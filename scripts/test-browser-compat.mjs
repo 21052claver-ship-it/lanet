@@ -25,6 +25,7 @@ for (const name of requested) {
     return ctx;
   }
   async function check(label, fn) {
+    if (process.env.LANET_BROWSER_CHECK && !label.includes(process.env.LANET_BROWSER_CHECK)) return;
     try {
       const detail = await fn();
       results.push({ engine: name, label, passed: true, ...detail });
@@ -151,8 +152,38 @@ for (const name of requested) {
       try {
         const p = await ctx.newPage();
         await p.goto(fixture.base + '/#study');
+        await p.evaluate(() => {
+          window.__audioDiagnostics = [];
+          const play = HTMLMediaElement.prototype.play;
+          HTMLMediaElement.prototype.play = function () {
+            return play.call(this).catch((error) => {
+              window.__audioDiagnostics.push({ name: error.name, message: error.message });
+              throw error;
+            });
+          };
+        });
         await p.getByRole('button', { name: 'Reproduir', exact: true }).click();
-        await p.getByRole('button', { name: 'Pausar música', exact: true }).waitFor();
+        try {
+          await p.getByRole('button', { name: 'Pausar música', exact: true }).waitFor();
+        } catch (error) {
+          console.error(
+            'Audio diagnostics',
+            await p.evaluate(() => ({
+              rejected: window.__audioDiagnostics,
+              media: [...document.querySelectorAll('audio')].map((el) => ({
+                src: el.currentSrc,
+                paused: el.paused,
+                ready: el.readyState,
+                error: el.error?.message,
+                code: el.error?.code,
+                mp3: el.canPlayType('audio/mpeg'),
+                vorbis: el.canPlayType('audio/ogg; codecs="vorbis"'),
+              })),
+              status: document.querySelector('.record-status')?.textContent,
+            })),
+          );
+          throw error;
+        }
         const media = await p
           .locator('audio[data-study-audio]')
           .evaluate((el) => ({ src: el.currentSrc, paused: el.paused, duration: el.duration }));

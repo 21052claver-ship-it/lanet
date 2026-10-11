@@ -32,6 +32,11 @@ jobs:
       - name: Install Linux media codecs
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - run: npx playwright install --with-deps chromium firefox webkit
+      - name: Firefox audio smoke check
+        run: npm run test:browser
+        env:
+          LANET_BROWSER_ENGINES: firefox
+          LANET_BROWSER_CHECK: Compatible audio
       - run: npm run test:mobile-navigation
       - run: npm run test:responsive
       - run: npm run test:browser
