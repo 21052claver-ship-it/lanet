@@ -1,10 +1,10 @@
 import React, { useId, useState } from 'react';
-import shell from '../design/pantalles-v1/01-horari.png';
-import community from '../design/pantalles-v2/comunitat-propostes-sidebar.png';
-import pluses from '../design/pantalles-v2/plusos-cards.png';
-import notes from '../design/pantalles-v2/apunts-formats.png';
-import study from '../design/pantalles-v1/05-estudi.png';
-import bakery from '../design/pantalles-v1/07-pastisseria.png';
+import shell from './assets/reference/01-horari.png';
+import community from './assets/reference/comunitat-propostes-sidebar.png';
+import pluses from './assets/reference/plusos-cards.png';
+import notes from './assets/reference/apunts-formats.png';
+import study from './assets/reference/05-estudi.png';
+import bakery from './assets/reference/07-pastisseria.png';
 import transparentArt from './transparent-art.json';
 
 // Legacy viewports keep the approved artwork intact. Selected icons use separate
