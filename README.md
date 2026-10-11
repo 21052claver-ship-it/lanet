@@ -12,6 +12,8 @@ GitHub comprova cada push/PR. `npm run release` publica el commit exacte despré
 
 ## Actualització del 12 d’octubre de 2026
 
+**Més complet · 0.2.1:** els vuit apartats en dues files sobre la barra inferior, icones, focus contextual i perfil/propostes. Verificat a 320 px i paisatge en tres navegadors. [Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.2.1) · [Pla](docs/PLA-MES-COMPLET.md).
+
 **GitHub i versions:** publicada [0.2.0](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.2.0), amb CI correcta, tag/release immutable, rebut verificable i Deployment vinculat a Cloudflare. Main protegida, secret scanning i dependències monitorades. [Registre](docs/releases/0.2.0.json).
 
 **Navegació mòbil:** Més obre una graella 2×2 sobre la barra inferior, amb icones, secció activa, perfil i propostes. Tancament ràpid, teclat i safe areas. 318 unitàries, 9 escenaris nous, 48 responsive i 135 generals correctes. [Pla](docs/PLA-NAVEGACIO-MOBIL.md).

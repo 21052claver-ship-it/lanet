@@ -1,0 +1,30 @@
+{
+  "recordedAt": "2026-10-11T23:40:27.316Z",
+  "repository": "21052claver-ship-it/lanet",
+  "version": "0.2.1",
+  "sourceCommit": "2cd7ee3007a0e9c00d5b467fbb78597e4fca99e8",
+  "authorEmail": "21052.claver@fje.edu",
+  "releaseUrl": "https://github.com/21052claver-ship-it/lanet/releases/tag/v0.2.1",
+  "immutable": true,
+  "tagCommitMatches": true,
+  "releaseReceiptDigestMatches": true,
+  "ci": "https://github.com/21052claver-ship-it/lanet/actions/runs/38184580200",
+  "ciSuccess": true,
+  "cloudflareDeployment": "c5a12609",
+  "providerConfirmed": true,
+  "githubDeployment": 7003457710,
+  "githubDeploymentState": "success",
+  "origin": "https://lanet.pages.dev",
+  "publicFiles": 521,
+  "productionDataExcluded": true,
+  "tests": {
+    "unit": 324,
+    "mobileNavigationScenarios": 9,
+    "responsive": 48,
+    "generalBrowser": 135
+  },
+  "publicSiteVisited": false,
+  "realDevicesTested": false,
+  "publication": "Local versioned release command after GitHub CI; no deployment on each push",
+  "credentialExportedToGitHub": false
+}

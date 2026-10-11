@@ -6306,7 +6306,7 @@
       "id": "T59-01",
       "phase": "F59",
       "title": "Més amb tots els apartats sobre la barra inferior",
-      "status": "active",
+      "status": "verified",
       "requirements": [
         "R73"
       ],
@@ -6326,7 +6326,20 @@
         "Verificar navegació, amplades, focus i regressions.",
         "Publicar 0.2.1 i registrar evidències."
       ],
-      "evidence": []
+      "evidence": [
+        "docs/PLA-MES-COMPLET.md",
+        "docs/releases/0.2.1.json",
+        "output/mobile-navigation-complete/browser/results.json",
+        "output/mobile-navigation-complete/typecheck.txt",
+        "output/mobile-navigation-complete/source-audit.json",
+        "output/mobile-navigation-complete/delivery.json",
+        "output/mobile-navigation-complete/ci-success.json",
+        "output/mobile-navigation-complete/ci-success.txt",
+        "output/mobile-navigation-complete/remote-bindings.json",
+        "output/mobile-navigation-complete/preserved-state.json",
+        "output/releases/0.2.1/receipt.json"
+      ],
+      "change_log_id": "H160"
     }
   ]
 }
