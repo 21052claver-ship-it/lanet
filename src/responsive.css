@@ -853,3 +853,31 @@
     animation: none;
   }
 }
+
+/* Native date/time controls must shrink inside narrow modal grids. */
+.dialog .field,
+.dialog .form-grid > * {
+  min-width: 0;
+}
+.dialog input[type='date'],
+.dialog input[type='time'] {
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+}
+@media (max-width: 480px) {
+  .dialog .plus-subject-editor {
+    min-width: 0;
+    padding: 12px;
+  }
+  .dialog .form-grid.bonus-row {
+    grid-template-columns: minmax(0, 1fr) 44px;
+    gap: 10px;
+  }
+  .dialog .bonus-row > .select-control:first-child {
+    grid-column: 1 / -1;
+  }
+  .dialog .bonus-row .select-value {
+    overflow-wrap: normal;
+  }
+}

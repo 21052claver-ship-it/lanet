@@ -222,6 +222,25 @@ for (const name of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,webki
           assert.ok(
             await p.getByRole('dialog').evaluate((el) => el.scrollWidth <= el.clientWidth + 1),
           );
+          if (section === 'pluses') {
+            assert.ok(
+              await p.getByRole('dialog').evaluate((dialog) => {
+                const bounds = dialog.getBoundingClientRect();
+                return [...dialog.querySelectorAll('input[type="date"], input[type="time"]')].every(
+                  (input) => input.getBoundingClientRect().right <= bounds.right - 10,
+                );
+              }),
+              'Date and time controls fit inside the dialog',
+            );
+            assert.ok(
+              await p
+                .locator('.bonus-row .select-value')
+                .evaluateAll((labels) =>
+                  labels.every((label) => label.getBoundingClientRect().width >= 70),
+                ),
+              'Subject and bonus labels remain readable',
+            );
+          }
           await p.getByRole('button', { name: 'Tancar', exact: true }).click();
         }
       });
