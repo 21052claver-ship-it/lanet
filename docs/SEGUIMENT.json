@@ -292,6 +292,10 @@
     {
       "id": "R72",
       "description": "Publicar el projecte sanejat al GitHub 21052claver-ship-it, configurar desplegament Cloudflare i historial verificable de versions."
+    },
+    {
+      "id": "R73",
+      "description": "Més responsive reuneix tots els apartats en dues files sobre la barra inferior, sense calaix lateral."
     }
   ],
   "phases": [
@@ -705,6 +709,13 @@
       "title": "GitHub públic i registre de versions",
       "depends_on": [
         "F57"
+      ]
+    },
+    {
+      "id": "F59",
+      "title": "Selector mòbil complet i compacte",
+      "depends_on": [
+        "F58"
       ]
     }
   ],
@@ -6290,6 +6301,32 @@
         "output/releases/0.2.0/receipt.json"
       ],
       "change_log_id": "H159"
+    },
+    {
+      "id": "T59-01",
+      "phase": "F59",
+      "title": "Més amb tots els apartats sobre la barra inferior",
+      "status": "active",
+      "requirements": [
+        "R73"
+      ],
+      "depends_on": [
+        "T58-01"
+      ],
+      "files": [
+        "src/App.jsx",
+        "src/responsive.css",
+        "scripts/test-mobile-navigation.mjs",
+        "docs/PLA-MES-COMPLET.md"
+      ],
+      "acceptance": "Vuit apartats visibles en dues files, secció activa, controls tàctils, tancament i focus accessibles, 320 px i paisatge, publicació versionada verificada.",
+      "checks": [
+        "Revisar implementació publicada i definir abast.",
+        "Compactar i mostrar totes les destinacions.",
+        "Verificar navegació, amplades, focus i regressions.",
+        "Publicar 0.2.1 i registrar evidències."
+      ],
+      "evidence": []
     }
   ]
 }

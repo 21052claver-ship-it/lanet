@@ -2,6 +2,13 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.2.1] - 2026-10-12
+
+### Millorat
+- Més al mòbil mostra tots els apartats en dues files compactes sobre la barra inferior.
+- Noms breus, icones, secció activa i focus contextual; perfil i propostes separats de la navegació.
+- Tancament ràpid i compatibilitat amb 320 px, paisatge, teclat i moviment reduït.
+
 ## [0.2.0] - 2026-10-12
 
 ### Afegit

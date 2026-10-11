@@ -787,8 +787,8 @@
 }
 .mobile-more-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
 }
 .mobile-more-item {
   display: flex;
@@ -796,11 +796,11 @@
   align-items: center;
   justify-content: center;
   gap: 7px;
-  min-height: 88px;
-  padding: 9px 4px;
-  border-radius: 15px;
+  min-height: 76px;
+  padding: 8px 2px;
+  border-radius: 13px;
   color: #665747;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
 }
 .mobile-more-item:hover,

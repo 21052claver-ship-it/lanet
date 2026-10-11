@@ -111,7 +111,11 @@ function Workspace({ onLogout }) {
     const previousFocus = menuReturnFocus.current || document.activeElement;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    sidebarRef.current?.querySelector('.mobile-more-item')?.focus();
+    const panel = sidebarRef.current;
+    (
+      panel?.querySelector('.mobile-more-item[aria-current="page"]') ||
+      panel?.querySelector('.mobile-more-item')
+    )?.focus();
     return () => {
       document.body.style.overflow = previousOverflow;
       if (previousFocus instanceof HTMLElement && previousFocus.isConnected) previousFocus.focus();
@@ -389,25 +393,25 @@ function Workspace({ onLogout }) {
           {smallScreen && mobile && (
             <section id="main-menu" className="mobile-more-panel" aria-label="Més seccions">
               <div className="mobile-more-heading">
-                <h2>Més seccions</h2>
+                <h2>Tots els apartats</h2>
                 <IconButton label="Tancar menú" onClick={() => setMobile(false)}>
                   <X size={21} />
                 </IconButton>
               </div>
-              <nav className="mobile-more-grid" aria-label="Altres seccions">
-                {NAV.filter(([key]) => !['schedule', 'notes', 'grades', 'study'].includes(key)).map(
-                  ([key, label]) => (
-                    <button
-                      key={key}
-                      className={`mobile-more-item ${page === key ? 'active' : ''}`}
-                      aria-current={page === key ? 'page' : undefined}
-                      onClick={() => navigate(key)}
-                    >
-                      <ReferenceArt name={key} size={36} />
-                      <span>{label}</span>
-                    </button>
-                  ),
-                )}
+              <nav className="mobile-more-grid" aria-label="Tots els apartats">
+                {NAV.map(([key, label]) => (
+                  <button
+                    key={key}
+                    className={`mobile-more-item ${page === key ? 'active' : ''}`}
+                    aria-current={page === key ? 'page' : undefined}
+                    aria-label={label}
+                    title={label}
+                    onClick={() => navigate(key)}
+                  >
+                    <ReferenceArt name={key} size={32} />
+                    <span>{key === 'schedule' ? 'Curs' : key === 'pau' ? 'PAU' : label}</span>
+                  </button>
+                ))}
               </nav>
               <div className="mobile-more-account">
                 <button

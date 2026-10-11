@@ -45,7 +45,27 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
             box.x >= 0 &&
             box.x + box.width <= size.width,
         );
-        assert.equal(await p.locator('.mobile-more-grid button').count(), 4);
+        const destinations = p.locator('.mobile-more-grid button');
+        assert.equal(await destinations.count(), 8);
+        const tiles = await destinations.evaluateAll((buttons) =>
+          buttons.map((button) => {
+            const r = button.getBoundingClientRect();
+            return {
+              x: r.x,
+              y: r.y,
+              width: r.width,
+              height: r.height,
+              fits: button.scrollWidth <= button.clientWidth + 1,
+            };
+          }),
+        );
+        assert.equal(new Set(tiles.map((tile) => Math.round(tile.y))).size, 2);
+        assert.ok(tiles.every((tile) => tile.width >= 60 && tile.height >= 44 && tile.fits));
+        assert.ok(
+          await p
+            .locator('.mobile-more-item[aria-current="page"]')
+            .evaluate((el) => el === document.activeElement),
+        );
         assert.ok(await p.locator('#main-content').evaluate((el) => el.inert));
         await panel.screenshot({ path: `${out}/${engine}-${size.width}-panel.png` });
         await p.screenshot({ path: `${out}/${engine}-${size.width}.png` });
@@ -92,6 +112,28 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         await p.getByRole('dialog', { name: 'El meu perfil' }).waitFor();
         assert.equal(await panel.count(), 0);
         await p.keyboard.press('Escape');
+        // Every destination remains usable from the expanded selector.
+        for (const route of ['notes', 'grades', 'study', 'pluses', 'pau', 'bakery', 'schedule']) {
+          await more.click();
+          await p
+            .locator('.mobile-more-grid button')
+            .nth(
+              [
+                'schedule',
+                'notes',
+                'pluses',
+                'grades',
+                'pau',
+                'study',
+                'community',
+                'bakery',
+              ].indexOf(route),
+            )
+            .click();
+          await dialog.waitFor({ state: 'hidden' });
+          await p.waitForURL(`**/#${route}`);
+          await p.locator('.page-title h1').waitFor();
+        }
         await more.click();
         await p.setViewportSize({ width: 1280, height: 900 });
         await p.waitForFunction(
@@ -106,7 +148,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         assert.equal(await more.getAttribute('aria-expanded'), 'false');
         assert.ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
         assert.deepEqual(errors, []);
-        results.push({ engine, size, passed: true, checks: 12 });
+        results.push({ engine, size, passed: true, checks: 22 });
         console.log(engine, size.width, 'OK');
       } catch (e) {
         results.push({ engine, size, passed: false, error: e.message });
