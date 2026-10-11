@@ -223,7 +223,7 @@ test('PAU official catalogue: complete codes, strict weights, ranges, years and 
     assert.equal(new URL(s.url).hostname, 'universitats.gencat.cat');
     assert.equal(
       createHash('sha256')
-        .update(readFileSync(`output/pau/sources/${name}.pdf`))
+        .update(readFileSync(`tests/fixtures/pau/sources/${name}.pdf`))
         .digest('hex'),
       s.sha256,
     );
@@ -243,7 +243,7 @@ test('PAU official catalogue: conflicting source coefficients are not silently s
 });
 test('PAU official catalogue: all table codes matched text; latest title wins over clipped first-round label', () => {
   const c = JSON.parse(readFileSync('public/data/pau.json', 'utf8'));
-  const a = JSON.parse(readFileSync('output/pau/data-audit.json', 'utf8'));
+  const a = JSON.parse(readFileSync('tests/fixtures/pau/data-audit.json', 'utf8'));
   assert.ok(Object.values(a.sources).every((s) => s.allTextCodesMatched));
   assert.equal(a.cutoffDegrees, 558);
   assert.equal(a.totalDegrees, 560);
