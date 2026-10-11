@@ -49,6 +49,8 @@ export class StudyAudio {
     element.preload = 'auto';
     this.errorHandler = () => {
       if (generation !== this.generation) return;
+      // During loading, play() rejects and owns recovery/cleanup.
+      if (this.state === 'loading') return;
       this.stop();
       this.onError?.(new Error('No s’ha pogut carregar la música. Torna-ho a provar.'));
     };
@@ -74,6 +76,16 @@ export class StudyAudio {
       return started;
     } catch (error) {
       if (generation !== this.generation || request !== this.request) return false;
+      const track = LOFI_TRACKS.find((item) => item.id === this.trackId);
+      if (
+        error.name === 'NotSupportedError' &&
+        track &&
+        element.src.endsWith('.mp3') &&
+        element.canPlayType?.('audio/ogg; codecs="vorbis"')
+      ) {
+        element.src = track.oggSrc;
+        return this.start(element, volume);
+      }
       this.stop();
       throw new Error(
         error.name === 'NotAllowedError'

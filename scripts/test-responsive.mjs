@@ -319,6 +319,21 @@ for (const name of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,webki
       });
     await run('landscape-and-drawer-resize', { width: 844, height: 390 }, async (p) => {
       await goto(p, 'study');
+      await p.evaluate(() => {
+        window.__audioDiagnostics = [];
+        const play = HTMLMediaElement.prototype.play;
+        HTMLMediaElement.prototype.play = function () {
+          return play.call(this).catch((error) => {
+            window.__audioDiagnostics.push({
+              name: error.name,
+              message: error.message,
+              mp3: this.canPlayType('audio/mpeg'),
+              vorbis: this.canPlayType('audio/ogg; codecs="vorbis"'),
+            });
+            throw error;
+          });
+        };
+      });
       await p.getByRole('navigation', { name: 'Navegació mòbil' }).waitFor();
       await p.getByRole('button', { name: 'Comença', exact: true }).click();
       await p.getByRole('button', { name: 'Reproduir', exact: true }).click();
@@ -328,7 +343,12 @@ for (const name of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,webki
         'Landscape header leaves vertical room for content',
       );
       assert.ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
-      await p.getByRole('button', { name: 'Pausar música', exact: true }).click();
+      try {
+        await p.getByRole('button', { name: 'Pausar música', exact: true }).click();
+      } catch (error) {
+        console.error('Audio diagnostics', await p.evaluate(() => window.__audioDiagnostics));
+        throw error;
+      }
       await p.getByRole('button', { name: 'Pausar', exact: true }).click();
       await p.evaluate(() => scrollTo(0, 0));
       await p.screenshot({ path: `${out}/${name}-landscape.png` });

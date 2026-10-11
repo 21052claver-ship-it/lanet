@@ -16,6 +16,7 @@ Cada publicació nova té una versió SemVer, un tag Git immutable, una release 
 
 - Formulari de plusos llegible a 320 px, amb dates i hores ajustades i selectors sense compressió vertical.
 - Música en Vorbis quan el navegador no anuncia suport MP3; codecs de Linux instal·lats explícitament a CI.
+- Recuperació a Vorbis si el descodificador rebutja un MP3 anunciat com a compatible, amb reintent limitat i neteja d’errors.
 
 ### Preservat
 - Adreça lanet.pages.dev, Google únic @fje.edu, D1/R2 i serveis privats.

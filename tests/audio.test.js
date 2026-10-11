@@ -67,6 +67,40 @@ test('browsers without MP3 decoding use the available Vorbis track', async (t) =
   assert.equal(await audio.play('window'), true);
   assert.equal(elements.length, 1);
 });
+test('a decoder rejecting an advertised MP3 retries Vorbis once and preserves volume', async (t) => {
+  const { audio, elements } = engine(t);
+  const pending = audio.play('window', 0.42);
+  const element = elements[0];
+  element.canPlayType = () => 'probably';
+  let retries = 0;
+  element.play = () => {
+    retries++;
+    return Promise.resolve();
+  };
+  element.listeners.get('error')();
+  element.reject(Object.assign(new Error('Missing codec'), { name: 'NotSupportedError' }));
+  assert.equal(await pending, true);
+  assert.equal(element.src, '/audio/window.ogg');
+  assert.equal(element.volume, 0.42);
+  assert.equal(retries, 1);
+  assert.equal(audio.state, 'playing');
+});
+test('failed Vorbis recovery stops without retrying forever', async (t) => {
+  const { audio, elements } = engine(t);
+  const pending = audio.play('window');
+  const element = elements[0];
+  element.canPlayType = () => 'probably';
+  let retries = 0;
+  element.play = () => {
+    retries++;
+    return Promise.reject(Object.assign(new Error(), { name: 'NotSupportedError' }));
+  };
+  element.reject(Object.assign(new Error(), { name: 'NotSupportedError' }));
+  await assert.rejects(pending, /No s’ha pogut reproduir/);
+  assert.equal(retries, 1);
+  assert.equal(audio.element, null);
+  assert.ok(element.removed);
+});
 test('25 local tracks across eight styles have unique audio, valid containers and licences', () => {
   assert.equal(new Set(LOFI_TRACKS.map((track) => track.id)).size, 25);
   assert.equal(MUSIC_STYLES.length, 8);
