@@ -296,6 +296,10 @@
     {
       "id": "R73",
       "description": "Més responsive reuneix tots els apartats en dues files sobre la barra inferior, sense calaix lateral."
+    },
+    {
+      "id": "R74",
+      "description": "Repartir fitxes en totes les posicions estàndard de la ruleta europea, amb diverses apostes per gir."
     }
   ],
   "phases": [
@@ -716,6 +720,13 @@
       "title": "Selector mòbil complet i compacte",
       "depends_on": [
         "F58"
+      ]
+    },
+    {
+      "id": "F60",
+      "title": "Ruleta amb tauler de fitxes",
+      "depends_on": [
+        "F59"
       ]
     }
   ],
@@ -6340,6 +6351,35 @@
         "output/releases/0.2.1/receipt.json"
       ],
       "change_log_id": "H160"
+    },
+    {
+      "id": "T60-01",
+      "phase": "F60",
+      "title": "Apostes múltiples i posicions del tapet europeu",
+      "status": "review",
+      "requirements": [
+        "R74"
+      ],
+      "depends_on": [
+        "T59-01"
+      ],
+      "files": [
+        "shared/roulette.js",
+        "worker/roulette.js",
+        "src/components/RouletteBoard.jsx",
+        "src/components/SecretCasino.jsx",
+        "src/roulette.css",
+        "migrations/0024_roulette_tickets.sql",
+        "tests/roulette-tickets.test.js"
+      ],
+      "acceptance": "Tauler tàctil i accessible amb ple, cavall, carrer, trio, cantonada, primers quatre, sisena, columnes, dotzenes i exteriors. Diverses fitxes, desfer/retirar, saldo i premis atòmics, recuperació idempotent, historial conservat i publicació versionada.",
+      "checks": [
+        "Catàleg de posicions i retorns verificat.",
+        "Tauler visual i liquidació atòmica amb compatibilitat anterior.",
+        "Proves exhaustives de premis, seguretat, navegador i regressions.",
+        "Còpia privada, migració additiva i publicació 0.3.0."
+      ],
+      "evidence": []
     }
   ]
 }

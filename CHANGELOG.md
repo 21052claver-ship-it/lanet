@@ -2,6 +2,14 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.3.0] - 2026-10-12
+
+### Afegit
+- Tapet de ruleta europea amb 157 posicions: números, cavalls, cantonades, files, zona del zero, columnes, dotzenes i apostes exteriors.
+- Repartiment de diverses fitxes per gir, valors 1/5/10/25/100, desfer, retirar i revisió dels retorns.
+- Liquidació atòmica del gir complet, recuperació després de reconnexió i historial compatible amb les apostes anteriors.
+- Tauler adaptat a mòbil, controls de teclat i bloqueig durant el gir.
+
 ## [0.2.1] - 2026-10-12
 
 ### Millorat

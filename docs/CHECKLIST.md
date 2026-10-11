@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**163/164 tasques verificades · 73 requisits · 60 fases · límit d’una tasca activa.**
+**163/165 tasques verificades · 74 requisits · 61 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **cap**.
+Tasca activa: **T60-01 — Apostes múltiples i posicions del tapet europeu**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -353,5 +353,9 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 ## F59 Selector mòbil complet i compacte
 
 - [x] **T59-01** Més amb tots els apartats sobre la barra inferior — Verificat.
+
+## F60 Ruleta amb tauler de fitxes
+
+- [ ] **T60-01** Apostes múltiples i posicions del tapet europeu — En revisió.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

@@ -105,6 +105,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
     await page.getByRole('heading', { name: 'La sala secreta', exact: true }).waitFor();
     await page.getByRole('button', { name: 'Fer girar la ruleta', exact: true }).waitFor();
     await page.waitForFunction(() => !document.querySelector('.casino-bet-controls')?.disabled);
+    await page.getByRole('button', { name: 'Aposta ràpida', exact: true }).click();
   };
   const assertResult = async (page, fixture, count = 1) => {
     await page.locator('.roulette-result.has-result').waitFor();
@@ -159,6 +160,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         await rug.press('Enter');
         await page.getByRole('heading', { name: 'La sala secreta', exact: true }).waitFor();
         await page.waitForFunction(() => !document.querySelector('.casino-bet-controls')?.disabled);
+        await page.getByRole('button', { name: 'Aposta ràpida', exact: true }).click();
         const red = page.getByRole('radio', { name: /Vermell/ });
         await red.focus();
         await red.press('ArrowRight');
@@ -388,6 +390,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         await page.screenshot({ path: `${out}/${engine}-tunnel.png`, fullPage: true });
         await page.getByRole('heading', { name: 'La sala secreta', exact: true }).waitFor();
         await page.waitForFunction(() => !document.querySelector('.casino-bet-controls')?.disabled);
+        await page.getByRole('button', { name: 'Aposta ràpida', exact: true }).click();
         await page.getByRole('button', { name: 'Fer girar la ruleta', exact: true }).click();
         await page.locator('.roulette-device.is-spinning').waitFor();
         assert.equal(

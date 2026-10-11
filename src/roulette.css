@@ -790,3 +790,431 @@
     animation: none !important;
   }
 }
+/* Chip table: one placement layer at a time keeps touch targets unambiguous. */
+.roulette-play-modes,
+.tapet-modes,
+.tapet-denominations,
+.tapet-edit {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.roulette-play-modes {
+  margin: 0 0 18px;
+}
+.roulette-play-modes button,
+.tapet-modes button,
+.tapet-edit button,
+.tapet-ticket button {
+  min-height: 44px;
+  border: 1px solid #dbcebb;
+  border-radius: 12px;
+  background: #fffaf2;
+  color: #493726;
+  padding: 8px 14px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.roulette-play-modes button[aria-pressed='true'],
+.tapet-modes button[aria-pressed='true'] {
+  background: #245a45;
+  color: #fff;
+  border-color: #245a45;
+  box-shadow: 0 2px 0 #173c2e;
+}
+.roulette-board button:focus-visible {
+  outline: 3px solid #dc8c35;
+  outline-offset: 3px;
+  z-index: 5;
+}
+.roulette-board button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.tapet-help {
+  font-size: 14px;
+  color: #6c6259;
+  margin: 0 0 16px;
+  line-height: 1.5;
+}
+.tapet-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.tapet-denominations .denomination {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border: 4px dashed #fff4d6;
+  border-radius: 50%;
+  background: #805d99;
+  color: white;
+  font: inherit;
+  font-weight: 900;
+  box-shadow:
+    0 0 0 2px #ad9b87,
+    inset 0 0 0 2px #ffffff55;
+  cursor: pointer;
+  padding: 0;
+}
+.tapet-denominations .denomination-1 {
+  background: #506d9b;
+}
+.tapet-denominations .denomination-10 {
+  background: #b45e46;
+}
+.tapet-denominations .denomination-25 {
+  background: #327c61;
+}
+.tapet-denominations .denomination-100 {
+  background: #353b44;
+}
+.tapet-denominations .denomination[aria-pressed='true'] {
+  outline: 3px solid #c17a2e;
+  outline-offset: 3px;
+  transform: translateY(-2px);
+}
+.tapet-modes {
+  margin-bottom: 12px;
+}
+.tapet-modes button {
+  font-size: 13px;
+  padding: 8px 12px;
+  flex: 1 0 auto;
+}
+.tapet-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 70px;
+  padding: 10px 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.tapet-preview span {
+  color: #6c6259;
+  overflow-wrap: anywhere;
+}
+.tapet-container {
+  container-type: inline-size;
+  border: 8px solid #9c7148;
+  border-radius: 14px;
+  background: #18543e;
+  box-shadow: inset 0 0 24px #0b2d25;
+  margin: 8px 0 14px;
+  padding: 24px;
+}
+.tapet-grid {
+  position: relative;
+  height: 816px;
+  isolation: isolate;
+}
+.tapet-cell,
+.tapet-grid .tapet-target {
+  position: absolute;
+  left: var(--vx);
+  top: var(--vy);
+  transform: translate(-50%, -50%);
+}
+.tapet-cell,
+.tapet-number {
+  width: calc(100% / 3);
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d5dab9;
+  color: white;
+  font-weight: 800;
+  font-size: 18px;
+}
+.tapet-cell {
+  opacity: 0.65;
+}
+.tapet-cell.is-covered {
+  opacity: 1;
+  box-shadow: inset 0 0 0 4px #fbd58b;
+}
+.tapet-target {
+  position: relative;
+  font: inherit;
+  cursor: pointer;
+  color: #fff;
+  background: #245e48;
+  border: 1px solid #d5dab9;
+  min-height: 44px;
+}
+.tapet-number {
+  border-radius: 0;
+  min-width: 0;
+}
+.tapet-junction {
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  border-radius: 50%;
+  background: #f5dfae;
+  color: #45331e;
+  border: 3px solid #a87c40;
+  font-size: 22px;
+  box-shadow: 0 2px 5px #0005;
+}
+.tapet-row {
+  width: calc(100% - 12px);
+  height: 44px;
+  border-radius: 12px;
+  background: #f5dfae;
+  color: #45331e;
+  font-size: 16px;
+  font-weight: 800;
+  box-shadow: 0 2px 5px #0005;
+}
+.tapet-chip {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  min-width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border: 3px dashed #fff1d5;
+  border-radius: 50%;
+  background: #c59543;
+  color: #231b12;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 900;
+  box-shadow: 0 1px 3px #0006;
+  pointer-events: none;
+  padding: 1px;
+}
+.tapet-junction.has-chips > span {
+  visibility: hidden;
+}
+.tapet-junction .tapet-chip {
+  inset: 0;
+  margin: auto;
+  width: 34px;
+  height: 34px;
+  font-size: 14px;
+}
+.tapet-outsides {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.tapet-outside {
+  border-radius: 10px;
+  padding: 10px 8px;
+  min-height: 56px;
+  font-size: 13px;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+.tapet-outsides .tapet-outside.has-chips {
+  padding-bottom: 32px;
+}
+.tapet-zero .tapet-outside {
+  width: 100%;
+  font-size: 20px;
+}
+.tapet-zero-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 8px 0 16px;
+}
+.tapet-zero-options button {
+  position: relative;
+  min-height: 72px;
+  background: #225d44;
+  color: white;
+  border: 1px solid #cad2b8;
+  border-radius: 12px;
+  padding: 10px 10px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
+  cursor: pointer;
+}
+.tapet-zero-options small {
+  opacity: 0.8;
+}
+.tapet-total {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 18px 0;
+  font-size: 15px;
+}
+.tapet-total span {
+  font-size: 13px;
+  color: #6c6259;
+  line-height: 1.5;
+}
+.tapet-ticket {
+  margin-bottom: 18px;
+  font-size: 14px;
+}
+.tapet-ticket summary {
+  cursor: pointer;
+  padding: 12px 0;
+  font-weight: 800;
+}
+.tapet-ticket ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.tapet-ticket li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-top: 1px solid #ece3d6;
+  padding: 8px 0;
+}
+.tapet-ticket li > span {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.tapet-ticket small {
+  color: #6c6259;
+}
+.tapet-ticket button {
+  min-width: 44px;
+  padding: 8px;
+}
+@container (min-width: 680px) {
+  .tapet-grid {
+    height: 228px;
+  }
+  .tapet-cell,
+  .tapet-grid .tapet-target {
+    left: var(--hx);
+    top: var(--hy);
+  }
+  .tapet-cell,
+  .tapet-number {
+    width: calc(100% / 12);
+    height: 76px;
+  }
+  .tapet-row {
+    width: 44px;
+    height: calc(100% - 12px);
+    font-size: 13px;
+    writing-mode: vertical-rl;
+  }
+}
+@media (max-width: 360px) {
+  .tapet-container {
+    padding: 22px 12px;
+    border-width: 6px;
+  }
+  .tapet-denominations {
+    gap: 9px;
+  }
+  .tapet-denominations .denomination {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+  }
+  .tapet-outside {
+    font-size: 12px;
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+  .tapet-edit {
+    width: 100%;
+  }
+  .tapet-edit button {
+    flex: 1;
+  }
+}
+.roulette-history li strong {
+  overflow-wrap: anywhere;
+  display: block;
+}
+.roulette-history li > div {
+  min-width: 0;
+}
+.tapet-placed {
+  position: absolute;
+  left: var(--vx);
+  top: var(--vy);
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  pointer-events: none;
+  min-width: 26px;
+  height: 26px;
+  padding: 2px;
+  display: grid;
+  place-items: center;
+  border: 3px dashed #fff1d5;
+  border-radius: 50%;
+  background: #c59543;
+  color: #231b12;
+  font-size: 12px;
+  font-weight: 900;
+  box-shadow: 0 1px 3px #0006;
+}
+@container (min-width:680px) {
+  .tapet-placed {
+    left: var(--hx);
+    top: var(--hy);
+  }
+}
+.roulette-ticket-result {
+  font-size: 13px;
+  margin: 10px 0 16px;
+}
+.roulette-ticket-result summary {
+  cursor: pointer;
+  font-weight: 800;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.roulette-ticket-result p {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px;
+  margin: 0;
+  padding: 8px;
+  border-bottom: 1px solid #e7dccb;
+}
+.roulette-ticket-result small {
+  font-size: 12px;
+}
+.roulette-ticket-result .ticket-win {
+  background: #e4eedd;
+  color: #254c36;
+  border-radius: 6px;
+}
+.roulette-board .pocket-red {
+  background: #ad473c;
+  color: #fff;
+}
+.roulette-board .pocket-black {
+  background: #24342f;
+  color: #fff;
+}
+.roulette-board .pocket-green {
+  background: #225d44;
+  color: #fff;
+}
