@@ -1,7 +1,11 @@
-# Verificació · Navegació mòbil
+# Verificació · GitHub i versions
 
-12 d’octubre de 2026. 318 proves unitàries, 9 escenaris nous amb 108 comprovacions, 48 responsive i 135 controls generals locals correctes en Chromium, Firefox i WebKit. Tipus, lint i compilació correctes.
+12 d’octubre de 2026. Versió 0.2.0, commit 2ee68351833edf9e3ed85f4013ebce76bfe53b78. CI real des d’un checkout nou a Ubuntu/Node 24: auditoria de fonts, tipus, lint, 324 unitàries, build, 9 escenaris del menú (108 comprovacions), 48 responsive i 135 generals correctes en Chromium/Firefox/WebKit.
 
-Panell sobre la barra inferior, graella 2×2, secció activa, perfil i propostes, teclat/focus, tancament amb Més/Escape/fons/creu/ruta, scroll i canvi d’orientació/escriptori.
+https://github.com/21052claver-ship-it/lanet/actions/runs/38183868082
 
-Publicació 4cc1feee confirmada pel proveïdor; D1/R2/MEDIA_SAFETY, gift i política del forn preservats. Cap migració ni canvi de dades. No s’ha visitat la web pública ni provat un dispositiu físic. Evidències locals a output/mobile-navigation; excloses de GitHub per privadesa.
+Repositori públic al compte 21052claver-ship-it, autoria 21052.claver@fje.edu. 517 fitxers públics, àudio en LFS, originals de runtime idèntics i fonts oficials PAU per a tests reproduïbles. Secrets, còpies i dades de producció excloses.
+
+Release immutable, tag i rebut SHA-256 confirmats; GitHub Deployment success i Cloudflare production/main amb el mateix SHA complet. Cap visita al web públic ni prova en dispositiu físic. Les sessions locals fan la publicació versionada després de CI verda; no es desplega automàticament cada push.
+
+[Rebut públic](releases/0.2.0.json) · [Flux de versions](VERSIONS.md). Evidències detallades locals a output/github i output/releases, excloses del repositori.

@@ -6255,7 +6255,7 @@
       "id": "T58-01",
       "phase": "F58",
       "title": "GitHub públic i registre de versions",
-      "status": "active",
+      "status": "verified",
       "requirements": [
         "R72"
       ],
@@ -6275,7 +6275,21 @@
         "Verificar resultats i regressions.",
         "Registrar versió i publicació."
       ],
-      "evidence": []
+      "evidence": [
+        "docs/PLA-GITHUB.md",
+        "docs/VERSIONS.md",
+        "docs/releases/0.2.0.json",
+        "output/github/delivery.json",
+        "output/github/ci-success.json",
+        "output/github/ci-success.txt",
+        "output/github/source-audit.json",
+        "output/github/repository-settings.json",
+        "output/github/runtime-art.json",
+        "output/github/remote-bindings.json",
+        "output/github/preserved-state.json",
+        "output/releases/0.2.0/receipt.json"
+      ],
+      "change_log_id": "H159"
     }
   ]
 }
