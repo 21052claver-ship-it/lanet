@@ -101,6 +101,23 @@ test('failed Vorbis recovery stops without retrying forever', async (t) => {
   assert.equal(audio.element, null);
   assert.ok(element.removed);
 });
+test('a late MP3 decoding failure recovers with Vorbis and keeps the same player', async (t) => {
+  const { audio, elements } = engine(t);
+  const pending = audio.play('window', 0.42);
+  const element = elements[0];
+  element.resolve();
+  await pending;
+  element.error = { code: 3 };
+  element.canPlayType = () => 'probably';
+  element.listeners.get('error')();
+  await Promise.resolve();
+  assert.equal(element.src, '/audio/window.ogg');
+  assert.equal(audio.element, element);
+  assert.equal(audio.state, 'playing');
+  assert.equal(element.volume, 0.42);
+  element.listeners.get('error')();
+  assert.equal(audio.element, null, 'An Ogg failure stops instead of looping');
+});
 test('25 local tracks across eight styles have unique audio, valid containers and licences', () => {
   assert.equal(new Set(LOFI_TRACKS.map((track) => track.id)).size, 25);
   assert.equal(MUSIC_STYLES.length, 8);

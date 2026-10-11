@@ -51,6 +51,15 @@ export class StudyAudio {
       if (generation !== this.generation) return;
       // During loading, play() rejects and owns recovery/cleanup.
       if (this.state === 'loading') return;
+      if (
+        [3, 4].includes(element.error?.code) &&
+        element.src.endsWith('.mp3') &&
+        element.canPlayType?.('audio/ogg; codecs="vorbis"')
+      ) {
+        element.src = track.oggSrc;
+        this.start(element, element.volume).catch((error) => this.onError?.(error));
+        return;
+      }
       this.stop();
       this.onError?.(new Error('No s’ha pogut carregar la música. Torna-ho a provar.'));
     };

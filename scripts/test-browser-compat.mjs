@@ -154,6 +154,18 @@ for (const name of requested) {
         await p.goto(fixture.base + '/#study');
         await p.evaluate(() => {
           window.__audioDiagnostics = [];
+          document.addEventListener(
+            'error',
+            (event) => {
+              const el = event.target;
+              if (el instanceof HTMLMediaElement)
+                window.__audioDiagnostics.push({
+                  code: el.error?.code,
+                  message: el.error?.message,
+                });
+            },
+            true,
+          );
           const play = HTMLMediaElement.prototype.play;
           HTMLMediaElement.prototype.play = function () {
             return play.call(this).catch((error) => {
@@ -164,6 +176,10 @@ for (const name of requested) {
         });
         await p.getByRole('button', { name: 'Reproduir', exact: true }).click();
         try {
+          await p.waitForFunction(() => {
+            const el = document.querySelector('audio[data-study-audio]');
+            return el && !el.paused && el.duration > 60 && el.currentTime > 0.25;
+          });
           await p.getByRole('button', { name: 'Pausar música', exact: true }).waitFor();
         } catch (error) {
           console.error(
