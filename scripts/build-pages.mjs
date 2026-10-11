@@ -3,8 +3,10 @@ import { resolve, dirname } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { build } from 'esbuild';
 import { pagesConfig } from './pages-utils.mjs';
+import { assertAudioAssets } from './audio-assets.mjs';
 
 pagesConfig();
+assertAudioAssets();
 const root = resolve('.'),
   target = resolve('dist-pages');
 if (dirname(target) !== root || target !== resolve(root, 'dist-pages'))
