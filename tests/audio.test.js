@@ -51,6 +51,22 @@ function engine(t) {
   t.after(() => audio.stop());
   return { audio, elements };
 }
+test('browsers without MP3 decoding use the available Vorbis track', async (t) => {
+  const { audio, elements } = engine(t);
+  const create = audio.createAudio;
+  audio.createAudio = (src) => {
+    const element = create(src);
+    element.canPlayType = (type) => (type.includes('vorbis') ? 'probably' : '');
+    return element;
+  };
+  const started = audio.play('window');
+  assert.equal(elements[0].src, '/audio/window.ogg');
+  elements[0].resolve();
+  assert.equal(await started, true);
+  audio.pause();
+  assert.equal(await audio.play('window'), true);
+  assert.equal(elements.length, 1);
+});
 test('25 local tracks across eight styles have unique audio, valid containers and licences', () => {
   assert.equal(new Set(LOFI_TRACKS.map((track) => track.id)).size, 25);
   assert.equal(MUSIC_STYLES.length, 8);

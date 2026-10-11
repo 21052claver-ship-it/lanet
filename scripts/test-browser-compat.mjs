@@ -146,7 +146,7 @@ for (const name of requested) {
         await ctx.close();
       }
     });
-    await check('MP3 starts and pauses after a user gesture', async () => {
+    await check('Compatible audio starts and pauses after a user gesture', async () => {
       const ctx = await context();
       try {
         const p = await ctx.newPage();
@@ -156,7 +156,7 @@ for (const name of requested) {
         const media = await p
           .locator('audio[data-study-audio]')
           .evaluate((el) => ({ src: el.currentSrc, paused: el.paused, duration: el.duration }));
-        assert.ok(media.src.endsWith('.mp3') && !media.paused && media.duration > 60);
+        assert.ok(/\.(mp3|ogg)$/.test(media.src) && !media.paused && media.duration > 60);
         await p.getByRole('button', { name: 'Pausar música', exact: true }).click();
         return { media };
       } finally {

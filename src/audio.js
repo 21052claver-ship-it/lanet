@@ -37,6 +37,12 @@ export class StudyAudio {
     this.stop();
     const generation = this.generation;
     const element = this.createAudio(track.src);
+    if (
+      element.canPlayType &&
+      !element.canPlayType('audio/mpeg') &&
+      element.canPlayType('audio/ogg; codecs="vorbis"')
+    )
+      element.src = track.oggSrc;
     this.element = element;
     this.trackId = track.id;
     element.loop = false;

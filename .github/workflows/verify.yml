@@ -29,6 +29,8 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run pages:build
+      - name: Install Linux media codecs
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - run: npx playwright install --with-deps chromium firefox webkit
       - run: npm run test:mobile-navigation
       - run: npm run test:responsive
