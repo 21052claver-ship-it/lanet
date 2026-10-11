@@ -30,7 +30,13 @@ jobs:
       - run: npm test
       - run: npm run pages:build
       - name: Install Linux media codecs
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg pulseaudio
+      - name: Start Linux audio output
+        run: |
+          pulseaudio --start --exit-idle-time=-1
+          pactl load-module module-null-sink sink_name=lanet_ci
+          pactl set-default-sink lanet_ci
+          pactl info
       - run: npx playwright install --with-deps chromium firefox webkit
       - name: Firefox audio smoke check
         run: npm run test:browser

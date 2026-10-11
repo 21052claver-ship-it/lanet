@@ -13,6 +13,8 @@ Repositori públic: https://github.com/21052claver-ship-it/lanet. Aplicació: ht
 
 GitHub executa els controls automàticament a push/PR. La publicació s’executa des de la sessió local amb `npm run release`; no es publica automàticament cada push. Això reutilitza els accessos existents sense copiar credencials personals de Cloudflare a GitHub.
 
+La CI usa Ubuntu 24.04, FFmpeg i una sortida virtual PulseAudio perquè Firefox pugui reproduir àudio real sense altaveus físics. Les proves exigeixen durada i avanç del temps de reproducció. PulseAudio és el backend principal de Linux de [Mozilla cubeb](https://github.com/mozilla/cubeb).
+
 Pages es va crear amb Direct Upload; Cloudflare no permet convertir-lo a integració Git nativa. La integració usa Wrangler i GitHub Deployments i conserva l’adreça actual. Font oficial: https://developers.cloudflare.com/pages/get-started/direct-upload/.
 
 ## Versions i recuperació
