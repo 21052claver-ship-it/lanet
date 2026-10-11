@@ -6218,7 +6218,7 @@
       "id": "T57-01",
       "phase": "F57",
       "title": "Navegació mòbil amb Més sobre la barra inferior",
-      "status": "active",
+      "status": "verified",
       "requirements": [
         "R71"
       ],
@@ -6238,13 +6238,24 @@
         "Verificar resultats i regressions.",
         "Registrar versió i publicació."
       ],
-      "evidence": []
+      "evidence": [
+        "docs/PLA-NAVEGACIO-MOBIL.md",
+        "output/mobile-navigation/results.json",
+        "output/mobile-navigation/typecheck.txt",
+        "output/mobile-navigation/unit.txt",
+        "output/mobile-navigation/responsive/responsive-results.json",
+        "output/mobile-navigation/general/browser-results.json",
+        "output/mobile-navigation/remote-bindings.json",
+        "output/mobile-navigation/preserved-state.json",
+        "output/mobile-navigation/tested-build.json"
+      ],
+      "change_log_id": "H158"
     },
     {
       "id": "T58-01",
       "phase": "F58",
       "title": "GitHub públic i registre de versions",
-      "status": "pending",
+      "status": "active",
       "requirements": [
         "R72"
       ],

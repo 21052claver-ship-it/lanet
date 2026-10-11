@@ -1,5 +1,33 @@
-import {execFileSync}from'node:child_process';import{readFileSync,statSync}from'node:fs';
-const files=execFileSync('git',['ls-files','-z'],{encoding:'utf8'}).split('\0').filter(Boolean);const findings=[];let bytes=0;
-const patterns={github:/\b(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,})\b/,google:/GOCSPX-[A-Za-z0-9_-]{20,}/,privateKey:/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/,credential:/["']?(?:oauth_token|api_token|client_secret)["']?\s*[:=]\s*["'][A-Za-z0-9_-]{25,}["']/i,cookie:/lanet_session=[A-Za-z0-9_-]{30,}/};
-for(const path of files){bytes+=statSync(path).size;if(/(?:^|\/)(?:\.cloud|\.cache|\.wrangler|output|exports|backups|node_modules|ops)(?:\/|$)|client_secret.*\.json$|(?:^|\/)\.env(?:\.|$)|(?:^|\/)\.dev\.vars(?!\.example$)|\.(?:pem|key|zip|sql\.bak)$/i.test(path)){findings.push({path,kind:'private path'});continue;}if(/\.(png|jpg|jpeg|webp|mp3|ogg|woff2|pdf)$/i.test(path))continue;let s=readFileSync(path,'utf8');if(path==='tests/google-configure.test.js')s=s.replaceAll('isolated-remote-credential-test','TEST_CREDENTIAL');for(const[kind,re]of Object.entries(patterns))if(re.test(s))findings.push({path,kind});}
-console.log(JSON.stringify({trackedFiles:files.length,bytes,findings,secretsPrinted:false}));if(findings.length)process.exitCode=1;
+import { execFileSync } from 'node:child_process';
+import { readFileSync, statSync } from 'node:fs';
+const files = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' })
+  .split('\0')
+  .filter(Boolean);
+const findings = [];
+let bytes = 0;
+const patterns = {
+  github: /\b(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,})\b/,
+  google: /GOCSPX-[A-Za-z0-9_-]{20,}/,
+  privateKey: /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/,
+  credential:
+    /["']?(?:oauth_token|api_token|client_secret)["']?\s*[:=]\s*["'][A-Za-z0-9_-]{25,}["']/i,
+  cookie: /lanet_session=[A-Za-z0-9_-]{30,}/,
+};
+for (const path of files) {
+  bytes += statSync(path).size;
+  if (
+    /(?:^|\/)(?:\.cloud|\.cache|\.wrangler|output|exports|backups|node_modules|ops)(?:\/|$)|client_secret.*\.json$|(?:^|\/)\.env(?:\.|$)|(?:^|\/)\.dev\.vars(?!\.example$)|\.(?:pem|key|zip|sql\.bak)$/i.test(
+      path,
+    )
+  ) {
+    findings.push({ path, kind: 'private path' });
+    continue;
+  }
+  if (/\.(png|jpg|jpeg|webp|mp3|ogg|woff2|pdf)$/i.test(path)) continue;
+  let s = readFileSync(path, 'utf8');
+  if (path === 'tests/google-configure.test.js')
+    s = s.replaceAll('isolated-remote-credential-test', 'TEST_CREDENTIAL');
+  for (const [kind, re] of Object.entries(patterns)) if (re.test(s)) findings.push({ path, kind });
+}
+console.log(JSON.stringify({ trackedFiles: files.length, bytes, findings, secretsPrinted: false }));
+if (findings.length) process.exitCode = 1;

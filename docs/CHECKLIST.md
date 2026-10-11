@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**160/163 tasques verificades · 72 requisits · 59 fases · límit d’una tasca activa.**
+**161/163 tasques verificades · 72 requisits · 59 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **T57-01 — Navegació mòbil amb Més sobre la barra inferior**.
+Tasca activa: **T58-01 — GitHub públic i registre de versions**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -344,10 +344,10 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 
 ## F57 Navegació mòbil amb Més sobre la barra inferior
 
-- [ ] **T57-01** Navegació mòbil amb Més sobre la barra inferior — En curs.
+- [x] **T57-01** Navegació mòbil amb Més sobre la barra inferior — Verificat.
 
 ## F58 GitHub públic i registre de versions
 
-- [ ] **T58-01** GitHub públic i registre de versions — Pendent.
+- [ ] **T58-01** GitHub públic i registre de versions — En curs.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

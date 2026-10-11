@@ -4,6 +4,16 @@ Plataforma local completa per a estudiants de segon de batxillerat. Interfície 
 
 **[La Net publicada](https://lanet.pages.dev)** — aplicació pròpia `lanet` al compte actual de Cloudflare, amb **Google com a única entrada** i altes restringides a **@fje.edu**. Nom, cognoms i foto sincronitzats des de Google; la identitat no es pot editar a La Net. Entrada Google real, nom, cognoms i foto comprovats. Exterior i interior de la pastisseria amb transparència real, revisats en mòbil i escriptori. [Desplegament i comprovacions públiques](docs/PUBLICACIO.md).
 
+## Codi i versions
+
+[Repositori públic](https://github.com/21052claver-ship-it/lanet) · [Versions publicades](https://github.com/21052claver-ship-it/lanet/releases) · [CHANGELOG](CHANGELOG.md).
+
+GitHub comprova cada push/PR. `npm run release` publica el commit exacte després de CI verda a Cloudflare Pages, crea Deployment a GitHub i una release immutable amb tag i rebut JSON. La publicació s’executa amb les sessions locals existents; no es publica automàticament cada push ni es desen secrets personals de Cloudflare a GitHub. [Flux de versions](docs/VERSIONS.md).
+
+## Actualització del 12 d’octubre de 2026
+
+**Navegació mòbil:** Més obre una graella 2×2 sobre la barra inferior, amb icones, secció activa, perfil i propostes. Tancament ràpid, teclat i safe areas. 318 unitàries, 9 escenaris nous, 48 responsive i 135 generals correctes. [Pla](docs/PLA-NAVEGACIO-MOBIL.md).
+
 ## Actualització de l’11 d’octubre de 2026
 
 **Retenció mínima dels anuncis:** imatges substituïdes eliminades de R2, cinc imatges històriques ja retirades, quotes per compte i bloqueig temporal d’allaus o fitxers prohibits repetits. Esborranys nous amb caducitat, cache de moderació sense píxels i neteja privada programada cada minut. 318 proves unitàries, 62 fluxos API amb D1/R2 locals, 18 escenaris nous, 36 de seguretat d’adjunts, 12 de pujades ràpides, 135 controls generals i 5 comprovacions del servei privat desplegat; tipus, lint i compilació correctes. [Pla i límits](docs/PLA-RETENCIO-ANUNCIS.md).

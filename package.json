@@ -1,6 +1,6 @@
 {
   "name": "la-net",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -38,7 +38,10 @@
     "cf:types": "wrangler types --config wrangler.local.jsonc",
     "cf:check": "npm run pages:build && node --test tests/pages-entry.test.js",
     "cf:prepare": "node scripts/cloud-prepare.mjs",
-    "cf:deploy": "node scripts/cloud-deploy.mjs"
+    "cf:deploy": "node scripts/cloud-deploy.mjs",
+    "test:mobile-navigation": "node scripts/test-mobile-navigation.mjs",
+    "audit:source": "node scripts/audit-public-source.mjs",
+    "release": "node scripts/release.mjs"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.3.0",
@@ -63,5 +66,10 @@
     "typescript": "^7.0.2",
     "vite": "^7.1.9",
     "wrangler": "^4.149.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/21052claver-ship-it/lanet.git"
+  },
+  "homepage": "https://lanet.pages.dev"
 }
