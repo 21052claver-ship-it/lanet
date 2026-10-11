@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "lanet",
+  "pages_build_output_dir": "./dist-pages",
+  "compatibility_date": "2026-10-08",
+  "compatibility_flags": ["nodejs_compat"],
+  "services": [{ "binding": "MEDIA_SAFETY", "service": "lanet-media-safety" }],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "la-net-db",
+      "database_id": "bcea5200-4b6d-43ff-b214-7612b633d3b6",
+      "migrations_dir": "migrations",
+    },
+  ],
+  "r2_buckets": [
+    {
+      "binding": "FILES",
+      "bucket_name": "la-net-files",
+      "jurisdiction": "eu",
+    },
+  ],
+  "vars": {
+    "SCHOOL_NAME": "La Net",
+    "DEMO_MODE": "false",
+    "GUEST_ACCESS": "false",
+    "GOOGLE_ALLOWED_DOMAIN": "fje.edu",
+    "PUBLIC_ORIGIN": "https://lanet.pages.dev",
+    "GOOGLE_REDIRECT_URI": "https://lanet.pages.dev/api/auth/google/callback",
+  },
+}

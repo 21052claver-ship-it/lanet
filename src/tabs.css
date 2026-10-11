@@ -1,0 +1,92 @@
+/* R32: one grouped selector; only the selected view has a filled, outlined surface. */
+.tabs.view-tabs,
+.app-shell .tabs.view-tabs {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-width: 0;
+  max-width: 100%;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid #d6c7b9;
+  border-radius: 13px;
+  background: #f4efe9;
+  box-shadow: none;
+  overflow-x: auto;
+  scroll-padding-inline: 4px;
+  scrollbar-width: thin;
+}
+.tabs.view-tabs > button,
+.app-shell .tabs.view-tabs > button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 44px;
+  gap: 7px;
+  padding: 9px 14px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: #736153;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.3;
+  white-space: nowrap;
+  box-shadow: none;
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+.tabs.view-tabs > button[aria-selected='true'],
+.app-shell .tabs.view-tabs > button[aria-selected='true'] {
+  border-color: #a66b43;
+  background: #ffddc4;
+  color: #4c3120;
+  box-shadow: 0 1px 2px #6a432b12, inset 0 1px #fff8;
+}
+@media (hover: hover) {
+  .tabs.view-tabs > button:not([aria-selected='true']):hover,
+  .app-shell .tabs.view-tabs > button:not([aria-selected='true']):hover {
+    background: #e9e0d6;
+    color: #4c3120;
+  }
+}
+.tabs.view-tabs > button:focus-visible,
+.app-shell .tabs.view-tabs > button:focus-visible {
+  outline: 2px solid #76513b;
+  outline-offset: -4px;
+}
+.tabs.view-tabs > button > svg {
+  flex: 0 0 18px;
+  pointer-events: none;
+}
+.app-shell .calendar-toolbar > .tabs.view-tabs {
+  width: 300px;
+  min-width: 0;
+  max-width: 100%;
+}
+.app-shell .calendar-toolbar > .tabs.view-tabs > button {
+  flex: 1 1 0;
+  font-size: 15px;
+}
+@media (max-width: 400px) {
+  .tabs.view-tabs > button,
+  .app-shell .tabs.view-tabs > button {
+    padding-inline: 9px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tabs.view-tabs > button,
+  .app-shell .tabs.view-tabs > button {
+    transition: none;
+  }
+}
+@media (forced-colors: active) {
+  .tabs.view-tabs > button[aria-selected='true'],
+  .app-shell .tabs.view-tabs > button[aria-selected='true'] {
+    border-color: Highlight;
+    background: Highlight;
+    color: HighlightText;
+    forced-color-adjust: none;
+  }
+}

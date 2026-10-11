@@ -1,0 +1,77 @@
+[
+  {
+    "id": "window",
+    "title": "Vora la finestra",
+    "subtitle": "Piano càlid · 72 BPM",
+    "icon": "window",
+    "color": "#e9d9c5",
+    "bpm": 72,
+    "chords": [
+      [48, 52, 55, 59, 62],
+      [45, 48, 52, 55, 59],
+      [50, 53, 57, 60, 64],
+      [43, 47, 50, 53, 57]
+    ],
+    "melody": [2, 4, 3, 2, -1, 1, 0, -1]
+  },
+  {
+    "id": "library",
+    "title": "Biblioteca tranquil·la",
+    "subtitle": "Acords lents · 66 BPM",
+    "icon": "book",
+    "color": "#e2dded",
+    "bpm": 66,
+    "chords": [
+      [50, 53, 57, 60, 64],
+      [43, 46, 50, 53, 57],
+      [48, 52, 55, 58, 62],
+      [41, 45, 48, 52, 55]
+    ],
+    "melody": [-1, 3, -1, 4, 2, -1, 1, -1]
+  },
+  {
+    "id": "cafe",
+    "title": "Cafè de tarda",
+    "subtitle": "Groove suau · 82 BPM",
+    "icon": "coffee",
+    "color": "#efd9ca",
+    "bpm": 82,
+    "chords": [
+      [51, 55, 58, 62, 65],
+      [48, 51, 55, 58, 62],
+      [41, 44, 48, 51, 55],
+      [46, 50, 53, 56, 60]
+    ],
+    "melody": [2, -1, 4, 3, 1, 2, -1, 0]
+  },
+  {
+    "id": "night",
+    "title": "Llums de nit",
+    "subtitle": "Tecles i espai · 62 BPM",
+    "icon": "moon",
+    "color": "#dce2f1",
+    "bpm": 62,
+    "chords": [
+      [45, 48, 52, 55, 59],
+      [50, 53, 57, 60, 64],
+      [41, 45, 48, 52, 55],
+      [40, 43, 47, 50, 54]
+    ],
+    "melody": [4, -1, -1, 2, -1, 3, -1, 1]
+  },
+  {
+    "id": "garden",
+    "title": "Jardí d’idees",
+    "subtitle": "Melodia lleugera · 76 BPM",
+    "icon": "leaf",
+    "color": "#dfe8d5",
+    "bpm": 76,
+    "chords": [
+      [42, 46, 49, 53, 56],
+      [44, 47, 51, 54, 58],
+      [46, 49, 53, 56, 60],
+      [49, 53, 56, 59, 63]
+    ],
+    "melody": [1, 3, 4, -1, 3, 2, 0, -1]
+  }
+]

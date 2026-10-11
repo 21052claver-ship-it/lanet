@@ -1,0 +1,8 @@
+DEMO_MODE=false
+GUEST_ACCESS=false
+
+# Credencials OAuth de tipus Web. El secret no s’inclou al codi ni al ZIP.
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_ALLOWED_DOMAIN=fje.edu
+GOOGLE_REDIRECT_URI=http://127.0.0.1:5173/api/auth/google/callback

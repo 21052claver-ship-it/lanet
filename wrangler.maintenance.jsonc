@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "lanet-file-maintenance",
+  "account_id": "bae727f7e92ad7610919d21b6409ade1",
+  "main": "worker/maintenance-entry.js",
+  "compatibility_date": "2026-10-11",
+  "workers_dev": false,
+  "preview_urls": false,
+  "triggers": { "crons": ["* * * * *"] },
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "la-net-db",
+    "database_id": "bcea5200-4b6d-43ff-b214-7612b633d3b6"
+  }],
+  "r2_buckets": [{"binding": "FILES", "bucket_name": "la-net-files", "jurisdiction": "eu"}]
+}

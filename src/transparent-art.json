@@ -1,0 +1,26 @@
+{
+  "bulb": {
+    "src": "/images/ui/bulb-alpha-v1.png",
+    "width": 1262,
+    "height": 1246,
+    "viewBox": [300, 170, 660, 900]
+  },
+  "cake": {
+    "src": "/images/ui/cake-alpha-v1.png",
+    "width": 1254,
+    "height": 1254,
+    "viewBox": [244, 288, 767, 697]
+  },
+  "megaphone": {
+    "src": "/images/ui/megaphone-alpha-v1.png",
+    "width": 1254,
+    "height": 1254,
+    "viewBox": [233, 292, 801, 709]
+  },
+  "document": {
+    "src": "/images/ui/document-alpha-v1.png",
+    "width": 1254,
+    "height": 1254,
+    "viewBox": [335, 299, 675, 759]
+  }
+}

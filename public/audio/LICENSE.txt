@@ -1,0 +1,8 @@
+La Net — cinc composicions instrumentals originals, generades amb scripts/render-lofi.py.
+Partitura: shared/lofi-tracks.json. No s’han utilitzat enregistraments o mostres de tercers.
+La música i la partitura es distribueixen amb CC0 1.0 Universal.
+https://creativecommons.org/publicdomain/zero/1.0/
+El generador utilitza NumPy i FFmpeg per a la síntesi i codificació; les seves llicències continuen aplicant-se a les eines.
+
+Les dotze peces addicionals de Kevin MacLeod no estan sota aquesta dedicació CC0.
+Es distribueixen sota CC BY 4.0 amb atribució: vegeu CREDITS.txt en aquest directori.

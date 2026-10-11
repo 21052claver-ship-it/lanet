@@ -1,0 +1,8 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "lanet",
+  "account_id": "bae727f7e92ad7610919d21b6409ade1",
+  "main": "worker/legacy-entry.js",
+  "compatibility_date": "2026-10-08",
+  "observability": { "enabled": true, "logs": { "invocation_logs": false } },
+}

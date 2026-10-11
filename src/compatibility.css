@@ -1,0 +1,42 @@
+.select-native {
+  position: relative;
+}
+.select-native-input {
+  appearance: none;
+  -webkit-appearance: none;
+  display: block;
+  width: 100%;
+  padding-left: 44px;
+  padding-right: 32px;
+  cursor: pointer;
+}
+.select-native-icon,
+.select-native-caret {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.select-native-icon {
+  left: 12px;
+}
+.select-native-caret {
+  right: 12px;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+.welcome-page {
+  min-height: 100dvh;
+}
+.dialog {
+  max-height: calc(100dvh - 32px);
+}
+@media (max-width: 760px) {
+  .app-shell input:not([type='checkbox']):not([type='radio']),
+  .app-shell textarea,
+  .app-shell select {
+    font-size: 16px;
+  }
+}

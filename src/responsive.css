@@ -1,0 +1,855 @@
+/* Responsive behavior is shared through data-compact, including phones in landscape. */
+.app-shell .workspace,
+.app-shell .main-content,
+.app-shell .page-title > div,
+.app-shell .search-field,
+.app-shell .search-field input,
+.app-shell .note-body,
+.app-shell .plus-body {
+  min-width: 0;
+}
+.app-shell .title-actions {
+  flex-wrap: wrap;
+}
+.app-shell .app-footer {
+  flex-wrap: wrap;
+}
+.app-shell .app-footer > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.app-shell[data-density] .topbar {
+  height: auto;
+  min-height: 72px;
+  flex-wrap: wrap;
+  row-gap: 8px;
+  padding-block: 6px;
+}
+.app-shell .topbar-actions {
+  min-width: 0;
+  max-width: 100%;
+  flex-wrap: wrap;
+  row-gap: 6px;
+}
+.app-shell .profile-button,
+.app-shell .profile-button > span:not(.avatar) {
+  min-width: 0;
+}
+.app-shell .profile-button .avatar {
+  flex-shrink: 0;
+}
+.app-shell .profile-button strong {
+  display: block;
+  max-width: 190px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.app-shell .card-title-button,
+.app-shell .selected-event-title,
+.dialog-heading > h2 {
+  overflow-wrap: anywhere;
+}
+.app-shell .tabs.timetable-days,
+.month-day-agenda,
+.month-event-dot,
+.day-break-label {
+  display: none;
+}
+
+/* A tablet keeps the navigation rail while giving the page its usable width back. */
+@media (min-width: 761px) and (max-width: 1100px) {
+  .app-shell[data-compact='false'] .sidebar {
+    width: 88px;
+    padding-inline: 9px;
+    overflow-y: auto;
+  }
+  .app-shell[data-compact='false'] .workspace {
+    margin-left: 88px;
+    width: calc(100% - 88px);
+  }
+  .app-shell[data-compact='false'] .sidebar .brand,
+  .app-shell[data-compact='false'] .course-label,
+  .app-shell[data-compact='false'] .collapse-toggle,
+  .app-shell[data-compact='false'] .nav-item > span:not(.nav-art) {
+    display: none;
+  }
+  .app-shell[data-compact='false'] .compact-brand {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin: 4px auto 0;
+    border-radius: 12px;
+  }
+  .app-shell[data-compact='false'] .compact-brand img {
+    display: block;
+    width: 44px;
+    height: 44px;
+  }
+  .app-shell[data-compact='false'] .sidebar nav {
+    margin-top: 24px;
+    gap: 6px;
+  }
+  .app-shell[data-compact='false'] .nav-item {
+    justify-content: center;
+    padding-inline: 0;
+    gap: 0;
+  }
+  .app-shell[data-compact='false'] .nav-art {
+    margin: 0;
+  }
+  .app-shell[data-compact='false'] .sidebar-bottom {
+    padding-top: 12px;
+    margin-top: 12px;
+  }
+  .app-shell[data-compact='false'] .topbar,
+  .app-shell[data-compact='false'][data-density] .topbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 76px;
+    padding-inline: 20px;
+  }
+  .app-shell[data-compact='false'] .topbar-context {
+    display: none;
+  }
+  .app-shell[data-compact='false'] .topbar .global-board {
+    width: 256px;
+    flex: 0 0 256px;
+  }
+}
+
+/* Mobile header scrolls with the page; the bottom navigation remains available. */
+.app-shell[data-compact='true'] .workspace {
+  width: 100%;
+  margin-left: 0;
+  padding-bottom: calc(76px + env(safe-area-inset-bottom));
+}
+.app-shell[data-compact='true'] .topbar,
+.app-shell[data-compact='true'][data-density] .topbar {
+  position: relative;
+  top: auto;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 6px 8px;
+  height: auto;
+  min-height: 0;
+  padding: 8px max(12px, env(safe-area-inset-right)) 8px max(12px, env(safe-area-inset-left));
+}
+.app-shell[data-compact='true'] .topbar-context {
+  display: flex;
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+}
+.app-shell[data-compact='true'] .mobile-brand {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 12px;
+}
+.app-shell[data-compact='true'] .mobile-brand img {
+  display: block;
+}
+.app-shell[data-compact='true'] .topbar-context > .menu-button,
+.app-shell[data-compact='true'] .workspace-course,
+.app-shell[data-compact='true'] .topbar .profile-button > span:not(.avatar),
+.app-shell[data-compact='true'] .topbar .profile-button > svg {
+  display: none;
+}
+.app-shell[data-compact='true'] .topbar-actions {
+  grid-column: 2;
+  grid-row: 1;
+  justify-content: flex-end;
+  min-width: 0;
+  gap: 4px;
+}
+.app-shell[data-compact='true'] .topbar .global-board {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  width: min(100%, 256px);
+  justify-self: center;
+}
+.app-shell[data-compact='true'] .topbar .audio-pill,
+.app-shell[data-compact='true'] .topbar .timer-pill,
+.app-shell[data-compact='true'] .topbar-actions > .icon-button,
+.app-shell[data-compact='true'] .topbar .profile-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 44px;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+}
+.app-shell[data-compact='true'] .timer-pill {
+  font-size: 12px;
+}
+.app-shell[data-compact='true'] .timer-pill .status-dot {
+  display: none;
+}
+.app-shell[data-compact='true'] .cake-balance {
+  flex: 0 0 76px;
+  width: 76px;
+  min-width: 0;
+  gap: 4px;
+  padding: 0 6px;
+}
+.app-shell[data-compact='true'] .cake-balance strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.app-shell[data-compact='true'] .sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 40;
+  width: min(300px, calc(100% - 48px));
+  height: 100dvh;
+  max-height: 100dvh;
+  padding: max(18px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom));
+  transform: translateX(-105%);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: #fffdfb;
+  box-shadow: 10px 0 40px #3c2d2020;
+}
+.app-shell[data-compact='true'] .sidebar.is-open {
+  transform: translateX(0);
+}
+.app-shell[data-compact='true'] .sidebar-close {
+  display: inline-flex;
+  position: absolute;
+  top: 20px;
+  right: 12px;
+}
+.app-shell[data-compact='true'] .collapse-toggle,
+.app-shell[data-compact='true'] .compact-brand {
+  display: none;
+}
+.app-shell[data-compact='true'] .mobile-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 39;
+  background: #382a2055;
+}
+.app-shell[data-compact='true'] .bottom-nav {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  position: fixed;
+  inset: auto 0 0;
+  z-index: var(--layer-nav);
+  padding: 5px max(6px, env(safe-area-inset-right)) calc(5px + env(safe-area-inset-bottom))
+    max(6px, env(safe-area-inset-left));
+  background: #fffcf8f5;
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--line);
+}
+.app-shell[data-compact='true'] .bottom-nav button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 54px;
+  gap: 3px;
+  color: #8a7662;
+  border-radius: 13px;
+  font-size: 12px;
+}
+.app-shell[data-compact='true'] .bottom-nav button.active {
+  color: #78512f;
+  background: #f0e5d6;
+  font-weight: 800;
+}
+.app-shell[data-compact='true'][data-density] .main-content {
+  padding: 20px max(12px, env(safe-area-inset-right)) 28px max(12px, env(safe-area-inset-left));
+}
+.app-shell[data-compact='true'][data-density] .page-title {
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.app-shell[data-compact='true'][data-density] .page-heading h1 {
+  font-size: clamp(26px, 6.8vw, 30px);
+  line-height: 1.2;
+}
+.app-shell[data-compact='true'] .page-title > div {
+  max-width: 100%;
+}
+.app-shell[data-compact='true'] .title-actions:empty {
+  display: none;
+}
+.app-shell[data-compact='true'] .title-actions {
+  gap: 8px;
+}
+.app-shell[data-compact='true'] .resource-filters,
+.app-shell[data-compact='true'] .resource-filters.notes-filters {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.app-shell[data-compact='true'] .resource-filters > .search-field,
+.app-shell[data-compact='true'] .resource-filters > .subject-filter-content,
+.app-shell[data-compact='true'] .resource-filters:not(.notes-filters) > .resource-subjects-trigger {
+  grid-column: 1 / -1;
+}
+.app-shell[data-compact='true'] .resource-subjects-trigger,
+.app-shell[data-compact='true'] .resource-filters > .select-control {
+  min-width: 0;
+  width: 100%;
+}
+.app-shell[data-compact='true'] .resource-subjects-trigger {
+  justify-content: center;
+  padding-inline: 8px;
+  gap: 6px;
+}
+.app-shell[data-compact='true'] .notes-grid,
+.app-shell[data-compact='true'] .pluses-grid,
+.app-shell[data-compact='true'] .study-layout,
+.app-shell[data-compact='true'] .bakery-layout,
+.app-shell[data-compact='true'] .schedule-layout,
+.app-shell[data-compact='true'] .community-columns {
+  grid-template-columns: minmax(0, 1fr);
+}
+.app-shell[data-compact='true'] .focus-panel,
+.app-shell[data-compact='true'] .sound-panel {
+  padding: 18px;
+}
+.app-shell[data-compact='true'] .timer-face {
+  width: min(230px, 100%);
+  height: auto;
+  aspect-ratio: 1;
+}
+.app-shell[data-compact='true'] .timer-actions {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.app-shell[data-compact='true'] .ambient-controls > .icon-button {
+  width: 44px;
+  min-width: 44px;
+  flex-basis: 44px;
+}
+.app-shell[data-compact='true'] .bakery-aside {
+  display: flex;
+  flex-direction: column;
+}
+
+/* One day at a time on phones, while retaining the complete week on larger screens. */
+.app-shell[data-compact='true'] .calendar-navigation-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 44px;
+  gap: 8px;
+  width: 100%;
+}
+.app-shell[data-compact='true'] .date-navigation {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  gap: 4px;
+  min-width: 0;
+}
+.app-shell[data-compact='true'] .date-navigation strong {
+  min-width: 0;
+  width: auto;
+  font-size: 14px;
+  text-align: center;
+}
+.app-shell[data-compact='true'] .date-navigation .icon-button {
+  width: 44px;
+  height: 44px;
+}
+.app-shell[data-compact='true'] .date-navigation .text-button {
+  grid-column: 1 / -1;
+  justify-self: center;
+  min-height: 36px;
+  padding: 6px 16px;
+}
+.app-shell[data-compact='true'] .calendar-navigation-row > .section-options {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+}
+.app-shell[data-compact='true'] .calendar-navigation-row .section-options > summary {
+  width: 44px;
+  padding: 8px;
+}
+.app-shell[data-compact='true'] .calendar-navigation-row .section-options > summary > span {
+  display: none;
+}
+.app-shell[data-compact='true'] .calendar-options {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+.app-shell[data-compact='true'] .timetable-days {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  width: auto;
+  min-width: 0;
+  gap: 4px;
+  margin: 12px;
+}
+.app-shell[data-compact='true'] .timetable-days > button {
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 2px;
+  font-size: 13px;
+}
+.app-shell[data-compact='true'] .timeline-mode {
+  grid-template-columns: 48px minmax(0, 1fr);
+  min-width: 0;
+  width: 100%;
+}
+.app-shell[data-compact='true'] .timeline-mode > [data-current='false'] {
+  display: none;
+}
+.app-shell[data-compact='true'] .timeline-mode .week-heading {
+  height: 48px;
+  flex-direction: row;
+  justify-content: center;
+  gap: 8px;
+}
+.app-shell[data-compact='true'] .timeline-axis,
+.app-shell[data-compact='true'] .timeline-day {
+  height: calc(var(--timeline-minutes) * 1.15px);
+  min-height: 440px;
+}
+.app-shell[data-compact='true'] .timeline-axis > span {
+  font-size: 12px;
+}
+.app-shell[data-compact='true'] .timeline-class {
+  padding: 8px 12px;
+  align-items: flex-start;
+  gap: 4px;
+}
+.app-shell[data-compact='true'] .timeline-class strong {
+  font-size: 15px;
+}
+.app-shell[data-compact='true'] .timeline-class small {
+  display: block;
+  font-size: 12px;
+}
+.app-shell[data-compact='true'] .day-break-label {
+  display: inline;
+}
+.app-shell[data-compact='true'] .month-grid {
+  min-width: 0;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+.app-shell[data-compact='true'] .month-cell {
+  padding: 2px;
+  min-width: 0;
+  min-height: 50px;
+}
+.app-shell[data-compact='true'] .month-cell > .event-card,
+.app-shell[data-compact='true'] .month-cell > .class-count {
+  display: none;
+}
+.app-shell[data-compact='true'] .month-cell .day-number {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  height: 44px;
+  padding: 2px;
+}
+.app-shell[data-compact='true'] .day-number[aria-pressed='true'] {
+  background: #ffdcc4;
+  color: #493324;
+  box-shadow: inset 0 0 0 1px #d7a279;
+}
+.app-shell[data-compact='true'] .month-event-dot {
+  position: absolute;
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #aa6840;
+  bottom: 3px;
+  left: calc(50% - 2.5px);
+}
+.app-shell[data-compact='true'] .month-day-agenda {
+  display: block;
+  padding: 16px 12px;
+  border-top: 1px solid var(--line);
+}
+.app-shell[data-compact='true'] .month-day-agenda > h3 {
+  font-size: 15px;
+  margin: 0 0 12px;
+  text-transform: capitalize;
+}
+.app-shell[data-compact='true'] .agenda-filters {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.app-shell[data-compact='true'] .agenda-filters > label {
+  grid-column: 1 / -1;
+}
+
+/* The same grade inputs become subject cards: no duplicated edits or hidden second form. */
+.app-shell .summary-view[data-cards='true'] {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table colgroup,
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table .row-index {
+  display: none;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table thead {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table tbody {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 12px;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table tbody tr {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table tbody td,
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table tbody th {
+  display: block;
+  position: static;
+  width: auto;
+  min-width: 0;
+  height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table tbody .row-index {
+  display: none;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table tbody .frozen {
+  grid-column: 1 / -1;
+  left: auto;
+  padding: 0 0 8px;
+  border-bottom: 1px solid var(--line);
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table .frozen > button {
+  min-height: 44px;
+  gap: 8px;
+  font-size: 15px;
+  white-space: normal;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table .frozen > button > span {
+  width: 24px;
+  height: 24px;
+  flex-basis: 24px;
+  border-radius: 8px;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table .frozen > button > span > svg {
+  display: block;
+  width: 17px;
+  height: 17px;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table td[data-label]::before {
+  content: attr(data-label);
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table .grade-cell-control {
+  min-width: 0;
+  padding: 0;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table .grade-input {
+  min-width: 0;
+  min-height: 44px;
+  font-size: 16px;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table .grade-mean {
+  grid-column: 1 / 3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  text-align: left;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table .evaluated-cell {
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table .grade-mean::before {
+  margin: 0;
+}
+.app-shell[data-compact='true'] .grades-toolbar {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.app-shell[data-compact='true'] .grades-toolbar .grade-privacy-toggle,
+.app-shell[data-compact='true'] .grades-toolbar > .select-control {
+  flex: 1 1 140px;
+  min-width: 0;
+}
+.app-shell[data-compact='true'] .grades-toolbar .grades-add {
+  flex: 1 1 auto;
+  margin-left: 0;
+}
+.app-shell[data-compact='true'] .grades-toolbar > .select-control .select-glyph {
+  display: none;
+}
+.app-shell[data-compact='true'] .grades-toolbar > .select-control .select-trigger {
+  padding: 10px 12px;
+  gap: 8px;
+}
+.app-shell[data-compact='true'] .grades-toolbar > .select-control .select-value {
+  white-space: nowrap;
+}
+.dialog .schedule-event-detail {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.dialog .schedule-event-detail .selection-heading {
+  display: none;
+}
+
+/* Dialogs follow the visible viewport when a virtual keyboard reduces available height. */
+.dialog {
+  top: calc(
+    var(--dialog-viewport-top, 0px) + min(var(--dialog-viewport-height, 100dvh), 100dvh) / 2
+  );
+  max-height: calc(min(var(--dialog-viewport-height, 100dvh), 100dvh) - 24px);
+  overscroll-behavior: contain;
+  scroll-padding-block: 72px 24px;
+}
+.dialog-heading {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  background: var(--panel);
+  padding-block: 4px;
+  box-shadow: 0 -24px 0 var(--panel);
+}
+.dialog-heading > h2 {
+  min-width: 0;
+}
+.dialog-heading > .icon-button {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+}
+@media (max-width: 480px), (max-height: 500px) {
+  .dialog {
+    padding: 16px;
+    max-width: calc(100vw - 24px);
+    border-radius: 18px;
+  }
+  .dialog-heading {
+    margin-bottom: 14px;
+  }
+  .dialog-heading > h2 {
+    font-size: 21px;
+  }
+  .dialog input:not([type='checkbox']):not([type='radio']),
+  .dialog textarea,
+  .dialog select {
+    font-size: 16px;
+  }
+  .dialog .form-footer {
+    gap: 8px;
+  }
+  .dialog .form-footer > .button {
+    flex: 1 1 110px;
+    min-width: 0;
+    min-height: 44px;
+    white-space: normal;
+  }
+}
+@media (max-width: 360px) {
+  .app-shell[data-compact='true'] .topbar {
+    column-gap: 4px;
+  }
+  .app-shell[data-compact='true'] .topbar-actions {
+    gap: 2px;
+  }
+  .app-shell[data-compact='true'] .cake-balance {
+    flex-basis: 56px;
+    width: 56px;
+    min-width: 56px;
+    padding: 0 4px;
+    gap: 2px;
+  }
+  .app-shell[data-compact='true'] .cake-balance strong {
+    font-size: 14px;
+  }
+  .app-shell[data-compact='true'] .cake-balance .reference-art {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  .app-shell[data-compact='true'] .resource-filters.notes-filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-height: 500px) and (pointer: coarse) {
+  .app-shell[data-compact='true'] .bottom-nav button {
+    flex-direction: row;
+    min-height: 44px;
+    gap: 6px;
+  }
+  .app-shell[data-compact='true'] .bottom-nav .reference-art {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  .app-shell[data-compact='true'] .workspace {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+}
+@media (max-width: 360px) {
+  .app-shell[data-compact='true'] .bottom-nav button {
+    padding-inline: 2px;
+    font-size: 11px;
+  }
+}
+@media (min-width: 640px) and (max-height: 500px) and (pointer: coarse) {
+  .app-shell[data-compact='true'] .topbar {
+    grid-template-columns: 44px minmax(0, 1fr) auto;
+  }
+  .app-shell[data-compact='true'] .topbar .global-board {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .app-shell[data-compact='true'] .topbar-actions {
+    grid-column: 3;
+  }
+}
+
+/* Mobile destinations unfold above the persistent bottom navigation. */
+.mobile-more-panel {
+  display: none;
+}
+.app-shell[data-compact='true'] .mobile-navigation {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+}
+.app-shell[data-compact='true'] .mobile-navigation > * {
+  pointer-events: auto;
+}
+.app-shell[data-compact='true'] .mobile-more-panel {
+  display: block;
+  position: fixed;
+  bottom: calc(72px + env(safe-area-inset-bottom));
+  left: max(10px, env(safe-area-inset-left));
+  right: max(10px, env(safe-area-inset-right));
+  max-width: 480px;
+  margin-inline: auto;
+  max-height: calc(100dvh - 92px - env(safe-area-inset-bottom) - env(safe-area-inset-top));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 12px;
+  border: 1px solid #e8dfd4;
+  border-radius: 23px;
+  background: #fffdfb;
+  box-shadow: 0 12px 50px #382a2029;
+  animation: mobile-more-enter 180ms ease-out;
+}
+.mobile-more-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2px 8px 8px;
+}
+.mobile-more-heading h2 {
+  margin: 0;
+  font-size: 16px;
+}
+.mobile-more-heading .icon-button {
+  width: 44px;
+  height: 44px;
+}
+.mobile-more-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+.mobile-more-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 88px;
+  padding: 9px 4px;
+  border-radius: 15px;
+  color: #665747;
+  font-size: 12px;
+  font-weight: 700;
+}
+.mobile-more-item:hover,
+.mobile-more-item:focus-visible {
+  background: #f7f0e7;
+}
+.mobile-more-item.active {
+  background: #f0e5d6;
+  color: #78512f;
+  box-shadow: inset 0 0 0 1px #dbc7ad;
+}
+.mobile-more-account {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  border-top: 1px solid #eee7de;
+  margin-top: 10px;
+  padding-top: 8px;
+}
+.mobile-more-account button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  color: #665747;
+  text-align: left;
+}
+.mobile-more-account button:hover,
+.mobile-more-account button:focus-visible {
+  background: #f7f0e7;
+}
+.mobile-more-account button svg {
+  flex-shrink: 0;
+}
+@keyframes mobile-more-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-shell[data-compact='true'] .mobile-more-panel {
+    animation: none;
+  }
+}

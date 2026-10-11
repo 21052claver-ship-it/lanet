@@ -1,0 +1,130 @@
+La Net · crèdits musicals
+
+Peces originals de La Net: Vora la finestra, Biblioteca tranquil·la, Cafè de tarda, Llums de nit, Jardí d’idees.
+CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
+Partitures: shared/lofi-tracks.json; generador: scripts/render-lofi.py.
+
+Llicència del catàleg oficial: https://incompetech.com/music/royalty-free/licenses/
+Comprovada el 2026-10-11.
+
+Atlantean Twilight — Kevin MacLeod
+Composició: Kevin MacLeod
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100322
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Evening Fall (Piano) — Kevin MacLeod
+Composició: Kevin MacLeod
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100235
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Local Forecast — Kevin MacLeod
+Composició: Kevin MacLeod
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1300010
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+George Street Shuffle — Kevin MacLeod
+Composició: Kevin MacLeod
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1300035
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Easy Lemon — Kevin MacLeod
+Composició: Kevin MacLeod
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1200076
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Carefree — Kevin MacLeod
+Composició: Kevin MacLeod
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400037
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Water Prelude — Kevin MacLeod
+Composició: Kevin MacLeod
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100017
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Air Prelude — Kevin MacLeod
+Composició: Kevin MacLeod
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100337
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Wallpaper — Kevin MacLeod
+Composició: Kevin MacLeod
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100843
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Cipher — Kevin MacLeod
+Composició: Kevin MacLeod
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100844
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Gymnopedie No. 1 — Kevin MacLeod
+Composició: Erik Satie
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100787
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Gymnopedie No. 3 — Kevin MacLeod
+Composició: Erik Satie
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100785
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Concentration — Kevin MacLeod
+Composició: Kevin MacLeod
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1700022
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Fluidscape — Kevin MacLeod
+Composició: Kevin MacLeod
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100393
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Tranquility — Kevin MacLeod
+Composició: Kevin MacLeod
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100581
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Tranquility Base — Kevin MacLeod
+Composició: Kevin MacLeod
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100614
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Ambiment — Kevin MacLeod
+Composició: Kevin MacLeod
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100630
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Floating Cities — Kevin MacLeod
+Composició: Kevin MacLeod
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1600018
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Dream Culture — Kevin MacLeod
+Composició: Kevin MacLeod
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1300046
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Jellyfish in Space — Kevin MacLeod
+Composició: Kevin MacLeod
+Font: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1500030
+Llicència: CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+Canvis: Normalització de volum i conversió a Ogg/Vorbis i MP3. Peça completa.
+
+Formats: Ogg/Vorbis i MP3 per a compatibilitat amb Safari/iOS. Peces completes; volum normalitzat.

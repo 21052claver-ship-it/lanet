@@ -1,0 +1,74 @@
+.grade-activity-title {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  line-height: 1.3;
+  font-size: 11px;
+  color: var(--muted);
+}
+.app-shell .grade-col-subject {
+  width: 180px;
+}
+.app-shell .spreadsheet[data-cards='false'] .grade-summary-table .row-index {
+  width: 32px;
+  min-width: 32px;
+}
+.app-shell .spreadsheet[data-cards='false'] .grade-summary-table .frozen {
+  left: 32px;
+  width: 180px;
+  min-width: 180px;
+}
+.app-shell .grade-col-mean {
+  width: 84px;
+}
+.app-shell .grade-col-evaluated {
+  width: 80px;
+}
+.app-shell .grade-extra-cell .grade-cell-weight {
+  white-space: normal;
+  line-height: 1.4;
+  font-size: 11px;
+}
+.grade-activity-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 44px;
+  width: 100%;
+  padding: 6px 4px;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  color: var(--muted);
+  background: transparent;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.grade-activity-add:hover:not(:disabled) {
+  border-color: #bd9169;
+  color: #805c3d;
+  background: #fbf4e9;
+}
+.grade-activity-add:focus-visible {
+  outline: 3px solid #bd9169;
+  outline-offset: 2px;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table tbody tr {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table tbody td {
+  grid-column: span 2;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table tbody .grade-extra-cell {
+  grid-column: span 3;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table tbody .grade-mean {
+  grid-column: span 4;
+}
+.app-shell .spreadsheet[data-cards='true'] .grade-summary-table tbody .evaluated-cell {
+  grid-column: span 2;
+}
+.extra-activity-editor {
+  margin-top: 20px;
+}

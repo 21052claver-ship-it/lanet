@@ -1,0 +1,4 @@
+/* Transparent clay icons keep their cream highlights on every app surface. */
+.reference-art.has-alpha {
+  mix-blend-mode: normal;
+}

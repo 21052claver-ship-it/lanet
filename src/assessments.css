@@ -1,0 +1,118 @@
+.assessment-editor {
+  min-width: 0;
+  margin: 18px 0;
+  padding: 0;
+  border: 0;
+}
+.assessment-group-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.assessment-hint {
+  margin: 18px 0 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.assessment-optional {
+  margin: 10px 0;
+  border: 1px solid var(--line, #e9e3db);
+  border-radius: 12px;
+  background: #fffdf9;
+}
+.assessment-optional > summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 12px 14px;
+  cursor: pointer;
+  list-style: none;
+}
+.assessment-optional > summary::before {
+  content: '›';
+  width: 12px;
+  color: var(--muted);
+  font-size: 20px;
+  transform-origin: center;
+}
+.assessment-optional[open] > summary::before {
+  transform: rotate(90deg);
+}
+.assessment-optional > summary::-webkit-details-marker {
+  display: none;
+}
+.assessment-optional > summary > span {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 12px;
+}
+.assessment-optional > .button {
+  margin: 10px 14px 14px;
+}
+.assessment-optional > summary:focus-visible {
+  outline: 3px solid #ce9665;
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+.assessment-table input {
+  min-width: 0;
+}
+.assessment-table td:first-child {
+  min-width: 150px;
+}
+.assessment-table td:nth-child(2) {
+  min-width: 125px;
+}
+.assessment-table td:last-child {
+  width: 42px;
+}
+.subject-assessment-sheet {
+  min-width: 0;
+}
+.subject-assessment-sheet > .assessment-optional {
+  margin: 12px;
+}
+.subject-assessment-sheet .subject-sheet {
+  min-width: 100%;
+}
+.subject-grade-total {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px;
+  border-top: 1px solid var(--line, #e9e3db);
+  background: #faf7f2;
+}
+.subject-grade-total > small {
+  margin-left: auto;
+  color: var(--muted);
+}
+.assessment-template-note {
+  display: block;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+@media (max-width: 600px) {
+  .assessment-optional > summary {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+  }
+  .assessment-optional > summary > span {
+    margin-left: 22px;
+    width: calc(100% - 22px);
+  }
+  .assessment-table td:first-child,
+  .assessment-table td:nth-child(2) {
+    min-width: 0;
+  }
+  .subject-grade-total > small {
+    width: 100%;
+    margin-left: 0;
+  }
+}

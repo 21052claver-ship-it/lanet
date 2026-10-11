@@ -1,0 +1,280 @@
+/* Both dioramas float on the page; preserve their full artwork and coordinates. */
+.app-shell .bakery-scene {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  overflow: visible;
+  min-height: 0;
+}
+.app-shell .bakery-scene .bakery-picture-wrap {
+  width: 100%;
+  height: auto;
+  max-height: none;
+  aspect-ratio: auto;
+  background: transparent;
+  overflow: visible;
+}
+.bakery-exterior-stage {
+  position: relative;
+  width: min(100%, 660px, 78vh);
+  aspect-ratio: 3 / 2;
+  margin-inline: auto;
+}
+.bakery-exterior-stage .bakery-exterior-full {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: normal;
+}
+.bakery-picture-wrap:has(.door-hotspot):hover .bakery-exterior-full {
+  transform: none;
+}
+.app-shell .bakery-scene:not(.inside) .scene-actions {
+  min-height: 88px;
+  padding: 14px 18px 20px;
+  background: transparent;
+}
+.bakery-scene {
+  scroll-margin-top: 88px;
+}
+.entering .bakery-exterior-full {
+  animation-duration: var(--bakery-entry);
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+.inside .baker-stage {
+  animation-duration: var(--bakery-reveal);
+}
+.bakery-scene.inside .scene-caption {
+  position: relative;
+  inset: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  background: transparent;
+  text-align: left;
+  pointer-events: auto;
+}
+.bakery-scene.inside .scene-caption h2 {
+  margin: 0;
+  font-size: 18px;
+}
+.bakery-scene.inside .scene-caption .button {
+  min-height: 44px;
+  flex: 0 0 auto;
+}
+.bakery-layout .inside .bakery-picture-wrap {
+  margin: 0;
+}
+
+/* Still baker, clean counter; only heat, cake rise and one reveal move. */
+.baker-scene-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  pointer-events: none;
+}
+.oven-window-heat {
+  opacity: 0;
+  transition: opacity var(--bakery-heat) ease;
+}
+.is-warming .oven-window-heat {
+  opacity: 0.35;
+}
+.is-cooking .oven-window-heat {
+  opacity: 0.85;
+  animation: bakery-heat 4000ms ease-in-out infinite;
+}
+.phase-resting .oven-window-heat {
+  opacity: 0.3;
+}
+.oven-food {
+  opacity: 0;
+  transition: opacity var(--bakery-fade) ease;
+}
+.oven-food.is-visible {
+  opacity: 1;
+}
+.oven-cake-rise {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  transform: scaleY(0.58);
+}
+.is-cooking .oven-cake-rise {
+  animation: bakery-rise var(--cooking-duration) ease-in-out forwards;
+}
+.is-cooked .oven-cake-rise {
+  transform: scaleY(1);
+}
+.bakery-counter-cake {
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity var(--bakery-present) ease,
+    transform var(--bakery-present) cubic-bezier(0.2, 0.6, 0.3, 1);
+}
+.bakery-counter-cake.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.baker-interaction {
+  position: absolute;
+  left: 61%;
+  top: 55%;
+  width: min(195px, 36%);
+  z-index: 5;
+  animation: bakery-action-appear 400ms ease-out both;
+}
+.baker-interaction::before {
+  content: '';
+  position: absolute;
+  right: calc(100% - 1px);
+  top: 15px;
+  border-width: 7px 8px 7px 0;
+  border-style: solid;
+  border-color: transparent #ffe3ce transparent transparent;
+}
+.baker-interaction .button {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 12px;
+  gap: 7px;
+  font-size: 14px;
+  line-height: 1.25;
+  white-space: normal;
+  border-radius: 14px;
+  box-shadow: 0 3px 10px #69482d1c;
+}
+.baker-interaction .button > svg {
+  flex-shrink: 0;
+}
+.baker-claimed {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 10px;
+  color: #756344;
+  background: #fffcf2ed;
+  border: 1px solid #d8c7aa;
+  border-radius: 12px;
+  font-size: 12px;
+  line-height: 1.3;
+}
+.baker-stage .baker-scene-status {
+  left: 8%;
+  right: 8%;
+  bottom: 9px;
+  min-height: 32px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: clamp(10px, 1.4vw, 12px);
+  line-height: 1.35;
+  pointer-events: none;
+}
+.baker-scene-status.is-preparing::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 100%;
+  background: #cf9d68;
+  transform-origin: left;
+  animation: bakery-preparation var(--preparation-duration) linear both;
+}
+.cake-flight {
+  animation-duration: 1650ms;
+}
+@keyframes bakery-heat {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+@keyframes bakery-rise {
+  from {
+    transform: scaleY(0.58);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes bakery-action-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes bakery-preparation {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@media (max-width: 520px) {
+  .bakery-scene.inside .scene-caption {
+    padding: 8px 12px;
+  }
+  .bakery-scene.inside .scene-caption h2 {
+    font-size: 16px;
+  }
+  .baker-interaction {
+    left: 59%;
+    top: 54%;
+    width: 38%;
+  }
+  .baker-interaction .button {
+    min-height: 48px;
+    padding: 8px;
+    font-size: 12px;
+    gap: 5px;
+  }
+  .baker-claimed {
+    font-size: 10px;
+    padding: 8px;
+  }
+  .baker-stage .baker-scene-status {
+    left: 5%;
+    right: 5%;
+    bottom: 7px;
+    padding: 6px 8px;
+  }
+}
+@media (max-width: 360px) {
+  .baker-interaction {
+    top: 52%;
+  }
+  .baker-interaction .button {
+    font-size: 11.5px;
+  }
+  .baker-interaction .button > svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+.baker-stage.is-paused *,
+.baker-stage.is-paused *::after {
+  animation-play-state: paused;
+}
+.baker-stage.motion-off *,
+.baker-stage.motion-off *::after {
+  animation: none !important;
+  transition: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .baker-stage *,
+  .baker-stage *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

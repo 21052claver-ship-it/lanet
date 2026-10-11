@@ -1,0 +1,14 @@
+.image-unavailable {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 5px;
+  min-height: 52px;
+  max-width: 100%;
+  padding: 8px;
+  color: var(--text-muted, #716b67);
+  background: var(--surface-soft, #f5f1eb);
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.3;
+}

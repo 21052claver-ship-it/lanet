@@ -1,0 +1,1114 @@
+/* Current UI hierarchy. Shared rules first, section rules below, responsive last. */
+.app-shell {
+  font-size: 15px;
+  color: var(--ink);
+}
+.app-shell .panel {
+  border-radius: 18px;
+  box-shadow: none;
+}
+.app-shell .button {
+  min-height: 44px;
+  padding: 10px 15px;
+  font-size: 14px;
+  border-radius: 12px;
+  box-shadow: none;
+}
+.app-shell .button.primary {
+  background: #ffdcc4;
+  border-color: #f0c4a8;
+  color: #493324;
+  box-shadow: none;
+}
+.app-shell .button.primary:hover:not(:disabled) {
+  background: #ffd0b0;
+}
+.app-shell .select-trigger {
+  font-size: 14px;
+  box-shadow: none;
+}
+.app-shell[data-density] .topbar {
+  height: 72px;
+  padding-inline: 26px;
+  background: #faf7f2f5;
+  border-bottom: 1px solid var(--line);
+}
+.app-shell .topbar-context {
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
+}
+.app-shell .workspace-course {
+  font-size: 13px;
+  white-space: nowrap;
+}
+.app-shell .topbar-actions {
+  gap: 12px;
+}
+.app-shell .profile-button {
+  gap: 9px;
+}
+.app-shell .profile-button .avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
+}
+.app-shell .profile-button strong {
+  font-size: 14px;
+  font-weight: 700;
+}
+.app-shell .profile-button > svg {
+  margin-left: 0;
+  width: 16px;
+}
+.app-shell .cake-balance {
+  min-width: 78px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0 9px;
+  border-radius: 12px;
+  background: #fffaf5;
+  border-color: #eadbcb;
+  box-shadow: none;
+}
+.app-shell .cake-balance .reference-art {
+  width: 30px !important;
+  height: 30px !important;
+}
+.app-shell .cake-balance strong {
+  font-size: 18px;
+}
+.app-shell .sidebar {
+  padding-top: 20px;
+}
+.app-shell .brand {
+  width: 160px;
+  height: 56px;
+}
+.app-shell .brand .reference-art {
+  width: 160px;
+  height: 55px;
+}
+.app-shell .collapse-toggle {
+  top: 76px;
+}
+.app-shell[data-density] .sidebar nav {
+  margin-top: 40px;
+  gap: 4px;
+}
+.app-shell[data-density] .nav-item {
+  min-height: 54px;
+  font-size: 16px;
+  gap: 12px;
+}
+.app-shell .nav-item.active {
+  background: #fce7d8;
+  box-shadow: none;
+}
+.app-shell .sidebar-bottom {
+  padding-top: 16px;
+  margin-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.app-shell[data-density] .nav-item.subtle {
+  min-height: 44px;
+  font-size: 13px;
+  margin-top: 4px;
+  gap: 10px;
+}
+.app-shell[data-density] .main-content {
+  padding: 26px 26px 32px;
+  border-radius: 0;
+  background: #fffdfb;
+  box-shadow: none;
+}
+.app-shell[data-density] .page-title {
+  min-height: 0;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+.app-shell[data-density] .page-heading h1 {
+  font-size: 32px;
+  transform: none;
+  letter-spacing: -1.1px;
+}
+.app-shell[data-density] .page-title p {
+  font-size: 14px;
+  margin-top: 4px;
+}
+.app-shell .page-heading {
+  gap: 12px;
+}
+.app-shell .tabs {
+  width: fit-content;
+  max-width: 100%;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  gap: 20px;
+  box-shadow: none;
+}
+.app-shell .tabs button {
+  min-height: 44px;
+  padding: 8px 4px;
+  border-radius: 0;
+  font-size: 14px;
+  color: #726b65;
+  background: transparent;
+  box-shadow: none;
+}
+.app-shell .tabs button.active {
+  color: #493324;
+  background: transparent;
+  box-shadow: inset 0 -2px #b67a53;
+}
+.app-shell .tabs button:hover:not(.active) {
+  background: #f8f3ed;
+}
+.app-shell .resource-toolbar {
+  padding: 0;
+  margin-bottom: 16px;
+  min-height: 44px;
+}
+.app-shell .resource-filters {
+  display: grid;
+  grid-template-columns: minmax(140px, 1fr) auto;
+  align-items: start;
+  gap: 10px;
+  padding: 0;
+  margin-bottom: 16px;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.app-shell .resource-filters.notes-filters {
+  grid-template-columns: minmax(140px, 1fr) 190px auto;
+}
+.app-shell .resource-filters .search-field {
+  width: 100%;
+  min-height: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #fffefd;
+  max-width: none;
+}
+.app-shell .resource-filters .search-field input {
+  height: 42px;
+  min-height: 42px;
+  font-size: 14px;
+}
+.app-shell .resource-filters .select-trigger {
+  gap: 7px;
+  padding: 6px 10px 6px 7px;
+}
+.app-shell .resource-filters .select-glyph {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+}
+.app-shell .resource-filters .select-value {
+  white-space: nowrap;
+}
+.resource-subjects-trigger {
+  white-space: nowrap;
+}
+.resource-subjects-trigger small {
+  color: var(--muted);
+  font-size: inherit;
+}
+.resource-subjects-trigger[aria-expanded='true'] > svg:last-child {
+  transform: rotate(180deg);
+}
+.app-shell .subject-filter-content {
+  grid-column: 1 / -1;
+  padding: 0 18px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #faf7f2;
+}
+.app-shell .results-label {
+  margin: 4px 0 16px;
+  font-size: 13px;
+}
+.app-shell .section-heading h2 {
+  font-size: 22px;
+}
+.app-shell .app-footer {
+  background: transparent;
+  font-size: 12px;
+}
+
+/* Shared secondary actions: one named disclosure, anchored within its toolbar. */
+.app-shell .title-actions .button.primary {
+  min-height: 44px;
+  font-size: 14px;
+  padding: 10px 16px;
+}
+.section-options {
+  position: relative;
+  flex: 0 0 auto;
+  z-index: 8;
+}
+.section-options > summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fffefd;
+  font-size: 14px;
+  cursor: pointer;
+  list-style: none;
+}
+.section-options > summary::-webkit-details-marker {
+  display: none;
+}
+.section-options[open] > summary {
+  background: #f6eee5;
+}
+.section-options-content {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(310px, calc(100vw - 32px));
+  padding: 10px;
+  max-height: min(460px, 60vh);
+  overflow-y: auto;
+  background: #fffefd;
+  border: 1px solid #e7ddd1;
+  border-radius: 14px;
+  box-shadow: 0 10px 32px #49332414;
+}
+.section-options[data-side='top'] > .section-options-content {
+  top: auto;
+  bottom: calc(100% + 8px);
+}
+.app-shell .section-options-content .button {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+  white-space: normal;
+}
+.options-help {
+  margin: 10px 7px 5px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.subject-filter-mode {
+  margin: 18px 0 10px;
+  min-height: 44px;
+}
+.subject-filter-following {
+  font-size: 14px;
+  margin: 0 0 20px;
+  max-width: 60ch;
+}
+
+/* Resources: a single title, a short summary, real media only. */
+.app-shell .notes-grid,
+.app-shell .pluses-grid {
+  gap: 18px;
+}
+.app-shell .note-card {
+  padding: 20px;
+  grid-template-columns: 120px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  gap: 14px;
+}
+.app-shell .note-card.note-text-only {
+  grid-template-columns: minmax(0, 1fr);
+}
+.app-shell .note-body {
+  padding: 0;
+  grid-row: 1;
+  min-width: 0;
+}
+.app-shell .note-card .card-tags {
+  padding-right: 36px;
+}
+.app-shell .note-card .card-title-button {
+  min-height: 44px;
+  margin-top: 8px;
+  max-width: 100%;
+}
+.app-shell .card-title-button h2 {
+  font-size: 19px;
+  line-height: 1.35;
+  letter-spacing: -0.3px;
+}
+.app-shell .note-card .card-description {
+  -webkit-line-clamp: 2;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 6px 0 0;
+}
+.app-shell .subject-chip {
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 7px;
+  padding: 3px 8px;
+}
+.app-shell .note-card .card-meta {
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 14px;
+  font-size: 12px;
+}
+.app-shell .note-card .avatar.tiny {
+  width: 24px;
+  height: 24px;
+  font-size: 9px;
+}
+.app-shell .note-card .note-format {
+  margin: 0 0 0 auto;
+  font-size: 12px;
+  gap: 5px;
+}
+.app-shell .note-format svg {
+  width: 16px;
+  height: 16px;
+}
+.app-shell .note-preview {
+  height: 160px;
+  grid-row: 1;
+  align-self: start;
+}
+.app-shell .note-save {
+  top: 10px;
+  right: 10px;
+}
+.app-shell .note-card .resource-card-footer {
+  gap: 8px;
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+.app-shell .like-button {
+  min-height: 44px;
+  font-size: 12px;
+  padding: 8px;
+  gap: 5px;
+  border-color: transparent;
+  border-radius: 10px;
+  background: transparent;
+}
+.app-shell .like-button.liked {
+  background: #fff0f3;
+}
+.app-shell .note-card .note-price {
+  min-height: 0;
+  padding: 0;
+  font-size: 12px;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+}
+.app-shell .note-open {
+  margin-left: 0;
+  padding-inline: 5px;
+  color: #815736;
+}
+.app-shell .plus-visual {
+  height: 112px;
+}
+.app-shell .plus-visual .activity-art {
+  transform: scale(0.78);
+  transform-origin: center;
+}
+.app-shell .plus-date {
+  width: 58px;
+  height: 62px;
+  padding: 8px;
+  border-radius: 12px;
+}
+.app-shell .plus-date strong {
+  font-size: 24px;
+}
+.app-shell .plus-body {
+  padding: 18px 20px;
+}
+.app-shell .plus-body .card-title-button h2 {
+  font-size: 19px;
+  min-height: 0;
+  height: auto;
+}
+.app-shell .plus-body .card-title-button {
+  min-height: 44px;
+}
+.app-shell .plus-facts {
+  font-size: 13px;
+  gap: 7px;
+  margin-top: 14px;
+}
+.app-shell .plus-bonus {
+  padding: 10px 0 0;
+  margin-top: 14px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  background: transparent;
+}
+.app-shell .plus-bonus > strong {
+  font-size: 22px;
+}
+.app-shell .plus-card .card-meta {
+  font-size: 12px;
+  margin-top: 12px;
+}
+.app-shell .plus-card .avatar.tiny {
+  width: 24px;
+  height: 24px;
+  font-size: 9px;
+}
+.app-shell .plus-footer {
+  padding: 10px 14px;
+  background: transparent;
+}
+.app-shell .plus-footer > .button {
+  min-width: 0;
+  padding-inline: 10px;
+  color: #815736;
+}
+
+/* Grades: writing and privacy first; configuration and tools once each. */
+.app-shell .grades-toolbar {
+  gap: 10px;
+  align-items: center;
+}
+.app-shell .grades-toolbar .button,
+.app-shell .grades-toolbar .select-trigger {
+  min-height: 44px;
+  font-size: 14px;
+}
+.app-shell .grades-toolbar .grades-add {
+  padding-inline: 16px;
+}
+.app-shell .grade-privacy-toggle {
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+.app-shell .grade-privacy-note {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 4px 0 14px;
+  font-size: 12px;
+  gap: 7px;
+  color: #62714f;
+}
+.sheet-selector {
+  width: min(320px, 100%);
+  margin: 0 0 16px;
+}
+.app-shell .spreadsheet .grade-summary-table {
+  min-width: 860px;
+  --grade-index-width: 32px;
+  --grade-subject-width: 200px;
+}
+.app-shell .grade-col-mean {
+  width: 110px;
+}
+.app-shell .grade-col-evaluated {
+  width: 100px;
+}
+.app-shell .spreadsheet th,
+.app-shell .spreadsheet td {
+  height: 68px;
+  padding: 4px 8px;
+  font-size: 15px;
+}
+.app-shell .spreadsheet thead th {
+  height: 44px;
+  font-size: 13px;
+  background: #faf8f5;
+}
+.app-shell .grade-summary-table th.frozen > button {
+  font-size: 15px;
+}
+.app-shell .grade-cell-control {
+  min-width: 60px;
+  padding: 3px 0;
+  gap: 4px;
+}
+.app-shell .grade-cell-control .grade-input {
+  height: 44px;
+  min-height: 44px;
+  font-size: 15px;
+}
+.app-shell .grade-cell-weight {
+  background: transparent;
+  padding: 0;
+  font-weight: 600;
+  color: #7b7167;
+}
+.app-shell .grade-export-confirm {
+  display: grid;
+  padding: 10px;
+  max-width: 100%;
+}
+
+/* Study: quiet phase status and a library opened only when changing tracks. */
+.app-shell .study-layout {
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 24px;
+  align-items: start;
+}
+.app-shell .focus-panel {
+  min-height: 0;
+  padding: 24px;
+}
+.app-shell .focus-heading {
+  gap: 12px;
+}
+.app-shell .focus-heading h2 {
+  font-size: 25px;
+}
+.focus-phase {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  color: #766c63;
+  padding: 0 4px;
+  margin: 18px 0 0;
+}
+.focus-phase > span:first-child {
+  font-weight: 700;
+  color: #815736;
+}
+.app-shell .timer-face {
+  width: 250px;
+  height: 250px;
+  margin: 18px auto;
+}
+.app-shell .timer-ring circle {
+  stroke-width: 10;
+}
+.app-shell .timer-ring .timer-marker {
+  stroke-width: 1;
+}
+.app-shell .timer-number {
+  font-size: 54px;
+}
+.app-shell .timer-face > div > small {
+  font-size: 13px;
+}
+.app-shell .timer-actions {
+  gap: 10px;
+  margin-bottom: 0;
+  flex-wrap: wrap;
+}
+.app-shell .timer-actions .button {
+  min-height: 44px;
+  min-width: 0;
+  font-size: 14px;
+}
+.app-shell .timer-actions .timer-start {
+  min-width: 150px;
+  min-height: 48px;
+  font-size: 16px;
+  border-radius: 14px;
+}
+.focus-settings-summary {
+  font-size: 12px;
+  color: #7b7167;
+  margin: 18px 0 0;
+}
+.app-shell .sound-panel {
+  padding: 22px;
+}
+.app-shell .sound-panel .section-heading h2 {
+  font-size: 20px;
+}
+.app-shell .ambient-player {
+  border: 0;
+  padding: 0;
+  margin: 18px 0;
+  background: transparent;
+}
+.app-shell .ambient-track {
+  gap: 14px;
+}
+.app-shell .lofi-cover {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  box-shadow: inset 0 1px 0 #fff9;
+}
+.app-shell .lofi-cover > svg:first-child {
+  width: 32px;
+  height: 32px;
+}
+.app-shell .ambient-track strong {
+  font-size: 17px;
+}
+.app-shell .ambient-track small {
+  font-size: 12px;
+  margin-top: 4px;
+}
+.app-shell .ambient-controls {
+  margin-top: 20px;
+  gap: 16px;
+}
+.app-shell .ambient-controls .button {
+  min-width: 112px;
+  padding-inline: 10px;
+  flex: 0 1 auto;
+  background: #fffefd;
+  color: #493324;
+  border-color: #e7ddd1;
+}
+.app-shell .volume-control {
+  min-height: 44px;
+}
+.lofi-library {
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+.lofi-library > summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  list-style: none;
+}
+.lofi-library > summary::-webkit-details-marker {
+  display: none;
+}
+.lofi-library > summary > span {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 12px;
+}
+.lofi-library[open] > summary > svg {
+  transform: rotate(180deg);
+}
+.app-shell .lofi-options {
+  margin-top: 8px;
+}
+.app-shell .lofi-options button {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 12px;
+}
+.app-shell .lofi-options button[aria-pressed='true'] {
+  border-color: #dcc6b1;
+  background: #fcf2e9;
+  box-shadow: none;
+}
+.app-shell .study-record {
+  padding: 8px 0;
+  background: transparent;
+  border: 0;
+  margin-top: 14px;
+}
+.app-shell .study-record > summary {
+  font-size: 13px;
+  min-height: 44px;
+  align-content: center;
+}
+
+/* Community and bakery: content and artwork, without nested decorative panels. */
+.app-shell .community-group {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  gap: 8px;
+}
+.app-shell .community-group > svg {
+  display: none;
+}
+.app-shell .community-columns {
+  gap: 28px;
+  margin-top: 24px;
+  align-items: start;
+}
+.app-shell .notice-feed {
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+.app-shell .notice-feed > h2 {
+  font-size: 21px;
+  margin: 0 0 8px;
+}
+.app-shell .announcement {
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  margin: 0;
+  padding: 22px 0 22px 60px;
+  background: transparent;
+}
+.app-shell .announcement-heading > .reference-art {
+  left: 0;
+  top: 24px;
+  width: 44px !important;
+  height: 44px !important;
+}
+.app-shell .announcement-heading h2 {
+  font-size: 18px;
+  line-height: 1.4;
+}
+.app-shell .announcement .rich-text {
+  font-size: 14px;
+  line-height: 1.7;
+  margin-top: 8px;
+}
+.app-shell .announcement .rich-text p {
+  line-height: 1.7;
+}
+.app-shell .announcement .card-meta {
+  font-size: 12px;
+  gap: 6px;
+  margin-top: 12px;
+}
+.app-shell .announcement .notice-scope {
+  margin-left: 0;
+  width: 100%;
+  font-size: 11px;
+}
+.app-shell .proposal-preview {
+  padding: 18px 20px;
+  background: #faf7f3;
+  border-color: transparent;
+}
+.app-shell .proposal-preview .section-heading {
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.app-shell .proposal-preview .section-heading h2 {
+  font-size: 21px;
+}
+.app-shell .proposal-summary {
+  padding: 16px 0;
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid #e9e2d9;
+  border-radius: 0;
+  background: transparent;
+}
+.app-shell .proposal-summary > h3 {
+  font-size: 17px;
+}
+.app-shell .proposal-title {
+  min-height: 44px;
+}
+.app-shell .proposal-preview > .text-button {
+  margin-top: 8px;
+  font-size: 13px;
+}
+.app-shell .proposal-intro {
+  padding: 0;
+  margin: 20px 0;
+  border: 0;
+  background: transparent;
+  gap: 12px;
+}
+.app-shell .proposal-intro p {
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+}
+.app-shell .proposal-intro > span {
+  font-size: 12px;
+  padding: 0;
+  background: transparent;
+}
+.app-shell .proposal-heading h2 {
+  font-size: 19px;
+}
+.app-shell .proposal-content > .rich-text {
+  font-size: 14px;
+  line-height: 1.7;
+}
+.app-shell .team-response {
+  font-size: 13px;
+  background: #faf7f2;
+}
+.app-shell .schedule-aside {
+  gap: 20px;
+}
+.app-shell .schedule-aside h2 {
+  font-size: 20px;
+}
+.app-shell .schedule-notices {
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+  background: transparent;
+}
+.schedule-notices > summary {
+  min-height: 44px;
+  align-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+}
+.schedule-notices > summary > span {
+  font-weight: 400;
+  margin-left: 6px;
+  color: var(--muted);
+}
+.app-shell .calendar-navigation-row {
+  gap: 12px;
+}
+.app-shell .bakery-layout {
+  grid-template-columns: minmax(0, 1fr) 270px;
+  gap: 24px;
+}
+.app-shell .bakery-aside > .panel {
+  padding: 20px;
+}
+.app-shell .bakery-aside h2 {
+  font-size: 20px;
+}
+.app-shell .bakery-wallet > .wallet-amount {
+  gap: 14px;
+  margin: 18px 0;
+}
+.app-shell .wallet-amount > .reference-art {
+  width: 64px;
+  height: 64px;
+}
+.app-shell .wallet-amount > strong {
+  font-size: 40px;
+}
+.app-shell .bakery-wallet > .button {
+  margin-top: 4px;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 8px 0;
+  background: transparent;
+}
+.daily-status-line {
+  font-size: 13px;
+  padding-bottom: 16px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  line-height: 1.6;
+}
+.daily-status-line > small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.quiet-disclosure > summary {
+  min-height: 44px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  align-content: center;
+}
+.app-shell .wallet-preview {
+  padding: 0 2px;
+}
+.app-shell .wallet-preview-item {
+  font-size: 13px;
+}
+.app-shell .bakery-scene:not(.inside) .scene-actions {
+  justify-content: center;
+  padding: 18px;
+}
+.app-shell .bakery-scene:not(.inside) .bakery-picture-wrap {
+  max-height: min(440px, 52vh);
+}
+
+/* Comfortable density keeps the same hierarchy with more breathing room. */
+.app-shell[data-density='comfortable'] .main-content {
+  padding: 32px;
+}
+.app-shell[data-density='comfortable'] .page-heading h1 {
+  font-size: 34px;
+}
+.app-shell[data-density='comfortable'] .page-title {
+  margin-bottom: 28px;
+}
+.app-shell[data-density='comfortable'] .sidebar nav {
+  gap: 8px;
+}
+.app-shell[data-density='comfortable'] .nav-item:not(.subtle) {
+  min-height: 58px;
+}
+.app-shell[data-density='comfortable'] .note-card,
+.app-shell[data-density='comfortable'] .plus-body {
+  padding: 24px;
+}
+.app-shell[data-density='comfortable'] .note-card .card-description {
+  font-size: 15px;
+}
+.app-shell[data-density='comfortable'] .focus-panel {
+  padding: 28px;
+}
+
+@media (min-width: 761px) {
+  .app-shell.sidebar-collapsed .sidebar nav {
+    margin-top: 66px;
+  }
+  .app-shell.sidebar-collapsed .nav-item {
+    gap: 0;
+  }
+}
+@media (max-width: 1200px) {
+  .app-shell .workspace-course {
+    display: none;
+  }
+}
+@media (max-width: 960px) {
+  .app-shell .resource-filters.notes-filters {
+    grid-template-columns: minmax(140px, 1fr) auto;
+  }
+  .app-shell .notes-filters > .search-field {
+    grid-column: 1 / -1;
+  }
+  .app-shell .study-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .app-shell .bakery-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .app-shell .bakery-aside {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 20px;
+  }
+}
+@media (max-width: 760px) {
+  .app-shell[data-density] .topbar {
+    height: 64px;
+    padding-inline: 12px;
+  }
+  .app-shell .topbar-context,
+  .app-shell .topbar-actions {
+    gap: 4px;
+  }
+  .app-shell[data-density] .main-content {
+    padding: 22px 16px 28px;
+  }
+  .app-shell[data-density='comfortable'] .main-content {
+    padding: 26px 18px 32px;
+  }
+  .app-shell[data-density='comfortable'] .page-heading h1 {
+    font-size: 30px;
+  }
+  .app-shell[data-density='comfortable'] .note-card,
+  .app-shell[data-density='comfortable'] .plus-body {
+    padding: 22px;
+  }
+  .app-shell[data-density] .page-heading h1 {
+    font-size: 28px;
+  }
+  .app-shell .tabs {
+    gap: 16px;
+  }
+  .app-shell .resource-filters .select-control {
+    min-width: 0;
+  }
+  .app-shell .subject-filter-content {
+    padding-inline: 12px;
+  }
+  .app-shell .notes-grid,
+  .app-shell .pluses-grid,
+  .app-shell .community-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .app-shell .note-card {
+    padding: 18px;
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 12px;
+  }
+  .app-shell .note-card.note-text-only {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .app-shell .note-card .note-format {
+    margin-left: auto;
+  }
+  .app-shell .grade-privacy-toggle {
+    flex: 0 1 auto;
+  }
+  .app-shell .grades-toolbar > .select-control {
+    flex: 1 1 140px;
+  }
+  .app-shell .grades-toolbar .grades-add {
+    margin-left: auto;
+    flex: 1 1 auto;
+  }
+  .app-shell .grades-toolbar .section-options-content {
+    right: auto;
+    left: 0;
+  }
+  .app-shell .grades-toolbar .section-options > summary {
+    width: 44px;
+    padding: 8px;
+  }
+  .app-shell .grades-toolbar .section-options > summary > span {
+    display: none;
+  }
+  .sheet-selector {
+    width: 100%;
+  }
+  .app-shell .focus-panel,
+  .app-shell .sound-panel {
+    padding: 20px;
+  }
+  .app-shell .focus-heading h2 {
+    font-size: 23px;
+  }
+  .app-shell .timer-face {
+    width: 230px;
+    height: 230px;
+  }
+  .app-shell .announcement {
+    padding-left: 48px;
+  }
+  .app-shell .announcement-heading > .reference-art {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  .app-shell .announcement-heading h2 {
+    font-size: 17px;
+  }
+  .app-shell .announcement-date {
+    font-size: 11px;
+  }
+  .app-shell .bakery-aside {
+    display: flex;
+    flex-direction: column;
+  }
+  .app-shell .bakery-aside > .panel,
+  .app-shell .bakery-aside > details {
+    width: 100%;
+  }
+}
+@media (max-width: 360px) {
+  .app-shell[data-density] .topbar {
+    padding-inline: 8px;
+  }
+  .app-shell .topbar-actions {
+    gap: 2px;
+  }
+  .app-shell .cake-balance {
+    min-width: 56px;
+    gap: 3px;
+    padding: 0 5px;
+  }
+  .app-shell .cake-balance .reference-art {
+    width: 20px !important;
+    height: 20px !important;
+  }
+  .app-shell .resource-filters,
+  .app-shell .resource-filters.notes-filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .app-shell .notes-filters > .search-field {
+    grid-column: auto;
+  }
+}

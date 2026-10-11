@@ -1,0 +1,140 @@
+.google-access {
+  display: grid;
+  gap: 8px;
+  margin: 18px 0;
+}
+.google-sign-in {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #fff;
+  color: #1f1f1f;
+  border: 1px solid #747775;
+  border-radius: 8px;
+  font:
+    500 14px/20px Arial,
+    sans-serif;
+  cursor: pointer;
+  transition:
+    background 0.16s,
+    box-shadow 0.16s;
+}
+.google-sign-in > svg {
+  flex: 0 0 20px;
+}
+.google-sign-in:hover:enabled {
+  background: #f8faff;
+  box-shadow: 0 1px 3px #3c404326;
+}
+.google-sign-in:focus-visible {
+  outline: 3px solid #a8c7fa;
+  outline-offset: 3px;
+}
+.google-sign-in:disabled {
+  cursor: default;
+  opacity: 0.58;
+}
+.google-access > small {
+  color: var(--muted, #716b75);
+  font-size: 12px;
+  text-align: center;
+}
+.google-school-hint {
+  margin: -8px 0 18px;
+  text-align: center;
+  font-size: 12px;
+}
+.avatar.has-photo {
+  overflow: hidden;
+  background: #eee8df;
+}
+.avatar.has-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.profile-google {
+  margin: 8px 0 20px;
+  padding: 16px;
+  border: 1px solid var(--line, #e9e1d8);
+  border-radius: 14px;
+  background: var(--paper, #fffcf8);
+}
+.profile-google-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.profile-google-identity > div {
+  min-width: 0;
+}
+.profile-google-identity > .avatar {
+  flex-shrink: 0;
+}
+.profile-google-identity strong,
+.profile-google-identity small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.profile-google-identity small,
+.profile-google > p {
+  font-size: 13px;
+  color: var(--muted, #716b75);
+}
+.profile-google .google-access {
+  margin-bottom: 0;
+}
+.profile-google > p {
+  margin: 12px 0 0;
+}
+.profile-identity-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.6;
+}
+.profile-identity-hint svg {
+  flex: 0 0 16px;
+  margin-top: 2px;
+}
+.auth-result {
+  position: fixed;
+  z-index: 160;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: min(520px, calc(100% - 32px));
+  padding: 14px 16px;
+  border: 1px solid #c7d8c2;
+  border-radius: 12px;
+  background: #f4faf0;
+  box-shadow: 0 5px 24px #382c1f1a;
+}
+.auth-result.error {
+  background: #fff5f2;
+  border-color: #e8c9bf;
+}
+.auth-result p {
+  margin: 0;
+  font-size: 14px;
+}
+.auth-result button {
+  flex: 0 0 auto;
+  border: 0;
+  background: transparent;
+  padding: 8px;
+  cursor: pointer;
+}
+@media (prefers-reduced-motion: reduce) {
+  .google-sign-in {
+    transition: none;
+  }
+}

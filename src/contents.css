@@ -1,0 +1,405 @@
+.contents-page {
+  min-width: 0;
+}
+.app-shell .tabs.view-tabs.contents-sections {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 24px;
+}
+.app-shell .tabs.view-tabs.contents-sections > button {
+  min-width: 0;
+  gap: 7px;
+  padding-inline: 18px;
+}
+.contents-section {
+  min-width: 0;
+}
+.contents-section .notes-toolbar {
+  margin-top: 0;
+}
+.library-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+.library-heading h2 {
+  margin: 0 0 5px;
+  font-size: 21px;
+}
+.library-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  max-width: 620px;
+}
+.library-manage {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.library-manage [aria-pressed='true'],
+.library-editor-views [aria-pressed='true'] {
+  background: #e2ebdf;
+  border-color: #bacdb6;
+  color: #354b32;
+}
+.library-dot {
+  width: 7px;
+  height: 7px;
+  background: #b96f3b;
+  border-radius: 50%;
+}
+.library-filters {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.4fr) minmax(170px, 1fr) minmax(170px, 1fr);
+  gap: 12px;
+}
+.library-filters > * {
+  min-width: 0;
+}
+.library-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin: 15px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.library-caption p {
+  margin: 0;
+}
+.library-caption > span {
+  text-align: right;
+}
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 17px;
+}
+.library-card {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  min-width: 0;
+}
+.library-card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.library-card-top > span:last-child {
+  overflow-wrap: anywhere;
+}
+.library-card h3 {
+  font-size: 19px;
+  margin: 0 0 9px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.library-card .card-description {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.library-subjects {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+}
+.library-card footer {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  justify-content: space-between;
+  border-top: 1px solid var(--line, #eee7df);
+  padding-top: 15px;
+  margin-top: 18px;
+}
+.library-card .library-subjects {
+  margin-top: auto;
+}
+.library-provenance {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.library-provenance > span {
+  overflow-wrap: anywhere;
+  flex: 1;
+}
+.library-provenance > svg {
+  flex-shrink: 0;
+}
+.library-provenance > small {
+  width: 100%;
+}
+.library-card footer .button {
+  flex-shrink: 0;
+  padding-inline: 9px;
+  font-size: 12px;
+}
+.library-more {
+  display: flex;
+  justify-content: center;
+  margin: 22px 0;
+}
+.library-load-error {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px;
+  margin: 16px 0;
+  border-radius: 14px;
+  background: #fff0df;
+}
+.library-reading,
+.library-editor {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+.library-reading > p {
+  margin: 0;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.library-review-stamp {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #456441;
+  font-size: 13px;
+}
+.library-source-note {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 0;
+}
+.formula-block {
+  border: 1px solid #e7e6da;
+  background: #f8faf4;
+  padding: 20px;
+  border-radius: 15px;
+  min-width: 0;
+}
+.formula-block h3 {
+  margin: 0 0 12px;
+  font-size: 17px;
+}
+.formula-block p {
+  margin: 14px 0 0;
+  font-size: 14px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.formula-expression {
+  font-family: 'Cambria Math', Cambria, serif;
+  font-size: 24px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.library-source {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--line, #eee7df);
+  padding-top: 16px;
+}
+.library-source strong {
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.library-source a {
+  max-width: 100%;
+  white-space: normal;
+}
+.library-editor-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 13px;
+  color: #456441;
+}
+.library-editor-views {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.library-fields {
+  display: grid;
+  gap: 15px;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.library-form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.library-fields textarea,
+.library-fields input {
+  width: 100%;
+  min-width: 0;
+}
+.library-formulas-editor {
+  display: grid;
+  gap: 13px;
+}
+.library-formulas-editor h3 {
+  font-size: 17px;
+  margin: 0;
+}
+.library-formulas-editor > p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.formula-edit {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  background: #f8f8f2;
+  border: 1px solid #e8e6dc;
+  border-radius: 14px;
+  min-width: 0;
+}
+.formula-edit-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.formula-input {
+  font-family: 'Cambria Math', Cambria, serif;
+  font-size: 20px;
+}
+.library-review-actions {
+  padding: 17px;
+  background: #eef3e9;
+  border: 1px solid #cbd9c5;
+  border-radius: 14px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.library-review-actions > p {
+  width: 100%;
+  margin: 0 0 5px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.library-editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 8px;
+}
+.library-history {
+  border-top: 1px solid var(--line, #eee7df);
+  padding-top: 15px;
+  font-size: 12px;
+}
+.library-history summary {
+  cursor: pointer;
+  padding-block: 6px;
+}
+.library-history ol {
+  padding-left: 20px;
+  line-height: 2;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 1150px) {
+  .library-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .library-heading {
+    align-items: flex-start;
+  }
+}
+@media (max-width: 700px) {
+  .library-heading {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .library-manage {
+    justify-content: flex-start;
+  }
+  .library-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+  .library-filters .search-field {
+    grid-column: 1/-1;
+  }
+  .library-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 13px;
+  }
+  .library-card {
+    padding: 18px;
+  }
+  .library-caption {
+    align-items: flex-start;
+  }
+  .library-caption > span {
+    max-width: 64%;
+  }
+  .app-shell .tabs.view-tabs.contents-sections {
+    display: flex;
+    width: 100%;
+  }
+  .app-shell .tabs.view-tabs.contents-sections > button {
+    flex: 1 1 0;
+    padding-inline: 8px;
+    font-size: 13px;
+    gap: 5px;
+  }
+  .library-form-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .library-editor-actions .button {
+    flex: 1 1 120px;
+  }
+}
+@media (max-width: 360px) {
+  .app-shell .tabs.view-tabs.contents-sections > button {
+    font-size: 12px;
+    padding-inline: 4px;
+    gap: 4px;
+  }
+  .app-shell .tabs.view-tabs.contents-sections > button svg {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 15px;
+  }
+  .library-filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .library-filters .search-field {
+    grid-column: auto;
+  }
+}

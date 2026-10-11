@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "lanet-media-safety",
+  "account_id": "bae727f7e92ad7610919d21b6409ade1",
+  "main": "worker/media-entry.js",
+  "compatibility_date": "2026-10-08",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "images": { "binding": "IMAGES" },
+  "ai": { "binding": "AI" },
+}
