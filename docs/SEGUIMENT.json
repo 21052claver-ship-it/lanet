@@ -6913,9 +6913,10 @@
         "output/direct-board/build.log",
         "output/roulette-animation/results.json",
         "output/direct-board/visual/1440-chips.png",
-        "output/direct-board/visual/390-chips.png"
+        "output/direct-board/visual/390-chips.png",
+        "output/direct-board/transition/results.json"
       ],
-      "progress": "Implementació i qualitat local correctes: 357 unitàries, 24 tapet i 18 animació en Chromium/Firefox/WebKit. Publicació 0.6.2 pendent de PR/CI i rebut. Cap canvi a servidor, odds, dades ni domini."
+      "progress": "Implementació i qualitat local correctes: 357 unitàries, 27 tapet (24 fluxos + 3 transicions responsive) i 18 animació en Chromium/Firefox/WebKit. Publicació 0.6.2 pendent de PR/CI i rebut. Cap canvi a servidor, odds, dades ni domini."
     }
   ]
 }

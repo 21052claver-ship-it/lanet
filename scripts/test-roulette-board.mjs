@@ -92,6 +92,42 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
   };
   try {
     await run(
+      'Responsive transition keeps all hit areas disjoint',
+      { width: 1104, height: 1000 },
+      async (p) => {
+        for (const width of [768, 1024, 1100, 1104, 1120, 1140, 1144, 1200, 1440]) {
+          await p.setViewportSize({ width, height: 1000 });
+          assert.ok(
+            await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1),
+            `${width}px: page overflow`,
+          );
+          const targets = await p.locator('[data-bet-id]').evaluateAll((items) =>
+            items.map((e) => {
+              const r = e.getBoundingClientRect();
+              return {
+                id: e.dataset.betId,
+                left: r.left,
+                top: r.top,
+                right: r.right,
+                bottom: r.bottom,
+                width: r.width,
+                height: r.height,
+              };
+            }),
+          );
+          for (let i = 0; i < targets.length; i++) {
+            const a = targets[i];
+            assert.ok(a.width >= 23.9 && a.height >= 23.9, `${width}px: ${a.id} too small`);
+            for (const b of targets.slice(i + 1)) {
+              const x = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+              const y = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+              assert.ok(x <= 0.75 || y <= 0.75, `${width}px: ${a.id} overlaps ${b.id}`);
+            }
+          }
+        }
+      },
+    );
+    await run(
       'All 157 placements are reachable and preserve independent chip amounts',
       { width: 1440, height: 1000 },
       async (p) => {

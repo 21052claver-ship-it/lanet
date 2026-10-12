@@ -1114,7 +1114,7 @@
   min-width: 44px;
   padding: 8px;
 }
-@container (min-width: 680px) {
+@container (min-width: 720px) {
   .tapet-surface {
     padding: 0 56px 28px 72px;
   }

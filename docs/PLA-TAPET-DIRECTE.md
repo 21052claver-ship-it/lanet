@@ -17,4 +17,6 @@ Al mòbil el tapet es disposa en tres columnes, amb espai entre els punts de joc
 
 No canviar el catàleg, probabilitats, sorteig, servidor, saldo o pagaments. Conservar desfer/retirar, tiquet, bloqueig durant gir/premi i recuperació idempotent. Proves exclusivament amb dades locals fictícies.
 
-Qualitat local: 357 unitàries, tipus/lint i build correctes; 24 escenaris del tapet i 18 d’animació en tres motors. Verificades les 157 posicions simultànies, coordenades directes de línies/cruïlles, zones mínimes de 24 px, desfer, límits, bloqueig i recuperació. Captures locals a `output/direct-board/visual`. PR/CI i publicació encara pendents.
+Qualitat local: 357 unitàries, tipus/lint i build correctes; 27 escenaris del tapet (24 fluxos i 3 transicions responsive) i 18 d’animació en tres motors. Verificades les 157 posicions simultànies, coordenades directes de línies/cruïlles, zones mínimes de 24 px, desfer, límits, bloqueig i recuperació. Captures locals a `output/direct-board/visual`. PR/CI i publicació encara pendents.
+
+La transició horitzontal requereix almenys 720 px al contenidor. Comprovats mínims de 24 px i absència d’interseccions entre zones en nou amplades de finestra, en els tres motors.
