@@ -278,7 +278,9 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
     [820, 1024],
     [568, 320],
   ]) {
-    const long = catalogue.degrees.toSorted((a, b) => b.name.length - a.name.length)[0];
+    const long = catalogue.degrees
+      .filter((d) => d.weights['2027'])
+      .toSorted((a, b) => b.name.length - a.name.length)[0];
     await run(
       `small-tablet-landscape-${height}`,
       width,
@@ -299,6 +301,18 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
         await p.getByRole('button', { name: 'Veure ponderacions i càlcul', exact: true }).click();
         const dialog = p.getByRole('dialog');
         await dialog.waitFor();
+        const cards = dialog.locator('.pau-weight-card');
+        assert.ok((await cards.count()) > 0, 'Subject weighting cards rendered');
+        for (const card of await cards.all()) {
+          assert.equal(await card.locator('.pau-weight-icon svg').count(), 1);
+          assert.match(await card.locator('.pau-weight-coefficient').innerText(), /×0,[12]/);
+          assert.match(
+            await card.locator('.pau-weight-coefficient').innerText(),
+            /Fins a [12] punts/,
+          );
+          assert.ok(await card.evaluate((el) => el.scrollWidth <= el.clientWidth + 1), 'Card fits');
+        }
+        await dialog.screenshot({ path: `${out}/${engine}-weights-${width}.png` });
         const box = await dialog.boundingBox();
         assert.ok(
           box.x >= 0 &&

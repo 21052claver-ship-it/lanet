@@ -315,6 +315,51 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         finish.release();
       }
     });
+    await check('profile-logout-recovery', { width: 320, height: 640 }, async (page, fixture) => {
+      const started = gate(),
+        finish = gate();
+      let attempts = 0,
+        fail = true;
+      await page.route('**/api/auth/logout', async (route) => {
+        attempts++;
+        started.release();
+        await finish.promise;
+        if (fail) await route.abort();
+        else await route.continue();
+      });
+      try {
+        await page.getByRole('button', { name: /Perfil de/ }).click();
+        const dialog = page.getByRole('dialog', { name: 'El meu perfil' });
+        await dialog.waitFor();
+        await page.screenshot({ path: `${out}/${engine}-profile-logout.png` });
+        await dialog.getByRole('button', { name: 'Tancar sessió', exact: true }).click();
+        await started.promise;
+        assert.equal(
+          await dialog.getByRole('button', { name: 'Tancant sessió…', exact: true }).isDisabled(),
+          true,
+        );
+        finish.release();
+        await dialog
+          .getByRole('alert')
+          .filter({ hasText: 'No hem pogut confirmar l’acció' })
+          .waitFor();
+        assert.equal(attempts, 1);
+        assert.equal(
+          fixture.db.prepare("SELECT COUNT(*) AS n FROM sessions WHERE user_id='browser'").get().n,
+          1,
+        );
+        fail = false;
+        await dialog.getByRole('button', { name: 'Tancar sessió', exact: true }).click();
+        await page.getByRole('button', { name: /Google/ }).waitFor();
+        assert.equal(attempts, 2);
+        assert.equal(
+          fixture.db.prepare("SELECT COUNT(*) AS n FROM sessions WHERE user_id='browser'").get().n,
+          0,
+        );
+      } finally {
+        finish.release();
+      }
+    });
   } finally {
     writeFileSync(`${out}/results.json`, JSON.stringify({ results }, null, 2));
     await browser.close();

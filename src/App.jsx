@@ -76,14 +76,17 @@ function Workspace({ onLogout }) {
   const [collapseBusy, setCollapseBusy] = useState(false);
   const [cakePulse, setCakePulse] = useState(false);
   const [logoutBusy, setLogoutBusy] = useState(false);
+  const [logoutError, setLogoutError] = useState('');
   const logoutPending = useRef(false);
   async function leave() {
     if (logoutPending.current) return;
     logoutPending.current = true;
     setLogoutBusy(true);
+    setLogoutError('');
     try {
       await onLogout();
     } catch (error) {
+      setLogoutError(error.message);
       notify(error.message, 'error');
     } finally {
       logoutPending.current = false;
@@ -502,7 +505,7 @@ function Workspace({ onLogout }) {
           </nav>
         </div>
       </div>
-      <Forms />
+      <Forms onLogout={leave} logoutBusy={logoutBusy} logoutError={logoutError} />
     </div>
   );
 }

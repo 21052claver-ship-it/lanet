@@ -86,7 +86,7 @@ const titles = {
   template: 'Plantilla de percentatges',
   manageUser: 'Gestionar compte',
 };
-export default function Forms() {
+export default function Forms({ onLogout, logoutBusy = false, logoutError = '' }) {
   const { modal, close, subject, go, setSubjectFilter } = useApp();
   if (!modal) return null;
   const { type, item } = modal;
@@ -105,7 +105,13 @@ export default function Forms() {
       wide={['note', 'reader', 'gradeSheet', 'offering', 'template', 'plus'].includes(type)}
     >
       {Form ? (
-        <Form key={`${type}-${item.id || item.subject_id || ''}`} item={item} />
+        <Form
+          key={`${type}-${item.id || item.subject_id || ''}`}
+          item={item}
+          onLogout={onLogout}
+          logoutBusy={logoutBusy}
+          logoutError={logoutError}
+        />
       ) : type === 'class' ? (
         <div>
           <SubjectChip subject={item.subject} />

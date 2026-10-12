@@ -344,6 +344,18 @@
     {
       "id": "R85",
       "description": "Accés a la NET oficial FJE amb el logotip aportat reinterpretat en 3D, a la sidebar i al menú mòbil."
+    },
+    {
+      "id": "R86",
+      "description": "Revisar la icona de la NET oficial segons la nova referència de Marc: volum arrodonit, raigs blancs prominents, blau pastel i fons transparent."
+    },
+    {
+      "id": "R87",
+      "description": "Tancar sessió des d’El meu perfil, amb estat d’espera, reintent segur si falla i retorn a l’entrada Google."
+    },
+    {
+      "id": "R88",
+      "description": "Ponderacions PAU visuals amb icones, colors i coeficients clars, coherents i adaptades al mòbil"
     }
   ],
   "phases": [
@@ -848,6 +860,13 @@
       "title": "Accés a la NET oficial",
       "depends_on": [
         "F70"
+      ]
+    },
+    {
+      "id": "F72",
+      "title": "Poliment visual de navegació, perfil i ponderacions PAU",
+      "depends_on": [
+        "F71"
       ]
     }
   ],
@@ -6888,7 +6907,7 @@
         "output/domain-lanet-es/local-checks.json"
       ],
       "change_log_id": "H170",
-      "progress": "Zona Free, Pages apex/www, CNAME proxied, Full strict, HTTPS i TLS mínim 1.2 preparats. Bloquejat el canvi final: login IONOS pendent i permís desat bloquejant Google Cloud. Producció 0.6.1 i origen anterior conservats. No verificada ni publicada la migració. Aparcada mentre es millora el tapet per petició posterior de l’usuari; sense canvis nous de domini."
+      "progress": "Delegació IONOS desada, correu i TXT preservats; registres web i dominis Pages preparats. Canvi canònic integrat amb PR #11 i versió 0.6.4; pendent activació Cloudflare i HTTPS abans de publicar. Callback .es confirmat pel propietari."
     },
     {
       "id": "T70-01",
@@ -6981,6 +7000,44 @@
       ],
       "progress": "Publicada 0.6.3 amb PR/CI verda, release immutable, rebuts i SHA/bindings confirmats. Icona 3D WebP transparent de 13 KB, sidebar oberta/plegada i Més mòbil verificats. Domini T69-01 encara pendent dels accessos.",
       "change_log_id": "H172"
+    },
+    {
+      "id": "T72-01",
+      "phase": "F72",
+      "title": "Polir navegació, perfil i ponderacions PAU",
+      "status": "review",
+      "requirements": [
+        "R86",
+        "R87",
+        "R88"
+      ],
+      "depends_on": [
+        "T71-01"
+      ],
+      "files": [
+        "src/components/OfficialNetLink.jsx",
+        "public/images/ui/official-net-3d-v2.webp",
+        "docs/PLA-NET-PASTEL.md",
+        "src/responsive.css",
+        "src/App.jsx",
+        "src/forms.jsx",
+        "src/forms-general.jsx",
+        "scripts/test-workspace-recovery.mjs",
+        "src/pages/Pau.jsx",
+        "src/pau.css",
+        "scripts/test-pau.mjs"
+      ],
+      "acceptance": "Icona nova propera a la referència amb blau pastel, transparència neta i raigs blancs llegibles en desktop/rail/Més mòbil; mateix enllaç accessible, verificació local i PR/CI abans de publicar. Botó explícit Tancar sessió a Perfil, sense peticions duplicades, error accessible i reintent, sessió eliminada i retorn a Google només després de confirmar el servidor. Ponderacions amb icona i color per matèria, coeficient i màxim explícits; selecció de les dues millors només visible fora del mode discret, sense alterar dades oficials ni càlculs.",
+      "checks": [
+        "Generar i inspeccionar l’asset transparent.",
+        "Optimitzar i substituir la referència compartida.",
+        "Revisar a mida real i verificar navegació amb fixtures locals.",
+        "Registrar i publicar amb PR i CI.",
+        "Comprovar tancament des de Perfil i recuperació d’errors de xarxa en tres motors.",
+        "Verificar targetes de ponderació amb noms llargs, icones i coeficients a 320px, tablet i horitzontal en tres motors."
+      ],
+      "evidence": [],
+      "progress": "Icona pastel, logout al perfil i ponderacions visuals integrats. 39 casos PAU en Chromium/Firefox/WebKit correctes; captures a 320 i 820 px revisades. Build Pages, tipus/lint correctes. Pendent de CI actualitzada i publicació 0.6.4."
     }
   ]
 }

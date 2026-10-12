@@ -2,6 +2,17 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.6.4] - 2026-10-12
+
+- Domini principal lanet.es, callback Google propi i redireccions web dels àlies; configuració preparada per publicar després de confirmar DNS i HTTPS.
+
+- Ponderacions PAU amb icones i colors per matèria, coeficients destacats, aportació màxima i les dues millors aportacions identificades respectant el mode discret.
+
+- Botó «Tancar sessió» a El meu perfil, amb estat d’espera i reintent segur en cas d’error de connexió.
+
+- Icona de la NET oficial renovada segons la referència de Marc: volum arrodonit, raigs blancs més prominents i blau pastel.
+- Asset transparent optimitzat i compartit entre sidebar, barra plegada i menú Més.
+
 ## [0.6.3] - 2026-10-12
 
 - Accés «La NET oficial» a la barra lateral i al menú Més del mòbil, amb enllaç al portal FJE en una pestanya nova.

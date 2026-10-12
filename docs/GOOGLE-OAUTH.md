@@ -10,11 +10,16 @@ Google és l’únic accés. Altes amb compte educatiu @fje.edu, correu verifica
 
 Identificació pel sub signat. Verificació d’emissor, destinatari, signatura, caducitat, nonce, estat d’un sol ús i PKCE. Només es demanen openid, email i profile; cap accés a Drive, Gmail o Calendar. No se sobreescriuen comptes desactivats o ja vinculats a una altra identitat. [Política i migració R45](PLA-GOOGLE-UNIC.md).
 
+## Domini propi preparat el 12/10/2026
+
+Marc confirma el callback `https://lanet.es/api/auth/google/callback` desat al mateix client. La configuració 0.6.5 prepara aquest origen; l’activació requereix DNS, TLS i publicació verificats. La comprovació real de l’11/10 descrita a dalt correspon a l’adreça anterior i no demostra una entrada real a lanet.es.
+
 ## Callbacks
 
-El client existent ja té desat el callback públic següent. Les variants locals depenen de l’adreça que s’obri:
+El callback principal nou està confirmat per Marc; es conserva també el callback de l’adreça anterior. Les variants locals depenen de l’adreça que s’obri:
 
 ```text
+https://lanet.es/api/auth/google/callback
 https://lanet.pages.dev/api/auth/google/callback
 http://127.0.0.1:5173/api/auth/google/callback
 http://127.0.0.1:5183/api/auth/google/callback
@@ -29,7 +34,7 @@ Les adreces workers.dev retirades ja no gestionen OAuth. Cal entrar a l’adreç
 Els secrets es desen privadament a .dev.vars per al desenvolupament i als secrets de Pages per a producció. No s’imprimeixen ni s’inclouen al ZIP. Per instal·lar-los des del JSON privat:
 
 ```powershell
-npm run google:configure -- --file "C:\Users\Marc\Downloads\client_secret_CLIENT.json" --remote --confirmed-redirect https://lanet.pages.dev/api/auth/google/callback
+npm run google:configure -- --file "C:\Users\Marc\Downloads\client_secret_CLIENT.json" --remote --confirmed-redirect https://lanet.es/api/auth/google/callback
 npm run pages:deploy
 ```
 
@@ -38,7 +43,7 @@ Si el callback ja consta al JSON, es pot ometre confirmed-redirect. Aquest argum
 Per reutilitzar els secrets locals existents a Pages, amb la marca actual conservada:
 
 ```powershell
-npm run google:pages-configure -- --remote --keep-existing-brand --confirmed-redirect https://lanet.pages.dev/api/auth/google/callback
+npm run google:pages-configure -- --remote --keep-existing-brand --confirmed-redirect https://lanet.es/api/auth/google/callback
 npm run pages:deploy
 ```
 

@@ -815,6 +815,7 @@
 .official-net-link .nav-art img {
   display: block;
   object-fit: contain;
+  clip-path: inset(10.9% 10.7% 11.3% 8.8% round 23%);
 }
 .official-net-label svg {
   display: inline-block;

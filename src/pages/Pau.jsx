@@ -10,6 +10,18 @@ import {
   ArrowClockwise,
   Plus,
   Trash,
+  Atom,
+  Leaf,
+  Flask,
+  Pi,
+  GlobeHemisphereWest,
+  BookOpen,
+  Palette,
+  MusicNotes,
+  MaskHappy,
+  Ruler,
+  Gear,
+  ChartLineUp,
 } from '@phosphor-icons/react';
 import { useApp } from '../context';
 import { api } from '../api';
@@ -36,6 +48,31 @@ const number = (n) =>
     ? '—'
     : n.toLocaleString('ca-ES', { minimumFractionDigits: 3, maximumFractionDigits: 3 });
 const official = 'https://universitats.gencat.cat/ca/';
+const subjectVisuals = {
+  biology: [Leaf, 'green'],
+  geology: [Leaf, 'green'],
+  physics: [Atom, 'blue'],
+  chemistry: [Flask, 'blue'],
+  'general-science': [Atom, 'blue'],
+  technology: [Gear, 'blue'],
+  math: [Pi, 'violet'],
+  'social-math': [Pi, 'violet'],
+  geography: [GlobeHemisphereWest, 'green'],
+  business: [ChartLineUp, 'amber'],
+  analysis: [MusicNotes, 'rose'],
+  choir: [MusicNotes, 'rose'],
+  'music-history': [MusicNotes, 'rose'],
+  performing: [MaskHappy, 'rose'],
+  drama: [MaskHappy, 'rose'],
+  'technical-drawing': [Ruler, 'blue'],
+  'design-drawing': [Ruler, 'rose'],
+  'art-drawing': [Palette, 'rose'],
+  design: [Palette, 'rose'],
+  'art-foundations': [Palette, 'rose'],
+  'art-history': [Palette, 'rose'],
+  'cultural-movements': [Palette, 'rose'],
+  'graphic-expression': [Palette, 'rose'],
+};
 const commonLabels = {
   catalan: 'Llengua Catalana i Literatura',
   spanish: 'Llengua Castellana i Literatura',
@@ -334,6 +371,9 @@ export default function Pau() {
           <PauOutlook {...{ degree, draft: value || draft, profile, round, hideGrades }} />
         )}
         <h3>Matèries que ponderen · {draft.year}</h3>
+        {weights && (
+          <p className="pau-muted">×0,2: fins a 2 punts · ×0,1: fins a 1 punt per matèria.</p>
+        )}
         {!weights ? (
           <p className="form-error">
             {degree.weightConflicts?.[String(draft.year)]
@@ -347,10 +387,20 @@ export default function Pau() {
               .map((s) => {
                 const c = result?.contributions.find((c) => c.id === s.id);
                 const chosen = result?.best.some((c) => c.id === s.id);
+                const [Icon, tone] = subjectVisuals[s.id] || [BookOpen, 'amber'];
                 return (
-                  <div key={s.id}>
-                    <span>{s.label}</span>
-                    <b>×{String(weights[s.id]).replace('.', ',')}</b>
+                  <div
+                    key={s.id}
+                    className={`pau-weight-card tone-${tone}${!hideGrades && chosen ? ' is-chosen' : ''}`}
+                  >
+                    <span className="pau-weight-icon" aria-hidden="true">
+                      <Icon size={22} weight="duotone" />
+                    </span>
+                    <span className="pau-weight-name">{s.label}</span>
+                    <b className="pau-weight-coefficient">
+                      ×{String(weights[s.id]).replace('.', ',')}
+                      <span>Fins a {weights[s.id] * 10} punts</span>
+                    </b>
                     {!hideGrades && c && c.grade !== null && (
                       <small>
                         {!c.valid
@@ -358,7 +408,7 @@ export default function Pau() {
                           : c.grade < 5
                             ? 'Cal un 5 per ponderar'
                             : chosen
-                              ? `Suma ${number(c.points)} punts`
+                              ? `✓ Seleccionada · Suma ${number(c.points)} punts`
                               : 'No és una de les dues millors aportacions'}
                       </small>
                     )}
