@@ -6523,7 +6523,7 @@
       "id": "T63-01",
       "phase": "F63",
       "title": "Crear aposta sempre accessible i flux d’alumne verificat",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R77"
       ],
@@ -6541,7 +6541,19 @@
         "Provar creació com alumne, cancel·lació, mòbil i liquidació.",
         "Publicar amb CI i rebut."
       ],
-      "evidence": []
+      "evidence": [
+        "docs/PLA-CREAR-APOSTES.md",
+        "docs/releases/0.4.1.json",
+        "output/create-bets/unit.log",
+        "output/create-bets/typecheck.log",
+        "output/create-bets/source-audit.log",
+        "output/create-bets/browser/browser-results.json",
+        "output/create-bets/remote-bindings.json",
+        "output/create-bets/ci-success.json",
+        "output/create-bets/delivery.json",
+        "output/releases/0.4.1/receipt.json"
+      ],
+      "change_log_id": "H164"
     }
   ]
 }
