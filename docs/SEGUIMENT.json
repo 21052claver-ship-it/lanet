@@ -6618,7 +6618,7 @@
       "id": "T65-01",
       "phase": "F65",
       "title": "Evitar text tallat a les targetes d’esdeveniments",
-      "status": "active",
+      "status": "review",
       "requirements": [
         "R79"
       ],

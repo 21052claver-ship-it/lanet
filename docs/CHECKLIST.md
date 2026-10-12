@@ -376,6 +376,6 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 
 ## F65 Llegibilitat de targetes de l’horari
 
-- [ ] **T65-01** Evitar text tallat a les targetes d’esdeveniments — En curs.
+- [ ] **T65-01** Evitar text tallat a les targetes d’esdeveniments — En revisió.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.
