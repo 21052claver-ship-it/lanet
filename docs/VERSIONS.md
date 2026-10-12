@@ -6,8 +6,8 @@ Repositori públic: https://github.com/21052claver-ship-it/lanet. Aplicació: ht
 
 1. Actualitza versió SemVer a package.json/package-lock.json i descriu el canvi a CHANGELOG.md.
 2. Executa els controls locals adients; actualitza el pla i l’historial.
-3. Commit i push amb el compte 21052claver-ship-it i correu d’autoria 21052.claver@fje.edu.
-4. Espera que Verify La Net sigui verd per al commit exacte.
+3. Crea una branca, fes commit i push amb el compte 21052claver-ship-it i correu d’autoria 21052.claver@fje.edu; obre una pull request a main. Les contribucions externes arriben des de forks segons [CONTRIBUTING.md](../CONTRIBUTING.md).
+4. Espera Validate verd i la revisió de Marc per a contribucions externes; resol converses i fusiona la PR. Sincronitza main local amb main remota i espera Verify La Net verd per al commit fusionat exacte. Les PR pròpies del propietari tenen una excepció de revisió, però no de CI.
 5. Executa `npm run release`. Comprova identitat, main remota, arbre net, versió/tag, CI i destinació fixada. Compila, publica Pages, confirma el desplegament via proveïdor i crea Deployment/release a GitHub amb rebut JSON i notes.
 6. Registra les evidències locals; les dades privades no es pugen a GitHub.
 

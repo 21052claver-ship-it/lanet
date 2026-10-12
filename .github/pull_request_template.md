@@ -1,11 +1,20 @@
 ## Canvi
 
-Explica el comportament abans i després.
+Explica el problema i què millora aquesta proposta.
 
-## Validació
+## Comprovació
 
-- Proves i navegadors rellevants:
-- Riscos o límits:
-- Versió i CHANGELOG si es publicarà producte:
+Indica les proves executades i el resultat. Si canvia la interfície, adjunta captures amb dades fictícies en mòbil i escriptori.
 
-No adjuntis dades personals, credencials ni captures de perfils reals.
+- [ ] Canvi concret, amb un abast fàcil de revisar.
+- [ ] Sense credencials, dades reals d'usuaris ni fitxers privats.
+- [ ] Tipus, lint i proves rellevants comprovats.
+- [ ] Documentació i atribucions actualitzades quan correspon.
+- [ ] Versió i CHANGELOG coherents si es publicarà producte; riscos o límits descrits.
+- [ ] Si hi ha SQL, bindings, permisos o configuració de producció, estan descrits a continuació.
+
+## Publicació
+
+Descriu migracions o passos manuals necessaris, o indica «Cap».
+
+Marc revisarà la proposta. Fusionar aquesta PR no publica automàticament a Cloudflare.
