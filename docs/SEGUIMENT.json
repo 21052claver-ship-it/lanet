@@ -348,6 +348,10 @@
     {
       "id": "R86",
       "description": "Revisar la icona de la NET oficial segons la nova referència de Marc: volum arrodonit, raigs blancs prominents, blau pastel i fons transparent."
+    },
+    {
+      "id": "R87",
+      "description": "Tancar sessió des d’El meu perfil, amb estat d’espera, reintent segur si falla i retorn a l’entrada Google."
     }
   ],
   "phases": [
@@ -856,7 +860,7 @@
     },
     {
       "id": "F72",
-      "title": "Icona NET pastel",
+      "title": "Icona NET i tancament de sessió al perfil",
       "depends_on": [
         "F71"
       ]
@@ -6996,10 +7000,11 @@
     {
       "id": "T72-01",
       "phase": "F72",
-      "title": "Substituir la icona NET per una versió 3D pastel fidel a la referència",
+      "title": "Polir la icona NET i afegir tancament de sessió al perfil",
       "status": "review",
       "requirements": [
-        "R86"
+        "R86",
+        "R87"
       ],
       "depends_on": [
         "T71-01"
@@ -7008,17 +7013,22 @@
         "src/components/OfficialNetLink.jsx",
         "public/images/ui/official-net-3d-v2.webp",
         "docs/PLA-NET-PASTEL.md",
-        "src/responsive.css"
+        "src/responsive.css",
+        "src/App.jsx",
+        "src/forms.jsx",
+        "src/forms-general.jsx",
+        "scripts/test-workspace-recovery.mjs"
       ],
-      "acceptance": "Icona nova propera a la referència amb blau pastel, transparència neta i raigs blancs llegibles en desktop/rail/Més mòbil; mateix enllaç accessible, verificació local i PR/CI abans de publicar.",
+      "acceptance": "Icona nova propera a la referència amb blau pastel, transparència neta i raigs blancs llegibles en desktop/rail/Més mòbil; mateix enllaç accessible, verificació local i PR/CI abans de publicar. Botó explícit Tancar sessió a Perfil, sense peticions duplicades, error accessible i reintent, sessió eliminada i retorn a Google només després de confirmar el servidor.",
       "checks": [
         "Generar i inspeccionar l’asset transparent.",
         "Optimitzar i substituir la referència compartida.",
         "Revisar a mida real i verificar navegació amb fixtures locals.",
-        "Registrar i publicar amb PR i CI."
+        "Registrar i publicar amb PR i CI.",
+        "Comprovar tancament des de Perfil i recuperació d’errors de xarxa en tres motors."
       ],
       "evidence": [],
-      "progress": "Icona pastel integrada, WebP transparent de 10.942 bytes i contorn CSS net a mida real. Compilació i 5 casos locals de navegació correctes, captures revisades. Pendent de CI/PR i publicació 0.6.4; domini independent pendent en PR10."
+      "progress": "Icona pastel i botó Tancar sessió integrats. 5 casos locals de l’enllaç i 24 casos de recuperació en tres motors correctes; build i tipus/lint correctes. Captura Perfil a 320px revisada. Pendent de CI actualitzada i publicació 0.6.4, sense dades reals."
     }
   ]
 }

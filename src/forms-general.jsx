@@ -11,6 +11,7 @@ import {
   MapPin,
   LockSimple,
   ArrowRight,
+  SignOut,
 } from '@phosphor-icons/react';
 import { useApp } from './context';
 import { Avatar } from './art';
@@ -511,7 +512,7 @@ export function AnnouncementForm({ item }) {
     </form>
   );
 }
-export function ProfileForm({ item = {} }) {
+export function ProfileForm({ item = {}, onLogout, logoutBusy = false, logoutError = '' }) {
   const { data, enrolled, close, mutate, open } = useApp();
   const [section, setSection] = useState(item.section || 'personal');
   const [preferences, setPreferences] = useState({ ...DEFAULT_PREFERENCES, ...data.preferences });
@@ -556,7 +557,17 @@ export function ProfileForm({ item = {} }) {
               Configurar el meu curs
             </Button>
           </div>
+          <FormError error={logoutError} />
           <div className="form-footer">
+            <Button
+              type="button"
+              onClick={onLogout}
+              disabled={logoutBusy}
+              aria-busy={logoutBusy}
+            >
+              <SignOut size={18} aria-hidden="true" />
+              {logoutBusy ? 'Tancant sessió…' : 'Tancar sessió'}
+            </Button>
             <Button type="button" variant="primary" onClick={close}>
               Fet
             </Button>

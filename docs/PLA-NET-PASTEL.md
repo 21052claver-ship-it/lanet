@@ -19,3 +19,9 @@ Edit the supplied 3D NET logo reference for a polished small sidebar UI icon. Pr
 ```
 
 Verificació local: compilació Pages correcta i cinc casos a 320, 390, 844, 1024 i 1440 px. Captures revisades de sidebar oberta, plegada i Més mòbil. URL exacta, nom accessible, pestanya nova sense opener, teclat i tancament de Més preservats; cap desbordament horitzontal. Portal extern simulat, sense visites a producció. Evidències privades: `output/net-pastel/local-checks.json`, `local.log`, `build.log` i captures.
+
+## Tancar sessió des del perfil
+
+Marc demana afegir l’acció a El meu perfil. Botó neutral «Tancar sessió» al peu de la pestanya Perfil, al costat de Fet; comparteix el flux existent de logout. Mentre espera, es desactiva i mostra «Tancant sessió…». Un error apareix també dins del diàleg amb opció de reintent; la sessió local només desapareix després de confirmar el servidor. No tanca el compte Google del navegador.
+
+24 regressions de recuperació en Chromium, Firefox i WebKit, incloses les tres noves de perfil: petició bloquejada, una sola sol·licitud, error recuperable amb sessió conservada, reintent correcte, sessió eliminada i entrada Google visible. Captura a 320px revisada; tipus/lint i compilació correctes. Evidències privades a `output/profile-logout` i logs `output/net-pastel/profile-*.log`.

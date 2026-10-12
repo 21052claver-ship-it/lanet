@@ -4,6 +4,8 @@ Cada publicació nova té una versió SemVer, un tag Git immutable, una release 
 
 ## [0.6.4] - 2026-10-12
 
+- Botó «Tancar sessió» a El meu perfil, amb estat d’espera i reintent segur en cas d’error de connexió.
+
 - Icona de la NET oficial renovada segons la referència de Marc: volum arrodonit, raigs blancs més prominents i blau pastel.
 - Asset transparent optimitzat i compartit entre sidebar, barra plegada i menú Més.
 
