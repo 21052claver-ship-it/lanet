@@ -1349,3 +1349,18 @@
   stroke-width: 3;
   filter: brightness(1.4);
 }
+
+.casino-balance.prize-arrived {
+  animation: roulette-wallet-arrive 800ms ease-out;
+}
+@keyframes roulette-wallet-arrive {
+  25% {
+    background: #fff0c9;
+    box-shadow: 0 0 0 6px #e8b98630;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .casino-balance.prize-arrived {
+    animation: none;
+  }
+}

@@ -428,7 +428,9 @@ export default function SecretCasino({ onExit }) {
             <div className="casino-counter" aria-hidden="true" />
           </div>
           <div className="casino-play-panel">
-            <div className="casino-balance">
+            <div
+              className={`casino-balance ${result?.payout && !spinning && !awarding ? 'prize-arrived' : ''}`}
+            >
               <ReferenceArt name="cake" size={36} />
               <span>
                 <strong>{walletBalance}</strong> pastissos disponibles

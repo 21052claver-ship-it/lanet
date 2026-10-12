@@ -103,7 +103,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         if (scenario === 'win') {
           await page.locator('.roulette-award.is-profit').waitFor();
           assert.equal(await balance(), '4', 'prize held while cakes fly');
-          assert.equal(await page.locator('.roulette-prize-flight').count(), 7);
+          assert.equal(await page.locator('.roulette-prize-flight').count(), 2);
           await page.screenshot({ path: `${out}/${engine}-win.png` });
           await page.waitForTimeout(1200);
           assert.equal(await balance(), '4', 'cakes in flight have not been credited visually');

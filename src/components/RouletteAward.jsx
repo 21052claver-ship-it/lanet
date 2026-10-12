@@ -23,6 +23,7 @@ export default function RouletteAward({ spin }) {
     };
   }, []);
   const profit = spin.net > 0;
+  const cakes = Math.min(spin.payout, profit ? 7 : 3);
   return createPortal(
     <div className={`roulette-award ${profit ? 'is-profit' : 'is-return'}`} aria-hidden="true">
       <div className="roulette-award-halo" />
@@ -41,15 +42,15 @@ export default function RouletteAward({ spin }) {
         <span>pastissos al teu saldo</span>
         <p>{profit ? `Guany net: +${spin.net}` : `Balanç de l’aposta: ${spin.net}`}</p>
       </div>
-      {Array.from({ length: profit ? 7 : 3 }, (_, i) => (
+      {Array.from({ length: cakes }, (_, i) => (
         <div
           className="roulette-prize-flight"
           key={i}
           style={{
             '--dx': `${destination.x}px`,
             '--dy': `${destination.y}px`,
-            '--spread': `${(i - 3) * 18}px`,
-            '--delay': `${900 + i * 65}ms`,
+            '--spread': `${(i - (cakes - 1) / 2) * 18}px`,
+            '--delay': `${900 + (cakes === 1 ? 390 : (i * 390) / (cakes - 1))}ms`,
           }}
         >
           <FlyingCake />
