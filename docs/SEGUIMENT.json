@@ -6667,7 +6667,7 @@
       "id": "T66-01",
       "phase": "F66",
       "title": "Crear i confirmar la pròpia aposta",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R80"
       ],
@@ -6686,7 +6686,21 @@
         "Provar conservació i migració amb dades.",
         "Verificar còpia, CI i publicar."
       ],
-      "evidence": []
+      "evidence": [
+        "docs/PLA-APOSTA-PROPIA.md",
+        "docs/releases/0.6.0.json",
+        "output/self-resolver/unit.log",
+        "output/self-resolver/typecheck.log",
+        "output/self-resolver/source-audit.log",
+        "output/self-resolver/browser/browser-results.json",
+        "output/self-resolver/backup-review.json",
+        "output/self-resolver/migration-verified.json",
+        "output/self-resolver/remote-bindings.json",
+        "output/self-resolver/ci-success.json",
+        "output/self-resolver/delivery.json",
+        "output/releases/0.6.0/receipt.json"
+      ],
+      "change_log_id": "H167"
     }
   ]
 }
