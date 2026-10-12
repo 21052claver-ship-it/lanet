@@ -6939,7 +6939,7 @@
       "id": "T71-01",
       "phase": "F71",
       "title": "Afegir accés a la NET oficial amb icona 3D",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R85"
       ],
@@ -6962,17 +6962,25 @@
       ],
       "evidence": [
         "docs/PLA-NET-OFICIAL.md",
+        "docs/releases/0.6.3.json",
         "public/images/ui/official-net-3d-v1.webp",
         "output/official-net/local-checks.json",
         "output/official-net/mobile/results.json",
         "output/official-net/unit.log",
         "output/official-net/typecheck.log",
         "output/official-net/build.log",
+        "output/official-net/source-audit.log",
         "output/official-net/1440.png",
         "output/official-net/320.png",
-        "output/official-net/collapsed.png"
+        "output/official-net/collapsed.png",
+        "output/official-net/provider-before.json",
+        "output/official-net/provider-after.json",
+        "output/official-net/ci-success.json",
+        "output/official-net/delivery.json",
+        "output/releases/0.6.3/receipt.json"
       ],
-      "progress": "Integració i qualitat local correctes: 357 unitàries, cinc comprovacions del nou enllaç i nou casos de navegació en tres motors. Icona transparent WebP de 13 KB, sidebar oberta/plegada i Més mòbil. Publicació 0.6.3 pendent de PR/CI i rebut."
+      "progress": "Publicada 0.6.3 amb PR/CI verda, release immutable, rebuts i SHA/bindings confirmats. Icona 3D WebP transparent de 13 KB, sidebar oberta/plegada i Més mòbil verificats. Domini T69-01 encara pendent dels accessos.",
+      "change_log_id": "H172"
     }
   ]
 }

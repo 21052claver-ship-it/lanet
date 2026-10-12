@@ -1,0 +1,43 @@
+{
+  "recordedAt": "2026-10-12T12:58:26.608Z",
+  "version": "0.6.3",
+  "repository": "21052claver-ship-it/lanet",
+  "sourceCommit": "12536d1112d6a6c9d449d4481c9d19e1d5a51236",
+  "authorEmail": "21052.claver@fje.edu",
+  "releaseUrl": "https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.3",
+  "immutable": true,
+  "tagCommitMatches": true,
+  "releaseReceiptDigestMatches": true,
+  "iconReceiptDigestMatches": true,
+  "ci": "https://github.com/21052claver-ship-it/lanet/actions/runs/38250108288",
+  "ciSuccess": true,
+  "pullRequest": "https://github.com/21052claver-ship-it/lanet/pull/8",
+  "cloudflareDeployment": "f2970048",
+  "providerConfirmed": true,
+  "githubDeployment": 7014602984,
+  "githubDeploymentState": "success",
+  "origin": "https://lanet.pages.dev",
+  "bindingsPreserved": true,
+  "googleOnlyPreserved": true,
+  "publicFiles": 563,
+  "icon": {
+    "path": "public/images/ui/official-net-3d-v1.webp",
+    "bytes": 13452,
+    "width": 256,
+    "height": 256,
+    "generatedWith": "image_gen",
+    "alpha": true
+  },
+  "tests": {
+    "unit": 357,
+    "linkViewportChecks": 5,
+    "mobileNavigationScenarios": 9
+  },
+  "publicSiteVisited": false,
+  "externalPortalMocked": true,
+  "realDevicesTested": false,
+  "productionDataExcluded": true,
+  "credentialExportedToGitHub": false,
+  "databaseMigrationRequired": false,
+  "domainMigrationApplied": false
+}
