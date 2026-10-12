@@ -12,7 +12,7 @@ Identificació pel sub signat. Verificació d’emissor, destinatari, signatura,
 
 ## Domini propi preparat el 12/10/2026
 
-Marc confirma el callback `https://lanet.es/api/auth/google/callback` desat al mateix client. La configuració 0.6.4 prepara aquest origen; l’activació requereix DNS, TLS i publicació verificats. La comprovació real de l’11/10 descrita a dalt correspon a l’adreça anterior i no demostra una entrada real a lanet.es.
+Marc confirma el callback `https://lanet.es/api/auth/google/callback` desat al mateix client. La configuració 0.6.5 prepara aquest origen; l’activació requereix DNS, TLS i publicació verificats. La comprovació real de l’11/10 descrita a dalt correspon a l’adreça anterior i no demostra una entrada real a lanet.es.
 
 ## Callbacks
 

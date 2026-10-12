@@ -2,7 +2,7 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
-## [0.6.4] - 2026-10-12
+## [0.6.5] - 2026-10-12
 
 - Domini principal propi `https://lanet.es`, amb HTTPS i callback de Google del mateix origen.
 - `www.lanet.es` i `lanet.pages.dev` redirigeixen la web a l’arrel canònica; les API dels àlies continuen aïllades.

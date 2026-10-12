@@ -9,7 +9,7 @@ Tasca única T69-01. Marc autoritza configurar el domini d’IONOS a Cloudflare 
 - [ ] Confirmar zona activa i HTTPS vàlid a `lanet.es` i `www.lanet.es`.
 - [x] Callback `https://lanet.es/api/auth/google/callback` confirmat per Marc; altres callbacks i marca compartida conservats.
 - [x] Preparar origen canònic, redireccions i metadades amb proves locals.
-- [ ] Passar PR/CI, publicar 0.6.4 i verificar el rebut i la configuració efectiva.
+- [ ] Passar PR/CI, publicar 0.6.5 i verificar el rebut i la configuració efectiva.
 
 ## Infraestructura
 
@@ -21,7 +21,7 @@ SSL en Full (strict), Always Use HTTPS i TLS mínim 1.2; TLS 1.3 i Universal SSL
 
 ## Aplicació i accés
 
-0.6.4 prepara `PUBLIC_ORIGIN=https://lanet.es` i `GOOGLE_REDIRECT_URI=https://lanet.es/api/auth/google/callback`. La versió publicada anterior continua activa fins que la infraestructura i CI estiguin verificades. Homepage, enllaços del README i metadades canòniques apunten al domini propi.
+0.6.5 prepara `PUBLIC_ORIGIN=https://lanet.es` i `GOOGLE_REDIRECT_URI=https://lanet.es/api/auth/google/callback`. La versió publicada anterior continua activa fins que la infraestructura i CI estiguin verificades. Homepage, enllaços del README i metadades canòniques apunten al domini propi.
 
 El guard de Pages existent serveix l’app només a l’origen principal. La web dels àlies `www.lanet.es`, `lanet.pages.dev` i previsualitzacions redirigeix a l’arrel canònica amb no-store/no-referrer i sense reenviar paràmetres OAuth. L’API dels àlies es rebutja abans d’accedir a dades o secrets. Les cookies de l’adreça antiga no es traslladen: els usuaris iniciaran sessió amb Google al domini nou.
 
