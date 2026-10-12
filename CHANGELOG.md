@@ -7,7 +7,8 @@ Cada publicació nova té una versió SemVer, un tag Git immutable, una release 
 - Corregides les icones i la cerca sense accents de les preferències d’assignatures.
 - Les respostes de formularis tancats ja no tanquen un diàleg obert posteriorment.
 - Editor d’apunts protegit durant la càrrega; errors de connexió clars i sortida de sessió recuperable sense peticions duplicades.
-- 18 regressions de recuperació en tres motors afegides a CI.
+- Gestió del centre amb reintent de connexió, avís netejat en recuperar-se i protecció contra respostes antigues.
+- 21 regressions de recuperació en tres motors afegides a CI.
 
 ## [0.6.0] - 2026-10-12
 

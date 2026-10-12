@@ -11,15 +11,27 @@ export default function Admin() {
   const [tab, setTab] = useState('course'),
     [management, setManagement] = useState(null),
     [error, setError] = useState(''),
+    [loading, setLoading] = useState(true),
+    [reload, setReload] = useState(0),
     [group, setGroup] = useState(data.user.group_id),
     [term, setTerm] = useState(1);
   const admin = data.user.role === 'admin';
   useEffect(() => {
     if (data.user.role === 'student') return;
+    let current = true;
+    setLoading(true);
     api('/admin')
-      .then(setManagement)
-      .catch((e) => setError(e.message));
-  }, [data, tab]);
+      .then((result) => {
+        if (!current) return;
+        setManagement(result);
+        setError('');
+      })
+      .catch((e) => current && setError(e.message))
+      .finally(() => current && setLoading(false));
+    return () => {
+      current = false;
+    };
+  }, [data, tab, reload]);
   if (data.user.role === 'student')
     return <Empty title="Aquest espai és per als responsables del centre" />;
   const offerings = data.offerings.filter((o) => o.group_id === group);
@@ -42,6 +54,12 @@ export default function Admin() {
         onChange={setTab}
       />
       <FormError error={error} />
+      {error && (
+        <Button busy={loading} onClick={() => setReload((attempt) => attempt + 1)}>
+          Tornar-ho a provar
+        </Button>
+      )}
+      {loading && !management && <p role="status">Carregant la gestió del centre…</p>}
       {['course', 'templates'].includes(tab) && (
         <div className="admin-toolbar">
           <Select
@@ -290,12 +308,12 @@ export default function Admin() {
                 </div>
               </article>
             ))
-          ) : (
+          ) : management ? (
             <Empty
               title="No hi ha revisions pendents"
               body="Els avisos sobre continguts apareixeran aquí."
             />
-          )}
+          ) : null}
         </section>
       )}
     </>

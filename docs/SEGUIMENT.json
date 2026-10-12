@@ -6733,7 +6733,8 @@
         "src/App.jsx",
         "scripts/test-workspace-recovery.mjs",
         "tests/api-client.test.js",
-        ".github/workflows/verify.yml"
+        ".github/workflows/verify.yml",
+        "src/pages/Admin.jsx"
       ],
       "acceptance": "Auditoria local de totes les seccions, formularis i casos límit. Corregir incidències reproduïdes, verificar tres motors i publicar amb CI verda i registre de versió. Sense accedir a dades de producció.",
       "checks": [

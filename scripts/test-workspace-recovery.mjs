@@ -217,6 +217,63 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         1,
       );
     });
+    await check(
+      'admin-recovery-and-ordering',
+      { width: 390, height: 844 },
+      async (page, fixture) => {
+        fixture.db.exec(
+          "UPDATE users SET role='admin',name='Responsable local antic' WHERE id='browser'",
+        );
+        let mode = 'fail';
+        const started = gate(),
+          finish = gate();
+        await page.route('**/api/admin', async (route) => {
+          if (mode === 'fail') return route.abort();
+          if (mode !== 'hold') return route.continue();
+          mode = 'normal';
+          const response = await route.fetch();
+          started.release();
+          await finish.promise;
+          await route.fulfill({
+            response,
+            headers: { ...response.headers(), 'x-lanet-test-late': '1' },
+          });
+        });
+        try {
+          // A hash-only navigation keeps the student bootstrap. Reload the
+          // fixture identity immediately rather than waiting for the 30s sync.
+          await page.goto(fixture.base + '/?audit=admin#admin');
+          await page.getByRole('alert').waitFor();
+          mode = 'normal';
+          await page.getByRole('button', { name: 'Tornar-ho a provar', exact: true }).click();
+          await page.getByRole('alert').waitFor({ state: 'hidden' });
+          mode = 'hold';
+          await page.getByRole('tab', { name: 'Revisions', exact: true }).click();
+          await started.promise;
+          fixture.db.exec(
+            "UPDATE users SET name='Responsable local actualitzat' WHERE id='browser'",
+          );
+          await page.getByRole('tab', { name: 'Comptes', exact: true }).click();
+          await page.getByRole('cell', { name: /Responsable local actualitzat/ }).waitFor();
+          const old = page.waitForResponse(
+            (response) => response.headers()['x-lanet-test-late'] === '1',
+          );
+          finish.release();
+          await (await old).finished();
+          await page.evaluate(
+            () =>
+              new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
+          );
+          assert.equal(
+            await page.getByRole('cell', { name: /Responsable local actualitzat/ }).count(),
+            1,
+          );
+          assert.equal(await page.getByRole('alert').count(), 0);
+        } finally {
+          finish.release();
+        }
+      },
+    );
     await check('logout-recovery', { width: 390, height: 844 }, async (page, fixture) => {
       const started = gate(),
         finish = gate();
