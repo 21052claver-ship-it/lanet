@@ -6883,7 +6883,7 @@
       "id": "T70-01",
       "phase": "F70",
       "title": "Repartir fitxes directament al tapet complet",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R84"
       ],
@@ -6907,16 +6907,22 @@
       ],
       "evidence": [
         "docs/PLA-TAPET-DIRECTE.md",
+        "docs/releases/0.6.2.json",
         "output/direct-board/browser/results.json",
+        "output/direct-board/transition/results.json",
         "output/direct-board/unit.log",
         "output/direct-board/typecheck.log",
         "output/direct-board/build.log",
+        "output/direct-board/source-audit.log",
         "output/roulette-animation/results.json",
-        "output/direct-board/visual/1440-chips.png",
-        "output/direct-board/visual/390-chips.png",
-        "output/direct-board/transition/results.json"
+        "output/direct-board/provider-before.json",
+        "output/direct-board/provider-after.json",
+        "output/direct-board/ci-success.json",
+        "output/direct-board/delivery.json",
+        "output/releases/0.6.2/receipt.json"
       ],
-      "progress": "Implementació i qualitat local correctes: 357 unitàries, 27 tapet (24 fluxos + 3 transicions responsive) i 18 animació en Chromium/Firefox/WebKit. Publicació 0.6.2 pendent de PR/CI i rebut. Cap canvi a servidor, odds, dades ni domini."
+      "progress": "Publicada 0.6.2 amb PR/CI verda, tag/release immutables i SHA/bindings confirmats. 357 unitàries, 27 casos de tapet i 18 d’animació en tres motors; origen i dades preservats. Domini de T69-01 encara pendent d’accés.",
+      "change_log_id": "H171"
     }
   ]
 }
