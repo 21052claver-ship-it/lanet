@@ -1,15 +1,13 @@
-# Verificació · aposta pròpia
+# Verificació · depuració general
 
-12 d’octubre de 2026. Versió 0.6.0, commit 731b5d4c8499c74276cd279f04da5aec68b20281.
+Versió 0.6.1, commit 53ebb7f7d0d5d5c18e3fb3ed3ca2f5ea1fbc8ecd.
 
-El creador pot ser responsable del resultat. Jo mateix seleccionat per defecte: l’aposta s’obre en crear-la i el creador confirma A/B després del termini amb justificació pública. Opció d’una altra persona preservada amb acceptació prèvia. Responsable visible i sense poder apostar-hi; límits, recuperació, retorns i liquidació única preservats.
+Corregides icones d’assignatures no seleccionades, cerca sense accents, tancament de diàlegs per respostes antigues, càrrega protegida de l’editor d’apunts i recuperació de connexió/sortida sense peticions duplicades. Gestió del centre amb reintent directe, avís netejat en recuperar-se i protecció contra respostes antigues.
 
-352 unitàries correctes, inclosos permisos, creació i resolució pròpies, recuperació sense doble pagament i migració amb mercats pendents, oberts, resolts i anul·lats. Preservació exacta de rowids, apostes, accions, liquidacions, usuaris i llibre major. 39 casos locals de prediccions correctes en Chromium, Firefox i WebKit, sis de nous a 320 i 1440 px. Captures revisades, selector sense text tallat al mòbil i repartiment exacte entre participants.
+Exploració local de les vuit seccions i formularis a 320, 390 i 1440 px amb noms i textos llargs. 21 regressions de recuperació en Chromium, Firefox i WebKit: selecció i cerca, resposta antiga després d’obrir un altre diàleg, càrrega i reintent d’editor, text conservat després de fallar un enviament i sortida de sessió recuperable. Captures revisades; icones uniformes a 34 px.
 
-CI completa correcta: auditoria, tipus/lint, build, àudio Firefox, 15 targetes, 39 prediccions, 6 antiabús, 18 animació, 15 tapet, 36 sala secreta, 9 navegació mòbil, 48 responsive i 135 controls generals. Auditoria npm de producció: 0 vulnerabilitats reportades.
+354 unitàries correctes i 342 casos de navegador a CI: 21 recuperació, 15 targetes d’horari, 39 prediccions, 6 antiabús, 18 animació, 15 tapet, 36 sala secreta, 9 navegació mòbil, 48 responsive i 135 controls generals. 120 casos locals addicionals correctes: 39 de música, 33 de continguts, 24 de nota final/plusos i 24 de top 5 PAU. Total: 462 casos de navegador, sense comptar dues vegades els responsive locals. Tipus, lint, build i auditoria de codi públic correctes. Auditoria npm de producció: 0 vulnerabilitats reportades.
 
-Migració 0025 revisada, amb còpia privada fresca i assaig aïllat que conserva els digests de totes les taules. Aplicada via proveïdor després de CI verda, esquema i foreign_key_check verificats. Conserva dades i saldos; cap aposta ni usuari de prova creat en producció.
+[CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38227341981) · [Registre](releases/0.6.1.json) · [Pla](PLA-DEPURACIO-GENERAL.md).
 
-[CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38220603175) · [Registre](releases/0.6.0.json) · [Pla](PLA-APOSTA-PROPIA.md).
-
-Cap visita al web públic ni prova de dispositius físics. Cloudflare confirma production/main i SHA complet; release immutable, tag, digest del rebut, GitHub Deployment success i D1/R2/MEDIA_SAFETY verificats. Evidències privades a output/self-resolver.
+Cloudflare confirma production/main i SHA complet; release immutable, tag, digest del rebut, GitHub Deployment success i D1/R2/MEDIA_SAFETY verificats. Cap migració, regal, reinici ni modificació de dades d’usuaris. Cap visita al web públic ni prova de dispositius físics. Evidències privades a output/debug-pass i output/workspace-recovery.

@@ -1,0 +1,58 @@
+{
+  "recordedAt": "2026-10-12T09:26:17.651Z",
+  "repository": "21052claver-ship-it/lanet",
+  "version": "0.6.1",
+  "sourceCommit": "53ebb7f7d0d5d5c18e3fb3ed3ca2f5ea1fbc8ecd",
+  "authorEmail": "21052.claver@fje.edu",
+  "releaseUrl": "https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.1",
+  "immutable": true,
+  "tagCommitMatches": true,
+  "releaseReceiptDigestMatches": true,
+  "ci": "https://github.com/21052claver-ship-it/lanet/actions/runs/38227341981",
+  "ciSuccess": true,
+  "cloudflareDeployment": "a4e10a9c",
+  "providerConfirmed": true,
+  "githubDeployment": 7010689710,
+  "githubDeploymentState": "success",
+  "origin": "https://lanet.pages.dev",
+  "publicFiles": 551,
+  "productionDataExcluded": true,
+  "dependencyAudit": {
+    "production": true,
+    "reportedVulnerabilities": 0,
+    "development": true
+  },
+  "tests": {
+    "unit": 354,
+    "workspaceRecovery": 21,
+    "scheduleCardBrowser": 15,
+    "predictionBrowser": 39,
+    "abuseBrowser": 6,
+    "animationScenarios": 18,
+    "rouletteBoardScenarios": 15,
+    "secretRoomScenarios": 36,
+    "mobileNavigationScenarios": 9,
+    "responsive": 48,
+    "generalBrowser": 135
+  },
+  "publicSiteVisited": false,
+  "realDevicesTested": false,
+  "databaseMigrationRequired": false,
+  "serverSettlementChanged": false,
+  "credentialExportedToGitHub": false,
+  "userDataChanged": false,
+  "fixes": [
+    "Subject icons retain size when selection changes",
+    "Accent-insensitive subject search and explicit empty state",
+    "Scoped dialog close prevents stale responses closing new dialogs",
+    "Note editor protects original load and supports retry",
+    "Clear network errors and guarded logout recovery",
+    "Admin retry clears errors and ignores out-of-order responses"
+  ],
+  "additionalLocalBrowserTests": {
+    "music": 39,
+    "contents": 33,
+    "courseGrades": 24,
+    "pauTopFive": 24
+  }
+}

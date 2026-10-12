@@ -1,9 +1,9 @@
-# Publicació · La Net 0.6.0
+# Publicació · La Net 0.6.1
 
-12 d’octubre de 2026. https://lanet.pages.dev · Pages eebd85ef, production/main. Commit: 731b5d4c8499c74276cd279f04da5aec68b20281.
+https://lanet.pages.dev · Pages a4e10a9c, production/main. Commit 53ebb7f7d0d5d5c18e3fb3ed3ca2f5ea1fbc8ecd.
 
-El creador pot ser responsable del resultat. Jo mateix seleccionat per defecte: l’aposta s’obre en crear-la i el creador confirma A/B després del termini amb justificació pública. Opció d’una altra persona preservada amb acceptació prèvia. Responsable visible i sense poder apostar-hi; límits, recuperació, retorns i liquidació única preservats.
+Corregides icones d’assignatures no seleccionades, cerca sense accents, tancament de diàlegs per respostes antigues, càrrega protegida de l’editor d’apunts i recuperació de connexió/sortida sense peticions duplicades. Gestió del centre amb reintent directe, avís netejat en recuperar-se i protecció contra respostes antigues.
 
-[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.0) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38220603175) · [Registre](releases/0.6.0.json). Publicada amb npm run release després de CI verda i migració 0025 verificada. GitHub Deployment 7009516703 success i SHA complet confirmat pel proveïdor.
+[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.1) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38227341981) · [Registre](releases/0.6.1.json). Publicada amb npm run release després de CI verda. GitHub Deployment 7010689710 success; SHA complet i bindings confirmats pel proveïdor.
 
-Google únic @fje.edu, D1/R2 i serveis privats preservats. Cap regal ni reinici. Còpia privada i assaig abans de modificar l’esquema. Verificació via proveïdor sense visitar la web pública.
+Google únic @fje.edu, D1/R2 i serveis privats preservats. Sense migracions ni dades reals de prova.

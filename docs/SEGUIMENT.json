@@ -6717,7 +6717,7 @@
       "id": "T67-01",
       "phase": "F67",
       "title": "Depurar la plataforma amb casos límit i errors de connexió",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R81"
       ],
@@ -6743,7 +6743,29 @@
         "Corregir incidències i afegir regressions apropiades.",
         "Verificar qualitat, CI i publicació amb rebut."
       ],
-      "evidence": []
+      "evidence": [
+        "docs/PLA-DEPURACIO-GENERAL.md",
+        "docs/releases/0.6.1.json",
+        "output/debug-pass/before/results.json",
+        "output/debug-pass/before/reproduced.json",
+        "output/debug-pass/before/modal-race.json",
+        "output/debug-pass/before/admin-recovery.json",
+        "output/debug-pass/unit.log",
+        "output/debug-pass/typecheck.log",
+        "output/debug-pass/source-audit.log",
+        "output/debug-pass/dependency-audit-all.json",
+        "output/workspace-recovery/results.json",
+        "output/debug-pass/responsive.log",
+        "output/debug-pass/music/music-results.json",
+        "output/debug-pass/contents/contents-browser-results.json",
+        "output/debug-pass/course-grades/course-browser-results.json",
+        "output/debug-pass/pau-top5/top5-browser-results.json",
+        "output/debug-pass/remote-bindings.json",
+        "output/debug-pass/ci-success.json",
+        "output/debug-pass/delivery.json",
+        "output/releases/0.6.1/receipt.json"
+      ],
+      "change_log_id": "H168"
     }
   ]
 }
