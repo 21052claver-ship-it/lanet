@@ -132,6 +132,67 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
     }
   }
   try {
+    for (const width of [320, 768, 1440]) {
+      await run(
+        'Pinned prediction board, host and keyboard navigation at ' + width + 'px',
+        { width, height: 1000 },
+        async (f, pageFor) => {
+          const page = await pageFor();
+          await page.locator('.prediction-empty').waitFor();
+          await page.getByRole('heading', { name: 'Prediccions', exact: true }).focus();
+          await page.screenshot({
+            path: out + '/' + engine + '-board-empty-' + width + '.png',
+            fullPage: true,
+          });
+          for (let i = 0; i < 3; i++) {
+            await f.call('', {
+              request_id: randomUUID(),
+              title: [
+                'Quin equip guanyarà la final de divendres?',
+                'Acabarem el projecte de tecnologia abans del termini acordat?',
+                'Hi haurà més participants que l’any passat a la jornada esportiva del centre?',
+              ][i],
+              option_a: 'Sí, ho aconseguirem',
+              option_b: 'No aquesta vegada',
+              rules:
+                'Segons el resultat oficial publicat. En cas de dubte es retornaran els pastissos.',
+              resolver_id: 'resolver',
+              closes_at: f.db.prepare('SELECT unixepoch() now').get().now + 3600,
+            });
+          }
+          await page.getByRole('button', { name: 'Actualitzar', exact: true }).click();
+          await page.waitForFunction(
+            () => document.querySelectorAll('.prediction-card').length === 3,
+          );
+          assert.ok(
+            await page
+              .locator('.prediction-host img')
+              .evaluate((img) => img.complete && img.naturalWidth > 0),
+          );
+          const host = await page.locator('.prediction-host').boundingBox();
+          const board = await page.locator('.prediction-board').boundingBox();
+          assert.ok(
+            host.x + host.width <= board.x + 1 || host.y + host.height <= board.y + 1,
+            'Host must not overlap board',
+          );
+          assert.ok(
+            await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1),
+          );
+          await page.screenshot({
+            path: out + '/' + engine + '-board-' + width + '.png',
+            fullPage: true,
+          });
+          await page.locator('.prediction-card').first().focus();
+          await page.keyboard.press('Enter');
+          await page.locator('.prediction-detail').waitFor();
+          await page.getByRole('button', { name: 'Totes les prediccions', exact: true }).click();
+          await page.locator('.prediction-card').first().waitFor();
+          await page.getByRole('button', { name: 'Ruleta', exact: true }).click();
+          await page.locator('.casino-host img').waitFor();
+          assert.equal(await page.locator('.prediction-board').count(), 0);
+        },
+      );
+    }
     for (const width of [320, 390]) {
       await run(
         `Student creates a new bet from another bet detail at ${width}px`,

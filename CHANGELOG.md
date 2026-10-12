@@ -1,5 +1,11 @@
 # Historial de versions
 
+## 0.5.0 · 2026-10-12
+
+- Nou escenari de prediccions amb la senyora sencera al costat d’una pissarra emmarcada en fusta.
+- Apostes com papers penjats, amb filtres, creació i detall accessibles al mòbil i amb teclat.
+- Nou control visual local en tres motors a 320, 768 i 1440 px; fluxos de pastissos preservats.
+
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
 ## [0.4.1] - 2026-10-12

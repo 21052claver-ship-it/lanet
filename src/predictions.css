@@ -713,3 +713,190 @@
     transition: none;
   }
 }
+
+/* A separate room: the host stands beside a real, readable noticeboard. */
+.prediction-scene {
+  display: grid;
+  grid-template-columns: minmax(130px, 19%) minmax(0, 1fr);
+  align-items: start;
+  gap: 18px;
+  padding-top: 10px;
+}
+.prediction-host {
+  position: sticky;
+  top: 100px;
+  align-self: start;
+  margin-top: 64px;
+  text-align: center;
+  isolation: isolate;
+}
+.prediction-host-niche {
+  position: absolute;
+  inset: 7% 0 5%;
+  z-index: -1;
+  border: 1px solid #e7c68e29;
+  border-radius: 120px 120px 16px 16px;
+  background: radial-gradient(ellipse at 50% 35%, #e7c68e20, #10291f55 75%);
+}
+.prediction-host img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 470px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 8px #071a1760);
+}
+.prediction-host > span {
+  display: inline-block;
+  margin: 12px 0;
+  color: #e7d6b5;
+  font-size: 11px;
+  font-style: italic;
+}
+.prediction-board {
+  min-width: 0;
+  padding: clamp(16px, 2.3vw, 30px);
+  border: 12px solid #a8794e;
+  border-radius: 14px;
+  background: radial-gradient(ellipse at 25% 0, #44655477, transparent 65%), #203c32;
+  box-shadow:
+    inset 0 0 0 2px #e5b78055,
+    inset 0 0 32px #061b2180,
+    0 0 0 1px #62462f,
+    0 12px 25px #0a211f55;
+  border-image: none;
+  position: relative;
+}
+.prediction-board::after {
+  content: '';
+  position: absolute;
+  bottom: -16px;
+  left: -16px;
+  right: -16px;
+  height: 9px;
+  border-radius: 3px;
+  background: linear-gradient(#d0a174, #8f603b);
+  box-shadow: 0 4px 5px #081b1a55;
+  pointer-events: none;
+}
+.prediction-board .prediction-heading {
+  padding-bottom: 12px;
+  border-bottom: 1px dashed #dbe5d53b;
+  align-items: flex-start;
+}
+.prediction-board .prediction-heading .button {
+  flex-shrink: 0;
+}
+.prediction-board .prediction-grid {
+  gap: 24px 18px;
+  padding: 10px 0 6px;
+}
+.prediction-board .prediction-card {
+  position: relative;
+  border-radius: 3px 3px 10px 3px;
+  border: 1px solid #ddd2b8;
+  padding: 28px 18px 18px;
+  background: linear-gradient(135deg, #fffdf5, #f4eddc);
+  box-shadow:
+    2px 5px 0 #122c2540,
+    0 8px 14px #071b2133;
+}
+.prediction-board .prediction-card::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: calc(50% - 7px);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #e9bb77, #b97b3f 65%);
+  box-shadow: 0 2px 3px #172d2966;
+  pointer-events: none;
+}
+.prediction-board .prediction-card:hover {
+  transform: translateY(-3px);
+}
+.prediction-board .prediction-card h4 {
+  font-size: 18px;
+  margin: 12px 0 18px;
+}
+.prediction-board .prediction-card-footer {
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.prediction-board .prediction-detail {
+  border-radius: 5px 5px 14px 5px;
+}
+.prediction-board .prediction-empty {
+  border: 1px dashed #e8dcba66;
+  border-radius: 8px;
+  background: #e7d6b508;
+}
+@media (max-width: 1100px) {
+  .prediction-scene {
+    grid-template-columns: minmax(90px, 14%) minmax(0, 1fr);
+    gap: 12px;
+  }
+  .prediction-board .prediction-heading {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .prediction-board .prediction-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 700px) {
+  .prediction-room {
+    padding: 0 12px 26px;
+  }
+  .prediction-scene {
+    display: block;
+    padding-top: 0;
+  }
+  .prediction-host {
+    position: relative;
+    top: auto;
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: fit-content;
+  }
+  .prediction-host img {
+    width: 72px;
+    max-height: none;
+  }
+  .prediction-host-niche {
+    inset: 4px auto 0 0;
+    width: 72px;
+  }
+  .prediction-host > span {
+    max-width: 110px;
+    text-align: left;
+    font-size: 12px;
+  }
+  .prediction-board {
+    border-width: 7px;
+    padding: 15px 12px;
+    border-radius: 10px;
+  }
+  .prediction-board::after {
+    left: -9px;
+    right: -9px;
+    bottom: -11px;
+    height: 7px;
+  }
+  .prediction-board .prediction-heading .button {
+    width: 100%;
+  }
+  .prediction-board .prediction-grid {
+    gap: 22px;
+  }
+  .prediction-board .prediction-card {
+    padding: 25px 14px 16px;
+  }
+  .prediction-board .prediction-detail {
+    padding: 16px 12px;
+  }
+}

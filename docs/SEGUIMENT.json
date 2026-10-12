@@ -312,6 +312,10 @@
     {
       "id": "R77",
       "description": "Qualsevol usuari pot crear apostes, amb un accés clar disponible també des del detall."
+    },
+    {
+      "id": "R78",
+      "description": "Escenari propi de prediccions amb la senyora i apostes penjades en una pissarra."
     }
   ],
   "phases": [
@@ -760,6 +764,13 @@
       "title": "Creació d’apostes accessible per a tothom",
       "depends_on": [
         "F62"
+      ]
+    },
+    {
+      "id": "F64",
+      "title": "Escenari de la pissarra d’apostes",
+      "depends_on": [
+        "F63"
       ]
     }
   ],
@@ -6554,6 +6565,31 @@
         "output/releases/0.4.1/receipt.json"
       ],
       "change_log_id": "H164"
+    },
+    {
+      "id": "T64-01",
+      "phase": "F64",
+      "title": "Pissarra visual d’apostes amb amfitriona i responsive",
+      "status": "review",
+      "requirements": [
+        "R78"
+      ],
+      "depends_on": [
+        "T63-01"
+      ],
+      "files": [
+        "src/components/PredictionRoom.jsx",
+        "src/predictions.css",
+        "scripts/test-predictions.mjs"
+      ],
+      "acceptance": "Escenari propi amb figura sencera, pissarra de fusta i targetes penjades. Creació, filtres, detall i liquidació preservats. Sense desbordaments a 320px. Verificació local en tres motors, CI i publicació versionada.",
+      "checks": [
+        "Registrar pla i revisar escena existent.",
+        "Implementar pissarra i amfitriona responsive.",
+        "Verificar visualment i provar operacions en tres motors.",
+        "Publicar amb CI verda i rebut."
+      ],
+      "evidence": []
     }
   ]
 }

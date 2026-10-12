@@ -676,348 +676,359 @@ export default function PredictionRoom() {
   const status = market ? predictionStatus(market, now) : null;
   return (
     <div className="prediction-room">
-      <div className="prediction-heading">
-        <div>
-          <span className="prediction-eyebrow">La segona taula</span>
-          <h3 ref={heading} tabIndex={-1}>
-            {selected ? 'La predicció' : 'Prediccions'}
-          </h3>
-          <p>Tria A o B. El resultat decideix com es reparteix el pot.</p>
+      <div className="prediction-scene">
+        <div className="prediction-host" aria-hidden="true">
+          <div className="prediction-host-niche" />
+          <img src="/images/croupier-v1.webp" alt="" width="512" height="768" />
+          <span>La pissarra de la casa</span>
         </div>
-        <Button
-          variant="primary"
-          onClick={() => {
-            setError('');
-            setCreate(true);
-          }}
-          disabled={disabled}
-        >
-          <Plus size={18} />
-          Crear aposta
-        </Button>
-      </div>
-      <div className="prediction-wallet">
-        <Cake size={20} aria-hidden="true" />
-        <b>{data.user.balance}</b>
-        <span>pastissos disponibles</span>
-        <small>Virtuals · sense diners</small>
-      </div>
-      {pending && (
-        <div className="prediction-recovery" role="status">
-          <strong>Acció pendent de confirmar</strong>
-          <p>
-            {pending.path.endsWith('/bets')
-              ? `${pending.body.stake} pastissos a ${pending.body.choice}. `
-              : ''}
-            Recuperar-la no crea una acció nova.
-          </p>
-          <Button variant="primary" busy={busy} onClick={() => send(pending, true)}>
-            <ArrowClockwise size={18} />
-            Recuperar acció
-          </Button>
-        </div>
-      )}
-      <FormError error={error} />
-      {selected ? (
-        <>
-          <Button
-            variant="ghost"
-            className="prediction-back"
-            onClick={() => {
-              setSelected(null);
-              setMarket(null);
-            }}
-          >
-            <ArrowLeft size={17} />
-            Totes les prediccions
-          </Button>
-          {market && (
-            <article className="prediction-detail">
-              <span className={`prediction-status status-${status}`}>{statuses[status]}</span>
-              <h4>{market.title}</h4>
-              <Pool market={market} />
-              <div className="prediction-facts">
-                <span>
-                  <Clock size={17} aria-hidden="true" />
-                  Tanca:{' '}
-                  <time dateTime={new Date(market.closes_at * 1000).toISOString()}>
-                    {dates(market.closes_at)}
-                  </time>
-                </span>
-                <span>
-                  <UserCircle size={17} aria-hidden="true" />
-                  Creada per {market.creator}
-                </span>
-                <span>
-                  <Scales size={17} aria-hidden="true" />
-                  Resol {market.resolver}
-                </span>
-                <span>
-                  <Cake size={17} aria-hidden="true" />
-                  {market.total_a + market.total_b} al pot · {market.participants} participants
-                </span>
-              </div>
-              <div className="prediction-rules">
-                <strong>Criteris del resultat</strong>
-                <p>{market.rules}</p>
-              </div>
-              {status === 'pending' && (
-                <div className="prediction-notice">
-                  <Scales size={25} aria-hidden="true" />
-                  <div>
-                    <b>Esperant l’acceptació de {market.resolver}</b>
-                    <p>Encara no es poden apostar pastissos.</p>
-                    {market.can_accept && (
-                      <div className="prediction-actions">
-                        <Button
-                          variant="primary"
-                          disabled={disabled}
-                          onClick={() =>
-                            send({
-                              path: `/predictions/${market.id}/actions`,
-                              body: {
-                                request_id: clientId(),
-                                kind: 'accept',
-                                choice: null,
-                                reason: '',
-                              },
-                            })
-                          }
-                        >
-                          Acceptar encàrrec
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          disabled={disabled}
-                          onClick={() => setAction('reject')}
-                        >
-                          Rebutjar
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-              {status === 'open' && market.resolver_id === data.user.id && (
-                <p className="prediction-notice">
-                  Ets el responsable: podràs confirmar el resultat després del tancament. No pots
-                  apostar en aquesta taula.
-                </p>
-              )}
-              {status === 'open' && market.resolver_id !== data.user.id && (
-                <BetForm
-                  key={market.id}
-                  market={market}
-                  balance={data.user.balance}
-                  busy={disabled}
-                  now={now}
-                  submit={(body) => send({ path: `/predictions/${market.id}/bets`, body })}
-                />
-              )}
-              {status === 'closed' && (
-                <div className="prediction-notice">
-                  <Clock size={25} aria-hidden="true" />
-                  <div>
-                    <b>Apostes tancades</b>
-                    <p>
-                      {market.resolver} té fins al {dates(market.resolve_by)} per confirmar el
-                      resultat. Si no ho fa, es retornarà tot.
-                    </p>
-                    {market.resolver_id === data.user.id && now < market.resolve_by && (
-                      <Button
-                        variant="primary"
-                        disabled={disabled}
-                        onClick={() => setAction('resolve')}
-                      >
-                        Confirmar resultat A/B
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              )}
-              {['resolved', 'cancelled'].includes(status) && (
-                <div className="prediction-outcome">
-                  <CheckCircle size={28} weight="fill" aria-hidden="true" />
-                  <div>
-                    <strong>
-                      {status === 'resolved'
-                        ? `Guanya ${market.result}: ${market[market.result === 'A' ? 'option_a' : 'option_b']}`
-                        : 'Predicció anul·lada'}
-                    </strong>
-                    <p>{market.reason}</p>
-                    {status === 'resolved' &&
-                      market[market.result === 'A' ? 'total_a' : 'total_b'] === 0 && (
-                        <p>
-                          Cap participant havia triat l’opció guanyadora. S’ha retornat tot el pot.
-                        </p>
-                      )}
-                    {market.own_stake > 0 && (
-                      <p className="prediction-own-result">
-                        La teva posició: {market.own_stake} a {market.own_choice} ·{' '}
-                        <b>{market.own_payout} pastissos retornats</b> · balanç{' '}
-                        {market.own_payout - market.own_stake > 0 ? '+' : ''}
-                        {market.own_payout - market.own_stake}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              )}
-              {status === 'closed' && market.own_stake > 0 && (
-                <p className="prediction-hint">
-                  La teva posició: {market.own_stake} pastissos a {market.own_choice}.
-                </p>
-              )}
-              {market.can_cancel && ['pending', 'open', 'closed'].includes(status) && (
-                <Button
-                  variant="ghost"
-                  className="prediction-cancel"
-                  disabled={disabled}
-                  onClick={() => setAction('cancel')}
-                >
-                  Anul·lar i retornar pastissos
-                </Button>
-              )}
-              {!!market.history.length && (
-                <details className="prediction-history">
-                  <summary>Historial de la taula</summary>
-                  <ol>
-                    {market.history.map((h, index) => (
-                      <li key={index}>
-                        <b>
-                          {h.kind === 'accept'
-                            ? 'Encàrrec acceptat'
-                            : h.kind === 'resolve'
-                              ? `Resultat ${h.choice}`
-                              : 'Taula anul·lada'}
-                        </b>
-                        <span>
-                          {h.actor} · {dates(h.created_at)}
-                        </span>
-                        {h.reason && <p>{h.reason}</p>}
-                      </li>
-                    ))}
-                  </ol>
-                </details>
-              )}
-            </article>
-          )}
-        </>
-      ) : (
-        <>
-          <Tabs
-            label="Filtrar prediccions"
-            className="prediction-tabs"
-            value={filter}
-            onChange={setFilter}
-            items={[
-              ['open', 'Taules', ChartBar],
-              ['mine', 'Les meves', UserCircle],
-              ['resolve', 'Per resoldre', Scales],
-              ['finished', 'Finalitzades', CheckCircle],
-            ]}
-          />
-          {!!markets.length && (
-            <div className="prediction-grid">
-              {markets.map((m) => {
-                const s = predictionStatus(m, now);
-                return (
-                  <button
-                    type="button"
-                    className="prediction-card"
-                    key={m.id}
-                    onClick={() => openMarket(m)}
-                  >
-                    <span className={`prediction-status status-${s}`}>{statuses[s]}</span>
-                    <h4>{m.title}</h4>
-                    <Pool market={m} />
-                    <span className="prediction-card-meta">
-                      <span>
-                        {m.participants} participants · {m.total_a + m.total_b} pastissos
-                      </span>
-                      <span>
-                        {s === 'resolved'
-                          ? `Guanya ${m.result}`
-                          : s === 'cancelled'
-                            ? 'Pastissos retornats'
-                            : dates(m.closes_at)}
-                      </span>
-                    </span>
-                    {m.own_stake > 0 && (
-                      <span className="prediction-card-own">
-                        Tu: {m.own_stake} a {m.own_choice}
-                      </span>
-                    )}
-                    <span className="prediction-card-footer">
-                      <span>Resol {m.resolver}</span>
-                      <b>Veure taula →</b>
-                    </span>
-                  </button>
-                );
-              })}
+        <div className="prediction-board">
+          <div className="prediction-heading">
+            <div>
+              <span className="prediction-eyebrow">El tauler d’apostes</span>
+              <h3 ref={heading} tabIndex={-1}>
+                {selected ? 'La predicció' : 'Prediccions'}
+              </h3>
+              <p>Tria A o B. El resultat decideix com es reparteix el pot.</p>
             </div>
-          )}
-          {!loading && !markets.length && (
-            <div className="prediction-empty">
-              <ChartBar size={38} weight="duotone" aria-hidden="true" />
-              <h4>
-                {filter === 'resolve'
-                  ? 'Cap encàrrec pendent'
-                  : filter === 'mine'
-                    ? 'Encara no tens prediccions'
-                    : filter === 'finished'
-                      ? 'Encara no hi ha resultats'
-                      : 'La taula està preparada'}
-              </h4>
-              <p>
-                {filter === 'resolve'
-                  ? 'Quan et designin responsable, trobaràs aquí la proposta per acceptar-la.'
-                  : 'Crea una pregunta amb dues opcions i convida algú a confirmar el resultat.'}
-              </p>
-              {filter === 'open' && (
-                <Button variant="primary" disabled={disabled} onClick={() => setCreate(true)}>
-                  Crear la primera aposta
-                </Button>
-              )}
-            </div>
-          )}
-          {cursor && (
-            <Button variant="ghost" busy={loading} onClick={() => load(null, cursor)}>
-              Carregar més
+            <Button
+              variant="primary"
+              onClick={() => {
+                setError('');
+                setCreate(true);
+              }}
+              disabled={disabled}
+            >
+              <Plus size={18} />
+              Crear aposta
             </Button>
+          </div>
+          <div className="prediction-wallet">
+            <Cake size={20} aria-hidden="true" />
+            <b>{data.user.balance}</b>
+            <span>pastissos disponibles</span>
+            <small>Virtuals · sense diners</small>
+          </div>
+          {pending && (
+            <div className="prediction-recovery" role="status">
+              <strong>Acció pendent de confirmar</strong>
+              <p>
+                {pending.path.endsWith('/bets')
+                  ? `${pending.body.stake} pastissos a ${pending.body.choice}. `
+                  : ''}
+                Recuperar-la no crea una acció nova.
+              </p>
+              <Button variant="primary" busy={busy} onClick={() => send(pending, true)}>
+                <ArrowClockwise size={18} />
+                Recuperar acció
+              </Button>
+            </div>
           )}
-        </>
-      )}
-      {loading && (
-        <p className="prediction-loading" role="status">
-          Actualitzant la taula…
-        </p>
-      )}
-      <div className="prediction-bottom">
-        <p>Percentatges = pastissos del pot, no probabilitats. Sense comissions.</p>
-        <Button variant="ghost" busy={loading} disabled={busy} onClick={() => load()}>
-          <ArrowClockwise size={16} />
-          Actualitzar
-        </Button>
+          <FormError error={error} />
+          {selected ? (
+            <>
+              <Button
+                variant="ghost"
+                className="prediction-back"
+                onClick={() => {
+                  setSelected(null);
+                  setMarket(null);
+                }}
+              >
+                <ArrowLeft size={17} />
+                Totes les prediccions
+              </Button>
+              {market && (
+                <article className="prediction-detail">
+                  <span className={`prediction-status status-${status}`}>{statuses[status]}</span>
+                  <h4>{market.title}</h4>
+                  <Pool market={market} />
+                  <div className="prediction-facts">
+                    <span>
+                      <Clock size={17} aria-hidden="true" />
+                      Tanca:{' '}
+                      <time dateTime={new Date(market.closes_at * 1000).toISOString()}>
+                        {dates(market.closes_at)}
+                      </time>
+                    </span>
+                    <span>
+                      <UserCircle size={17} aria-hidden="true" />
+                      Creada per {market.creator}
+                    </span>
+                    <span>
+                      <Scales size={17} aria-hidden="true" />
+                      Resol {market.resolver}
+                    </span>
+                    <span>
+                      <Cake size={17} aria-hidden="true" />
+                      {market.total_a + market.total_b} al pot · {market.participants} participants
+                    </span>
+                  </div>
+                  <div className="prediction-rules">
+                    <strong>Criteris del resultat</strong>
+                    <p>{market.rules}</p>
+                  </div>
+                  {status === 'pending' && (
+                    <div className="prediction-notice">
+                      <Scales size={25} aria-hidden="true" />
+                      <div>
+                        <b>Esperant l’acceptació de {market.resolver}</b>
+                        <p>Encara no es poden apostar pastissos.</p>
+                        {market.can_accept && (
+                          <div className="prediction-actions">
+                            <Button
+                              variant="primary"
+                              disabled={disabled}
+                              onClick={() =>
+                                send({
+                                  path: `/predictions/${market.id}/actions`,
+                                  body: {
+                                    request_id: clientId(),
+                                    kind: 'accept',
+                                    choice: null,
+                                    reason: '',
+                                  },
+                                })
+                              }
+                            >
+                              Acceptar encàrrec
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              disabled={disabled}
+                              onClick={() => setAction('reject')}
+                            >
+                              Rebutjar
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  {status === 'open' && market.resolver_id === data.user.id && (
+                    <p className="prediction-notice">
+                      Ets el responsable: podràs confirmar el resultat després del tancament. No
+                      pots apostar en aquesta taula.
+                    </p>
+                  )}
+                  {status === 'open' && market.resolver_id !== data.user.id && (
+                    <BetForm
+                      key={market.id}
+                      market={market}
+                      balance={data.user.balance}
+                      busy={disabled}
+                      now={now}
+                      submit={(body) => send({ path: `/predictions/${market.id}/bets`, body })}
+                    />
+                  )}
+                  {status === 'closed' && (
+                    <div className="prediction-notice">
+                      <Clock size={25} aria-hidden="true" />
+                      <div>
+                        <b>Apostes tancades</b>
+                        <p>
+                          {market.resolver} té fins al {dates(market.resolve_by)} per confirmar el
+                          resultat. Si no ho fa, es retornarà tot.
+                        </p>
+                        {market.resolver_id === data.user.id && now < market.resolve_by && (
+                          <Button
+                            variant="primary"
+                            disabled={disabled}
+                            onClick={() => setAction('resolve')}
+                          >
+                            Confirmar resultat A/B
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  {['resolved', 'cancelled'].includes(status) && (
+                    <div className="prediction-outcome">
+                      <CheckCircle size={28} weight="fill" aria-hidden="true" />
+                      <div>
+                        <strong>
+                          {status === 'resolved'
+                            ? `Guanya ${market.result}: ${market[market.result === 'A' ? 'option_a' : 'option_b']}`
+                            : 'Predicció anul·lada'}
+                        </strong>
+                        <p>{market.reason}</p>
+                        {status === 'resolved' &&
+                          market[market.result === 'A' ? 'total_a' : 'total_b'] === 0 && (
+                            <p>
+                              Cap participant havia triat l’opció guanyadora. S’ha retornat tot el
+                              pot.
+                            </p>
+                          )}
+                        {market.own_stake > 0 && (
+                          <p className="prediction-own-result">
+                            La teva posició: {market.own_stake} a {market.own_choice} ·{' '}
+                            <b>{market.own_payout} pastissos retornats</b> · balanç{' '}
+                            {market.own_payout - market.own_stake > 0 ? '+' : ''}
+                            {market.own_payout - market.own_stake}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  {status === 'closed' && market.own_stake > 0 && (
+                    <p className="prediction-hint">
+                      La teva posició: {market.own_stake} pastissos a {market.own_choice}.
+                    </p>
+                  )}
+                  {market.can_cancel && ['pending', 'open', 'closed'].includes(status) && (
+                    <Button
+                      variant="ghost"
+                      className="prediction-cancel"
+                      disabled={disabled}
+                      onClick={() => setAction('cancel')}
+                    >
+                      Anul·lar i retornar pastissos
+                    </Button>
+                  )}
+                  {!!market.history.length && (
+                    <details className="prediction-history">
+                      <summary>Historial de la taula</summary>
+                      <ol>
+                        {market.history.map((h, index) => (
+                          <li key={index}>
+                            <b>
+                              {h.kind === 'accept'
+                                ? 'Encàrrec acceptat'
+                                : h.kind === 'resolve'
+                                  ? `Resultat ${h.choice}`
+                                  : 'Taula anul·lada'}
+                            </b>
+                            <span>
+                              {h.actor} · {dates(h.created_at)}
+                            </span>
+                            {h.reason && <p>{h.reason}</p>}
+                          </li>
+                        ))}
+                      </ol>
+                    </details>
+                  )}
+                </article>
+              )}
+            </>
+          ) : (
+            <>
+              <Tabs
+                label="Filtrar prediccions"
+                className="prediction-tabs"
+                value={filter}
+                onChange={setFilter}
+                items={[
+                  ['open', 'Taules', ChartBar],
+                  ['mine', 'Les meves', UserCircle],
+                  ['resolve', 'Per resoldre', Scales],
+                  ['finished', 'Finalitzades', CheckCircle],
+                ]}
+              />
+              {!!markets.length && (
+                <div className="prediction-grid">
+                  {markets.map((m) => {
+                    const s = predictionStatus(m, now);
+                    return (
+                      <button
+                        type="button"
+                        className="prediction-card"
+                        key={m.id}
+                        onClick={() => openMarket(m)}
+                      >
+                        <span className={`prediction-status status-${s}`}>{statuses[s]}</span>
+                        <h4>{m.title}</h4>
+                        <Pool market={m} />
+                        <span className="prediction-card-meta">
+                          <span>
+                            {m.participants} participants · {m.total_a + m.total_b} pastissos
+                          </span>
+                          <span>
+                            {s === 'resolved'
+                              ? `Guanya ${m.result}`
+                              : s === 'cancelled'
+                                ? 'Pastissos retornats'
+                                : dates(m.closes_at)}
+                          </span>
+                        </span>
+                        {m.own_stake > 0 && (
+                          <span className="prediction-card-own">
+                            Tu: {m.own_stake} a {m.own_choice}
+                          </span>
+                        )}
+                        <span className="prediction-card-footer">
+                          <span>Resol {m.resolver}</span>
+                          <b>Veure taula →</b>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+              {!loading && !markets.length && (
+                <div className="prediction-empty">
+                  <ChartBar size={38} weight="duotone" aria-hidden="true" />
+                  <h4>
+                    {filter === 'resolve'
+                      ? 'Cap encàrrec pendent'
+                      : filter === 'mine'
+                        ? 'Encara no tens prediccions'
+                        : filter === 'finished'
+                          ? 'Encara no hi ha resultats'
+                          : 'La taula està preparada'}
+                  </h4>
+                  <p>
+                    {filter === 'resolve'
+                      ? 'Quan et designin responsable, trobaràs aquí la proposta per acceptar-la.'
+                      : 'Crea una pregunta amb dues opcions i convida algú a confirmar el resultat.'}
+                  </p>
+                  {filter === 'open' && (
+                    <Button variant="primary" disabled={disabled} onClick={() => setCreate(true)}>
+                      Crear la primera aposta
+                    </Button>
+                  )}
+                </div>
+              )}
+              {cursor && (
+                <Button variant="ghost" busy={loading} onClick={() => load(null, cursor)}>
+                  Carregar més
+                </Button>
+              )}
+            </>
+          )}
+          {loading && (
+            <p className="prediction-loading" role="status">
+              Actualitzant la taula…
+            </p>
+          )}
+          <div className="prediction-bottom">
+            <p>Percentatges = pastissos del pot, no probabilitats. Sense comissions.</p>
+            <Button variant="ghost" busy={loading} disabled={busy} onClick={() => load()}>
+              <ArrowClockwise size={16} />
+              Actualitzar
+            </Button>
+          </div>
+          <details className="prediction-help">
+            <summary>Com funciona el repartiment?</summary>
+            <p>
+              Els guanyadors es reparteixen tot el pot proporcionalment als pastissos que han
+              apostat. Els pastissos enters sobrants van a les restes més grans; en cas d’empat,
+              s’utilitza l’identificador estable del participant. Si ningú ha apostat a l’opció
+              guanyadora, es retorna tot.
+            </p>
+            <p>
+              Les regles i els terminis no es poden editar. Només el responsable acceptat confirma
+              A/B, després del tancament, amb una justificació pública. Pot anul·lar si no hi ha un
+              resultat verificable. L’autor pot cancel·lar mentre no hi hagi apostes;
+              l’administració pot anul·lar per incidències.
+            </p>
+            <p>
+              Sense resolució al cap de 7 dies, el servidor retorna els pastissos quan se
+              sincronitza l’aplicació. Màxim 10 prediccions actives i 5 creacions per hora per
+              persona.
+            </p>
+          </details>
+        </div>
       </div>
-      <details className="prediction-help">
-        <summary>Com funciona el repartiment?</summary>
-        <p>
-          Els guanyadors es reparteixen tot el pot proporcionalment als pastissos que han apostat.
-          Els pastissos enters sobrants van a les restes més grans; en cas d’empat, s’utilitza
-          l’identificador estable del participant. Si ningú ha apostat a l’opció guanyadora, es
-          retorna tot.
-        </p>
-        <p>
-          Les regles i els terminis no es poden editar. Només el responsable acceptat confirma A/B,
-          després del tancament, amb una justificació pública. Pot anul·lar si no hi ha un resultat
-          verificable. L’autor pot cancel·lar mentre no hi hagi apostes; l’administració pot
-          anul·lar per incidències.
-        </p>
-        <p>
-          Sense resolució al cap de 7 dies, el servidor retorna els pastissos quan se sincronitza
-          l’aplicació. Màxim 10 prediccions actives i 5 creacions per hora per persona.
-        </p>
-      </details>
       {create && (
         <CreatePrediction
           busy={busy}
