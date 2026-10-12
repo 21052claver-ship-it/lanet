@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**174/176 tasques verificades · 85 requisits · 72 fases · límit d’una tasca activa.**
+**174/177 tasques verificades · 86 requisits · 73 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **cap**.
+Tasca activa: **T72-01 — Substituir la icona NET per una versió 3D pastel fidel a la referència**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -401,5 +401,9 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 ## F71 Accés a la NET oficial
 
 - [x] **T71-01** Afegir accés a la NET oficial amb icona 3D — Verificat.
+
+## F72 Icona NET pastel
+
+- [ ] **T72-01** Substituir la icona NET per una versió 3D pastel fidel a la referència — En revisió.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

@@ -14,7 +14,7 @@ export default function OfficialNetLink({ mobile = false, onOpen }) {
     >
       <span className="nav-art" aria-hidden="true">
         <img
-          src="/images/ui/official-net-3d-v1.webp"
+          src="/images/ui/official-net-3d-v2.webp"
           alt=""
           width={mobile ? 32 : 44}
           height={mobile ? 32 : 44}

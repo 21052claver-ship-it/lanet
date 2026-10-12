@@ -2,6 +2,11 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.6.4] - 2026-10-12
+
+- Icona de la NET oficial renovada segons la referència de Marc: volum arrodonit, raigs blancs més prominents i blau pastel.
+- Asset transparent optimitzat i compartit entre sidebar, barra plegada i menú Més.
+
 ## [0.6.3] - 2026-10-12
 
 - Accés «La NET oficial» a la barra lateral i al menú Més del mòbil, amb enllaç al portal FJE en una pestanya nova.
