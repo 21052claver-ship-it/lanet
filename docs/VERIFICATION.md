@@ -1,15 +1,15 @@
-# Verificació · ruleta amb fitxes
+# Verificació · animació de ruleta
 
-12 d’octubre de 2026. Versió 0.3.0, commit 0df40c02c6d65b43e333653818e26d1d85aee560.
+12 d’octubre de 2026. Versió 0.3.1, commit 73f6c5e18d4c38fe34de5154d29d494162fc2c12.
 
-Tapet europeu de 157 posicions amb fitxes múltiples per gir, denominacions, desfer i retirada per posició; controls tàctils i de teclat, retorn detallat i recuperació idempotent. Liquidació SQL atòmica i historial antic conservat.
+Bola i roda amb rellotge compartit, descens continu i casella final coherent; revelació del premi, celebració segons guany net i pastissos volant al moneder abans d’actualitzar el saldo. Sense avançar resultat per historial o sincronització. Moviment reduït, sortida i recuperació segura.
 
-336 proves unitàries correctes, incloses 5.809 combinacions entre totes les posicions i els 37 resultats; premis, manipulació de dades, saldo insuficient, concurrència i compatibilitat de referències. 15 escenaris del tapet i 36 regressions de la sala secreta en Chromium, Firefox i WebKit. Revisió visual local de colors, punts de 44 px, 320/390 px i orientació horitzontal.
+338 proves unitàries correctes. Geometria de bola i roda als 37 números, rotacions consecutives, continuïtat en la captura i velocitat final. 18 casos específics en Chromium, Firefox i WebKit: guany, pèrdua, moviment reduït, sortida durant gir/celebració i canvi de moviment a mig gir. Saldo retingut durant sincronització i vol dels pastissos, un sol assentament al servidor, historial sense filtració del resultat.
 
-CI completa correcta: auditoria de 527 fitxers sense secrets, tipus/lint, unitàries, build, prova real d’àudio a Firefox, ruleta, sala secreta, 9 escenaris del menú, 48 responsive i 135 controls generals.
+CI completa correcta: auditoria sense secrets, tipus/lint, unitàries, build, àudio real a Firefox, 18 animació, 15 tapet, 36 sala secreta, 9 navegació mòbil, 48 responsive i 135 controls generals.
 
-[CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38186308179) · [Registre](releases/0.3.0.json) · [Pla](PLA-RULETA-FITXES.md).
+[CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38188332481) · [Registre](releases/0.3.1.json) · [Pla](PLA-RULETA-ANIMACIO.md).
 
-Migració 0024 additiva aplicada separadament, amb còpia privada i comprovació de les 54 taules anteriors en un clon local. Guardes SQL i catàleg de 157 posicions confirmats pel proveïdor. D1/R2, moderació, política del forn i regals previs preservats. Cap regal o reinici nou.
+Revisió visual local a 390 px. No s’ha visitat el web públic ni s’han provat dispositius físics. Liquidació, sorteig, probabilitats i migracions del servidor sense canvis. Cap regal ni reinici nou.
 
-Cloudflare confirma production/main amb SHA complet; release immutable, tag, digest del rebut i GitHub Deployment success verificats. Cap visita al web públic ni prova en dispositiu físic. Evidències privades a output/roulette-board; còpia de dades exclosa del repositori.
+Cloudflare confirma production/main i SHA complet; release immutable, tag, digest del rebut, GitHub Deployment success i D1/R2/MEDIA_SAFETY verificats. Evidències privades a output/roulette-animation.

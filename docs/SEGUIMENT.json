@@ -6413,7 +6413,7 @@
       "id": "T61-01",
       "phase": "F61",
       "title": "Bola sincronitzada i pastissos al final de la celebració",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R75"
       ],
@@ -6437,7 +6437,19 @@
         "Proves locals en tres motors i regressions.",
         "CI i publicació amb rebut."
       ],
-      "evidence": []
+      "evidence": [
+        "docs/PLA-RULETA-ANIMACIO.md",
+        "docs/releases/0.3.1.json",
+        "output/roulette-animation/results.json",
+        "output/roulette-animation/remote-bindings.json",
+        "output/roulette-animation/ci-success.json",
+        "output/roulette-animation/delivery.json",
+        "output/roulette-animation-unit.log",
+        "output/roulette-animation-typecheck.log",
+        "output/roulette-animation-source-audit.log",
+        "output/releases/0.3.1/receipt.json"
+      ],
+      "change_log_id": "H162"
     }
   ]
 }

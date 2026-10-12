@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**164/166 tasques verificades · 75 requisits · 62 fases · límit d’una tasca activa.**
+**165/166 tasques verificades · 75 requisits · 62 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **T61-01 — Bola sincronitzada i pastissos al final de la celebració**.
+Tasca activa: **cap**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -360,6 +360,6 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 
 ## F61 Moviment i lliurament de premis de ruleta
 
-- [ ] **T61-01** Bola sincronitzada i pastissos al final de la celebració — En revisió.
+- [x] **T61-01** Bola sincronitzada i pastissos al final de la celebració — Verificat.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.
