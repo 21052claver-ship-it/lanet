@@ -110,85 +110,87 @@ export function NoteForm({ item }) {
         );
       })}
     >
-      <div className="form-grid">
-        <Field label="Títol">
-          <input
-            value={f.title}
-            onChange={(e) => update('title', e.target.value)}
-            maxLength={120}
-            required
-          />
-        </Field>
-        <Field label="Assignatura">
-          <Select value={f.subject_id} onChange={(e) => update('subject_id', e.target.value)}>
-            {data.subjects.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.short}
-              </option>
-            ))}
-          </Select>
-        </Field>
-      </div>
-      <Field
-        label="Text dels apunts"
-        hint="Pots combinar text, fotos, vídeo, PDF i documents. # crea un títol; - crea una llista."
-      >
-        <textarea
-          disabled={loading || !!loadError}
-          rows={9}
-          value={f.body}
-          onChange={(e) => update('body', e.target.value)}
-          maxLength={50000}
-          placeholder="Escriu el que t’ha ajudat a entendre el tema…"
-        />
-      </Field>
-      <Attachments
-        files={files}
-        setFiles={setFiles}
-        previews={f.price > 0}
-        onBusyChange={setUploading}
-      />
-      <div className="form-grid">
-        <Field label="Resum públic" hint="La mostra que es veu abans d’obrir o comprar.">
-          <textarea
-            disabled={loading}
-            rows={2}
-            value={f.summary}
-            onChange={(e) => update('summary', e.target.value)}
-            maxLength={300}
-            placeholder="Si queda buit, es faran servir les primeres línies."
-          />
-        </Field>
-        <Field
-          label="Preu opcional en pastissos"
-          hint="0: gratuït. La publicació sencera té un únic preu."
-        >
-          <input
-            type="number"
-            min="0"
-            max="10000"
-            step="1"
-            value={f.price}
-            onChange={(e) => update('price', Number(e.target.value))}
-            required
-          />
-        </Field>
-      </div>
-      <Button type="button" onClick={() => setPreview(!preview)}>
-        <Eye size={18} />
-        {preview ? 'Tancar previsualització' : 'Previsualitzar'}
-      </Button>
-      {preview && (
-        <div className="editor-preview">
-          <h2>{f.title || 'Els teus apunts'}</h2>
-          <RichText text={f.body} />
-          {files
-            .filter((f) => f.mime?.startsWith('image/'))
-            .map((f) => (
-              <VerifiedImage key={f.id} src={`/api/files/${f.id}`} alt={f.name} />
-            ))}
+      <fieldset className="note-editor-fields" disabled={loading || !!loadError || busy}>
+        <div className="form-grid">
+          <Field label="Títol">
+            <input
+              value={f.title}
+              onChange={(e) => update('title', e.target.value)}
+              maxLength={120}
+              required
+            />
+          </Field>
+          <Field label="Assignatura">
+            <Select value={f.subject_id} onChange={(e) => update('subject_id', e.target.value)}>
+              {data.subjects.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.short}
+                </option>
+              ))}
+            </Select>
+          </Field>
         </div>
-      )}
+        <Field
+          label="Text dels apunts"
+          hint="Pots combinar text, fotos, vídeo, PDF i documents. # crea un títol; - crea una llista."
+        >
+          <textarea
+            disabled={loading || !!loadError}
+            rows={9}
+            value={f.body}
+            onChange={(e) => update('body', e.target.value)}
+            maxLength={50000}
+            placeholder="Escriu el que t’ha ajudat a entendre el tema…"
+          />
+        </Field>
+        <Attachments
+          files={files}
+          setFiles={setFiles}
+          previews={f.price > 0}
+          onBusyChange={setUploading}
+        />
+        <div className="form-grid">
+          <Field label="Resum públic" hint="La mostra que es veu abans d’obrir o comprar.">
+            <textarea
+              disabled={loading}
+              rows={2}
+              value={f.summary}
+              onChange={(e) => update('summary', e.target.value)}
+              maxLength={300}
+              placeholder="Si queda buit, es faran servir les primeres línies."
+            />
+          </Field>
+          <Field
+            label="Preu opcional en pastissos"
+            hint="0: gratuït. La publicació sencera té un únic preu."
+          >
+            <input
+              type="number"
+              min="0"
+              max="10000"
+              step="1"
+              value={f.price}
+              onChange={(e) => update('price', Number(e.target.value))}
+              required
+            />
+          </Field>
+        </div>
+        <Button type="button" onClick={() => setPreview(!preview)}>
+          <Eye size={18} />
+          {preview ? 'Tancar previsualització' : 'Previsualitzar'}
+        </Button>
+        {preview && (
+          <div className="editor-preview">
+            <h2>{f.title || 'Els teus apunts'}</h2>
+            <RichText text={f.body} />
+            {files
+              .filter((f) => f.mime?.startsWith('image/'))
+              .map((f) => (
+                <VerifiedImage key={f.id} src={`/api/files/${f.id}`} alt={f.name} />
+              ))}
+          </div>
+        )}
+      </fieldset>
       {loading && (
         <p className="muted" role="status">
           Carregant el contingut dels apunts…

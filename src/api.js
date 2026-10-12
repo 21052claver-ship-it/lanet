@@ -18,6 +18,16 @@ export async function api(path, options = {}) {
           : options.body instanceof Blob
             ? options.body
             : JSON.stringify(options.body),
+    }).catch((cause) => {
+      if (controller?.signal.aborted || requestOptions.signal?.aborted) throw cause;
+      const error = new Error(
+        read
+          ? 'No s’ha pogut connectar amb La Net. Comprova la connexió i torna-ho a provar.'
+          : 'No hem pogut confirmar l’acció. Comprova la connexió abans de tornar-ho a provar.',
+        { cause },
+      );
+      error.code = 'network_error';
+      throw error;
     });
     let result;
     try {

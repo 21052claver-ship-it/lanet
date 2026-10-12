@@ -113,7 +113,8 @@ export function AppProvider({ initial, children }) {
         notify,
         modal,
         open: (type, item = {}) => setModal({ type, item }),
-        close: () => setModal(null),
+        // A delayed response from a dismissed form must not close a newer dialog.
+        close: () => setModal((current) => (current === modal ? null : current)),
         page,
         go,
         subject,

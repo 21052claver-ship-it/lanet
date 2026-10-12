@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**170/171 tasques verificades · 80 requisits · 67 fases · límit d’una tasca activa.**
+**170/172 tasques verificades · 81 requisits · 68 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **cap**.
+Tasca activa: **T67-01 — Depurar la plataforma amb casos límit i errors de connexió**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -381,5 +381,9 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 ## F66 Apostes amb responsable creador
 
 - [x] **T66-01** Crear i confirmar la pròpia aposta — Verificat.
+
+## F67 Revisió general i correcció de regressions
+
+- [ ] **T67-01** Depurar la plataforma amb casos límit i errors de connexió — En revisió.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

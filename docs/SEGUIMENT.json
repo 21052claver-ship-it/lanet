@@ -324,6 +324,10 @@
     {
       "id": "R80",
       "description": "Permetre que el creador també confirmi el resultat de la seva aposta."
+    },
+    {
+      "id": "R81",
+      "description": "Depuració general de funcionalitat, accessibilitat, formularis i responsive amb regressions reproduïbles."
     }
   ],
   "phases": [
@@ -793,6 +797,13 @@
       "title": "Apostes amb responsable creador",
       "depends_on": [
         "F65"
+      ]
+    },
+    {
+      "id": "F67",
+      "title": "Revisió general i correcció de regressions",
+      "depends_on": [
+        "F66"
       ]
     }
   ],
@@ -6701,6 +6712,37 @@
         "output/releases/0.6.0/receipt.json"
       ],
       "change_log_id": "H167"
+    },
+    {
+      "id": "T67-01",
+      "phase": "F67",
+      "title": "Depurar la plataforma amb casos límit i errors de connexió",
+      "status": "review",
+      "requirements": [
+        "R81"
+      ],
+      "depends_on": [
+        "T66-01"
+      ],
+      "files": [
+        "src/components/SubjectPicker.jsx",
+        "src/revision.css",
+        "src/context.jsx",
+        "src/forms-resources.jsx",
+        "src/api.js",
+        "src/App.jsx",
+        "scripts/test-workspace-recovery.mjs",
+        "tests/api-client.test.js",
+        ".github/workflows/verify.yml"
+      ],
+      "acceptance": "Auditoria local de totes les seccions, formularis i casos límit. Corregir incidències reproduïdes, verificar tres motors i publicar amb CI verda i registre de versió. Sense accedir a dades de producció.",
+      "checks": [
+        "Registrar pla i inspeccionar cobertura existent.",
+        "Explorar formularis, navegació, textos llargs i fallades de xarxa.",
+        "Corregir incidències i afegir regressions apropiades.",
+        "Verificar qualitat, CI i publicació amb rebut."
+      ],
+      "evidence": []
     }
   ]
 }

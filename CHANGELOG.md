@@ -2,6 +2,13 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.6.1] - 2026-10-12
+
+- Corregides les icones i la cerca sense accents de les preferències d’assignatures.
+- Les respostes de formularis tancats ja no tanquen un diàleg obert posteriorment.
+- Editor d’apunts protegit durant la càrrega; errors de connexió clars i sortida de sessió recuperable sense peticions duplicades.
+- 18 regressions de recuperació en tres motors afegides a CI.
+
 ## [0.6.0] - 2026-10-12
 
 - El creador pot ser el responsable del resultat: Jo mateix seleccionat per defecte, o altra persona opcional.

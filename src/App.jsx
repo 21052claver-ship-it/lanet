@@ -58,7 +58,8 @@ export class Boundary extends React.Component {
   }
 }
 function Workspace({ onLogout }) {
-  const { data, walletBalance, page, go, open, setCommunityTab, savePreferences } = useApp();
+  const { data, walletBalance, page, go, open, setCommunityTab, savePreferences, notify } =
+    useApp();
   const { timer, remaining, toggle, audioType, audioState, playing, loading, toggleMusic } =
     useTimer();
   const musicTrack = LOFI_TRACKS.find((track) => track.id === audioType) || LOFI_TRACKS[0];
@@ -73,6 +74,21 @@ function Workspace({ onLogout }) {
   const [collapsed, setCollapsed] = useState(!!data.preferences?.sidebarCollapsed);
   const [collapseBusy, setCollapseBusy] = useState(false);
   const [cakePulse, setCakePulse] = useState(false);
+  const [logoutBusy, setLogoutBusy] = useState(false);
+  const logoutPending = useRef(false);
+  async function leave() {
+    if (logoutPending.current) return;
+    logoutPending.current = true;
+    setLogoutBusy(true);
+    try {
+      await onLogout();
+    } catch (error) {
+      notify(error.message, 'error');
+    } finally {
+      logoutPending.current = false;
+      setLogoutBusy(false);
+    }
+  }
   useEffect(() => {
     let timer;
     const arrived = () => {
@@ -378,8 +394,8 @@ function Workspace({ onLogout }) {
         </main>
         <footer className="app-footer" inert={smallScreen && mobile}>
           <span>{data.settings.school_name || 'La Net'} · Feta pels estudiants</span>
-          <button onClick={onLogout}>
-            <SignOut size={16} /> Sortir
+          <button onClick={leave} disabled={logoutBusy} aria-busy={logoutBusy}>
+            <SignOut size={16} /> {logoutBusy ? 'Sortint…' : 'Sortir'}
           </button>
         </footer>
         <div

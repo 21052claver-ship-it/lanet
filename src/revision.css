@@ -120,6 +120,12 @@
   border: 0;
   min-width: 0;
 }
+.note-editor-fields {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
 .subject-picker legend {
   font-size: 17px;
   font-weight: 800;
@@ -152,9 +158,15 @@
   font-size: 13px;
   cursor: pointer;
 }
-.subject-choice > span:nth-last-child(2),
-.subject-choice > span:last-child {
+.subject-choice-name {
   flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.subject-choice .subject-mark,
+.subject-choice > input,
+.subject-choice > svg {
+  flex-shrink: 0;
 }
 .subject-choice.chosen {
   border-color: #b99972;
