@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useId, useRef, useState } from 'react';
 import {
   BETS_BY_ID,
   TABLE_BETS,
@@ -6,29 +6,23 @@ import {
   rouletteColor,
   roulettePayout,
 } from '../../shared/roulette';
-const modes = [
-  ['number', 'Números'],
-  ['split', 'Entre dos'],
-  ['corner', 'Cantonades'],
-  ['street', 'Files de 3'],
-  ['six', 'Files de 6'],
-  ['zero', 'Zona del 0'],
-];
-function coordinates(b) {
-  const n = b.numbers[0],
-    row = Math.floor((n - 1) / 3),
-    col = (n - 1) % 3;
-  if (b.kind === 'number') return [col + 0.5, row + 0.5];
-  if (b.kind === 'split')
-    return b.numbers[1] - n === 1 ? [col + 1, row + 0.5] : [col + 0.5, row + 1];
-  if (b.kind === 'corner') return [col + 1, row + 1];
-  return [1.5, row + (b.kind === 'six' ? 1 : 0.5)];
-}
+import {
+  roulettePosition,
+  roulettePositionStyle,
+  rouletteTargetClass,
+} from '../../shared/roulette-layout';
+
+const onTable = TABLE_BETS.filter((b) => roulettePosition(b));
+const outside = TABLE_BETS.filter((b) => !roulettePosition(b));
+
 export default function RouletteBoard({ bets, onChange, disabled, balance, onError, resetToken }) {
-  const [mode, setMode] = useState('number'),
-    [chip, setChip] = useState(1),
+  const [chip, setChip] = useState(1),
     [undoHistory, setUndoHistory] = useState({ token: resetToken, entries: [] }),
-    [preview, setPreview] = useState(null);
+    [preview, setPreview] = useState(null),
+    [focused, setFocused] = useState('number:0'),
+    [announcement, setAnnouncement] = useState('');
+  const board = useRef(null);
+  const helpId = useId();
   const total = bets.reduce((s, b) => s + b.stake, 0);
   const amounts = Object.fromEntries(bets.map((b) => [b.id, b.stake]));
   const undo = undoHistory.token === resetToken ? undoHistory.entries : [];
@@ -43,11 +37,13 @@ export default function RouletteBoard({ bets, onChange, disabled, balance, onErr
   }
   const active = preview ? BETS_BY_ID[preview] : null;
   function change(next) {
+    if (disabled) return;
     setUndo((current) => [...current.slice(-999), bets]);
     onChange(next);
     onError('');
   }
   function place(id) {
+    if (disabled) return;
     setPreview(id);
     if (total + chip > Math.min(balance, MAX_STAKE)) {
       onError(
@@ -60,48 +56,111 @@ export default function RouletteBoard({ bets, onChange, disabled, balance, onErr
         ? bets.map((b) => (b.id === id ? { ...b, stake: b.stake + chip } : b))
         : [...bets, { id, stake: chip }],
     );
+    setAnnouncement(
+      `${chip} pastissos a ${BETS_BY_ID[id].label}. Total al tapet: ${total + chip}.`,
+    );
   }
-  function target(b, style = {}, extra = '') {
+  function navigate(event) {
+    const direction = {
+      ArrowLeft: [-1, 0],
+      ArrowRight: [1, 0],
+      ArrowUp: [0, -1],
+      ArrowDown: [0, 1],
+    }[event.key];
+    if (!direction && !['Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+    const targets = [...board.current.querySelectorAll('[data-bet-id]')];
+    let next;
+    if (event.key === 'Home' || event.key === 'End') {
+      next = targets.find(
+        (t) => t.dataset.betId === (event.key === 'Home' ? 'number:0' : 'number:36'),
+      );
+    } else {
+      const current = event.currentTarget.getBoundingClientRect();
+      const [dx, dy] = direction;
+      let score = Infinity;
+      for (const target of targets) {
+        if (target === event.currentTarget) continue;
+        const r = target.getBoundingClientRect();
+        const x = (r.left + r.right - current.left - current.right) / 2;
+        const y = (r.top + r.bottom - current.top - current.bottom) / 2;
+        const forward = x * dx + y * dy;
+        const sideways = Math.abs(x * dy - y * dx);
+        const distance = forward + sideways * 3;
+        if (forward > 1 && distance < score) {
+          score = distance;
+          next = target;
+        }
+      }
+    }
+    next?.focus({ preventScroll: true });
+    next?.scrollIntoView({ block: 'nearest' });
+  }
+  function target(b) {
+    const type = rouletteTargetClass(b);
+    const color = ['red', 'black'].includes(b.kind) ? b.kind : null;
     return (
       <button
         key={b.id}
         type="button"
-        className={`tapet-target ${extra} ${amounts[b.id] ? 'has-chips' : ''}`}
-        style={style}
+        disabled={disabled}
+        tabIndex={focused === b.id ? 0 : -1}
+        className={`tapet-target ${type} ${color ? `pocket-${color}` : ''} ${amounts[b.id] ? 'has-chips' : ''} ${preview === b.id ? 'is-preview' : ''} ${b.kind === 'dozen' ? 'tapet-dozen' : ''}`}
+        style={roulettePositionStyle(b)}
         aria-label={`${b.label} · retorn ×${b.multiplier}${amounts[b.id] ? ` · ${amounts[b.id]} apostats` : ''}`}
-        onFocus={() => setPreview(b.id)}
+        aria-describedby={helpId}
+        onFocus={() => {
+          setFocused(b.id);
+          setPreview(b.id);
+        }}
         onMouseEnter={() => setPreview(b.id)}
+        onKeyDown={navigate}
         onClick={() => place(b.id)}
         data-bet-id={b.id}
       >
-        <span>
-          {extra.includes('tapet-number')
+        <span aria-hidden="true" className={type === 'tapet-edge' ? 'tapet-edge-label' : undefined}>
+          {b.kind === 'number'
             ? b.numbers[0]
-            : ['street', 'six'].includes(b.kind)
-              ? `${b.numbers[0]}–${b.numbers[b.numbers.length - 1]}`
-              : extra.includes('tapet-outside')
-                ? b.label
-                : '+'}
+            : b.kind === 'column'
+              ? '2:1'
+              : type === 'tapet-edge'
+                ? b.numbers.length
+                : type === 'tapet-outside'
+                  ? b.label
+                  : ''}
         </span>
-        {amounts[b.id] > 0 && <b className="tapet-chip">{amounts[b.id]}</b>}
+        {amounts[b.id] > 0 && (
+          <b
+            key={amounts[b.id]}
+            className={`tapet-chip ${amounts[b.id] >= 1000 ? 'is-large' : ''}`}
+            aria-hidden="true"
+          >
+            {amounts[b.id]}
+          </b>
+        )}
       </button>
     );
   }
-  const gridBets = TABLE_BETS.filter((b) => b.numbers[0] > 0 && b.kind === mode);
-  const outside = ['column', 'dozen', 'red', 'black', 'even', 'odd', 'low', 'high'].flatMap(
-    (kind) => TABLE_BETS.filter((b) => b.kind === kind),
-  );
   const maxReturn = Math.max(...Array.from({ length: 37 }, (_, n) => roulettePayout({ bets }, n)));
   return (
     <div className="roulette-board">
       <p className="tapet-help">
-        Tria una fitxa i toca el tapet. Pots repartir-ne en diverses posicions abans de girar.
+        Tria una fitxa i posa-la sobre un número, una línia o una cruïlla. A la vora, 3 cobreix una
+        fila i 6 en cobreix dues.
       </p>
+      <p id={helpId} className="sr-only">
+        Fletxes per moure’t pel tapet; Intro o espai per posar una fitxa. Inici va al zero i Fi al
+        36.
+      </p>
+      <div className="sr-only" role="status">
+        {announcement}
+      </div>
       <div className="tapet-toolbar">
         <div role="group" aria-label="Valor de la fitxa" className="tapet-denominations">
           {[1, 5, 10, 25, 100].map((n) => (
             <button
               type="button"
+              disabled={disabled}
               key={n}
               aria-pressed={chip === n}
               onClick={() => setChip(n)}
@@ -115,7 +174,7 @@ export default function RouletteBoard({ bets, onChange, disabled, balance, onErr
         <div className="tapet-edit">
           <button
             type="button"
-            disabled={!undo.length}
+            disabled={disabled || !undo.length}
             onClick={() => {
               onChange(undo[undo.length - 1]);
               setUndo((v) => v.slice(0, -1));
@@ -124,152 +183,51 @@ export default function RouletteBoard({ bets, onChange, disabled, balance, onErr
           >
             Desfer
           </button>
-          <button type="button" disabled={!bets.length} onClick={() => change([])}>
+          <button type="button" disabled={disabled || !bets.length} onClick={() => change([])}>
             Retirar totes
           </button>
         </div>
       </div>
-      <div className="tapet-modes" role="group" aria-label="On posar les fitxes">
-        {modes.map(([id, label]) => (
-          <button
-            type="button"
-            key={id}
-            aria-pressed={mode === id}
-            onClick={() => {
-              setMode(id);
-              setPreview(null);
-            }}
-          >
-            {label}
-          </button>
-        ))}
+      <div className="tapet-preview">
+        <strong>{active ? active.label : 'Tot el tapet, a punt'}</strong>
+        <span>
+          {active
+            ? `${active.numbers.join(' · ')} · Retorn ×${active.multiplier}, inclosa l’aposta`
+            : 'Els punts de les línies i cantonades també admeten fitxes.'}
+        </span>
       </div>
-      <div className="tapet-preview" aria-live="polite">
-        {active ? (
-          <>
-            <strong>{active.label}</strong>
-            <span>
-              {active.numbers.join(' · ')} · Retorn ×{active.multiplier}, inclosa l’aposta
-            </span>
-          </>
-        ) : (
-          <>
-            <strong>{modes.find((m) => m[0] === mode)[1]}</strong>
-            <span>
-              {mode === 'split'
-                ? 'Toca el punt entre dos números.'
-                : mode === 'corner'
-                  ? 'Toca la cruïlla de quatre números.'
-                  : mode === 'six'
-                    ? 'Toca la línia entre dues files.'
-                    : 'Toca una posició per afegir-hi la fitxa.'}
-            </span>
-          </>
-        )}
-      </div>
-      {mode === 'zero' ? (
-        <div className="tapet-zero-options">
-          {TABLE_BETS.filter((b) => b.numbers[0] === 0).map((b) => (
-            <button
-              type="button"
-              key={b.id}
-              onClick={() => place(b.id)}
-              data-bet-id={b.id}
-              aria-label={`${b.label} · retorn ×${b.multiplier}`}
-            >
-              <strong>{b.label}</strong>
-              <small>×{b.multiplier}</small>
-              {amounts[b.id] > 0 && <b className="tapet-chip">{amounts[b.id]}</b>}
-            </button>
-          ))}
+      <div
+        className="tapet-container"
+        ref={board}
+        role="group"
+        aria-label="Tapet de la ruleta"
+        onMouseLeave={() => setPreview(null)}
+      >
+        <div className="tapet-surface">
+          <div className="tapet-grid">
+            <span
+              className={`tapet-cell tapet-zero-cell pocket-green ${active?.numbers.includes(0) ? 'is-covered' : ''}`}
+              data-number="0"
+              aria-hidden="true"
+            />
+            {Array.from({ length: 36 }, (_, i) => {
+              const n = i + 1;
+              return (
+                <span
+                  key={n}
+                  data-number={n}
+                  className={`tapet-cell pocket-${rouletteColor(n)} ${active?.numbers.includes(n) ? 'is-covered' : ''}`}
+                  style={roulettePositionStyle(BETS_BY_ID[`number:${n}`])}
+                  aria-hidden="true"
+                />
+              );
+            })}
+            {onTable.map(target)}
+          </div>
         </div>
-      ) : (
-        <>
-          <div className="tapet-zero">
-            {target(BETS_BY_ID['number:0'], {}, 'tapet-outside pocket-green')}
-          </div>
-          <div className="tapet-container">
-            <div className={`tapet-grid mode-${mode}`} role="group" aria-label="Tapet de la ruleta">
-              {Array.from({ length: 36 }, (_, i) => {
-                const n = i + 1,
-                  row = Math.floor(i / 3),
-                  col = i % 3;
-                const style = {
-                  '--vx': `${((col + 0.5) / 3) * 100}%`,
-                  '--vy': `${((row + 0.5) / 12) * 100}%`,
-                  '--hx': `${((row + 0.5) / 12) * 100}%`,
-                  '--hy': `${((2 - col + 0.5) / 3) * 100}%`,
-                };
-                return mode === 'number' ? (
-                  target(
-                    BETS_BY_ID[`number:${n}`],
-                    style,
-                    `tapet-number pocket-${rouletteColor(n)}`,
-                  )
-                ) : (
-                  <span
-                    key={n}
-                    className={`tapet-cell pocket-${rouletteColor(n)} ${active?.numbers.includes(n) ? 'is-covered' : ''}`}
-                    style={style}
-                  >
-                    {n}
-                    {amounts[`number:${n}`] > 0 && (
-                      <b className="tapet-chip">{amounts[`number:${n}`]}</b>
-                    )}
-                  </span>
-                );
-              })}
-              {bets
-                .filter(
-                  (b) =>
-                    ['split', 'corner', 'street', 'six'].includes(BETS_BY_ID[b.id].kind) &&
-                    BETS_BY_ID[b.id].numbers[0] > 0 &&
-                    BETS_BY_ID[b.id].kind !== mode,
-                )
-                .map((b) => {
-                  const [x, y] = coordinates(BETS_BY_ID[b.id]);
-                  return (
-                    <span
-                      key={`placed-${b.id}`}
-                      className="tapet-placed"
-                      aria-hidden="true"
-                      style={{
-                        '--vx': `${(x / 3) * 100}%`,
-                        '--vy': `${(y / 12) * 100}%`,
-                        '--hx': `${(y / 12) * 100}%`,
-                        '--hy': `${((3 - x) / 3) * 100}%`,
-                      }}
-                    >
-                      {b.stake}
-                    </span>
-                  );
-                })}
-              {mode !== 'number' &&
-                gridBets.map((b) => {
-                  const [x, y] = coordinates(b);
-                  return target(
-                    b,
-                    {
-                      '--vx': `${(x / 3) * 100}%`,
-                      '--vy': `${(y / 12) * 100}%`,
-                      '--hx': `${(y / 12) * 100}%`,
-                      '--hy': `${((3 - x) / 3) * 100}%`,
-                    },
-                    ['street', 'six'].includes(mode) ? 'tapet-row' : 'tapet-junction',
-                  );
-                })}
-            </div>
-          </div>
-        </>
-      )}
-      <div className="tapet-outsides" role="group" aria-label="Apostes exteriors">
-        {outside.map((b) =>
-          target(
-            b,
-            {},
-            `tapet-outside ${['red', 'black'].includes(b.kind) ? `pocket-${b.kind}` : ''}`,
-          ),
-        )}
+        <div className="tapet-outsides" role="group" aria-label="Apostes exteriors">
+          {outside.map(target)}
+        </div>
       </div>
       <div className="tapet-total" aria-live="polite">
         <strong>{total} pastissos al tapet</strong>
@@ -294,6 +252,7 @@ export default function RouletteBoard({ bets, onChange, disabled, balance, onErr
                 </span>
                 <button
                   type="button"
+                  disabled={disabled}
                   aria-label={`Retirar una fitxa de ${BETS_BY_ID[b.id].label}`}
                   onClick={() =>
                     change(
@@ -311,6 +270,7 @@ export default function RouletteBoard({ bets, onChange, disabled, balance, onErr
                 </button>
                 <button
                   type="button"
+                  disabled={disabled}
                   aria-label={`Retirar ${BETS_BY_ID[b.id].label}`}
                   onClick={() => change(bets.filter((v) => v.id !== b.id))}
                 >

@@ -14,6 +14,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
     continue;
   const browser = await launcher.launch({ headless: true });
   async function run(label, size, fn, { motion = false } = {}) {
+    if (process.env.LANET_TEST_CASE && !label.includes(process.env.LANET_TEST_CASE)) return;
     const f = await browserFixture();
     f.db.exec(
       "INSERT INTO ledger(id,user_id,amount,reason,ref,day) VALUES('fund','browser',995,'Local fixture','fund','2026-10-12')",
@@ -69,24 +70,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
       await f.close();
     }
   }
-  const modeNames = {
-    number: 'Números',
-    split: 'Entre dos',
-    corner: 'Cantonades',
-    street: 'Files de 3',
-    six: 'Files de 6',
-    trio: 'Zona del 0',
-    'first-four': 'Zona del 0',
-  };
   const place = async (p, id) => {
-    const b = TABLE_BETS.find((b) => b.id === id);
-    if (modeNames[b.kind])
-      await p
-        .getByRole('button', {
-          name: b.numbers[0] === 0 && b.kind !== 'number' ? 'Zona del 0' : modeNames[b.kind],
-          exact: true,
-        })
-        .click();
     await p.locator(`[data-bet-id="${id}"]`).click();
   };
   const spin = async (p, f) => {
@@ -111,10 +95,14 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
       'All 157 placements are reachable and preserve independent chip amounts',
       { width: 1440, height: 1000 },
       async (p) => {
+        assert.equal(await p.locator('.tapet-modes').count(), 0);
+        assert.equal(await p.locator('[data-bet-id]').count(), 157);
+        await p
+          .locator('.tapet-container')
+          .screenshot({ path: `${out}/${engine}-desktop-empty.png` });
         const colors = await p.evaluate(() =>
-          ['number:0', 'number:1', 'number:2'].map(
-            (id) =>
-              getComputedStyle(document.querySelector(`[data-bet-id="${id}"]`)).backgroundColor,
+          [0, 1, 2].map(
+            (n) => getComputedStyle(document.querySelector(`[data-number="${n}"]`)).backgroundColor,
           ),
         );
         assert.equal(new Set(colors).size, 3, 'Zero, red and black retain distinct table colors');
@@ -123,8 +111,9 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         assert.equal(await p.locator('.tapet-ticket li').count(), 157);
         assert.ok((await p.locator('.tapet-total').innerText()).includes('157 pastissos'));
         await p.locator('.tapet-ticket summary').click();
-        await p.getByRole('button', { name: 'Cantonades', exact: true }).click();
-        await p.screenshot({ path: `${out}/${engine}-desktop-corners.png`, fullPage: true });
+        await p
+          .locator('.tapet-container')
+          .screenshot({ path: `${out}/${engine}-desktop-complete.png` });
         await p.getByRole('button', { name: 'Retirar totes', exact: true }).click();
         assert.equal(await p.locator('.tapet-ticket').count(), 0);
         assert.equal(
@@ -147,7 +136,6 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         await p.locator('.tapet-ticket summary').click();
         await p.getByRole('button', { name: 'Retirar Número 17', exact: true }).click();
         assert.equal(await p.locator('.tapet-ticket li').count(), 3);
-        await p.getByRole('button', { name: 'Entre dos', exact: true }).click();
         await p.screenshot({ path: `${out}/${engine}-320-splits.png`, fullPage: true });
         const row = await spin(p, f);
         assert.equal(row.stake, 3);
@@ -220,11 +208,15 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
       'Keyboard split and real animation lock all placement controls',
       { width: 1440, height: 900 },
       async (p, f) => {
-        await p.getByRole('button', { name: 'Entre dos', exact: true }).focus();
-        await p.keyboard.press('Enter');
         const b = p.locator('[data-bet-id="split:1-2"]');
         await b.focus();
         await b.press('Enter');
+        await b.press('ArrowRight');
+        assert.notEqual(await p.evaluate(() => document.activeElement.dataset.betId), 'split:1-2');
+        await p.keyboard.press('Home');
+        assert.equal(await p.evaluate(() => document.activeElement.dataset.betId), 'number:0');
+        await p.keyboard.press('End');
+        assert.equal(await p.evaluate(() => document.activeElement.dataset.betId), 'number:36');
         await p.getByRole('button', { name: 'Fer girar la ruleta', exact: true }).click();
         await p.locator('.roulette-device.is-spinning').waitFor();
         assert.equal(await b.isDisabled(), true);
@@ -237,6 +229,52 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
       },
       { motion: true },
     );
+    for (const width of [320, 390, 1440]) {
+      await run(
+        `Direct cell boundaries and all 157 hit targets at ${width}px`,
+        { width, height: 950 },
+        async (p) => {
+          const tap = async (id, numbers) => {
+            await p
+              .locator(`[data-bet-id="${id}"]`)
+              .evaluate((e) => e.scrollIntoView({ block: 'center' }));
+            const cells = await Promise.all(
+              numbers.map((n) => p.locator(`[data-number="${n}"]`).boundingBox()),
+            );
+            const x = cells.reduce((s, c) => s + c.x + c.width / 2, 0) / cells.length;
+            const y = cells.reduce((s, c) => s + c.y + c.height / 2, 0) / cells.length;
+            if (width < 1000) await p.touchscreen.tap(x, y);
+            else await p.mouse.click(x, y);
+            assert.equal(await p.locator(`[data-bet-id="${id}"] .tapet-chip`).innerText(), '1');
+            assert.equal(await p.locator('.tapet-chip').count(), 1);
+            await p.getByRole('button', { name: 'Retirar totes', exact: true }).click();
+          };
+          await tap('split:1-2', [1, 2]);
+          await tap('split:1-4', [1, 4]);
+          await tap('corner:1-2-4-5', [1, 2, 4, 5]);
+          for (const b of TABLE_BETS) {
+            const target = p.locator(`[data-bet-id="${b.id}"]`);
+            await target.evaluate((e) => e.scrollIntoView({ block: 'center' }));
+            const box = await target.boundingBox();
+            assert.ok(box.width >= 23.9 && box.height >= 23.9, `${b.id}: touch area too small`);
+            const hit = await p.evaluate(
+              ({ x, y }) =>
+                document.elementFromPoint(x, y)?.closest('[data-bet-id]')?.dataset.betId,
+              { x: box.x + box.width / 2, y: box.y + box.height / 2 },
+            );
+            assert.equal(hit, b.id, `${b.id}: another position intercepts its centre`);
+            if (width < 1000)
+              await p.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2);
+            else await target.click();
+          }
+          assert.equal(await p.locator('.tapet-chip').count(), 157);
+          assert.ok((await p.locator('.tapet-total').innerText()).includes('157 pastissos'));
+          await p
+            .locator('.tapet-container')
+            .screenshot({ path: `${out}/${engine}-${width}-all-targets.png` });
+        },
+      );
+    }
   } finally {
     await browser.close();
   }
