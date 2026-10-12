@@ -1,11 +1,15 @@
-# Verificació · Més complet
+# Verificació · ruleta amb fitxes
 
-12 d’octubre de 2026. Versió 0.2.1, commit 2cd7ee3007a0e9c00d5b467fbb78597e4fca99e8.
+12 d’octubre de 2026. Versió 0.3.0, commit 0df40c02c6d65b43e333653818e26d1d85aee560.
 
-Més mostra vuit apartats en dues files compactes de quatre icones sobre la barra inferior. Noms breus amb etiqueta accessible completa, secció activa i focus contextual; perfil/propostes separats. Tancament amb Més, creu, fons, Escape o navegació. Barra lateral només a escriptori.
+Tapet europeu de 157 posicions amb fitxes múltiples per gir, denominacions, desfer i retirada per posició; controls tàctils i de teclat, retorn detallat i recuperació idempotent. Liquidació SQL atòmica i historial antic conservat.
 
-Revisió visual local a 320 px, mòbil normal i paisatge. Les 9 proves del menú naveguen per tots els apartats i verifiquen graella de dues files, mida tàctil, desbordament, focus, tancament i canvi a escriptori. CI completa correcta: auditoria, tipus/lint, 324 unitàries, build, 9 menú, 48 responsive i 135 controls generals en Chromium, Firefox i WebKit; prova extra d’avanç real d’àudio a Firefox.
+336 proves unitàries correctes, incloses 5.809 combinacions entre totes les posicions i els 37 resultats; premis, manipulació de dades, saldo insuficient, concurrència i compatibilitat de referències. 15 escenaris del tapet i 36 regressions de la sala secreta en Chromium, Firefox i WebKit. Revisió visual local de colors, punts de 44 px, 320/390 px i orientació horitzontal.
 
-[CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38184580200) · [Registre](releases/0.2.1.json) · [Pla](PLA-MES-COMPLET.md).
+CI completa correcta: auditoria de 527 fitxers sense secrets, tipus/lint, unitàries, build, prova real d’àudio a Firefox, ruleta, sala secreta, 9 escenaris del menú, 48 responsive i 135 controls generals.
 
-Cloudflare confirma production/main amb el mateix SHA complet; GitHub Release immutable, tag, digest del rebut i Deployment success confirmats. D1/R2 i servei de moderació correctes. Cap visita al web públic ni prova en telèfon físic. Evidències privades a output/mobile-navigation-complete; fonts i notes publicables al repositori.
+[CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38186308179) · [Registre](releases/0.3.0.json) · [Pla](PLA-RULETA-FITXES.md).
+
+Migració 0024 additiva aplicada separadament, amb còpia privada i comprovació de les 54 taules anteriors en un clon local. Guardes SQL i catàleg de 157 posicions confirmats pel proveïdor. D1/R2, moderació, política del forn i regals previs preservats. Cap regal o reinici nou.
+
+Cloudflare confirma production/main amb SHA complet; release immutable, tag, digest del rebut i GitHub Deployment success verificats. Cap visita al web públic ni prova en dispositiu físic. Evidències privades a output/roulette-board; còpia de dades exclosa del repositori.

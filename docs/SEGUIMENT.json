@@ -6356,7 +6356,7 @@
       "id": "T60-01",
       "phase": "F60",
       "title": "Apostes múltiples i posicions del tapet europeu",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R74"
       ],
@@ -6379,7 +6379,24 @@
         "Proves exhaustives de premis, seguretat, navegador i regressions.",
         "Còpia privada, migració additiva i publicació 0.3.0."
       ],
-      "evidence": []
+      "evidence": [
+        "docs/PLA-RULETA-FITXES.md",
+        "docs/releases/0.3.0.json",
+        "output/roulette-board/browser/results.json",
+        "output/roulette-board/visual/results.json",
+        "output/roulette-board/typecheck.txt",
+        "output/roulette-board/unit.txt",
+        "output/roulette-board/source-audit.txt",
+        "output/roulette-board/backup.json",
+        "output/roulette-board/migration-schema.json",
+        "output/roulette-board/migration-source.json",
+        "output/roulette-board/preserved-state.json",
+        "output/roulette-board/remote-bindings.json",
+        "output/roulette-board/ci-success.json",
+        "output/roulette-board/delivery.json",
+        "output/releases/0.3.0/receipt.json"
+      ],
+      "change_log_id": "H161"
     }
   ]
 }

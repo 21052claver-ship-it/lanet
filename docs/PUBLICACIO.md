@@ -1,9 +1,9 @@
-# Publicació · La Net 0.2.1
+# Publicació · La Net 0.3.0
 
-12 d’octubre de 2026. https://lanet.pages.dev · Pages c5a12609, production/main. Commit: 2cd7ee3007a0e9c00d5b467fbb78597e4fca99e8.
+12 d’octubre de 2026. https://lanet.pages.dev · Pages 6d25ad9c, production/main. Commit: 0df40c02c6d65b43e333653818e26d1d85aee560.
 
-Més mostra vuit apartats en dues files compactes de quatre icones sobre la barra inferior. Noms breus amb etiqueta accessible completa, secció activa i focus contextual; perfil/propostes separats. Tancament amb Més, creu, fons, Escape o navegació. Barra lateral només a escriptori.
+Tapet europeu de 157 posicions amb fitxes múltiples per gir, denominacions, desfer i retirada per posició; controls tàctils i de teclat, retorn detallat i recuperació idempotent. Liquidació SQL atòmica i historial antic conservat.
 
-[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.2.1) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38184580200) · [Registre](releases/0.2.1.json). Publicada amb npm run release després de CI verda; GitHub Deployment 7003457710 amb estat success i SHA complet confirmat pel proveïdor.
+[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.3.0) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38186308179) · [Registre](releases/0.3.0.json). Publicada amb npm run release després de CI verda; GitHub Deployment 7003778055 success i SHA complet confirmat pel proveïdor.
 
-Adreça, Google únic @fje.edu, D1/R2 i serveis privats preservats. Cap migració, regal ni reinici nous. Verificació del proveïdor sense visitar la web pública. GitHub valida cada push; la publicació versionada continua des de la sessió local.
+Migració additiva 0024 preparada amb còpia privada i aplicada separadament. Adreça, Google únic @fje.edu, D1/R2, serveis privats i saldos preservats. Cap regal ni reinici nou. Verificació del proveïdor sense visitar la web pública. GitHub valida cada push; la publicació versionada continua des de la sessió local.

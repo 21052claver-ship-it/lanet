@@ -5,7 +5,7 @@
 - [x] Tauler amb fitxes, desfer, retirar i múltiples posicions per gir.
 - [x] Liquidació atòmica i validació també a SQLite; conservar girs antics.
 - [x] Proves exhaustives i revisió visual local en tres motors.
-- [ ] Còpia privada i migració additiva revisada; publicació amb CI i rebut.
+- [x] Còpia privada i migració additiva revisada; publicació amb CI i rebut.
 
 Abast: apostes interiors i exteriors estàndard; no variants amb doble zero ni regles franceses de mitja devolució.
 
@@ -39,4 +39,8 @@ Còpia privada de D1 verificada: la migració, dividida amb el parser de Wrangle
 
 336 proves unitàries correctes, incloses 5.809 combinacions de posició/resultat i validacions SQL. 15 escenaris del tapet i 36 regressions de la sala secreta en Chromium, Firefox i WebKit. Revisió visual addicional dels colors i objectius de 44 px en els tres motors. Tipus/lint i compilació correctes.
 
-Migració 0024 confirmada pel proveïdor després de corregir la delimitació de CASE per al parser remot de D1. Primer intent desfet completament i verificat abans de reintentar. Catàleg de 157 posicions i liquidació atòmica instal·lats; política del forn i regals previs preservats. La publicació de la interfície està pendent de CI del commit exacte.
+Migració 0024 confirmada pel proveïdor després de corregir la delimitació de CASE per al parser remot de D1. Primer intent desfet completament i verificat abans de reintentar. Catàleg de 157 posicions i liquidació atòmica instal·lats; política del forn i regals previs preservats. La interfície 0.3.0 s’ha publicat després de CI correcta del commit exacte.
+
+## Publicació confirmada
+
+[Versió 0.3.0](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.3.0), commit 0df40c02c6d65b43e333653818e26d1d85aee560, Pages 6d25ad9c i GitHub Deployment 7003778055. CI correcta i configuració del proveïdor verificada sense accedir a la web pública.
