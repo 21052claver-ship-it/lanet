@@ -2,6 +2,13 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.6.2] - 2026-10-12
+
+- Tapet complet amb les 157 posicions actives alhora: números, línies, cantonades, files, zero i exteriors, sense selectors de tipus.
+- Fitxes a la posició real, números coberts il·luminats i previsualització del retorn de cada aposta.
+- Tapet vertical al mòbil i horitzontal quan hi ha espai, amb navegació per fletxes/Intro i zones accessibles.
+- Desfer, límits, bloqueig durant el gir, animació i recuperació preservats; cap canvi de sorteig, probabilitats o saldo.
+
 ## [0.6.1] - 2026-10-12
 
 - Corregides les icones i la cerca sense accents de les preferències d’assignatures.

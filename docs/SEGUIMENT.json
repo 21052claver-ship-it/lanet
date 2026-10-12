@@ -336,6 +336,10 @@
     {
       "id": "R83",
       "description": "Configurar el domini lanet.es d’IONOS a Cloudflare com a adreça principal, amb DNS, HTTPS, redireccions i Google OAuth coherents."
+    },
+    {
+      "id": "R84",
+      "description": "Tapet de ruleta complet i dividit des del principi: posar fitxes directament sobre números, línies, cruïlles i files sense selectors de tipus d’aposta."
     }
   ],
   "phases": [
@@ -824,6 +828,13 @@
     {
       "id": "F69",
       "title": "Domini principal lanet.es",
+      "depends_on": [
+        "F68"
+      ]
+    },
+    {
+      "id": "F70",
+      "title": "Tapet directe de ruleta",
       "depends_on": [
         "F68"
       ]
@@ -6830,7 +6841,7 @@
       "id": "T69-01",
       "phase": "F69",
       "title": "Connectar lanet.es, validar HTTPS i migrar l’origen principal",
-      "status": "active",
+      "status": "pending",
       "requirements": [
         "R83"
       ],
@@ -6866,7 +6877,46 @@
         "output/domain-lanet-es/local-checks.json"
       ],
       "change_log_id": "H170",
-      "progress": "Zona Free, Pages apex/www, CNAME proxied, Full strict, HTTPS i TLS mínim 1.2 preparats. Bloquejat el canvi final: login IONOS pendent i permís desat bloquejant Google Cloud. Producció 0.6.1 i origen anterior conservats. No verificada ni publicada la migració."
+      "progress": "Zona Free, Pages apex/www, CNAME proxied, Full strict, HTTPS i TLS mínim 1.2 preparats. Bloquejat el canvi final: login IONOS pendent i permís desat bloquejant Google Cloud. Producció 0.6.1 i origen anterior conservats. No verificada ni publicada la migració. Aparcada mentre es millora el tapet per petició posterior de l’usuari; sense canvis nous de domini."
+    },
+    {
+      "id": "T70-01",
+      "phase": "F70",
+      "title": "Repartir fitxes directament al tapet complet",
+      "status": "review",
+      "requirements": [
+        "R84"
+      ],
+      "depends_on": [
+        "T68-01"
+      ],
+      "files": [
+        "src/components/RouletteBoard.jsx",
+        "src/roulette.css",
+        "shared/roulette-layout.js",
+        "scripts/test-roulette-board.mjs",
+        "tests/roulette-layout.test.js",
+        "docs/PLA-TAPET-DIRECTE.md"
+      ],
+      "acceptance": "Totes les 157 posicions col·locables al mateix tauler sense modes, fitxes en posicions reals, ajuda contextual i teclat. Números, línies, cantonades, files, zero i exteriors accessibles a PC i mòbil sense ambigüitat ni desbordament. Conservar odds, liquidació, límits, desfer, animació i recuperació. Proves locals, PR/CI i release versionada.",
+      "checks": [
+        "Revisar geometria, interacció i proves existents.",
+        "Implementar tapet i zones simultànies amb previsualització i teclat.",
+        "Verificar totes les posicions, mòbil, bloqueig i recuperació en tres motors.",
+        "Passar qualitat, PR/CI i publicar amb rebut."
+      ],
+      "evidence": [
+        "docs/PLA-TAPET-DIRECTE.md",
+        "output/direct-board/browser/results.json",
+        "output/direct-board/unit.log",
+        "output/direct-board/typecheck.log",
+        "output/direct-board/build.log",
+        "output/roulette-animation/results.json",
+        "output/direct-board/visual/1440-chips.png",
+        "output/direct-board/visual/390-chips.png",
+        "output/direct-board/transition/results.json"
+      ],
+      "progress": "Implementació i qualitat local correctes: 357 unitàries, 27 tapet (24 fluxos + 3 transicions responsive) i 18 animació en Chromium/Firefox/WebKit. Publicació 0.6.2 pendent de PR/CI i rebut. Cap canvi a servidor, odds, dades ni domini."
     }
   ]
 }
