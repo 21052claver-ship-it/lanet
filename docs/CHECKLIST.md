@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**174/177 tasques verificades · 88 requisits · 73 fases · límit d’una tasca activa.**
+**176/177 tasques verificades · 88 requisits · 73 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **T72-01 — Polir navegació, perfil i ponderacions PAU**.
+Tasca activa: **cap**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -392,7 +392,7 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 
 ## F69 Domini principal lanet.es
 
-- [ ] **T69-01** Connectar lanet.es, validar HTTPS i migrar l’origen principal — Pendent.
+- [x] **T69-01** Connectar lanet.es, validar HTTPS i migrar l’origen principal — Verificat.
 
 ## F70 Tapet directe de ruleta
 
@@ -404,6 +404,6 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 
 ## F72 Poliment visual de navegació, perfil i ponderacions PAU
 
-- [ ] **T72-01** Polir navegació, perfil i ponderacions PAU — En revisió.
+- [x] **T72-01** Polir navegació, perfil i ponderacions PAU — Verificat.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

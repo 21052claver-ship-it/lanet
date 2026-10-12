@@ -6,7 +6,7 @@ Revisió demanada per Marc a partir de la nova referència: base arrodonida, rai
 - [x] Preparar WebP transparent de 256 × 256, 10.942 bytes.
 - [x] Substituir l’asset compartit de sidebar i Més: `public/images/ui/official-net-3d-v2.webp`.
 - [x] Verificar a mida real, sidebar plegada i mòbil amb fixtures locals.
-- [ ] Passar PR/CI i publicar 0.6.4.
+- [x] Passar PR/CI i publicar 0.6.4.
 
 L’enllaç, etiqueta accessible i obertura en pestanya nova es conserven. Un contorn CSS arrodonit limita la representació al cos de la insígnia i evita mostrar els píxels residuals de l’alpha exterior generat; no es retoca el dibuix ni els raigs. Redimensionament i codificació WebP conserven la transparència original. L’original seleccionat és `exec-32f049c4-1b09-4967-9918-26f4854b022b.png`, conservat localment. Les variants de neteja posteriors s’han descartat perquè no milloraven la fidelitat o el contorn.
 
@@ -33,6 +33,8 @@ Marc demana afegir l’acció a El meu perfil. Botó neutral «Tancar sessió» 
 - [x] Mode discret sense marques de selecció ni aportacions personals; dades oficials i càlcul preservats.
 - [x] Composició compacta amb coeficient sota el nom en pantalles estretes i noms llargs sense retalls.
 - [x] Revisar captures i completar 39 regressions locals en Chromium, Firefox i WebKit.
-- [ ] CI de la PR actualitzada i publicació versionada.
+- [x] CI de la PR actualitzada i publicació versionada.
 
 La prova responsive selecciona el grau amb nom més llarg que té ponderacions oficials publicades. Comprova icona, coeficient, màxim de punts i absència de desbordament per targeta; els casos de dades absents i conflictes continuen coberts per la regressió existent. Evidències privades a output/pau-visual-verified.
+
+Publicada 0.6.4: https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.4. Commit dd7fa5f3c857a51f80c4b345a703d191a51e7bc9; dominis actius i SSL vàlid, proves HTTP i digests publicats verificats.
