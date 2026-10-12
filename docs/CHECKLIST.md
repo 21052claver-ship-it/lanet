@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**173/175 tasques verificades · 84 requisits · 71 fases · límit d’una tasca activa.**
+**173/176 tasques verificades · 85 requisits · 72 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **cap**.
+Tasca activa: **T71-01 — Afegir accés a la NET oficial amb icona 3D**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -397,5 +397,9 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 ## F70 Tapet directe de ruleta
 
 - [x] **T70-01** Repartir fitxes directament al tapet complet — Verificat.
+
+## F71 Accés a la NET oficial
+
+- [ ] **T71-01** Afegir accés a la NET oficial amb icona 3D — En revisió.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.
