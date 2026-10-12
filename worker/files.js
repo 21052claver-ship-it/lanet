@@ -9,6 +9,7 @@ import {
   SAFE_MIMES,
 } from './file-validation.js';
 import { safeImage, IMAGE_SAFETY_POLICY } from './image-safety.js';
+import { safePdf, PDF_SAFETY_POLICY } from './pdf-safety.js';
 import { beginUpload, finishUpload } from './upload-guard.js';
 import { drainFileDeletions, queueUnusedFiles } from './file-lifecycle.js';
 const FILE_POLICY = 'lanet-file-v1';
@@ -32,6 +33,8 @@ export async function upload(request, env, user, ctx) {
       },
     });
     let { mime, image } = validateFile(bytes, name);
+    const pdf = mime === 'application/pdf';
+    if (pdf) bytes = await safePdf(env, bytes);
     if (image) {
       bytes = await safeImage(env, bytes, mime);
       mime = 'image/webp';
@@ -53,7 +56,7 @@ export async function upload(request, env, user, ctx) {
         size,
         key,
         image ? 'approved' : 'validated',
-        image ? IMAGE_SAFETY_POLICY : FILE_POLICY,
+        image ? IMAGE_SAFETY_POLICY : pdf ? PDF_SAFETY_POLICY : FILE_POLICY,
         new Date().toISOString(),
         lease.purpose,
         lease.purpose,
@@ -86,6 +89,8 @@ export async function upload(request, env, user, ctx) {
 export async function ensureFileSafety(env, f) {
   if (f.deleting_at != null) fail(410, 'Aquesta imatge s’ha retirat i ja no està disponible.');
   const image = f.mime?.startsWith('image/');
+  const pdf = f.mime === 'application/pdf';
+  const policy = pdf ? PDF_SAFETY_POLICY : FILE_POLICY;
   if (f.safety_state === 'blocked')
     fail(422, 'Aquest adjunt no es pot mostrar perquè no ha superat la comprovació de seguretat.');
   if (
@@ -98,7 +103,7 @@ export async function ensureFileSafety(env, f) {
   if (
     !image &&
     f.safety_state === 'validated' &&
-    f.safety_policy === FILE_POLICY &&
+    f.safety_policy === policy &&
     SAFE_MIMES.has(f.mime)
   )
     return f;
@@ -114,10 +119,12 @@ export async function ensureFileSafety(env, f) {
     const validated = validateFile(bytes, name);
     if (validated.mime !== f.mime || validated.image !== image)
       fail(400, 'El format de l’adjunt no és vàlid.');
-    if (image) {
-      bytes = await safeImage(env, bytes, f.mime);
+    if (image || pdf) {
+      bytes = image ? await safeImage(env, bytes, f.mime) : await safePdf(env, bytes);
       replacement = `${f.owner_id}/${id()}`;
-      await env.FILES.put(replacement, bytes, { httpMetadata: { contentType: 'image/webp' } });
+      await env.FILES.put(replacement, bytes, {
+        httpMetadata: { contentType: image ? 'image/webp' : f.mime },
+      });
     }
     const result = await run(
       env,
@@ -127,9 +134,9 @@ export async function ensureFileSafety(env, f) {
       bytes.length,
       replacement || f.object_key,
       image ? 'approved' : 'validated',
-      image ? IMAGE_SAFETY_POLICY : FILE_POLICY,
+      image ? IMAGE_SAFETY_POLICY : policy,
       new Date().toISOString(),
-      image ? f.original_object_key || f.object_key : null,
+      image || pdf ? f.original_object_key || f.object_key : null,
       f.id,
       f.object_key,
       f.safety_state,
@@ -148,7 +155,7 @@ export async function ensureFileSafety(env, f) {
             fresh.safety_state === 'approved' &&
             fresh.safety_policy === IMAGE_SAFETY_POLICY
           )
-        : !(fresh.safety_state === 'validated' && fresh.safety_policy === FILE_POLICY))
+        : !(fresh.safety_state === 'validated' && fresh.safety_policy === policy))
     )
       fail(409, 'L’adjunt està canviant. Torna-ho a provar.');
     return fresh;

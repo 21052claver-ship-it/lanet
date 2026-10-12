@@ -6,6 +6,9 @@ import { testEnvironment } from './d1.js';
 import app from '../../worker/index.js';
 import { madridDay } from '../../shared/domain.js';
 import { byteRange } from '../../shared/byte-range.js';
+import { PDFiumLibrary } from '@hyzyla/pdfium';
+import { inspectPdf } from '../../worker/pdf-inspection.js';
+import { PDF_SAFETY_POLICY } from '../../worker/pdf-safety.js';
 
 function pdfFixture() {
   const content = 'BT /F1 18 Tf 50 750 Td (La Net local PDF compatibility check) Tj ET';
@@ -76,11 +79,18 @@ export async function browserFixture({ beforeAsset, mediaSafety } = {}) {
   db.exec(
     "INSERT INTO notes(id,author_id,subject_id,title,body,summary) VALUES('browser-note','browser','math','PDF de prova local','Text de prova segur: <img src=x onerror=alert(1)>','Un recurs de prova amb PDF.'); INSERT INTO pluses(id,author_id,title,body,date,place) VALUES('browser-plus','browser','Activitat local','Una activitat per comprovar el disseny.','2026-10-20','Aula de proves'); INSERT INTO plus_subjects(plus_id,subject_id,bonus) VALUES('browser-plus','math','+0,5'); INSERT INTO proposals(id,author_id,title,body) VALUES('browser-proposal','browser','Una idea local','Proposta fictícia per a la revisió.');",
   );
-  const pdf = pdfFixture();
+  const library = await PDFiumLibrary.init();
+  let pdf;
+  try {
+    // Only this generated local document uses a moderation double.
+    pdf = await inspectPdf(pdfFixture(), {}, null, library, async () => {});
+  } finally {
+    library.destroy();
+  }
   const files = new Map([['fixture/pdf', pdf]]);
   db.prepare(
-    "INSERT INTO files(id,owner_id,name,mime,size,object_key,note_id,preview) VALUES('browser-pdf','browser','prova-local.pdf','application/pdf',?,'fixture/pdf','browser-note',1)",
-  ).run(pdf.length);
+    "INSERT INTO files(id,owner_id,name,mime,size,object_key,note_id,preview,safety_state,safety_policy) VALUES('browser-pdf','browser','prova-local.pdf','application/pdf',?,'fixture/pdf','browser-note',1,'validated',?)",
+  ).run(pdf.length, PDF_SAFETY_POLICY);
   env.FILES = {
     async get(key, options) {
       const data = files.get(key);
