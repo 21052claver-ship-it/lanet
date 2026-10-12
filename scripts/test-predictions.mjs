@@ -193,6 +193,82 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         },
       );
     }
+    for (const width of [320, 1440]) {
+      await run(
+        'Creator opens and resolves own bet at ' + width + 'px',
+        { width, height: 1000 },
+        async (f, pageFor) => {
+          const page = await pageFor();
+          await page.getByRole('button', { name: 'Crear aposta', exact: true }).click();
+          const dialog = page.getByRole('dialog');
+          assert.equal(
+            await dialog
+              .getByRole('tab', { name: 'Jo mateix', exact: true })
+              .getAttribute('aria-selected'),
+            'true',
+          );
+          await dialog
+            .getByLabel('Pregunta', { exact: true })
+            .fill('Guanyarà el nostre equip la final?');
+          await dialog
+            .getByLabel('Criteris del resultat', { exact: true })
+            .fill('El marcador oficial determina el guanyador. Si hi ha empat, retornar.');
+          assert.ok(
+            await dialog
+              .locator('.prediction-resolver-tabs')
+              .evaluate((el) => el.scrollWidth <= el.clientWidth + 1),
+          );
+          await dialog.screenshot({ path: out + '/' + engine + '-self-form-' + width + '.png' });
+          await dialog.getByRole('button', { name: 'Crear i obrir aposta', exact: true }).click();
+          await dialog.waitFor({ state: 'hidden' });
+          await page.locator('.prediction-detail .status-open').waitFor();
+          const m = f.db.prepare('SELECT * FROM prediction_markets').get();
+          assert.equal(m.creator_id, 'browser');
+          assert.equal(m.resolver_id, 'browser');
+          assert.equal(await page.locator('.prediction-bet-form').count(), 0);
+          await f.call(
+            '/' + m.id + '/bets',
+            { request_id: randomUUID(), choice: 'A', stake: 2 },
+            'bettor',
+          );
+          await f.call(
+            '/' + m.id + '/bets',
+            { request_id: randomUUID(), choice: 'B', stake: 1 },
+            'resolver',
+          );
+          nowAdvance(f, m.closes_at);
+          await page.getByRole('button', { name: 'Actualitzar', exact: true }).click();
+          await page.getByRole('button', { name: 'Confirmar resultat A/B', exact: true }).click();
+          const result = page.getByRole('dialog');
+          await result
+            .getByLabel('Justificació i font del resultat', { exact: true })
+            .fill('El resultat oficial confirma que ha guanyat l’equip A.');
+          await result.getByRole('checkbox').check();
+          await result.getByRole('button', { name: 'Confirmar i repartir', exact: true }).click();
+          await page.locator('.prediction-detail .status-resolved').waitFor();
+          assert.equal(
+            f.db.prepare("SELECT balance FROM users WHERE id='browser'").get().balance,
+            5,
+          );
+          assert.equal(
+            f.db.prepare("SELECT balance FROM users WHERE id='bettor'").get().balance,
+            6,
+          );
+          assert.equal(
+            f.db.prepare("SELECT balance FROM users WHERE id='resolver'").get().balance,
+            4,
+          );
+          assert.equal(f.db.prepare('SELECT SUM(balance) n FROM users').get().n, 15);
+          assert.ok(
+            await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1),
+          );
+          await page.screenshot({
+            path: out + '/' + engine + '-self-resolved-' + width + '.png',
+            fullPage: true,
+          });
+        },
+      );
+    }
     for (const width of [320, 390]) {
       await run(
         `Student creates a new bet from another bet detail at ${width}px`,
@@ -220,6 +296,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
           await dialog
             .getByLabel('Criteris del resultat', { exact: true })
             .fill('Segons el marcador oficial del torneig. Si hi ha empat, es retorna el pot.');
+          await dialog.getByRole('tab', { name: 'Una altra persona', exact: true }).click();
           await dialog.getByLabel('Responsable del resultat', { exact: true }).fill('Responsable');
           await dialog.getByRole('button', { name: 'Responsable de prova', exact: true }).click();
           await dialog.getByRole('button', { name: 'Enviar proposta', exact: true }).click();
@@ -262,6 +339,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
           .fill(
             'El marcador oficial del concurs determina el guanyador. En cas d’empat, anul·lar i retornar.',
           );
+        await dialog.getByRole('tab', { name: 'Una altra persona', exact: true }).click();
         await dialog.getByLabel('Responsable del resultat', { exact: true }).fill('Responsable');
         await dialog.getByRole('button', { name: 'Responsable de prova', exact: true }).click();
         await dialog.getByRole('button', { name: 'Enviar proposta', exact: true }).click();
@@ -386,6 +464,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         });
         const refreshAfterLoss = page.waitForResponse(
           (response) =>
+            intercepted &&
             response.request().method() === 'GET' &&
             new URL(response.url()).pathname === `/api/predictions/${market.id}`,
         );
@@ -393,12 +472,16 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         await page.getByRole('button', { name: 'Recuperar acció', exact: true }).waitFor();
         assert.equal(f.db.prepare('SELECT COUNT(*) n FROM prediction_bets').get().n, 1);
         await (await refreshAfterLoss).finished();
+        await page.waitForFunction(
+          () => document.querySelector('.prediction-wallet b')?.textContent === '4',
+        );
         await page.reload();
         await page.getByRole('button', { name: 'Entrar a la pastisseria', exact: true }).click();
         await page
           .getByRole('button', { name: 'Aixecar la catifa de la pastisseria', exact: true })
           .click();
         await page.getByRole('button', { name: 'Prediccions A/B', exact: true }).click();
+        await page.waitForFunction(() => !document.querySelector('.prediction-loading'));
         await page.getByRole('button', { name: 'Recuperar acció', exact: true }).click();
         await page.locator('.prediction-detail .status-open').waitFor();
         await page.waitForFunction(() => !document.querySelector('.prediction-recovery'));
@@ -422,6 +505,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         await dialog
           .getByLabel('Criteris del resultat', { exact: true })
           .fill('Segons el marcador oficial de la prova. Si no hi ha guanyador, retornar.');
+        await dialog.getByRole('tab', { name: 'Una altra persona', exact: true }).click();
         await dialog.getByLabel('Responsable del resultat', { exact: true }).fill('Responsable');
         await dialog.getByRole('button', { name: 'Responsable de prova', exact: true }).click();
         let lost = false;

@@ -320,6 +320,10 @@
     {
       "id": "R79",
       "description": "Corregir targetes d’esdeveniments amb lletres tallades i revisar coherència de mides."
+    },
+    {
+      "id": "R80",
+      "description": "Permetre que el creador també confirmi el resultat de la seva aposta."
     }
   ],
   "phases": [
@@ -782,6 +786,13 @@
       "title": "Llegibilitat de targetes de l’horari",
       "depends_on": [
         "F64"
+      ]
+    },
+    {
+      "id": "F66",
+      "title": "Apostes amb responsable creador",
+      "depends_on": [
+        "F65"
       ]
     }
   ],
@@ -6651,6 +6662,31 @@
         "output/releases/0.5.1/receipt.json"
       ],
       "change_log_id": "H166"
+    },
+    {
+      "id": "T66-01",
+      "phase": "F66",
+      "title": "Crear i confirmar la pròpia aposta",
+      "status": "review",
+      "requirements": [
+        "R80"
+      ],
+      "depends_on": [
+        "T65-01"
+      ],
+      "files": [
+        "src/components/PredictionRoom.jsx",
+        "worker/predictions.js",
+        "tests/predictions.test.js"
+      ],
+      "acceptance": "Creador responsable seleccionable, permisos de resolució coherents, saldos i històric preservats. Migració revisada i còpia privada abans de qualsevol canvi de base de dades. Proves, CI i publicació.",
+      "checks": [
+        "Revisar permisos i restricció SQL.",
+        "Preparar formulari i servidor.",
+        "Provar conservació i migració amb dades.",
+        "Verificar còpia, CI i publicar."
+      ],
+      "evidence": []
     }
   ]
 }

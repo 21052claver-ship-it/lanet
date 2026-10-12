@@ -137,7 +137,6 @@ async function route(request, env, user, path) {
     if (previous)
       same(previous, value, ['title', 'option_a', 'option_b', 'rules', 'resolver_id', 'closes_at']);
     else {
-      if (value.resolver_id === user.id) fail(400, 'Designa una altra persona com a responsable.');
       if (
         !(await one(
           env,
@@ -149,7 +148,7 @@ async function route(request, env, user, path) {
       await limit(env, request, `prediction:create:${user.id}`, 30, 60, true);
       await run(
         env,
-        `INSERT INTO prediction_markets(id,creator_id,request_id,resolver_id,title,option_a,option_b,rules,closes_at,resolve_by) SELECT ?,?,?,?,?,?,?,?,?,? WHERE NOT EXISTS(SELECT 1 FROM prediction_markets WHERE creator_id=? AND request_id=?)`,
+        `INSERT INTO prediction_markets(id,creator_id,request_id,resolver_id,title,option_a,option_b,rules,closes_at,resolve_by,state) SELECT ?,?,?,?,?,?,?,?,?,?,? WHERE NOT EXISTS(SELECT 1 FROM prediction_markets WHERE creator_id=? AND request_id=?)`,
         id(),
         user.id,
         value.request_id,
@@ -160,6 +159,7 @@ async function route(request, env, user, path) {
         value.rules,
         value.closes_at,
         value.closes_at + RESOLUTION_SECONDS,
+        value.resolver_id === user.id ? 'open' : 'pending',
         user.id,
         value.request_id,
       );

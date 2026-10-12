@@ -2,6 +2,13 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.6.0] - 2026-10-12
+
+- El creador pot ser el responsable del resultat: Jo mateix seleccionat per defecte, o altra persona opcional.
+- Les apostes pròpies s’obren en crear-les; el creador confirma A/B després del tancament amb justificació pública.
+- El responsable no hi pot apostar. Terminis, retorns, límits i liquidació única preservats.
+- Migració compatible que conserva mercats, rowids, apostes, historial i saldos; proves de preservació i flux en tres motors.
+
 ## [0.5.1] - 2026-10-12
 
 - Targetes de l’horari sense lletres comprimides ni línies tallades.

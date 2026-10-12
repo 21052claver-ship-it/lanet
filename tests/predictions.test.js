@@ -23,8 +23,8 @@ test('D1 remote trigger parsing keeps LF, uppercase BEGIN and parenthesized CASE
   );
 });
 
-function fixture() {
-  const { db, env } = testEnvironment();
+function fixture(through) {
+  const { db, env } = testEnvironment({ through });
   let now = Math.floor(Date.now() / 1000);
   db.function('unixepoch', () => now);
   for (const name of ['creator', 'resolver', 'a', 'b', 'c', 'admin']) {
@@ -537,10 +537,6 @@ test('Unicode length agrees with SQLite and short emoji strings return validatio
 test('Creator/resolver validation and SQL creation limits cannot be bypassed by parallel requests', async () => {
   const f = fixture();
   try {
-    await assert.rejects(
-      f.request('', { ...f.draft(), resolver_id: 'creator' }),
-      (e) => e.status === 400,
-    );
     f.db.prepare("UPDATE users SET disabled=1 WHERE id='resolver'").run();
     await assert.rejects(f.create(), (e) => e.status === 400);
     f.db.prepare("UPDATE users SET disabled=0 WHERE id='resolver'").run();
@@ -549,6 +545,93 @@ test('Creator/resolver validation and SQL creation limits cannot be bypassed by 
     assert.ok(
       attempts.filter((r) => r.status === 'rejected').every((r) => r.reason.status === 429),
     );
+    f.conservation();
+  } finally {
+    f.db.close();
+  }
+});
+
+test('Creator can open and resolve own market, but cannot stake or resolve before closing; retries settle once', async () => {
+  const f = fixture();
+  try {
+    const draft = { ...f.draft(), resolver_id: 'creator' };
+    const market = (await f.request('', draft)).market;
+    assert.equal(market.state, 'open');
+    assert.equal(market.can_bet, false);
+    assert.equal(market.can_resolve, false);
+    assert.equal((await f.request('', draft)).market.id, market.id);
+    await assert.rejects(f.bet(market, 'creator', 'A', 1), (e) => e.status === 409);
+    await assert.rejects(
+      f.action(market, 'resolve', 'creator', { choice: 'A' }),
+      (e) => e.status === 409,
+    );
+    await f.bet(market, 'a', 'A', 4);
+    await f.bet(market, 'b', 'B', 2);
+    f.advance(600);
+    await assert.rejects(
+      f.action(market, 'resolve', 'a', { choice: 'A' }),
+      (e) => e.status === 409,
+    );
+    const result = {
+      request_id: randomUUID(),
+      kind: 'resolve',
+      choice: 'A',
+      reason: 'Resultat comprovat al marcador oficial.',
+    };
+    const path = '/' + market.id + '/actions';
+    assert.equal((await f.request(path, result)).market.state, 'resolved');
+    assert.equal((await f.request(path, result)).market.state, 'resolved');
+    assert.equal(f.balance('creator'), 1000);
+    assert.equal(f.balance('a'), 1002);
+    assert.equal(f.balance('b'), 998);
+    assert.equal(
+      f.db.prepare("SELECT COUNT(*) n FROM prediction_actions WHERE kind='resolve'").get().n,
+      1,
+    );
+    f.conservation();
+  } finally {
+    f.db.close();
+  }
+});
+
+test('Self-resolver migration preserves populated markets, rowids, bets, actions, settlements and all balances', async () => {
+  const f = fixture('0024_roulette_tickets.sql');
+  try {
+    const resolved = await f.open();
+    await f.bet(resolved, 'a', 'A', 7);
+    await f.bet(resolved, 'b', 'B', 4);
+    f.advance(600);
+    await f.action(resolved, 'resolve', 'resolver', { choice: 'A' });
+    const cancelled = await f.open();
+    await f.bet(cancelled, 'c', 'B', 6);
+    await f.action(cancelled, 'cancel');
+    await f.create();
+    const live = await f.open();
+    await f.bet(live, 'a', 'A', 5);
+    const tables = [
+      'prediction_markets',
+      'prediction_bets',
+      'prediction_actions',
+      'prediction_settlements',
+      'users',
+      'ledger',
+    ];
+    const snapshot = () =>
+      tables.map((t) => f.db.prepare('SELECT rowid,* FROM ' + t + ' ORDER BY rowid').all());
+    const before = snapshot();
+    f.db.exec('BEGIN');
+    try {
+      f.db.exec(readFileSync('migrations/0025_prediction_self_resolver.sql', 'utf8'));
+      assert.deepEqual(f.db.prepare('PRAGMA foreign_key_check').all(), []);
+      f.db.exec('COMMIT');
+    } catch (e) {
+      f.db.exec('ROLLBACK');
+      throw e;
+    }
+    assert.deepEqual(snapshot(), before);
+    const own = (await f.request('', { ...f.draft(), resolver_id: 'creator' })).market;
+    assert.equal(own.state, 'open');
+    await assert.rejects(f.bet(own, 'creator', 'A', 1), (e) => e.status === 409);
     f.conservation();
   } finally {
     f.db.close();

@@ -1,9 +1,9 @@
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, readdirSync } from 'node:fs';
-export function testEnvironment() {
+export function testEnvironment({ through } = {}) {
   const db = new DatabaseSync(':memory:');
   for (const file of readdirSync('migrations')
-    .filter((f) => f.endsWith('.sql'))
+    .filter((f) => f.endsWith('.sql') && (!through || f <= through))
     .sort())
     db.exec(readFileSync(`migrations/${file}`, 'utf8'));
   const DB = {

@@ -113,24 +113,26 @@ function Choices({ market, value, onChange, locked = null, disabled = false }) {
   );
 }
 function CreatePrediction({ busy, onSubmit, error, onClose }) {
+  const { data } = useApp();
+  const [self, setSelf] = useState(true);
   const [draft, setDraft] = useState({
     title: '',
     option_a: 'Sí',
     option_b: 'No',
     rules: '',
     closes: localDate(new Date(Date.now() + 86400000)),
-    resolver_id: '',
+    resolver_id: data.user.id,
   });
   const [query, setQuery] = useState(''),
     [people, setPeople] = useState([]),
-    [person, setPerson] = useState(null),
+    [person, setPerson] = useState(data.user),
     [searching, setSearching] = useState(false),
     [searchError, setSearchError] = useState(''),
     [validation, setValidation] = useState('');
   useEffect(() => {
     setPeople([]);
     setSearchError('');
-    if (query.trim().length < 2) {
+    if (self || query.trim().length < 2) {
       setSearching(false);
       return;
     }
@@ -163,7 +165,7 @@ function CreatePrediction({ busy, onSubmit, error, onClose }) {
       clearTimeout(timeout);
       own.abort();
     };
-  }, [query]);
+  }, [query, self]);
   const patch = (key, value) => setDraft((current) => ({ ...current, [key]: value }));
   return (
     <Modal
@@ -244,60 +246,87 @@ function CreatePrediction({ busy, onSubmit, error, onClose }) {
               placeholder="El marcador oficial del concurs determinarà el resultat. En cas d’empat, es retornaran els pastissos."
             />
           </Field>
-          <Field
-            label="Responsable del resultat"
-            hint="Cerca una altra persona de La Net. Haurà d’acceptar i no podrà apostar."
-          >
-            <input
-              type="search"
-              maxLength={80}
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setPerson(null);
-                patch('resolver_id', '');
-              }}
-              placeholder="Cerca pel nom…"
-              autoComplete="off"
-            />
-          </Field>
-          {searching && <p role="status">Cercant persones…</p>}
-          <FormError error={searchError} />
-          {!searching && query.trim().length >= 2 && !people.length && !searchError && (
+          <Tabs
+            className="prediction-resolver-tabs"
+            label="Qui confirma el resultat?"
+            value={self ? 'self' : 'other'}
+            items={[
+              ['self', 'Jo mateix', UserCircle],
+              ['other', 'Una altra persona', Scales],
+            ]}
+            onChange={(value) => {
+              const own = value === 'self';
+              setSelf(own);
+              setQuery('');
+              setPeople([]);
+              setPerson(own ? data.user : null);
+              patch('resolver_id', own ? data.user.id : '');
+            }}
+          />
+          {self ? (
             <p className="prediction-hint">
-              Cap coincidència. La persona ha d’haver entrat amb Google a La Net.
+              <b>Tu, {data.user.name}, confirmaràs el resultat.</b> L’aposta s’obrirà en crear-la.
+              Podràs confirmar A o B després del tancament, amb una justificació pública. Com a
+              responsable, no hi podràs apostar.
             </p>
-          )}
-          {!!people.length && (
-            <div className="prediction-people" role="group" aria-label="Tria el responsable">
-              {people.map((p) => (
-                <button
-                  type="button"
-                  key={p.id}
-                  aria-pressed={person?.id === p.id}
-                  onClick={() => {
-                    setPerson(p);
-                    patch('resolver_id', p.id);
+          ) : (
+            <>
+              <Field
+                label="Responsable del resultat"
+                hint="Cerca una altra persona de La Net. Haurà d’acceptar i no podrà apostar."
+              >
+                <input
+                  type="search"
+                  maxLength={80}
+                  value={query}
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                    setPerson(null);
+                    patch('resolver_id', '');
                   }}
-                >
-                  <UserCircle size={24} aria-hidden="true" />
-                  <span>{p.name}</span>
-                  {person?.id === p.id && (
-                    <CheckCircle weight="fill" size={20} aria-hidden="true" />
-                  )}
-                </button>
-              ))}
-            </div>
-          )}
-          {person && (
-            <p className="prediction-hint">
-              <b>{person.name}</b> rebrà l’encàrrec a «Per resoldre».
-            </p>
+                  placeholder="Cerca pel nom…"
+                  autoComplete="off"
+                />
+              </Field>
+              {searching && <p role="status">Cercant persones…</p>}
+              <FormError error={searchError} />
+              {!searching && query.trim().length >= 2 && !people.length && !searchError && (
+                <p className="prediction-hint">
+                  Cap coincidència. La persona ha d’haver entrat amb Google a La Net.
+                </p>
+              )}
+              {!!people.length && (
+                <div className="prediction-people" role="group" aria-label="Tria el responsable">
+                  {people.map((p) => (
+                    <button
+                      type="button"
+                      key={p.id}
+                      aria-pressed={person?.id === p.id}
+                      onClick={() => {
+                        setPerson(p);
+                        patch('resolver_id', p.id);
+                      }}
+                    >
+                      <UserCircle size={24} aria-hidden="true" />
+                      <span>{p.name}</span>
+                      {person?.id === p.id && (
+                        <CheckCircle weight="fill" size={20} aria-hidden="true" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {person && (
+                <p className="prediction-hint">
+                  <b>{person.name}</b> rebrà l’encàrrec a «Per resoldre».
+                </p>
+              )}
+            </>
           )}
         </fieldset>
         <p className="prediction-form-note">
-          Les regles, el responsable i el termini quedaran fixats. Si el responsable no accepta
-          abans del tancament, la proposta caduca.
+          Les regles, el responsable i el termini quedaran fixats.
+          {!self && ' Si el responsable no accepta abans del tancament, la proposta caduca.'}
         </p>
         <FormError error={validation || error} />
         <div className="form-footer">
@@ -305,7 +334,7 @@ function CreatePrediction({ busy, onSubmit, error, onClose }) {
             Cancel·lar
           </Button>
           <Button type="submit" variant="primary" busy={busy} disabled={!person}>
-            Enviar proposta
+            {self ? 'Crear i obrir aposta' : 'Enviar proposta'}
           </Button>
         </div>
       </form>
@@ -978,7 +1007,7 @@ export default function PredictionRoom() {
                   </h4>
                   <p>
                     {filter === 'resolve'
-                      ? 'Quan et designin responsable, trobaràs aquí la proposta per acceptar-la.'
+                      ? 'Crea una aposta amb tu com a responsable, o accepta l’encàrrec d’una altra persona.'
                       : 'Crea una pregunta amb dues opcions i convida algú a confirmar el resultat.'}
                   </p>
                   {filter === 'open' && (
@@ -1016,9 +1045,10 @@ export default function PredictionRoom() {
               guanyadora, es retorna tot.
             </p>
             <p>
-              Les regles i els terminis no es poden editar. Només el responsable acceptat confirma
-              A/B, després del tancament, amb una justificació pública. Pot anul·lar si no hi ha un
-              resultat verificable. L’autor pot cancel·lar mentre no hi hagi apostes;
+              Les regles i els terminis no es poden editar. Només el responsable confirma A/B,
+              després del tancament, amb una justificació pública. Si és el creador, l’aposta s’obre
+              directament; si és una altra persona, primer ha d’acceptar. Pot anul·lar si no hi ha
+              un resultat verificable. L’autor pot cancel·lar mentre no hi hagi apostes;
               l’administració pot anul·lar per incidències.
             </p>
             <p>
