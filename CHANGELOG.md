@@ -2,6 +2,13 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.4.1] - 2026-10-12
+
+- Botó «Crear aposta» sempre accessible en llista i detall per a qualsevol alumne autenticat.
+- Formulari i estat buit amb nom coherent; cancel·lar conserva l’aposta anterior.
+- Després de crear des d’una altra aposta, la sincronització conserva el detall de l’aposta nova.
+- Proves de creació des del detall a 320 i 390 px i del flux complet en tres motors, incorporades a CI.
+
 ## [0.4.0] - 2026-10-12
 
 - Proteccions antiabús persistents per compte i operació, amb límits atòmics que no es reinicien canviant d’IP.

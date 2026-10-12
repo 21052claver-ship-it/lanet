@@ -132,12 +132,66 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
     }
   }
   try {
+    for (const width of [320, 390]) {
+      await run(
+        `Student creates a new bet from another bet detail at ${width}px`,
+        { width, height: 844 },
+        async (f, pageFor) => {
+          const original = await f.seed();
+          assert.equal(
+            f.db.prepare("SELECT role FROM users WHERE id='browser'").get().role,
+            'student',
+          );
+          const page = await pageFor();
+          await page.locator('.prediction-card').click();
+          await page.getByRole('heading', { name: original.title, exact: true }).waitFor();
+          await page.getByRole('button', { name: 'Crear aposta', exact: true }).click();
+          let dialog = page.getByRole('dialog');
+          await dialog.getByRole('button', { name: 'Cancel·lar', exact: true }).click();
+          await dialog.waitFor({ state: 'hidden' });
+          await page.getByRole('heading', { name: original.title, exact: true }).waitFor();
+          assert.equal(f.db.prepare('SELECT COUNT(*) n FROM prediction_markets').get().n, 1);
+          await page.getByRole('button', { name: 'Crear aposta', exact: true }).click();
+          dialog = page.getByRole('dialog');
+          await dialog
+            .getByLabel('Pregunta', { exact: true })
+            .fill('Guanyarà el nostre grup el torneig?');
+          await dialog
+            .getByLabel('Criteris del resultat', { exact: true })
+            .fill('Segons el marcador oficial del torneig. Si hi ha empat, es retorna el pot.');
+          await dialog.getByLabel('Responsable del resultat', { exact: true }).fill('Responsable');
+          await dialog.getByRole('button', { name: 'Responsable de prova', exact: true }).click();
+          await dialog.getByRole('button', { name: 'Enviar proposta', exact: true }).click();
+          await dialog.waitFor({ state: 'hidden' });
+          await page
+            .getByRole('heading', { name: 'Guanyarà el nostre grup el torneig?', exact: true })
+            .waitFor();
+          await page.locator('.prediction-detail .status-pending').waitFor();
+          assert.equal(f.db.prepare('SELECT COUNT(*) n FROM prediction_markets').get().n, 2);
+          assert.equal(
+            f.db.prepare('SELECT state FROM prediction_markets WHERE id=?').get(original.id).state,
+            'open',
+          );
+          assert.equal(
+            f.db.prepare("SELECT balance FROM users WHERE id='browser'").get().balance,
+            5,
+          );
+          assert.ok(
+            await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1),
+          );
+          await page.screenshot({
+            path: `${out}/${engine}-student-created-${width}.png`,
+            fullPage: true,
+          });
+        },
+      );
+    }
     await run(
       'Three users create, accept, stake, close and settle with exact balances',
       { width: 1440, height: 1000 },
       async (f, pageFor) => {
         const creator = await pageFor();
-        await creator.getByRole('button', { name: 'Crear predicció', exact: true }).click();
+        await creator.getByRole('button', { name: 'Crear aposta', exact: true }).click();
         const dialog = creator.getByRole('dialog');
         await dialog.getByLabel('Pregunta', { exact: true }).fill('Guanyarà l’equip A el concurs?');
         await dialog.getByLabel('Opció A', { exact: true }).fill('Equip A');
@@ -257,7 +311,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
       'Lost bet response, reload and recovery never debit twice',
       { width: 375, height: 812 },
       async (f, pageFor) => {
-        await f.seed();
+        const market = await f.seed();
         const page = await pageFor();
         await page.locator('.prediction-card').click();
         let intercepted = false;
@@ -269,9 +323,15 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
             await route.abort('failed');
           } else await route.continue();
         });
+        const refreshAfterLoss = page.waitForResponse(
+          (response) =>
+            response.request().method() === 'GET' &&
+            new URL(response.url()).pathname === `/api/predictions/${market.id}`,
+        );
         await page.getByRole('button', { name: 'Apostar 1 a A', exact: true }).click();
         await page.getByRole('button', { name: 'Recuperar acció', exact: true }).waitFor();
         assert.equal(f.db.prepare('SELECT COUNT(*) n FROM prediction_bets').get().n, 1);
+        await (await refreshAfterLoss).finished();
         await page.reload();
         await page.getByRole('button', { name: 'Entrar a la pastisseria', exact: true }).click();
         await page
@@ -293,7 +353,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
       { width: 320, height: 720 },
       async (f, pageFor) => {
         const page = await pageFor();
-        await page.getByRole('button', { name: 'Crear predicció', exact: true }).click();
+        await page.getByRole('button', { name: 'Crear aposta', exact: true }).click();
         const dialog = page.getByRole('dialog');
         await dialog
           .getByLabel('Pregunta', { exact: true })

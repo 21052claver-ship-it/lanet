@@ -169,7 +169,7 @@ function CreatePrediction({ busy, onSubmit, error, onClose }) {
     <Modal
       open
       onClose={() => !busy && onClose()}
-      title="Crear una predicció"
+      title="Crear aposta"
       description="Dues opcions, unes regles clares i algú que en confirmi el resultat."
     >
       <form
@@ -617,6 +617,7 @@ export default function PredictionRoom() {
     const own = new AbortController();
     writeController.current = own;
     const timer = setTimeout(() => own.abort(), 15000);
+    let committedMarketId = null;
     try {
       await mutate(
         command.path,
@@ -626,6 +627,7 @@ export default function PredictionRoom() {
           if (pendingValue(storageKey)?.body.request_id === command.body.request_id)
             removeLocalValue(storageKey);
           if (!mounted.current) return;
+          committedMarketId = value.market.id;
           sync(value);
           setPending(null);
           setMarket(value.market);
@@ -661,7 +663,8 @@ export default function PredictionRoom() {
       locked.current = false;
       if (mounted.current) {
         setBusy(false);
-        load(selected, null, true);
+        // Changing selection already triggers its own load effect.
+        if (!committedMarketId || committedMarketId === selected) load(selected, null, true);
       }
     }
   }
@@ -681,19 +684,17 @@ export default function PredictionRoom() {
           </h3>
           <p>Tria A o B. El resultat decideix com es reparteix el pot.</p>
         </div>
-        {!selected && (
-          <Button
-            variant="primary"
-            onClick={() => {
-              setError('');
-              setCreate(true);
-            }}
-            disabled={disabled}
-          >
-            <Plus size={18} />
-            Crear predicció
-          </Button>
-        )}
+        <Button
+          variant="primary"
+          onClick={() => {
+            setError('');
+            setCreate(true);
+          }}
+          disabled={disabled}
+        >
+          <Plus size={18} />
+          Crear aposta
+        </Button>
       </div>
       <div className="prediction-wallet">
         <Cake size={20} aria-hidden="true" />
@@ -974,7 +975,7 @@ export default function PredictionRoom() {
               </p>
               {filter === 'open' && (
                 <Button variant="primary" disabled={disabled} onClick={() => setCreate(true)}>
-                  Crear la primera predicció
+                  Crear la primera aposta
                 </Button>
               )}
             </div>

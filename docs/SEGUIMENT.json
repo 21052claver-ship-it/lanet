@@ -308,6 +308,10 @@
     {
       "id": "R76",
       "description": "Proteccions anti-spam i contra abús repetit al servidor, sense perjudicar ús normal."
+    },
+    {
+      "id": "R77",
+      "description": "Qualsevol usuari pot crear apostes, amb un accés clar disponible també des del detall."
     }
   ],
   "phases": [
@@ -749,6 +753,13 @@
       "title": "Protecció contra spam i abús",
       "depends_on": [
         "F61"
+      ]
+    },
+    {
+      "id": "F63",
+      "title": "Creació d’apostes accessible per a tothom",
+      "depends_on": [
+        "F62"
       ]
     }
   ],
@@ -6507,6 +6518,30 @@
         "output/releases/0.4.0/receipt.json"
       ],
       "change_log_id": "H163"
+    },
+    {
+      "id": "T63-01",
+      "phase": "F63",
+      "title": "Crear aposta sempre accessible i flux d’alumne verificat",
+      "status": "review",
+      "requirements": [
+        "R77"
+      ],
+      "depends_on": [
+        "T62-01"
+      ],
+      "files": [
+        "src/components/PredictionRoom.jsx",
+        "scripts/test-predictions.mjs"
+      ],
+      "acceptance": "Botó Crear aposta visible en llista i detall, qualsevol alumne pot crear amb termini i responsable independent. Cancel·lar conserva el detall anterior. Proves en tres motors i publicació versionada.",
+      "checks": [
+        "Revisar permisos i accés actual.",
+        "Fer visible la creació en llista i detall.",
+        "Provar creació com alumne, cancel·lació, mòbil i liquidació.",
+        "Publicar amb CI i rebut."
+      ],
+      "evidence": []
     }
   ]
 }
