@@ -1,0 +1,51 @@
+{
+  "recordedAt": "2026-10-12T01:18:28.607Z",
+  "repository": "21052claver-ship-it/lanet",
+  "version": "0.4.0",
+  "sourceCommit": "7c531808f56c1f8015aa9054024c09e206344bb4",
+  "authorEmail": "21052.claver@fje.edu",
+  "releaseUrl": "https://github.com/21052claver-ship-it/lanet/releases/tag/v0.4.0",
+  "immutable": true,
+  "tagCommitMatches": true,
+  "releaseReceiptDigestMatches": true,
+  "ci": "https://github.com/21052claver-ship-it/lanet/actions/runs/38190189682",
+  "ciSuccess": true,
+  "cloudflareDeployment": "bd8a013b",
+  "providerConfirmed": true,
+  "githubDeployment": 7004445948,
+  "githubDeploymentState": "success",
+  "origin": "https://lanet.pages.dev",
+  "publicFiles": 538,
+  "productionDataExcluded": true,
+  "dependencyAudit": {
+    "production": true,
+    "reportedVulnerabilities": 0
+  },
+  "tests": {
+    "unit": 350,
+    "abuseUnit": 12,
+    "abuseBrowser": 6,
+    "animationScenarios": 18,
+    "roulettePositions": 157,
+    "positionResultCombinations": 5809,
+    "rouletteBoardScenarios": 15,
+    "secretRoomScenarios": 36,
+    "mobileNavigationScenarios": 9,
+    "responsive": 48,
+    "generalBrowser": 135
+  },
+  "publicSiteVisited": false,
+  "realDevicesTested": false,
+  "publication": "Local versioned release command after GitHub CI; no deployment on each push",
+  "credentialExportedToGitHub": false,
+  "databaseMigrationRequired": false,
+  "serverSettlementChanged": false,
+  "accountRateLimitsPersistent": true,
+  "duplicatePublicationsPrevented": true,
+  "temporaryPausesSeconds": [
+    60,
+    300,
+    900
+  ],
+  "userDataChanged": false
+}

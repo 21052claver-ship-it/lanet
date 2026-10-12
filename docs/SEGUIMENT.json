@@ -6466,7 +6466,7 @@
       "id": "T62-01",
       "phase": "F62",
       "title": "Límits per compte, duplicats i bloquejos temporals progressius",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R76"
       ],
@@ -6492,7 +6492,21 @@
         "Provar concurrència, canvi IP, duplicats, escalada, ús normal i regressions.",
         "Publicar amb CI i evidències sense modificar dades d’usuaris."
       ],
-      "evidence": []
+      "evidence": [
+        "docs/PLA-SEGURETAT-ANTIABUS.md",
+        "docs/releases/0.4.0.json",
+        "output/abuse/unit.log",
+        "output/abuse/typecheck.log",
+        "output/abuse/source-audit.log",
+        "output/abuse/dependency-audit.json",
+        "output/abuse/browser/results.json",
+        "output/abuse/regression/browser-results.json",
+        "output/abuse/remote-bindings.json",
+        "output/abuse/ci-success.json",
+        "output/abuse/delivery.json",
+        "output/releases/0.4.0/receipt.json"
+      ],
+      "change_log_id": "H163"
     }
   ]
 }

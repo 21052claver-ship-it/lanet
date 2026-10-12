@@ -10,7 +10,7 @@ Una sola tasca: T62-01. Implementació al servidor, dades locals de prova i publ
 - [x] Instal·lar pauses temporals progressives davant d’abús repetit.
 - [x] Limitar mida, profunditat i complexitat del JSON i rebutjar claus de prototip.
 - [x] Verificar ús normal, concurrència, recuperació, privadesa i regressions en navegadors.
-- [ ] Auditoria de codi publicable, CI del commit exacte i release amb rebut verificat.
+- [x] Auditoria de codi publicable, CI del commit exacte i release amb rebut verificat.
 
 ## Pressupostos
 
@@ -46,4 +46,6 @@ Es mantenen Google únic @fje.edu, comprovacions de propietat i rol, origen de p
 
 Referències del model: [OWASP API4: consum de recursos](https://api-security.owasp.org/editions/2023/en/0xa4-unrestricted-resource-consumption/) i [OWASP: avaluació REST](https://cheatsheetseries.owasp.org/cheatsheets/REST_Assessment_Cheat_Sheet.html).
 
-Verificació local: 350 proves unitàries i 6 casos antiabús en Chromium, Firefox i WebKit. Inclou 45 cicles seguits de preferències, notes i refresc amb ritme d’ús humà. Auditoria, CI i publicació pendents.
+Verificació local: 350 proves unitàries i 6 casos antiabús en Chromium, Firefox i WebKit. Inclou 45 cicles seguits de preferències, notes i refresc amb ritme d’ús humà. Auditoria, CI i publicació confirmades.
+
+Publicació confirmada: [0.4.0](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.4.0), commit 7c531808f56c1f8015aa9054024c09e206344bb4, [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38190189682), Pages bd8a013b.
