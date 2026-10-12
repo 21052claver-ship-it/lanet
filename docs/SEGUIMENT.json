@@ -316,6 +316,10 @@
     {
       "id": "R78",
       "description": "Escenari propi de prediccions amb la senyora i apostes penjades en una pissarra."
+    },
+    {
+      "id": "R79",
+      "description": "Corregir targetes d’esdeveniments amb lletres tallades i revisar coherència de mides."
     }
   ],
   "phases": [
@@ -771,6 +775,13 @@
       "title": "Escenari de la pissarra d’apostes",
       "depends_on": [
         "F63"
+      ]
+    },
+    {
+      "id": "F65",
+      "title": "Llegibilitat de targetes de l’horari",
+      "depends_on": [
+        "F64"
       ]
     }
   ],
@@ -6602,6 +6613,31 @@
         "output/releases/0.5.0/receipt.json"
       ],
       "change_log_id": "H165"
+    },
+    {
+      "id": "T65-01",
+      "phase": "F65",
+      "title": "Evitar text tallat a les targetes d’esdeveniments",
+      "status": "active",
+      "requirements": [
+        "R79"
+      ],
+      "depends_on": [
+        "T64-01"
+      ],
+      "files": [
+        "src/pages/Schedule.jsx",
+        "src/responsive.css",
+        "scripts/test-schedule-cards.mjs"
+      ],
+      "acceptance": "Targetes altes, curtes i simultànies sense lletres comprimides. Informació secundària adaptada a espai real, el·lipsi i detall complet. Verificació local en tres motors, mòbil, CI i publicació.",
+      "checks": [
+        "Reproduir captura amb esdeveniment de 60 minuts.",
+        "Adaptar contingut segons alçada i amplada sense alterar l’escala temporal.",
+        "Verificar tres motors, mides i accés al detall.",
+        "Publicar i registrar rebut amb CI verda."
+      ],
+      "evidence": []
     }
   ]
 }

@@ -2,6 +2,12 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.5.1] - 2026-10-12
+
+- Targetes de l’horari sense lletres comprimides ni línies tallades.
+- Contingut adaptat a l’alçada i amplada reals: menys informació en esdeveniments curts o simultanis, amb detall complet accessible.
+- Proves de durades de 10 a 120 minuts, esdeveniments simultanis i accés al detall en tres motors i cinc amplades.
+
 ## [0.5.0] - 2026-10-12
 
 - Nou escenari de prediccions amb la senyora sencera al costat d’una pissarra emmarcada en fusta.

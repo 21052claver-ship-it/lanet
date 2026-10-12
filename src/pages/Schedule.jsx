@@ -191,13 +191,21 @@ export default function Schedule() {
     const subjectName = ['math', 'smath', 'cast'].includes(eventSubject?.id)
       ? eventSubject.name
       : eventSubject?.short;
+    const description = [
+      eventLabel(e),
+      eventSubject?.name,
+      e.start ? `${e.start}${e.end ? '–' + e.end : ''}` : 'Tot el dia',
+      e.title,
+    ]
+      .filter(Boolean)
+      .join(' · ');
     return (
       <button
         key={e.id}
         className={`event-card ${e.kind} ${selected === e.id ? 'selected' : ''} ${small ? 'compact' : ''}`}
         onClick={() => setSelected(e.id)}
-        aria-label={`${eventLabel(e)} ${e.start || ''} ${e.title}`.trim()}
-        title={e.title}
+        aria-label={description}
+        title={description}
         style={{ '--subject': subject(e.subject_id)?.color || '#EEE6F4' }}
       >
         <span className="event-kind">

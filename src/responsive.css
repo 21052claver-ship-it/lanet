@@ -881,3 +881,67 @@
     overflow-wrap: normal;
   }
 }
+
+/* Timed cards keep complete text lines; density follows the actual time box. */
+.event-card > strong,
+.event-card > .event-title,
+.event-card > .event-kind {
+  flex-shrink: 0;
+  min-width: 0;
+}
+.event-card > strong {
+  overflow-wrap: anywhere;
+}
+.timeline-event {
+  container-type: size;
+  container-name: schedule-event;
+}
+.timeline-event .event-card {
+  min-height: 0;
+  justify-content: flex-start;
+  gap: 4px;
+}
+.timeline-event .event-card strong,
+.timeline-event .event-title {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: unset;
+  line-height: 1.35;
+}
+.timeline-event .event-kind {
+  max-width: 100%;
+}
+@container schedule-event (height < 88px) {
+  .timeline-event .event-title {
+    display: none;
+  }
+}
+@container schedule-event (height < 58px) {
+  .timeline-event .event-kind {
+    display: none;
+  }
+  .timeline-event .event-card {
+    padding: 4px 7px;
+    justify-content: center;
+  }
+  .timeline-event .event-card strong {
+    font-size: 13px;
+    line-height: 18px;
+  }
+}
+@container schedule-event (width < 96px) {
+  .timeline-event .event-kind,
+  .timeline-event .event-title {
+    display: none;
+  }
+  .timeline-event .event-card {
+    padding-inline: 5px;
+  }
+  .timeline-event .event-card strong {
+    font-size: 12px;
+    line-height: 18px;
+  }
+}
