@@ -1,6 +1,6 @@
 {
   "name": "la-net",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,6 +11,7 @@
     "preview": "wrangler dev --config wrangler.local.jsonc --local --port 8787",
     "test": "node --test tests/*.test.js",
     "test:api": "node scripts/test-api.mjs",
+    "test:abuse": "node scripts/test-abuse-ux.mjs",
     "test:browser": "node scripts/test-browser-compat.mjs",
     "test:devices": "node scripts/test-device-compat.mjs",
     "test:responsive": "node scripts/test-responsive.mjs",

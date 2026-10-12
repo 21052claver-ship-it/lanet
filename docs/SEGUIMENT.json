@@ -304,6 +304,10 @@
     {
       "id": "R75",
       "description": "Premis visuals al final del gir i bola coherent amb el número real."
+    },
+    {
+      "id": "R76",
+      "description": "Proteccions anti-spam i contra abús repetit al servidor, sense perjudicar ús normal."
     }
   ],
   "phases": [
@@ -738,6 +742,13 @@
       "title": "Moviment i lliurament de premis de ruleta",
       "depends_on": [
         "F60"
+      ]
+    },
+    {
+      "id": "F62",
+      "title": "Protecció contra spam i abús",
+      "depends_on": [
+        "F61"
       ]
     }
   ],
@@ -6450,6 +6461,38 @@
         "output/releases/0.3.1/receipt.json"
       ],
       "change_log_id": "H162"
+    },
+    {
+      "id": "T62-01",
+      "phase": "F62",
+      "title": "Límits per compte, duplicats i bloquejos temporals progressius",
+      "status": "review",
+      "requirements": [
+        "R76"
+      ],
+      "depends_on": [
+        "T61-01"
+      ],
+      "files": [
+        "worker/utils.js",
+        "worker/abuse.js",
+        "worker/index.js",
+        "worker/files.js",
+        "worker/google.js",
+        "worker/predictions.js",
+        "worker/roulette.js",
+        "tests/abuse.test.js",
+        "scripts/test-abuse-ux.mjs",
+        ".github/workflows/verify.yml"
+      ],
+      "acceptance": "Límits atòmics persistents per compte i operació, control de duplicats, pauses progressives amb Retry-After, límits de lectures i peticions JSON. Ús legítim, recuperació, permisos i pujades preservats. Proves locals, CI i publicació versionada.",
+      "checks": [
+        "Revisar punts d’abús i model de límits.",
+        "Implementar controls al servidor i errors clars.",
+        "Provar concurrència, canvi IP, duplicats, escalada, ús normal i regressions.",
+        "Publicar amb CI i evidències sense modificar dades d’usuaris."
+      ],
+      "evidence": []
     }
   ]
 }

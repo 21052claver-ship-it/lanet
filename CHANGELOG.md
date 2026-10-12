@@ -2,6 +2,14 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.4.0] - 2026-10-12
+
+- Proteccions antiabús persistents per compte i operació, amb límits atòmics que no es reinicien canviant d’IP.
+- Publicacions duplicades frenades durant 10 minuts, també amb enviaments concurrents o camps aleatoris ignorats.
+- Pauses temporals progressives i espera explícita; consultar dades i tancar sessió continua disponible.
+- JSON amb límits de complexitat i claus de prototip rebutjades. Registres antiabús sense contingut ni identificadors en clar.
+- Proves de concurrència, recuperació, quotes, permisos i ús normal; formularis conservats davant d’errors en tres motors.
+
 ## [0.3.1] - 2026-10-12
 
 - Bola i roda amb una trajectòria contínua compartida, descens a la casella i desacceleració final.

@@ -146,7 +146,7 @@ async function route(request, env, user, path) {
         ))
       )
         fail(400, 'Tria un responsable actiu de La Net.');
-      await limit(env, request, `prediction:create:${user.id}`, 30, 60);
+      await limit(env, request, `prediction:create:${user.id}`, 30, 60, true);
       await run(
         env,
         `INSERT INTO prediction_markets(id,creator_id,request_id,resolver_id,title,option_a,option_b,rules,closes_at,resolve_by) SELECT ?,?,?,?,?,?,?,?,?,? WHERE NOT EXISTS(SELECT 1 FROM prediction_markets WHERE creator_id=? AND request_id=?)`,
@@ -192,7 +192,7 @@ async function route(request, env, user, path) {
       value.request_id,
     );
     if (!previous) {
-      await limit(env, request, `prediction:bet:${user.id}`, 30, 60);
+      await limit(env, request, `prediction:bet:${user.id}`, 30, 60, true);
       await run(
         env,
         `INSERT INTO prediction_bets(id,market_id,user_id,request_id,choice,stake,day) SELECT ?,?,?,?,?,?,? WHERE NOT EXISTS(SELECT 1 FROM prediction_bets WHERE user_id=? AND request_id=?)`,
@@ -225,7 +225,7 @@ async function route(request, env, user, path) {
       value.request_id,
     );
     if (!previous) {
-      await limit(env, request, `prediction:action:${user.id}`, 30, 60);
+      await limit(env, request, `prediction:action:${user.id}`, 30, 60, true);
       await run(
         env,
         `INSERT INTO prediction_actions(id,market_id,actor_id,request_id,kind,choice,reason) SELECT ?,?,?,?,?,?,? WHERE NOT EXISTS(SELECT 1 FROM prediction_actions WHERE actor_id=? AND request_id=?)`,

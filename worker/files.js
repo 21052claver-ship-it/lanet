@@ -234,7 +234,7 @@ export async function fileResponse(request, env, user, fid) {
   if (banner) allowed = true;
   if (!allowed) fail(403, 'Aquest fitxer és privat o cal desbloquejar els apunts.');
   if (f.safety_state === 'legacy')
-    await limit(env, request, `legacy-file-check:${user.id}`, 30, 60);
+    await limit(env, request, `legacy-file-check:${user.id}`, 30, 60, true);
   f = await ensureFileSafety(env, f);
   let range;
   try {

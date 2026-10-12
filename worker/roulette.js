@@ -54,7 +54,7 @@ export async function rouletteRoute(request, env, user) {
     bet.request_id,
   );
   if (!previous) {
-    await limit(env, request, `roulette:${user.id}`, 12, 60);
+    await limit(env, request, `roulette:${user.id}`, 12, 60, true);
     const result = drawRoulette();
     try {
       if (bet.bets)

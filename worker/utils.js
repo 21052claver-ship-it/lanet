@@ -31,7 +31,12 @@ export function json(value, status = 200, headers = {}) {
     },
   });
 }
-export async function body(request) {
+const parsedBodies = new WeakMap();
+export function body(request) {
+  if (!parsedBodies.has(request)) parsedBodies.set(request, parseBody(request));
+  return parsedBodies.get(request);
+}
+async function parseBody(request) {
   const size = Number(request.headers.get('Content-Length'));
   if (size > 131072) fail(413, 'El text és massa llarg.');
   const reader = request.body?.getReader();
@@ -59,6 +64,19 @@ export async function body(request) {
     const value = JSON.parse(text);
     if (value === null || typeof value !== 'object' || Array.isArray(value))
       fail(400, 'Les dades han de formar un objecte.');
+    const pending = [[value, 0]];
+    let nodes = 0;
+    while (pending.length) {
+      const [node, depth] = pending.pop();
+      if (++nodes > 10000 || depth > 20) fail(400, 'Les dades són massa complexes.');
+      if (node && typeof node === 'object') {
+        for (const key of Object.keys(node)) {
+          if (['__proto__', 'prototype', 'constructor'].includes(key))
+            fail(400, 'Les dades contenen un camp no admès.');
+          pending.push([node[key], depth + 1]);
+        }
+      }
+    }
     return value;
   } catch {
     fail(400, 'Les dades no tenen un format vàlid.');
@@ -165,15 +183,34 @@ export function validatePassword(value) {
     fail(400, 'La contrasenya ha de tenir entre 10 i 128 caràcters.');
   return p;
 }
-export async function limit(env, request, scope, max = 20, seconds = 900) {
-  const ip = request.headers.get('CF-Connecting-IP') || 'local';
-  const window = Math.floor(Date.now() / 1000 / seconds);
-  const key = await hash(`${scope}:${ip}:${window}`);
-  const row = await one(
+export async function rateWindow(env, scope, seconds) {
+  const now = Math.floor(Date.now() / 1000);
+  const key = `rate:${await hash(scope)}`;
+  return one(
     env,
-    'INSERT INTO rate_limits(key,count,expires) VALUES(?,1,?) ON CONFLICT(key) DO UPDATE SET count=count+1 RETURNING count',
+    `INSERT INTO rate_limits(key,count,expires) VALUES(?,1,?)
+     ON CONFLICT(key) DO UPDATE SET
+       count=CASE WHEN rate_limits.expires<=? THEN 1 ELSE MIN(rate_limits.count+1,1000000) END,
+       expires=CASE WHEN rate_limits.expires<=? THEN excluded.expires ELSE rate_limits.expires END
+     RETURNING count,expires`,
     key,
-    (window + 1) * seconds,
+    now + seconds,
+    now,
+    now,
   );
-  if (row.count > max) fail(429, 'Massa intents. Torna-ho a provar més tard.');
+}
+export async function limit(env, request, scope, max = 20, seconds = 900, byAccount = false) {
+  // Account scopes already include the user ID: changing network cannot reset them.
+  const identity = byAccount ? 'account' : request.headers.get('CF-Connecting-IP') || 'local';
+  const row = await rateWindow(env, `${scope}:${identity}`, seconds);
+  if (row.count > max) {
+    const retry = Math.max(1, row.expires - Math.floor(Date.now() / 1000));
+    const error = new HttpError(
+      429,
+      `Has fet massa accions seguides. Espera ${retry} segons i torna-ho a provar.`,
+    );
+    error.code = 'rate_limited';
+    error.retryAfter = retry;
+    throw error;
+  }
 }

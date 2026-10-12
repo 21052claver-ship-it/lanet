@@ -12,8 +12,15 @@ import {
   num,
   integer,
   choice,
-  limit,
 } from './utils.js';
+import {
+  edgeGuard,
+  accountGuard,
+  reservePublication,
+  releasePublication,
+  recordAbuse,
+  cleanAbuseState,
+} from './abuse.js';
 import { authRoute, authenticate } from './auth.js';
 import { googleRoute } from './google.js';
 import { allowedRequestOrigin } from './origin.js';
@@ -31,7 +38,7 @@ import { libraryRoute } from './library.js';
 import { rouletteRoute } from './roulette.js';
 import { claimBakeryCake } from './bakery.js';
 import { predictionsRoute } from './predictions.js';
-async function api(request, env, ctx) {
+async function api(request, env, ctx, security) {
   const url = new URL(request.url),
     path = url.pathname;
   if (!['GET', 'POST', 'PUT', 'DELETE'].includes(request.method))
@@ -40,6 +47,7 @@ async function api(request, env, ctx) {
     if (!allowedRequestOrigin(request, env))
       fail(403, 'L’origen de la petició no està autoritzat.');
   }
+  await edgeGuard(request, env);
   if (path === '/api/health') return json({ ok: true });
   if (path.startsWith('/api/auth/')) {
     if (path.startsWith('/api/auth/google/')) {
@@ -53,8 +61,12 @@ async function api(request, env, ctx) {
     return authRoute(request, env, path);
   }
   const user = await authenticate(request, env);
+  security.user = user;
+  await accountGuard(request, env, user);
+  security.publication = await reservePublication(request, env, user);
   if (path === '/api/bootstrap') {
-    const cleanup = queueUnusedFiles(env)
+    const cleanup = cleanAbuseState(env)
+      .then(() => queueUnusedFiles(env))
       .then(() => drainFileDeletions(env))
       .catch(() => {});
     if (ctx?.waitUntil) ctx.waitUntil(cleanup);
@@ -65,7 +77,6 @@ async function api(request, env, ctx) {
     if (path === '/api/catalog') return json(await catalog(env));
     if (path.startsWith('/api/files/')) return fileResponse(request, env, user, path.split('/')[3]);
   }
-  if (request.method !== 'GET') await limit(env, request, `mutate:${user.id}`, 250, 60);
   if (path === '/api/pau') return pauRoute(request, env, user);
   if (path === '/api/roulette') return rouletteRoute(request, env, user);
   if (path === '/api/predictions' || path.startsWith('/api/predictions/'))
@@ -232,9 +243,14 @@ async function applicationResponse(request, env, ctx) {
     }
     return response;
   }
+  const security = {};
   try {
-    return await api(request, env, ctx);
+    return await api(request, env, ctx, security);
   } catch (error) {
+    await releasePublication(env, security.publication).catch(() => {});
+    await recordAbuse(env, security.user, error).catch(() => {
+      console.error(JSON.stringify({ event: 'abuse_record_failed' }));
+    });
     if (error instanceof HttpError)
       return json(
         {

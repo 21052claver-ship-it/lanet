@@ -111,7 +111,7 @@ export function createGoogleRoute({
           503,
           'L’adreça actual no coincideix amb la configuració de Google. Obre La Net des de la seva adreça habitual.',
         );
-      await limit(env, request, 'google-start', 12);
+      await limit(env, request, 'google-start', 120, 60);
       const b = await body(request);
       if (b.intent !== 'login') fail(400, 'Inicia sessió amb Google per continuar.');
       const target = await legacyGoogleGuest(request, env);
