@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**168/170 tasques verificades · 79 requisits · 66 fases · límit d’una tasca activa.**
+**169/170 tasques verificades · 79 requisits · 66 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **T65-01 — Evitar text tallat a les targetes d’esdeveniments**.
+Tasca activa: **cap**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -376,6 +376,6 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 
 ## F65 Llegibilitat de targetes de l’horari
 
-- [ ] **T65-01** Evitar text tallat a les targetes d’esdeveniments — En revisió.
+- [x] **T65-01** Evitar text tallat a les targetes d’esdeveniments — Verificat.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

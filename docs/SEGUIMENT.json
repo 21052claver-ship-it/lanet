@@ -6618,7 +6618,7 @@
       "id": "T65-01",
       "phase": "F65",
       "title": "Evitar text tallat a les targetes d’esdeveniments",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R79"
       ],
@@ -6637,7 +6637,20 @@
         "Verificar tres motors, mides i accés al detall.",
         "Publicar i registrar rebut amb CI verda."
       ],
-      "evidence": []
+      "evidence": [
+        "docs/PLA-TARGETES-HORARI.md",
+        "docs/releases/0.5.1.json",
+        "output/schedule-cards/before/results.json",
+        "output/schedule-cards/unit.log",
+        "output/schedule-cards/typecheck.log",
+        "output/schedule-cards/source-audit.log",
+        "output/schedule-cards/browser/results.json",
+        "output/schedule-cards/remote-bindings.json",
+        "output/schedule-cards/ci-success.json",
+        "output/schedule-cards/delivery.json",
+        "output/releases/0.5.1/receipt.json"
+      ],
+      "change_log_id": "H166"
     }
   ]
 }
