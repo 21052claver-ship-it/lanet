@@ -51,6 +51,51 @@ test('Pages: preview redirect discards credentials and query parameters', async 
   assert.equal(r.headers.get('Location'), canonical + '/');
   assert.equal(r.headers.get('Referrer-Policy'), 'no-referrer');
 });
+test('Pages: custom primary domain serves the app and isolates old and www aliases', async () => {
+  const origin = 'https://lanet.es';
+  const page = await worker.fetch(
+    new Request(origin + '/'),
+    { PUBLIC_ORIGIN: origin, ASSETS: { fetch: () => new Response('custom domain') } },
+    {},
+  );
+  assert.equal(await page.text(), 'custom domain');
+  const health = await worker.fetch(
+    new Request(origin + '/api/health'),
+    { PUBLIC_ORIGIN: origin },
+    {},
+  );
+  assert.deepEqual(await health.json(), { ok: true });
+  const isolated = {
+    PUBLIC_ORIGIN: origin,
+    get DB() {
+      throw new Error('Alias accessed DB');
+    },
+    get ASSETS() {
+      throw new Error('Alias accessed assets');
+    },
+    get GOOGLE_CLIENT_SECRET() {
+      throw new Error('Alias accessed OAuth');
+    },
+  };
+  for (const alias of ['https://lanet.pages.dev', 'https://www.lanet.es']) {
+    const redirect = await worker.fetch(
+      new Request(alias + '/?code=private-code&state=private-state'),
+      isolated,
+      {},
+    );
+    assert.equal(redirect.status, 308);
+    assert.equal(redirect.headers.get('Location'), origin + '/');
+    assert.equal(redirect.headers.get('Cache-Control'), 'no-store');
+    assert.equal(redirect.headers.get('Referrer-Policy'), 'no-referrer');
+    assert.equal(redirect.headers.has('Set-Cookie'), false);
+    for (const path of ['/api/auth/google/start', '/api/auth/google/callback?code=private']) {
+      const response = await worker.fetch(new Request(alias + path), isolated, {});
+      assert.equal(response.status, 421);
+      assert.equal(response.headers.has('Location'), false);
+      assert.equal(response.headers.has('Set-Cookie'), false);
+    }
+  }
+});
 test('Pages: invalid canonical configuration fails closed', async () => {
   for (const origin of [
     undefined,
@@ -69,6 +114,12 @@ test('Pages deployment guard keeps original account/data and rejects an alien br
   cfg.account_id = JSON.parse(readFileSync('cloudflare-target.json', 'utf8')).account_id;
   const original = parse(readFileSync('wrangler.worker-archive.jsonc', 'utf8'));
   assert.equal(validatePagesConfig(cfg, original), cfg);
+  const customDomain = structuredClone(cfg);
+  customDomain.vars.PUBLIC_ORIGIN = 'https://lanet.es';
+  customDomain.vars.GOOGLE_REDIRECT_URI = 'https://lanet.es/api/auth/google/callback';
+  assert.equal(validatePagesConfig(customDomain, original), customDomain);
+  customDomain.vars.GOOGLE_REDIRECT_URI = 'https://lanet.pages.dev/api/auth/google/callback';
+  assert.throws(() => validatePagesConfig(customDomain, original));
   const changes = [
     (c) => {
       c.account_id = '0'.repeat(32);

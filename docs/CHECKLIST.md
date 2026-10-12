@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**172/173 tasques verificades · 82 requisits · 69 fases · límit d’una tasca activa.**
+**172/174 tasques verificades · 83 requisits · 70 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **cap**.
+Tasca activa: **T69-01 — Connectar lanet.es, validar HTTPS i migrar l’origen principal**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -389,5 +389,9 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 ## F68 Contribucions amb pull requests i protecció de main
 
 - [x] **T68-01** Protegir main i configurar el flux de contribucions — Verificat.
+
+## F69 Domini principal lanet.es
+
+- [ ] **T69-01** Connectar lanet.es, validar HTTPS i migrar l’origen principal — En curs.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

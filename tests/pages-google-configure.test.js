@@ -21,7 +21,9 @@ test('Pages Google configuration requires confirmed brand and callback without e
       encoding: 'utf8',
       windowsHide: true,
     });
-  const callback = 'https://lanet.pages.dev/api/auth/google/callback';
+  const callback =
+    JSON.parse(readFileSync(join(root, 'cloudflare-target.json'), 'utf8')).public_origin +
+    '/api/auth/google/callback';
   try {
     for (const args of [
       ['--check', '--confirmed-redirect', callback],
