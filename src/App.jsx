@@ -58,7 +58,7 @@ export class Boundary extends React.Component {
   }
 }
 function Workspace({ onLogout }) {
-  const { data, page, go, open, setCommunityTab, savePreferences } = useApp();
+  const { data, walletBalance, page, go, open, setCommunityTab, savePreferences } = useApp();
   const { timer, remaining, toggle, audioType, audioState, playing, loading, toggleMusic } =
     useTimer();
   const musicTrack = LOFI_TRACKS.find((track) => track.id === audioType) || LOFI_TRACKS[0];
@@ -339,10 +339,10 @@ function Workspace({ onLogout }) {
             <button
               className={`cake-balance ${cakePulse ? 'receiving-cake' : ''}`}
               onClick={() => navigate('bakery')}
-              aria-label={`${data.user.balance} pastissos. Obrir la Pastisseria`}
+              aria-label={`${walletBalance} pastissos. Obrir la Pastisseria`}
             >
               <ReferenceArt name="cake" size={42} />
-              <strong>{data.user.balance}</strong>
+              <strong>{walletBalance}</strong>
             </button>
             <IconButton
               label="Veure avisos"

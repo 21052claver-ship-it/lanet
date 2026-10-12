@@ -329,23 +329,6 @@
   background: radial-gradient(circle at 30% 25%, #fff, #f4e1c0 60%, #b89c6e);
   box-shadow: 0 2px 3px #0007;
 }
-.is-spinning .roulette-ball-orbit {
-  animation: roulette-ball 5.6s cubic-bezier(0.15, 0.65, 0.2, 1);
-}
-.roulette-device.is-spinning .roulette-wheel {
-  transition: transform 5.6s cubic-bezier(0.12, 0.65, 0.12, 1);
-}
-@keyframes roulette-ball {
-  0% {
-    transform: rotate(0deg);
-  }
-  65% {
-    transform: rotate(-970deg);
-  }
-  100% {
-    transform: rotate(-1080deg);
-  }
-}
 @keyframes casino-reveal {
   from {
     opacity: 0;
@@ -1217,4 +1200,152 @@
 .roulette-board .pocket-green {
   background: #225d44;
   color: #fff;
+}
+.roulette-award {
+  position: fixed;
+  inset: 0;
+  z-index: 85;
+  pointer-events: none;
+  overflow: hidden;
+}
+.roulette-award-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(290px, calc(100vw - 40px));
+  padding: 22px;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  border-radius: 28px;
+  border: 1px solid #edce8d;
+  background: #fff9ec;
+  color: #563920;
+  box-shadow:
+    0 18px 70px #2a1d3440,
+    inset 0 0 0 5px #f4e4c6;
+  animation: roulette-prize-reveal 2100ms both;
+}
+.roulette-award-card > svg {
+  display: block;
+  margin: 0 auto;
+}
+.roulette-award-card small,
+.roulette-award-card span {
+  display: block;
+}
+.roulette-award-card strong {
+  display: block;
+  font-size: clamp(42px, 9vw, 64px);
+  line-height: 1.2;
+  font-weight: 900;
+  color: #3d7055;
+}
+.roulette-award-card p {
+  font-size: 13px;
+  margin: 10px 0 0;
+}
+.roulette-award-halo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 360px;
+  height: 360px;
+  border: 2px solid #eac880;
+  border-radius: 50%;
+  animation: roulette-prize-ring 1100ms ease-out both;
+}
+.roulette-spark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 7px;
+  height: 14px;
+  background: #d7a850;
+  border-radius: 4px;
+  animation: roulette-prize-spark 1100ms var(--delay) ease-out both;
+}
+.roulette-spark:nth-child(even) {
+  background: #77a088;
+}
+.roulette-prize-flight {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 64px;
+  height: 64px;
+  margin: -32px;
+  animation: roulette-prize-flight 750ms var(--delay) cubic-bezier(0.3, 0.05, 0.3, 1) both;
+  filter: drop-shadow(0 4px 5px #583c3030);
+}
+@keyframes roulette-prize-reveal {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+  14% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+  23%,
+  70% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.94);
+  }
+}
+@keyframes roulette-prize-ring {
+  from {
+    opacity: 0.75;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.4);
+  }
+}
+@keyframes roulette-prize-spark {
+  from {
+    opacity: 0;
+    transform: rotate(var(--ray)) translateY(-70px);
+  }
+  20% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: rotate(var(--ray)) translateY(-230px) rotate(90deg);
+  }
+}
+@keyframes roulette-prize-flight {
+  0% {
+    opacity: 0;
+    transform: translate(var(--spread), 0) scale(0.7);
+  }
+  15% {
+    opacity: 1;
+  }
+  35% {
+    transform: translate(calc(var(--dx) * 0.25 + var(--spread)), calc(var(--dy) * 0.2 - 65px))
+      scale(1);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(0.35);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .roulette-award {
+    display: none;
+  }
+}
+.wheel-pocket.winning-pocket {
+  stroke: #fff0a3;
+  stroke-width: 3;
+  filter: brightness(1.4);
 }

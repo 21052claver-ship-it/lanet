@@ -2,6 +2,14 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.3.1] - 2026-10-12
+
+- Bola i roda amb una trajectòria contínua compartida, descens a la casella i desacceleració final.
+- Premi revelat després del gir: celebració, pastissos volant al moneder i saldo actualitzat al final. L’historial també espera.
+- Retorns parcials diferenciats dels guanys nets; moviment reduït, sortida i recuperació sense duplicar liquidacions.
+- Proves locals de geometria, saldo durant sincronitzacions, celebració i interrupcions en tres motors.
+
+
 ## [0.3.0] - 2026-10-12
 
 ### Afegit

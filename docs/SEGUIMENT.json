@@ -300,6 +300,10 @@
     {
       "id": "R74",
       "description": "Repartir fitxes en totes les posicions estàndard de la ruleta europea, amb diverses apostes per gir."
+    },
+    {
+      "id": "R75",
+      "description": "Premis visuals al final del gir i bola coherent amb el número real."
     }
   ],
   "phases": [
@@ -727,6 +731,13 @@
       "title": "Ruleta amb tauler de fitxes",
       "depends_on": [
         "F59"
+      ]
+    },
+    {
+      "id": "F61",
+      "title": "Moviment i lliurament de premis de ruleta",
+      "depends_on": [
+        "F60"
       ]
     }
   ],
@@ -6397,6 +6408,36 @@
         "output/releases/0.3.0/receipt.json"
       ],
       "change_log_id": "H161"
+    },
+    {
+      "id": "T61-01",
+      "phase": "F61",
+      "title": "Bola sincronitzada i pastissos al final de la celebració",
+      "status": "review",
+      "requirements": [
+        "R75"
+      ],
+      "depends_on": [
+        "T60-01"
+      ],
+      "files": [
+        "src/components/SecretCasino.jsx",
+        "src/context.jsx",
+        "src/App.jsx",
+        "src/roulette.css",
+        "shared/roulette-motion.js",
+        "src/components/RouletteAward.jsx",
+        "tests/roulette-motion.test.js",
+        "scripts/test-roulette-animation.mjs"
+      ],
+      "acceptance": "Bola i roda sincronitzades, saldo sense revelar premi abans, celebració i transferència visuals, moviment reduït i recuperació segura. Proves locals i publicació versionada.",
+      "checks": [
+        "Trajectòria contínua i final coherent als 37 números.",
+        "Premi i saldo sincronitzats sense modificar liquidació segura.",
+        "Proves locals en tres motors i regressions.",
+        "CI i publicació amb rebut."
+      ],
+      "evidence": []
     }
   ]
 }

@@ -1,5 +1,7 @@
-import React, { useEffect, useId, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useId, useRef, useState } from 'react';
 import { ArrowLeft, Cake, ArrowClockwise, ChartBar, CircleDashed } from '@phosphor-icons/react';
+import RouletteAward from './RouletteAward';
+import { rouletteFrame, AWARD_MS } from '../../shared/roulette-motion';
 import PredictionRoom from './PredictionRoom';
 import RouletteBoard from './RouletteBoard';
 import { useApp } from '../context';
@@ -51,9 +53,35 @@ function point(radius, angle) {
     200 - Math.cos((angle * Math.PI) / 180) * radius,
   ];
 }
-export function RouletteWheel({ angle, spinning, result }) {
+export function RouletteWheel({ angle, spinning, result, motion }) {
   const uid = useId().replaceAll(':', '');
   const step = 360 / WHEEL.length;
+  const wheelRef = useRef(null),
+    orbitRef = useRef(null),
+    ballRef = useRef(null);
+  useLayoutEffect(() => {
+    if (!spinning || !motion) return;
+    const wheel = wheelRef.current,
+      orbit = orbitRef.current,
+      ball = ballRef.current;
+    let frame;
+    const start = performance.now();
+    const paint = (now) => {
+      const progress = Math.min(1, (now - start) / SPIN_MS);
+      const value = rouletteFrame(motion.from, angle, motion.result, progress);
+      wheel.style.transform = `rotate(${value.wheel}deg)`;
+      orbit.style.transform = `rotate(${value.ball}deg)`;
+      ball.style.top = `${50 - value.radius / 4}%`;
+      if (progress < 1) frame = requestAnimationFrame(paint);
+    };
+    paint(start);
+    return () => {
+      cancelAnimationFrame(frame);
+      wheel.style.transform = `rotate(${angle}deg)`;
+      orbit.style.transform = 'rotate(0deg)';
+      ball.style.top = '13.75%';
+    };
+  }, [spinning, motion, angle]);
   return (
     <div
       className={`roulette-device ${spinning ? 'is-spinning' : ''}`}
@@ -70,6 +98,7 @@ export function RouletteWheel({ angle, spinning, result }) {
     >
       <div className="roulette-pointer" aria-hidden="true" />
       <svg
+        ref={wheelRef}
         className="roulette-wheel"
         viewBox="0 0 400 400"
         style={{ transform: `rotate(${angle}deg)` }}
@@ -102,7 +131,7 @@ export function RouletteWheel({ angle, spinning, result }) {
             <g key={number}>
               <path
                 d={`M200 200 L${a.join(' ')} A183 183 0 0 1 ${b.join(' ')} Z`}
-                className={`wheel-pocket pocket-${rouletteColor(number)}`}
+                className={`wheel-pocket pocket-${rouletteColor(number)} ${result === number ? 'winning-pocket' : ''}`}
               />
               <text
                 x={text[0]}
@@ -135,18 +164,30 @@ export function RouletteWheel({ angle, spinning, result }) {
         <circle cx="200" cy="200" r="27" fill="#f1d39c" stroke="#8b5b33" strokeWidth="6" />
         <circle cx="194" cy="192" r="9" fill="#fff1c5" />
       </svg>
-      <div className="roulette-ball-orbit" aria-hidden="true">
-        <span className="roulette-ball" />
+      <div
+        ref={orbitRef}
+        className="roulette-ball-orbit"
+        style={!spinning ? { transform: 'rotate(0deg)' } : undefined}
+        aria-hidden="true"
+      >
+        <span
+          ref={ballRef}
+          className="roulette-ball"
+          style={!spinning ? { top: '13.75%' } : undefined}
+        />
       </div>
     </div>
   );
 }
 export default function SecretCasino({ onExit }) {
+  const [motion, setMotion] = useState(null);
+  const [awarding, setAwarding] = useState(false);
+  const committed = useRef(null);
   const [betMode, setBetMode] = useState('board');
   const [chips, setChips] = useState([]);
   const [boardRound, setBoardRound] = useState(0);
   const [table, setTable] = useState('roulette');
-  const { data, setData, mutate, refresh } = useApp();
+  const { data, setData, mutate, refresh, walletBalance, holdWallet } = useApp();
   const storageKey = `lanet.roulette.pending.${data.user.id}`;
   const [pending, setPending] = useState(() => {
     try {
@@ -182,6 +223,7 @@ export default function SecretCasino({ onExit }) {
       mounted.current = false;
       controller.current?.abort();
       clearTimeout(finishTimer.current);
+      holdWallet(null);
     };
   }, []);
   async function load() {
@@ -201,7 +243,7 @@ export default function SecretCasino({ onExit }) {
   }, []);
   useEffect(() => {
     const syncPending = (event) => {
-      if (event.key !== storageKey || locked.current) return;
+      if (event.key !== storageKey || locked.current || committed.current) return;
       try {
         setPending(event.newValue ? validateBet(JSON.parse(event.newValue)) : null);
       } catch {
@@ -214,25 +256,40 @@ export default function SecretCasino({ onExit }) {
   }, [storageKey]);
   const amount = Number(stake);
   const quickValid =
-    Number.isInteger(amount) && amount >= 1 && amount <= Math.min(MAX_STAKE, data.user.balance);
+    Number.isInteger(amount) && amount >= 1 && amount <= Math.min(MAX_STAKE, walletBalance);
   const boardStake = ticketStake({ bets: chips });
   const valid =
     betMode === 'board'
-      ? boardStake >= 1 && boardStake <= Math.min(MAX_STAKE, data.user.balance)
+      ? boardStake >= 1 && boardStake <= Math.min(MAX_STAKE, walletBalance)
       : quickValid;
   const bet =
     betMode === 'board'
       ? { bets: chips }
       : { kind, number: kind === 'number' ? number : null, stake: amount };
-  function finish(spin) {
+  function deliver(spin) {
+    if (!mounted.current) return;
+    holdWallet(null);
+    setAwarding(false);
+    committed.current = null;
+    setHistory((current) =>
+      [spin, ...current.filter((s) => s.request_id !== spin.request_id)].slice(0, 20),
+    );
+    if (spin.payout) window.dispatchEvent(new Event('lanet:cake-arrived'));
+  }
+  function finish(spin, instant = false) {
     if (!mounted.current) return;
     setSpinning(false);
     setResult(spin);
     setChips([]);
     setBoardRound((v) => v + 1);
+    if (spin.payout > 0 && !instant) {
+      setAwarding(true);
+      finishTimer.current = setTimeout(() => deliver(spin), AWARD_MS);
+    } else deliver(spin);
   }
   async function spin(recover = false) {
-    if (locked.current || spinning || (!recover && (pending || !valid || !loaded))) return;
+    if (locked.current || spinning || awarding || (!recover && (pending || !valid || !loaded)))
+      return;
     if (!recover) {
       try {
         const existing = readLocalJSON(storageKey, null);
@@ -270,18 +327,15 @@ export default function SecretCasino({ onExit }) {
           removeLocalValue(storageKey);
           if (!mounted.current) return;
           setPending(null);
+          committed.current = response.spin;
+          if (!reduced && !recover) holdWallet(Math.max(0, walletBalance - response.spin.stake));
           setData((current) => ({
             ...current,
             user: { ...current.user, balance: response.balance },
           }));
-          setHistory((current) =>
-            [
-              response.spin,
-              ...current.filter((s) => s.request_id !== response.spin.request_id),
-            ].slice(0, 20),
-          );
-          setAngle((current) => wheelRotation(current, response.spin.result));
-          if (reduced || recover) finish(response.spin);
+          setMotion({ from: angle, result: response.spin.result });
+          setAngle(wheelRotation(angle, response.spin.result));
+          if (reduced || recover) finish(response.spin, true);
           else {
             setSpinning(true);
             finishTimer.current = setTimeout(() => finish(response.spin), SPIN_MS);
@@ -310,14 +364,14 @@ export default function SecretCasino({ onExit }) {
       if (mounted.current) setBusy(false);
     }
   }
-  // Visibility changes should reveal an already settled result without a stale timer.
+  // A changed motion preference completes presentation without replaying settlement.
   useEffect(() => {
-    if (reduced && spinning && history[0]) {
+    if (reduced && (spinning || awarding) && committed.current) {
       clearTimeout(finishTimer.current);
-      finish(history[0]);
+      finish(committed.current, true);
     }
-  }, [reduced, spinning, history]);
-  const disabled = busy || spinning || !!pending;
+  }, [reduced, spinning, awarding]);
+  const disabled = busy || spinning || awarding || !!pending;
   return (
     <section className="casino-room" aria-labelledby="casino-heading">
       <header className="casino-header">
@@ -357,7 +411,12 @@ export default function SecretCasino({ onExit }) {
         <>
           <div className="casino-stage">
             <div className="casino-arch" aria-hidden="true" />
-            <RouletteWheel angle={angle} spinning={spinning} result={result?.result} />
+            <RouletteWheel
+              angle={angle}
+              spinning={spinning}
+              result={result?.result}
+              motion={motion}
+            />
             <div className="casino-host">
               <img
                 src="/images/croupier-v1.webp"
@@ -372,7 +431,7 @@ export default function SecretCasino({ onExit }) {
             <div className="casino-balance">
               <ReferenceArt name="cake" size={36} />
               <span>
-                <strong>{data.user.balance}</strong> pastissos disponibles
+                <strong>{walletBalance}</strong> pastissos disponibles
               </span>
               <small>Punts virtuals · sense diners</small>
             </div>
@@ -426,7 +485,7 @@ export default function SecretCasino({ onExit }) {
                     resetToken={boardRound}
                     bets={chips}
                     onChange={setChips}
-                    balance={data.user.balance}
+                    balance={walletBalance + (spinning ? boardStake : 0)}
                     disabled={disabled}
                     onError={setError}
                   />
@@ -533,7 +592,7 @@ export default function SecretCasino({ onExit }) {
                           type="number"
                           inputMode="numeric"
                           min="1"
-                          max={Math.min(MAX_STAKE, data.user.balance)}
+                          max={Math.min(MAX_STAKE, walletBalance)}
                           step="1"
                           value={stake}
                           onChange={(event) => setStake(event.target.value)}
@@ -542,9 +601,9 @@ export default function SecretCasino({ onExit }) {
                         <button
                           type="button"
                           aria-label="Afegir un pastís a l’aposta"
-                          disabled={amount >= Math.min(MAX_STAKE, data.user.balance)}
+                          disabled={amount >= Math.min(MAX_STAKE, walletBalance)}
                           onClick={() =>
-                            setStake(String(Math.min(MAX_STAKE, data.user.balance, amount + 1)))
+                            setStake(String(Math.min(MAX_STAKE, walletBalance, amount + 1)))
                           }
                         >
                           +
@@ -558,10 +617,10 @@ export default function SecretCasino({ onExit }) {
                           <strong>{betLabel({ kind, number })}</strong> · Retorn si encertes:{' '}
                           <strong>{amount * (kind === 'number' ? 36 : 2)}</strong>
                         </>
-                      ) : data.user.balance < 1 ? (
+                      ) : walletBalance < 1 ? (
                         'No tens pastissos disponibles. Pots tornar al forn.'
                       ) : (
-                        `Tria entre 1 i ${Math.min(MAX_STAKE, data.user.balance)} pastissos sencers.`
+                        `Tria entre 1 i ${Math.min(MAX_STAKE, walletBalance)} pastissos sencers.`
                       )}
                     </p>
                   </>
@@ -577,13 +636,15 @@ export default function SecretCasino({ onExit }) {
                     ? 'Confirmant aposta…'
                     : spinning
                       ? 'La ruleta està girant…'
-                      : 'Fer girar la ruleta'}
+                      : awarding
+                        ? 'Lliurant pastissos…'
+                        : 'Fer girar la ruleta'}
                 </Button>
               </fieldset>
             </form>
             <FormError error={error} />
             <div
-              className={`roulette-result ${result ? 'has-result' : ''}`}
+              className={`roulette-result ${result && !awarding ? 'has-result' : ''} ${awarding ? 'is-awarding' : ''}`}
               role="status"
               aria-live="polite"
               aria-atomic="true"
@@ -605,12 +666,20 @@ export default function SecretCasino({ onExit }) {
                         : `Retorn: 0 · Balanç de l’aposta: −${result.stake}`}{' '}
                       pastissos
                     </p>
+                    {result.payout > 0 && (
+                      <small>
+                        {awarding
+                          ? 'Pastissos en camí al teu saldo…'
+                          : 'Pastissos rebuts al teu saldo.'}
+                      </small>
+                    )}
                   </div>
                 </>
               ) : (
                 <p>Reparteix les fitxes i fes girar quan ho tinguis preparat.</p>
               )}
             </div>
+            {awarding && <RouletteAward spin={result} />}
             {result && !spinning && <TicketDetails spin={result} />}
             <details className="roulette-rules">
               <summary>Com funciona la ruleta?</summary>
@@ -660,6 +729,7 @@ export default function SecretCasino({ onExit }) {
               )}
               <Button
                 variant="ghost"
+                disabled={disabled}
                 onClick={() => {
                   load();
                   refresh().catch(() => {});

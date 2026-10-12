@@ -14,6 +14,8 @@ export function AppProvider({ initial, children }) {
     [page, setPage] = useState(() => location.hash.slice(1) || 'schedule'),
     [communityTab, setCommunityTab] = useState('notices'),
     [subjectFilter, setSubjectFilter] = useState('all');
+  const [walletHold, holdWallet] = useState(null);
+  const walletBalance = walletHold ?? data.user.balance;
   const [hideGrades, setHideGrades] = useState(!!initial.preferences?.hideGrades);
   const [pauDraft, setPauDraft] = useState(() => initial.pau?.value || emptyPau());
   const [pauSaved, setPauSaved] = useState(() => initial.pau || { value: null, revision: 0 });
@@ -103,6 +105,8 @@ export function AppProvider({ initial, children }) {
       value={{
         data,
         setData,
+        walletBalance,
+        holdWallet,
         refresh,
         mutate,
         remove: (path, success) => mutate(path, {}, success, undefined, 'DELETE'),
