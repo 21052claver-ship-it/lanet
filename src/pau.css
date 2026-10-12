@@ -579,20 +579,98 @@
 }
 .pau-weights {
   display: grid;
-  gap: 9px;
+  gap: 10px;
+  margin-block: 16px;
 }
-.pau-weights > div {
+.pau-weight-card {
+  --weight-ink: #76552c;
+  --weight-tint: #faf0dc;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 6px 12px;
-  border-radius: 10px;
-  background: #f7f4ef;
-  padding: 10px 12px;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 12px;
+  border: 1px solid #e8e3dc;
+  border-radius: 14px;
+  background: #fffdfa;
+  padding: 13px;
   font-size: 14px;
 }
-.pau-weights small {
-  grid-column: 1/-1;
-  color: #5a714d;
+.pau-weight-card.tone-blue {
+  --weight-ink: #38678b;
+  --weight-tint: #e9f1f8;
+}
+.pau-weight-card.tone-green {
+  --weight-ink: #4b7046;
+  --weight-tint: #edf3e8;
+}
+.pau-weight-card.tone-violet {
+  --weight-ink: #73558d;
+  --weight-tint: #f1ebf7;
+}
+.pau-weight-card.tone-rose {
+  --weight-ink: #965570;
+  --weight-tint: #faedf2;
+}
+.pau-weight-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--weight-tint);
+  color: var(--weight-ink);
+}
+.pau-weight-name {
+  font-weight: 750;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.pau-weight-coefficient {
+  padding: 7px 10px;
+  border-radius: 10px;
+  background: var(--weight-tint);
+  color: var(--weight-ink);
+  text-align: center;
+  font-size: 19px;
+  white-space: nowrap;
+}
+.pau-weight-coefficient span {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+}
+.pau-weight-card small {
+  grid-column: 2 / -1;
+  color: #62605b;
+  line-height: 1.5;
+}
+.pau-weight-card.is-chosen {
+  border-color: #a8bea0;
+}
+.pau-weight-card.is-chosen small {
+  color: #46633a;
+  font-weight: 700;
+}
+@media (max-width: 400px) {
+  .pau-weight-card {
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 9px;
+    padding: 11px;
+  }
+  .pau-weight-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+  }
+  .pau-weight-coefficient {
+    grid-column: 2;
+    justify-self: start;
+    font-size: 18px;
+  }
+  .pau-weight-coefficient span {
+    display: inline;
+    margin-left: 8px;
+  }
 }
 .pau-formula {
   background: #edf2e8;

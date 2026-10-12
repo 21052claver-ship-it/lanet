@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**174/177 tasques verificades · 87 requisits · 73 fases · límit d’una tasca activa.**
+**174/177 tasques verificades · 88 requisits · 73 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **T72-01 — Polir la icona NET i afegir tancament de sessió al perfil**.
+Tasca activa: **T72-01 — Polir navegació, perfil i ponderacions PAU**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -402,8 +402,8 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 
 - [x] **T71-01** Afegir accés a la NET oficial amb icona 3D — Verificat.
 
-## F72 Icona NET i tancament de sessió al perfil
+## F72 Poliment visual de navegació, perfil i ponderacions PAU
 
-- [ ] **T72-01** Polir la icona NET i afegir tancament de sessió al perfil — En revisió.
+- [ ] **T72-01** Polir navegació, perfil i ponderacions PAU — En revisió.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

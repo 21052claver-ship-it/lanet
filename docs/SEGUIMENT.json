@@ -352,6 +352,10 @@
     {
       "id": "R87",
       "description": "Tancar sessió des d’El meu perfil, amb estat d’espera, reintent segur si falla i retorn a l’entrada Google."
+    },
+    {
+      "id": "R88",
+      "description": "Ponderacions PAU visuals amb icones, colors i coeficients clars, coherents i adaptades al mòbil"
     }
   ],
   "phases": [
@@ -860,7 +864,7 @@
     },
     {
       "id": "F72",
-      "title": "Icona NET i tancament de sessió al perfil",
+      "title": "Poliment visual de navegació, perfil i ponderacions PAU",
       "depends_on": [
         "F71"
       ]
@@ -7000,11 +7004,12 @@
     {
       "id": "T72-01",
       "phase": "F72",
-      "title": "Polir la icona NET i afegir tancament de sessió al perfil",
+      "title": "Polir navegació, perfil i ponderacions PAU",
       "status": "review",
       "requirements": [
         "R86",
-        "R87"
+        "R87",
+        "R88"
       ],
       "depends_on": [
         "T71-01"
@@ -7017,18 +7022,22 @@
         "src/App.jsx",
         "src/forms.jsx",
         "src/forms-general.jsx",
-        "scripts/test-workspace-recovery.mjs"
+        "scripts/test-workspace-recovery.mjs",
+        "src/pages/Pau.jsx",
+        "src/pau.css",
+        "scripts/test-pau.mjs"
       ],
-      "acceptance": "Icona nova propera a la referència amb blau pastel, transparència neta i raigs blancs llegibles en desktop/rail/Més mòbil; mateix enllaç accessible, verificació local i PR/CI abans de publicar. Botó explícit Tancar sessió a Perfil, sense peticions duplicades, error accessible i reintent, sessió eliminada i retorn a Google només després de confirmar el servidor.",
+      "acceptance": "Icona nova propera a la referència amb blau pastel, transparència neta i raigs blancs llegibles en desktop/rail/Més mòbil; mateix enllaç accessible, verificació local i PR/CI abans de publicar. Botó explícit Tancar sessió a Perfil, sense peticions duplicades, error accessible i reintent, sessió eliminada i retorn a Google només després de confirmar el servidor. Ponderacions amb icona i color per matèria, coeficient i màxim explícits; selecció de les dues millors només visible fora del mode discret, sense alterar dades oficials ni càlculs.",
       "checks": [
         "Generar i inspeccionar l’asset transparent.",
         "Optimitzar i substituir la referència compartida.",
         "Revisar a mida real i verificar navegació amb fixtures locals.",
         "Registrar i publicar amb PR i CI.",
-        "Comprovar tancament des de Perfil i recuperació d’errors de xarxa en tres motors."
+        "Comprovar tancament des de Perfil i recuperació d’errors de xarxa en tres motors.",
+        "Verificar targetes de ponderació amb noms llargs, icones i coeficients a 320px, tablet i horitzontal en tres motors."
       ],
       "evidence": [],
-      "progress": "Icona pastel i botó Tancar sessió integrats. 5 casos locals de l’enllaç i 24 casos de recuperació en tres motors correctes; build i tipus/lint correctes. Captura Perfil a 320px revisada. Pendent de CI actualitzada i publicació 0.6.4, sense dades reals."
+      "progress": "Icona pastel, logout al perfil i ponderacions visuals integrats. 39 casos PAU en Chromium/Firefox/WebKit correctes; captures a 320 i 820 px revisades. Build Pages, tipus/lint correctes. Pendent de CI actualitzada i publicació 0.6.4."
     }
   ]
 }

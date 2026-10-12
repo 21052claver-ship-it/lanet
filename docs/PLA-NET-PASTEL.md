@@ -25,3 +25,14 @@ Verificació local: compilació Pages correcta i cinc casos a 320, 390, 844, 102
 Marc demana afegir l’acció a El meu perfil. Botó neutral «Tancar sessió» al peu de la pestanya Perfil, al costat de Fet; comparteix el flux existent de logout. Mentre espera, es desactiva i mostra «Tancant sessió…». Un error apareix també dins del diàleg amb opció de reintent; la sessió local només desapareix després de confirmar el servidor. No tanca el compte Google del navegador.
 
 24 regressions de recuperació en Chromium, Firefox i WebKit, incloses les tres noves de perfil: petició bloquejada, una sola sol·licitud, error recuperable amb sessió conservada, reintent correcte, sessió eliminada i entrada Google visible. Captura a 320px revisada; tipus/lint i compilació correctes. Evidències privades a `output/profile-logout` i logs `output/net-pastel/profile-*.log`.
+
+## Ponderacions PAU visuals
+
+- [x] Icones semàntiques per matèria i cinc famílies de colors pastel, amb noms sempre visibles.
+- [x] Coeficient i màxim de punts explícits; identificació textual de les dues aportacions seleccionades.
+- [x] Mode discret sense marques de selecció ni aportacions personals; dades oficials i càlcul preservats.
+- [x] Composició compacta amb coeficient sota el nom en pantalles estretes i noms llargs sense retalls.
+- [x] Revisar captures i completar 39 regressions locals en Chromium, Firefox i WebKit.
+- [ ] CI de la PR actualitzada i publicació versionada.
+
+La prova responsive selecciona el grau amb nom més llarg que té ponderacions oficials publicades. Comprova icona, coeficient, màxim de punts i absència de desbordament per targeta; els casos de dades absents i conflictes continuen coberts per la regressió existent. Evidències privades a output/pau-visual-verified.
