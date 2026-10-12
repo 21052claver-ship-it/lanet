@@ -6852,7 +6852,7 @@
       "id": "T69-01",
       "phase": "F69",
       "title": "Connectar lanet.es, validar HTTPS i migrar l’origen principal",
-      "status": "pending",
+      "status": "review",
       "requirements": [
         "R83"
       ],
@@ -6888,7 +6888,7 @@
         "output/domain-lanet-es/local-checks.json"
       ],
       "change_log_id": "H170",
-      "progress": "Zona Free, Pages apex/www, CNAME proxied, Full strict, HTTPS i TLS mínim 1.2 preparats. Bloquejat el canvi final: login IONOS pendent i permís desat bloquejant Google Cloud. Producció 0.6.1 i origen anterior conservats. No verificada ni publicada la migració. Aparcada mentre es millora el tapet per petició posterior de l’usuari; sense canvis nous de domini."
+      "progress": "IONOS autenticat. 9 registres DNS conservats a Cloudflare (correu, SPF/DKIM/DMARC i serveis), sense proxy de correu. Nameservers Cloudflare desats amb confirmació d’IONOS. Delegació pública ja detectada; zona/certificats pendents. Callback lanet.es confirmat per Marc en aquesta petició. Configuració 0.6.4 preparada localment; encara no activada ni publicada."
     },
     {
       "id": "T70-01",

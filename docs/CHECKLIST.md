@@ -6,7 +6,7 @@ Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especifica
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **cap**.
+Tasca activa: **T69-01 — Connectar lanet.es, validar HTTPS i migrar l’origen principal**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -392,7 +392,7 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 
 ## F69 Domini principal lanet.es
 
-- [ ] **T69-01** Connectar lanet.es, validar HTTPS i migrar l’origen principal — Pendent.
+- [ ] **T69-01** Connectar lanet.es, validar HTTPS i migrar l’origen principal — En revisió.
 
 ## F70 Tapet directe de ruleta
 
