@@ -332,6 +332,10 @@
     {
       "id": "R82",
       "description": "Permetre contribucions públiques amb pull requests a main, revisió de Marc i CI obligatòria; comprovar la connexió existent amb Cloudflare."
+    },
+    {
+      "id": "R83",
+      "description": "Configurar el domini lanet.es d’IONOS a Cloudflare com a adreça principal, amb DNS, HTTPS, redireccions i Google OAuth coherents."
     }
   ],
   "phases": [
@@ -815,6 +819,13 @@
       "title": "Contribucions amb pull requests i protecció de main",
       "depends_on": [
         "F67"
+      ]
+    },
+    {
+      "id": "F69",
+      "title": "Domini principal lanet.es",
+      "depends_on": [
+        "F68"
       ]
     }
   ],
@@ -6814,6 +6825,48 @@
         "output/pull-requests/setup-pr.json"
       ],
       "change_log_id": "H169"
+    },
+    {
+      "id": "T69-01",
+      "phase": "F69",
+      "title": "Connectar lanet.es, validar HTTPS i migrar l’origen principal",
+      "status": "active",
+      "requirements": [
+        "R83"
+      ],
+      "depends_on": [
+        "T68-01"
+      ],
+      "files": [
+        "cloudflare-target.json",
+        "wrangler.jsonc",
+        "worker/pages-entry.js",
+        "tests/pages-entry.test.js",
+        "docs/PLA-DOMINI-LANET-ES.md",
+        "docs/PUBLICACIO.md",
+        "tests/pages-google-configure.test.js"
+      ],
+      "acceptance": "Domini i www vinculats al mateix Pages, delegació DNS comprovada i registres de serveis preservats; HTTPS vàlid, callback Google autoritzat i origen coherent. Publicar la migració només quan el domini i OAuth estiguin preparats. Conservar el projecte, D1/R2, usuaris, marca OAuth compartida i el domini anterior com a compatibilitat/redirecció.",
+      "checks": [
+        "Auditar accés, DNS, registres i configuració Pages/OAuth.",
+        "Preparar zona Cloudflare, dominis Pages i delegació a IONOS.",
+        "Configurar callback Google i preparar origen/redireccions amb proves locals.",
+        "Validar DNS/HTTPS, passar CI i publicar amb rebut i historial."
+      ],
+      "evidence": [
+        "docs/PLA-DOMINI-LANET-ES.md",
+        "output/domain-lanet-es/dns-before.json",
+        "output/domain-lanet-es/provider-before.json",
+        "output/domain-lanet-es/provider-prepared.json",
+        "output/domain-lanet-es/pages-domains.json",
+        "output/domain-lanet-es/cloudflare-dns.jpg",
+        "output/domain-lanet-es/cloudflare-tls.jpg",
+        "output/domain-lanet-es/cloudflare-https.jpg",
+        "output/domain-lanet-es/cloudflare-nameservers.jpg",
+        "output/domain-lanet-es/local-checks.json"
+      ],
+      "change_log_id": "H170",
+      "progress": "Zona Free, Pages apex/www, CNAME proxied, Full strict, HTTPS i TLS mínim 1.2 preparats. Bloquejat el canvi final: login IONOS pendent i permís desat bloquejant Google Cloud. Producció 0.6.1 i origen anterior conservats. No verificada ni publicada la migració."
     }
   ]
 }

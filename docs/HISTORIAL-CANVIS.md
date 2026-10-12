@@ -1045,3 +1045,9 @@ Evidències: [docs/PLA-DEPURACIO-GENERAL.md](../docs/PLA-DEPURACIO-GENERAL.md), 
 **12 d’oct. 2026, 11:39 · T68-01.** Rulesets actives a main amb PR, aprovació del propietari i Validate actualitzat sense bypass de CI. Proteccions anteriors conservades i Pages Direct Upload verificat via API. Guia de forks, CODEOWNERS i plantilla preparats a la PR #4, amb CI obligatòria abans de fusionar; sense publicar producte ni transferir secrets.
 
 Evidències: [docs/PLA-PULL-REQUESTS.md](../docs/PLA-PULL-REQUESTS.md), [CONTRIBUTING.md](../CONTRIBUTING.md), [.github/CODEOWNERS](../.github/CODEOWNERS), [.github/pull_request_template.md](../.github/pull_request_template.md), [output/pull-requests/cloudflare-connection.json](../output/pull-requests/cloudflare-connection.json), [output/pull-requests/governance.json](../output/pull-requests/governance.json), [output/pull-requests/setup-pr.json](../output/pull-requests/setup-pr.json).
+
+### H170 Preparar lanet.es a Cloudflare — migració en curs
+
+**12 d’oct. 2026, 12:25 · T69-01, parcial.** Zona Free creada al compte existent, `lanet.es` i `www.lanet.es` vinculats al projecte Pages i dos CNAME amb proxy preparats. Configurats Full (strict), HTTPS obligatori i TLS mínim 1.2. Set proves locals correctes per a l'origen propi, redireccions i protecció dels àlies/OAuth. IONOS requereix login i Google Cloud està bloquejat per un permís desat del navegador. Delegació, certificat i callback pendents; producció 0.6.1 continua a l'origen anterior. La tasca no es dona per verificada i no s'ha publicat la migració.
+
+Evidències: [pla del domini](PLA-DOMINI-LANET-ES.md), [configuració preparada](../output/domain-lanet-es/provider-prepared.json), [DNS](../output/domain-lanet-es/cloudflare-dns.jpg), [proves locals](../output/domain-lanet-es/local-checks.json). Les captures i respostes del proveïdor es conserven localment fora del repositori públic.
