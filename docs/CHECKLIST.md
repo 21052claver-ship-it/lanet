@@ -2,7 +2,7 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**171/172 tasques verificades · 81 requisits · 68 fases · límit d’una tasca activa.**
+**172/173 tasques verificades · 82 requisits · 69 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
@@ -385,5 +385,9 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 ## F67 Revisió general i correcció de regressions
 
 - [x] **T67-01** Depurar la plataforma amb casos límit i errors de connexió — Verificat.
+
+## F68 Contribucions amb pull requests i protecció de main
+
+- [x] **T68-01** Protegir main i configurar el flux de contribucions — Verificat.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

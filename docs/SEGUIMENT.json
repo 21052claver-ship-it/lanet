@@ -328,6 +328,10 @@
     {
       "id": "R81",
       "description": "Depuració general de funcionalitat, accessibilitat, formularis i responsive amb regressions reproduïbles."
+    },
+    {
+      "id": "R82",
+      "description": "Permetre contribucions públiques amb pull requests a main, revisió de Marc i CI obligatòria; comprovar la connexió existent amb Cloudflare."
     }
   ],
   "phases": [
@@ -804,6 +808,13 @@
       "title": "Revisió general i correcció de regressions",
       "depends_on": [
         "F66"
+      ]
+    },
+    {
+      "id": "F68",
+      "title": "Contribucions amb pull requests i protecció de main",
+      "depends_on": [
+        "F67"
       ]
     }
   ],
@@ -6766,6 +6777,43 @@
         "output/releases/0.6.1/receipt.json"
       ],
       "change_log_id": "H168"
+    },
+    {
+      "id": "T68-01",
+      "phase": "F68",
+      "title": "Protegir main i configurar el flux de contribucions",
+      "status": "verified",
+      "requirements": [
+        "R82"
+      ],
+      "depends_on": [
+        "T67-01"
+      ],
+      "files": [
+        ".github/CODEOWNERS",
+        ".github/pull_request_template.md",
+        "CONTRIBUTING.md",
+        "AGENTS.md",
+        "docs/VERSIONS.md",
+        "docs/PLA-PULL-REQUESTS.md"
+      ],
+      "acceptance": "GitHub exigeix pull request, revisió del propietari i Validate de GitHub Actions actualitzat abans de fusionar; conserva bloqueig de force push/esborrat. El propietari pot fusionar PR pròpies sense autoaprovar-se, però no ometre CI. Flux de forks documentat, CODEOWNERS i plantilla preparats. Configuració Pages verificada via API sense visitar la web pública ni transferir secrets.",
+      "checks": [
+        "Comprovar compte, col·laboradors, proteccions, CI i configuració Pages.",
+        "Preparar CODEOWNERS, plantilla i guia de forks i versions.",
+        "Activar rulesets i confirmar regles efectives i CI sense bypass.",
+        "Auditar fitxers públics i obrir la PR de configuració; fusió només amb CI verda."
+      ],
+      "evidence": [
+        "docs/PLA-PULL-REQUESTS.md",
+        "CONTRIBUTING.md",
+        ".github/CODEOWNERS",
+        ".github/pull_request_template.md",
+        "output/pull-requests/cloudflare-connection.json",
+        "output/pull-requests/governance.json",
+        "output/pull-requests/setup-pr.json"
+      ],
+      "change_log_id": "H169"
     }
   ]
 }

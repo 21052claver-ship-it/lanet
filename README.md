@@ -8,6 +8,8 @@ Plataforma local completa per a estudiants de segon de batxillerat. Interfície 
 
 [Repositori públic](https://github.com/21052claver-ship-it/lanet) · [Versions publicades](https://github.com/21052claver-ship-it/lanet/releases) · [CHANGELOG](CHANGELOG.md).
 
+**Vols proposar una millora?** Fes un fork i envia una pull request a `main`; Marc revisa i accepta les propostes amb les proves automàtiques correctes. [Guia per contribuir](CONTRIBUTING.md).
+
 GitHub comprova cada push/PR. `npm run release` publica el commit exacte després de CI verda a Cloudflare Pages, crea Deployment a GitHub i una release immutable amb tag i rebut JSON. La publicació s’executa amb les sessions locals existents; no es publica automàticament cada push ni es desen secrets personals de Cloudflare a GitHub. [Flux de versions](docs/VERSIONS.md).
 
 ## Actualització del 12 d’octubre de 2026
