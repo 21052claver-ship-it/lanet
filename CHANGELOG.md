@@ -4,6 +4,8 @@ Cada publicació nova té una versió SemVer, un tag Git immutable, una release 
 
 ## [0.6.4] - 2026-10-12
 
+- Domini principal lanet.es, callback Google propi i redireccions web dels àlies; configuració preparada per publicar després de confirmar DNS i HTTPS.
+
 - Ponderacions PAU amb icones i colors per matèria, coeficients destacats, aportació màxima i les dues millors aportacions identificades respectant el mode discret.
 
 - Botó «Tancar sessió» a El meu perfil, amb estat d’espera i reintent segur en cas d’error de connexió.

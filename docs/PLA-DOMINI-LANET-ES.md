@@ -1,56 +1,37 @@
 # Domini principal lanet.es
 
-Tasca única T69-01. L'usuari autoritza configurar el seu domini d'IONOS a Cloudflare com a principal. Aquesta petició permet substituir l'origen públic fixat anteriorment, conservant el mateix projecte Pages, compte, D1/R2 i Google únic.
+Tasca única T69-01. Marc autoritza configurar el domini d’IONOS a Cloudflare com a principal, conservant projecte Pages, compte, D1/R2 i Google únic. El 12/10/2026 confirma que el callback OAuth de `lanet.es` ja està desat.
 
 - [x] Revisar instruccions, domini, accés i configuració actual.
-- [x] Preparar zona Cloudflare i dominis personalitzats del projecte Pages `lanet`.
-- [ ] Revisar/exportar registres d'IONOS i conservar correu, TXT i altres serveis.
-- [ ] Configurar els nameservers assignats per Cloudflare a IONOS i confirmar la delegació.
-- [ ] Comprovar HTTPS vàlid a `lanet.es` i `www.lanet.es`.
-- [ ] Afegir `https://lanet.es/api/auth/google/callback` al client OAuth existent, conservant els callbacks i la marca compartida.
-- [ ] Preparar l'origen canònic, redireccions i metadades amb proves locals.
-- [ ] Obrir PR, passar CI, publicar la nova versió i registrar el rebut.
+- [x] Preparar zona Cloudflare Free i dominis personalitzats del projecte Pages `lanet`.
+- [x] Revisar els registres IONOS i conservar correu, TXT i serveis auxiliars.
+- [x] Desar els nameservers de Cloudflare a IONOS i detectar-los al DNS públic.
+- [ ] Confirmar zona activa i HTTPS vàlid a `lanet.es` i `www.lanet.es`.
+- [x] Callback `https://lanet.es/api/auth/google/callback` confirmat per Marc; altres callbacks i marca compartida conservats.
+- [x] Preparar origen canònic, redireccions i metadades amb proves locals.
+- [ ] Passar PR/CI, publicar 0.6.4 i verificar el rebut i la configuració efectiva.
 
-## Situació inicial
+## Infraestructura
 
-`lanet.pages.dev` continua sent l'origen de la versió 0.6.1. El punt d'entrada Pages ja impedeix accedir a API des d'orígens alternatius i redirigeix la web a `PUBLIC_ORIGIN`; no s'activarà `lanet.es` com a origen fins a tenir DNS, HTTPS i callback Google preparats.
+Zona `lanet.es` del mateix compte Cloudflare, pla Free. Nameservers `jakub.ns.cloudflare.com` i `keira.ns.cloudflare.com` desats a IONOS amb confirmació d’èxit. Apex i `www` associats al projecte Pages `lanet`, amb CNAME proxied a `lanet.pages.dev`.
 
-La pestanya d'IONOS estava oberta amb informació anterior. En actualitzar-la, el servei ha demanat iniciar sessió. S'ha deixat el formulari de contrasenya preparat per a `lanet.es`; no es demana ni es desa la contrasenya al projecte.
+S’han importat nou registres IONOS amb TTL 3600: dos MX de prioritat 10, SPF, DMARC, dos DKIM, autodiscover, Domain Connect i el TXT auxiliar existent. Els registres importats són DNS only; els A/AAAA de la pàgina aparcada d’IONOS se substitueixen pels CNAME web. No s’ha eliminat ni contractat cap servei. Exportació i comprovants en `output/domain-lanet-es`, fora del repositori públic.
 
-El DNS local i el resolutor públic de Cloudflare retornen NXDOMAIN per a `lanet.es` i `www.lanet.es` (NS, A/AAAA, MX, TXT, CAA i DS). Això no permet concloure si el registre del domini encara està en procés; cal confirmar-lo al panell d'IONOS. Evidència privada: `output/domain-lanet-es/dns-before.json`.
+SSL en Full (strict), Always Use HTTPS i TLS mínim 1.2; TLS 1.3 i Universal SSL activats. No s’ha desactivat cap protecció DNSSEC: el DNS públic no mostra cap DS preexistent. L’emissió del certificat i la propagació són passos del proveïdor que cal confirmar abans del desplegament canònic.
 
-## Ordre i preservació
+## Aplicació i accés
 
-Primer infraestructura i verificació; després canvi d'origen i publicació. No comprar ni transferir el domini, canviar titularitat, eliminar serveis de correu o modificar la marca OAuth compartida. Sense reinicis, regals, migracions de dades ni canvi de permisos dels usuaris. Cap secret ni dada del compte d'IONOS es publica al repositori.
+0.6.4 prepara `PUBLIC_ORIGIN=https://lanet.es` i `GOOGLE_REDIRECT_URI=https://lanet.es/api/auth/google/callback`. La versió publicada anterior continua activa fins que la infraestructura i CI estiguin verificades. Homepage, enllaços del README i metadades canòniques apunten al domini propi.
 
-Per servir l'arrel `lanet.es` amb Pages cal una zona del mateix compte i delegar als seus nameservers. Referència: [dominis personalitzats de Cloudflare Pages](https://developers.cloudflare.com/pages/configuration/custom-domains/).
+El guard de Pages existent serveix l’app només a l’origen principal. La web dels àlies `www.lanet.es`, `lanet.pages.dev` i previsualitzacions redirigeix a l’arrel canònica amb no-store/no-referrer i sense reenviar paràmetres OAuth. L’API dels àlies es rebutja abans d’accedir a dades o secrets. Les cookies de l’adreça antiga no es traslladen: els usuaris iniciaran sessió amb Google al domini nou.
 
-## Configuració preparada a Cloudflare
+Mateix client Google, marca compartida conservada, accés exclusiu @fje.edu, convidat i mode demo desactivats. Cap canvi de dades, rols, saldo, regals o migracions. Els secrets existents es conserven; no cal regenerar-los.
 
-Zona `lanet.es` creada al compte fixat, pla Free. Els dos dominis consten al projecte Pages `lanet`, pendents de verificació. Registres creats i confirmats al panell:
+## Verificació i ordre
 
-| Tipus | Nom | Destinació | Proxy | TTL |
-| --- | --- | --- | --- | --- |
-| CNAME | `@` | `lanet.pages.dev` | Activat | Auto |
-| CNAME | `www` | `lanet.pages.dev` | Activat | Auto |
+1. Registres de correu importats abans de canviar la delegació; confirmació visual IONOS i DNS públic.
+2. Zona/Pages actius i cadena TLS vàlida per als dos hosts, sense ignorar errors de certificat.
+3. Proves locals de routing, aïllament d’API/OAuth i configuració Google; compilació i CI de la PR.
+4. PR fusionada, CI del commit exacte de main, publicació immutable i comprovació del rebut/proveïdor.
 
-Nameservers assignats: `jakub.ns.cloudflare.com` i `keira.ns.cloudflare.com`. Encara **no** s'han configurat a IONOS. Abans de delegar, revisar els registres existents d'IONOS i copiar els de correu/TXT/altres serveis necessaris.
-
-SSL configurat en `Full (strict)`, `Always Use HTTPS` activat i TLS mínim 1.2; TLS 1.3 i Universal SSL continuen activats. El certificat encara no consta emès: cal delegació i verificació del domini. No s'ha activat HSTS addicional ni fet cap canvi a altres zones.
-
-Evidències privades: `output/domain-lanet-es/pages-domains.json`, `cloudflare-dns.jpg`, `cloudflare-tls.jpg` i `cloudflare-https.jpg` dins del mateix directori.
-
-## Accés pendent i canvi final
-
-IONOS continua al formulari de contrasenya. L'usuari ha de completar el login en aquella pestanya, sense compartir la contrasenya al xat. La consola de Google està bloquejada per un permís desat del navegador de Codex; no es pot completar aquell canvi des de l'automatització ni esquivar el bloqueig.
-
-Cal afegir **`https://lanet.es/api/auth/google/callback`** a «URIs de redireccionamiento autorizados» del client existent. Conservar els altres callbacks i la marca OAuth compartida. No cal regenerar secrets.
-
-Després de verificar DNS, certificat HTTPS vàlid i callback desat:
-
-1. Canviar `public_origin` de `cloudflare-target.json` i `PUBLIC_ORIGIN` de `wrangler.jsonc` a `https://lanet.es`; `GOOGLE_REDIRECT_URI` a `https://lanet.es/api/auth/google/callback`.
-2. Actualitzar homepage i documentació actual; conservar les adreces històriques de releases.
-3. Executar proves, passar PR/CI i publicar amb el procés de versions. No desplegar directament una configuració que no ha passat aquest ordre.
-4. Confirmar origen/callback/bindings via proveïdor i verificar HTTPS de `lanet.es` i `www.lanet.es`. El guard existent redirigeix les visites web dels àlies a l'arrel canònica; no reenvia codis OAuth ni permet API als àlies.
-
-La branca inclou regressions locals del domini propi, redirecció dels àlies i aïllament OAuth. El test de configuració Google deriva el callback de l'origen fixat per continuar sent vàlid després de la migració. La configuració de producció encara és la de `lanet.pages.dev`; T69-01 continua en curs.
+Les comprovacions d’infraestructura utilitzen DNS, negociació TLS i API del proveïdor. No visiten l’aplicació pública ni modifiquen dades d’usuaris.

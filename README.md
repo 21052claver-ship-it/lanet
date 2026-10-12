@@ -2,7 +2,7 @@
 
 Plataforma local completa per a estudiants de segon de batxillerat. Interfície en català, estil **Taller depurat**, frontend React i servidor Cloudflare Workers amb **D1** i **R2**. Un mateix servidor gestiona les dades en local i al núvol.
 
-**[La Net publicada](https://lanet.pages.dev)** — aplicació pròpia `lanet` al compte actual de Cloudflare, amb **Google com a única entrada** i altes restringides a **@fje.edu**. Nom, cognoms i foto sincronitzats des de Google; la identitat no es pot editar a La Net. Entrada Google real, nom, cognoms i foto comprovats. Exterior i interior de la pastisseria amb transparència real, revisats en mòbil i escriptori. [Desplegament i comprovacions públiques](docs/PUBLICACIO.md).
+**[La Net publicada](https://lanet.es)** — aplicació pròpia `lanet` al compte actual de Cloudflare, amb **Google com a única entrada** i altes restringides a **@fje.edu**. Nom, cognoms i foto sincronitzats des de Google; la identitat no es pot editar a La Net. Entrada Google real, nom, cognoms i foto comprovats. Exterior i interior de la pastisseria amb transparència real, revisats en mòbil i escriptori. [Desplegament i comprovacions públiques](docs/PUBLICACIO.md).
 
 ## Codi i versions
 
@@ -40,9 +40,9 @@ GitHub comprova cada push/PR. `npm run release` publica el commit exacte despré
 
 **Arrencada mòbil corregida:** pantalla blanca reproduïda en WebKit sense Object.hasOwn; compatibilitat ampliada, component arrel protegit, HTML inicial visible, càrrega per apartats i reintent quan falla la xarxa. 250 unitàries, 50 fluxos API locals, 30 casos d’arrencada, 135 generals, 48 responsive i 4 perfils de navegador/dispositiu correctes. [Pla i límits](docs/PLA-ARRENCADA-MOBIL.md), [verificació actual](docs/VERIFICATION.md). Pendent de confirmar al mòbil físic de Marc.
 
-**[Continguts](https://lanet.pages.dev/#notes)** substitueix el nom Apunts i agrupa Materials, Formularis i Eines i webs. Formularis per assignatura i tema, amb editor de fórmules, fonts, previsualització, revisió explícita de delegats/administradors del grup i historial; les edicions pendents conserven la publicació anterior. Cinc referències educatives de fórmules i set eines inicials. Materials, fitxers, compres i preferències conservats. [Pla](docs/PLA-CONTINGUTS.md), [verificació actual](docs/VERIFICATION.md). 244 unitàries, 50 fluxos API locals, 33 casos Continguts, 48 responsive i 135 controls generals correctes; navegadors locals, mòbil emulat.
+**[Continguts](https://lanet.es/#notes)** substitueix el nom Apunts i agrupa Materials, Formularis i Eines i webs. Formularis per assignatura i tema, amb editor de fórmules, fonts, previsualització, revisió explícita de delegats/administradors del grup i historial; les edicions pendents conserven la publicació anterior. Cinc referències educatives de fórmules i set eines inicials. Materials, fitxers, compres i preferències conservats. [Pla](docs/PLA-CONTINGUTS.md), [verificació actual](docs/VERIFICATION.md). 244 unitàries, 50 fluxos API locals, 33 casos Continguts, 48 responsive i 135 controls generals correctes; navegadors locals, mòbil emulat.
 
-**[PAU i universitat](https://lanet.pages.dev/#pau):** calculadora d’accés de batxillerat i CFGS, nota d’admissió per grau amb les dues millors ponderacions, i cerca per carrera, universitat i campus. Recomana el tall històric més alt assolit dins de la carrera escollida. 560 codis oficials de Catalunya; 558 talls de la sisena assignació de juny 2026 (07/10/2026) i ponderacions 2026/2027. Simulació privada desada al compte, mode discret i protecció contra conflictes entre pestanyes. Les dades són orientatives i no garanteixen plaça; absències i contradiccions de la font s’indiquen explícitament. [Pla, fonts i actualització](docs/PLA-PAU.md), [verificació actual](docs/VERIFICATION.md). 235 proves unitàries, 48 fluxos d’API locals, 39 casos PAU, 48 de responsive i 135 controls generals correctes. Les proves de navegador d’aquesta revisió són locals, amb mòbil emulat.
+**[PAU i universitat](https://lanet.es/#pau):** calculadora d’accés de batxillerat i CFGS, nota d’admissió per grau amb les dues millors ponderacions, i cerca per carrera, universitat i campus. Recomana el tall històric més alt assolit dins de la carrera escollida. 560 codis oficials de Catalunya; 558 talls de la sisena assignació de juny 2026 (07/10/2026) i ponderacions 2026/2027. Simulació privada desada al compte, mode discret i protecció contra conflictes entre pestanyes. Les dades són orientatives i no garanteixen plaça; absències i contradiccions de la font s’indiquen explícitament. [Pla, fonts i actualització](docs/PLA-PAU.md), [verificació actual](docs/VERIFICATION.md). 235 proves unitàries, 48 fluxos d’API locals, 39 casos PAU, 48 de responsive i 135 controls generals correctes. Les proves de navegador d’aquesta revisió són locals, amb mòbil emulat.
 
 **5 pastissos de benvinguda per persona, una sola vegada**, també als membres actuals que encara no en tenien. Saldo i historial anteriors conservats. [Pla](docs/PLA-PASTISSOS-BENVINGUDA.md).
 
@@ -158,7 +158,7 @@ El [pla de perfeccionament](docs/PLA-PERFECCIO.md) i la [passada de màxim detal
 
 ## Publicació a Cloudflare
 
-Aplicació pròpia **Cloudflare Pages lanet**, publicada a [La Net](https://lanet.pages.dev). Mateixos D1 i R2 privats de La Net, sense importació local ni migració nova. La pantalla de Google conserva la marca existent per indicació de Marc; l’aplicació ImpossibleGoals i el subdomini del compte no s’han modificat.
+Aplicació pròpia **Cloudflare Pages lanet**, publicada a [La Net](https://lanet.es). Mateixos D1 i R2 privats de La Net, sense importació local ni migració nova. La pantalla de Google conserva la marca existent per indicació de Marc; l’aplicació ImpossibleGoals i el subdomini del compte no s’han modificat.
 
 `wrangler.jsonc` és la configuració de Pages; `cloudflare-target.json` fixa compte, projecte i origen. `wrangler.worker-archive.jsonc` conserva la configuració anterior només com a referència. Els scripts validen la destinació i que D1/R2 coincideixin abans de publicar.
 
@@ -169,7 +169,7 @@ npm run pages:deploy
 
 `pages:deploy` comprova que el projecte Pages ja existeix, compila React, genera `dist-pages/_worker.js` i publica a la branca `main`. `cf:deploy` és un àlies de la mateixa operació. `cf:prepare` comprova els recursos existents; no crea ni migra dades en aquesta configuració. Una migració futura requereix còpia D1 prèvia i execució explícita, separada de publicar codi.
 
-Google requereix els secrets privats i el callback exacte `https://lanet.pages.dev/api/auth/google/callback`. Després de modificar secrets de Pages cal tornar a publicar. Vegeu [GOOGLE-OAUTH.md](docs/GOOGLE-OAUTH.md). La configuració de producció prohibeix convidat i contrasenya, limita les altes a @fje.edu i conserva els rols existents.
+Google requereix els secrets privats i el callback exacte `https://lanet.es/api/auth/google/callback`. Després de modificar secrets de Pages cal tornar a publicar. Vegeu [GOOGLE-OAUTH.md](docs/GOOGLE-OAUTH.md). La configuració de producció prohibeix convidat i contrasenya, limita les altes a @fje.edu i conserva els rols existents.
 
 `wrangler.redirect.jsonc` i `wrangler.legacy.jsonc` retiren respectivament els antics Workers `lanet` i `la-net`: redirecció fixa 308 a la web i API 410, sense D1, R2 ni Assets. No són configuracions per publicar la plataforma. Les adreces de previsualització de Pages redirigeixen a l’origen públic i rebutgen l’API amb 421 abans d’accedir a les dades.
 

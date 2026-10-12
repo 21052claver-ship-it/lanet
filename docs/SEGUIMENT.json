@@ -6907,7 +6907,7 @@
         "output/domain-lanet-es/local-checks.json"
       ],
       "change_log_id": "H170",
-      "progress": "Nameservers Cloudflare desats a IONOS i visibles al DNS públic; correu/TXT conservats. Callback .es confirmat per Marc. Zona i HTTPS pendents del proveïdor; origen 0.6.5 preparat en PR10, sense desplegar."
+      "progress": "Delegació IONOS desada, correu i TXT preservats; registres web i dominis Pages preparats. Canvi canònic integrat amb PR #11 i versió 0.6.4; pendent activació Cloudflare i HTTPS abans de publicar. Callback .es confirmat pel propietari."
     },
     {
       "id": "T70-01",

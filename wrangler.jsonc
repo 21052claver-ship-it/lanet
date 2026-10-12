@@ -25,7 +25,7 @@
     "DEMO_MODE": "false",
     "GUEST_ACCESS": "false",
     "GOOGLE_ALLOWED_DOMAIN": "fje.edu",
-    "PUBLIC_ORIGIN": "https://lanet.pages.dev",
-    "GOOGLE_REDIRECT_URI": "https://lanet.pages.dev/api/auth/google/callback",
+    "PUBLIC_ORIGIN": "https://lanet.es",
+    "GOOGLE_REDIRECT_URI": "https://lanet.es/api/auth/google/callback",
   },
 }
