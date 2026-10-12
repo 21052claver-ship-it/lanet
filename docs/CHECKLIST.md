@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**167/169 tasques verificades · 78 requisits · 65 fases · límit d’una tasca activa.**
+**168/169 tasques verificades · 78 requisits · 65 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **T64-01 — Pissarra visual d’apostes amb amfitriona i responsive**.
+Tasca activa: **cap**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -372,6 +372,6 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 
 ## F64 Escenari de la pissarra d’apostes
 
-- [ ] **T64-01** Pissarra visual d’apostes amb amfitriona i responsive — En revisió.
+- [x] **T64-01** Pissarra visual d’apostes amb amfitriona i responsive — Verificat.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

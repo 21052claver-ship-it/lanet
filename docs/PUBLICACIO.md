@@ -1,9 +1,9 @@
-# Publicació · La Net 0.4.1
+# Publicació · La Net 0.5.0
 
-12 d’octubre de 2026. https://lanet.pages.dev · Pages b49ec67f, production/main. Commit: bfdb479f65ce35ff3e9216260ce6a0dc12821d2a.
+12 d’octubre de 2026. https://lanet.pages.dev · Pages 545e8cf3, production/main. Commit: ee44965605ab7139d4a83fc85094046af6033961.
 
-Crear aposta sempre visible en la llista i en el detall d’una altra aposta. Formulari i estat buit amb nom coherent. Cancel·lar conserva l’aposta anterior; crear obre el detall de la nova aposta pendent d’acceptació, sense refrescar l’anterior ni iniciar dues lectures de selecció. Flux verificat amb un alumne normal, termini i responsable independent, sense gastar pastissos per crear.
+Nou escenari de prediccions: senyora sencera i transparent al costat d’una pissarra amb marc i lleixa de fusta. Apostes penjades com papers amb una xinxeta, dades llegibles i filtres. Al mòbil la senyora passa a sobre per deixar tot l’espai al tauler. Creació, detall, teclat i retorn a la ruleta preservats, sense tocar saldos ni liquidació.
 
-[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.4.1) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38191721369) · [Registre](releases/0.4.1.json). Publicada amb npm run release després de CI verda; GitHub Deployment 7004702745 success i SHA complet confirmat pel proveïdor.
+[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.5.0) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38194444994) · [Registre](releases/0.5.0.json). Publicada amb npm run release després de CI verda; GitHub Deployment 7005123071 success i SHA complet confirmat pel proveïdor.
 
-Sense migració nova. Adreça, Google únic @fje.edu, D1/R2 i serveis privats preservats. Cap regal ni reinici. Verificació via proveïdor sense visitar la web pública.
+Adreça, Google únic @fje.edu, D1/R2 i serveis privats preservats. Cap regal ni reinici. Verificació via proveïdor sense visitar la web pública.

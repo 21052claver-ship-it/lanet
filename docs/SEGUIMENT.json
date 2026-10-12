@@ -6570,7 +6570,7 @@
       "id": "T64-01",
       "phase": "F64",
       "title": "Pissarra visual d’apostes amb amfitriona i responsive",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R78"
       ],
@@ -6589,7 +6589,19 @@
         "Verificar visualment i provar operacions en tres motors.",
         "Publicar amb CI verda i rebut."
       ],
-      "evidence": []
+      "evidence": [
+        "docs/PLA-PISSARRA-APOSTES.md",
+        "docs/releases/0.5.0.json",
+        "output/prediction-board/unit.log",
+        "output/prediction-board/typecheck.log",
+        "output/prediction-board/source-audit.log",
+        "output/prediction-board/browser/browser-results.json",
+        "output/prediction-board/remote-bindings.json",
+        "output/prediction-board/ci-success.json",
+        "output/prediction-board/delivery.json",
+        "output/releases/0.5.0/receipt.json"
+      ],
+      "change_log_id": "H165"
     }
   ]
 }
