@@ -340,6 +340,10 @@
     {
       "id": "R84",
       "description": "Tapet de ruleta complet i dividit des del principi: posar fitxes directament sobre números, línies, cruïlles i files sense selectors de tipus d’aposta."
+    },
+    {
+      "id": "R85",
+      "description": "Accés a la NET oficial FJE amb el logotip aportat reinterpretat en 3D, a la sidebar i al menú mòbil."
     }
   ],
   "phases": [
@@ -837,6 +841,13 @@
       "title": "Tapet directe de ruleta",
       "depends_on": [
         "F68"
+      ]
+    },
+    {
+      "id": "F71",
+      "title": "Accés a la NET oficial",
+      "depends_on": [
+        "F70"
       ]
     }
   ],
@@ -6923,6 +6934,45 @@
       ],
       "progress": "Publicada 0.6.2 amb PR/CI verda, tag/release immutables i SHA/bindings confirmats. 357 unitàries, 27 casos de tapet i 18 d’animació en tres motors; origen i dades preservats. Domini de T69-01 encara pendent d’accés.",
       "change_log_id": "H171"
+    },
+    {
+      "id": "T71-01",
+      "phase": "F71",
+      "title": "Afegir accés a la NET oficial amb icona 3D",
+      "status": "review",
+      "requirements": [
+        "R85"
+      ],
+      "depends_on": [
+        "T70-01"
+      ],
+      "files": [
+        "src/components/OfficialNetLink.jsx",
+        "src/App.jsx",
+        "src/responsive.css",
+        "public/images/ui/official-net-3d-v1.webp",
+        "docs/PLA-NET-OFICIAL.md"
+      ],
+      "acceptance": "Enllaç exacte a https://login.net.fje.edu/ en pestanya nova, amb icona 3D del logotip aportat; accessible amb sidebar oberta/plegada i menú Més mòbil, sense desbordaments. Verificació local, PR/CI i publicació versionada.",
+      "checks": [
+        "Generar i revisar icona 3D transparent, optimitzada per navegació.",
+        "Integrar enllaç accessible a sidebar i Més.",
+        "Comprovar disposició, teclat i destinació amb fixtures locals.",
+        "Passar qualitat, PR/CI i publicar amb rebut."
+      ],
+      "evidence": [
+        "docs/PLA-NET-OFICIAL.md",
+        "public/images/ui/official-net-3d-v1.webp",
+        "output/official-net/local-checks.json",
+        "output/official-net/mobile/results.json",
+        "output/official-net/unit.log",
+        "output/official-net/typecheck.log",
+        "output/official-net/build.log",
+        "output/official-net/1440.png",
+        "output/official-net/320.png",
+        "output/official-net/collapsed.png"
+      ],
+      "progress": "Integració i qualitat local correctes: 357 unitàries, cinc comprovacions del nou enllaç i nou casos de navegació en tres motors. Icona transparent WebP de 13 KB, sidebar oberta/plegada i Més mòbil. Publicació 0.6.3 pendent de PR/CI i rebut."
     }
   ]
 }

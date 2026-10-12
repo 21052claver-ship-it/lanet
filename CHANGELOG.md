@@ -2,6 +2,11 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.6.3] - 2026-10-12
+
+- Accés «La NET oficial» a la barra lateral i al menú Més del mòbil, amb enllaç al portal FJE en una pestanya nova.
+- Logotip aportat reinterpretat en 3D, amb transparència i WebP optimitzat per a les barres oberta i plegada.
+
 ## [0.6.2] - 2026-10-12
 
 - Tapet complet amb les 157 posicions actives alhora: números, línies, cantonades, files, zero i exteriors, sense selectors de tipus.

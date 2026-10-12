@@ -25,6 +25,7 @@ import Auth, { AuthFeedback } from './Auth';
 import Forms from './forms';
 import WoodBoard from './components/WoodBoard';
 import RecordArt from './components/RecordArt';
+import OfficialNetLink from './components/OfficialNetLink';
 import { LOFI_TRACKS } from './audio';
 import { googleResult } from '../shared/google-auth';
 import { useCompactLayout } from './responsive';
@@ -254,6 +255,7 @@ function Workspace({ onLogout }) {
               </span>
             </button>
           ))}
+          <OfficialNetLink />
         </nav>
         <div className="sidebar-bottom">
           <button
@@ -429,6 +431,7 @@ function Workspace({ onLogout }) {
                   </button>
                 ))}
               </nav>
+              <OfficialNetLink mobile onOpen={() => setMobile(false)} />
               <div className="mobile-more-account">
                 <button
                   onClick={() => {
