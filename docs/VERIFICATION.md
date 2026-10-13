@@ -1,9 +1,9 @@
-# Verificació · La Net 0.6.10
+# Verificació · La Net 0.6.11
 
-[CI completa](https://github.com/21052claver-ship-it/lanet/actions/runs/38455769429) correcta per a main 61592226ddf77ae7e3fcb545d8c0a805078c9ed3, després de PR23/24.
+[CI completa](https://github.com/21052claver-ship-it/lanet/actions/runs/38469595627) correcta per a main 54e1009692b57c3e0c489955fc8b78b35cab0a7e, després de PR26/27.
 
-370 unitàries, incloses les 208 combinacions oficials i la conservació de metadades en desar variants. Clients antics, IDs aliens/duplicats, tipus invàlids, modes general/específic/personal i solapaments comprovats. D1/workerd local verifica tres itineraris i l’edició de Filosofia, Literatura i Llatí amb payload antic.
+376 unitàries: classificació de les 18 matèries avaluables, preferències desades prioritàries, coherència PAU/Notes, TR amb zero/pendents i rubricació 30/42/21/7, calendari amb rangs i ICS UTF-8. Tipus/lint, compilació i auditoria de font correctes.
 
-27 fluxos de navegador locals i 27 a CI en Chromium, Firefox i WebKit; inclosos 9 casos d’edició de variants a 320, 390 i 1440 px. Comprovació que els noms de dia no es comprimeixen verticalment. Tipus/lint, compilació i auditoria correctes.
+60 fluxos locals en Chromium, Firefox i WebKit: 12 de guia/calendari/TR a 320/390/820/1440, 24 de notes i plusos, 24 de Top 5 PAU. Mode discret sense exposar valors antics, desament local/recarrega, notes invàlides, emmagatzematge bloquejat, exportació, pesos personals i recuperació comprovats. Guia i notes també correctes a CI; tots els grups de regressió de CI correctes. La suite API històrica general conserva la limitació registrada a 0.6.9 i no es presenta com a passada; la prova específica D1 d’horaris sí que passa a CI.
 
-Catàleg del proveïdor contrastat amb el model: 53 ofertes i 155 franges intactes. Domini, commit canònic, tag/release immutable i digest del rebut verificats. Sense migracions addicionals ni dades de producció modificades. Cap prova contra la web pública ni dispositius físics. La limitació de la suite API històrica general es conserva al registre de 0.6.9; la prova D1 específica és obligatòria a CI. [Registre](releases/0.6.10.json).
+Les 34 pàgines del PDF s’han revisat; dates PAU/PAP contrastades amb fonts oficials. Domini, commit canònic, tag/release immutable i digest del rebut verificats via proveïdor. Sense migracions, proves contra la web pública ni dispositius físics. El TR només es desa en aquest navegador i no es presenta com a mitjana oficial de batxillerat. [Registre](releases/0.6.11.json).

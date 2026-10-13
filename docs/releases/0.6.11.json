@@ -1,0 +1,33 @@
+{
+  "recordedAt": "2026-10-13T21:30:21.386Z",
+  "version": "0.6.11",
+  "sourceCommit": "54e1009692b57c3e0c489955fc8b78b35cab0a7e",
+  "origin": "https://lanet.es",
+  "releaseUrl": "https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.11",
+  "immutable": true,
+  "tagCommitMatches": true,
+  "receiptDigestMatches": true,
+  "ci": "https://github.com/21052claver-ship-it/lanet/actions/runs/38469595627",
+  "ciSuccess": true,
+  "pullRequest": "https://github.com/21052claver-ship-it/lanet/pull/26",
+  "validationPullRequest": "https://github.com/21052claver-ship-it/lanet/pull/27",
+  "cloudflareDeployment": "535d3b8d-1f7c-4f34-95dc-bb1646483764",
+  "providerConfirmed": true,
+  "productionCommitMatches": true,
+  "domainActive": true,
+  "githubDeployment": 7050565378,
+  "tests": {
+    "unit": 376,
+    "studentGuideBrowser": 12,
+    "annualGradeBrowser": 24,
+    "pauTop5Browser": 24,
+    "ciStudentGuideBrowser": 12,
+    "ciAnnualGradeBrowser": 24
+  },
+  "databaseMigrationRequired": false,
+  "personalWeightsPreserved": true,
+  "researchStorage": "explicit per-user local browser storage",
+  "realDevicesTested": false,
+  "userDataModified": false,
+  "publicSiteVisited": false
+}
