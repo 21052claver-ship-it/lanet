@@ -7163,6 +7163,43 @@
       ],
       "progress": "Publicada 0.6.7 a lanet.es via PR18 i CI exacta de main. Sala integrada, navegació visible i accessible; 132 casos locals en tres motors i 357 unitàries correctes. Rebut Cloudflare, tag/release i digest verificats.",
       "change_log_id": "H177"
+    },
+    {
+      "id": "T73-04",
+      "phase": "F73",
+      "title": "Afegir sons suaus a la ruleta",
+      "status": "review",
+      "requirements": [
+        "R89"
+      ],
+      "depends_on": [
+        "T73-03"
+      ],
+      "files": [
+        "src/roulette-sound.js",
+        "src/useRouletteSound.js",
+        "src/components/SecretCasino.jsx",
+        "src/components/RouletteBoard.jsx",
+        "src/roulette.css",
+        "scripts/test-roulette-sound.mjs"
+      ],
+      "acceptance": "Sons suaus de fitxa, bola i premi després del lliurament; control de silenci persistent, sense autoplay, sons orfes ni interferències amb música. Errors o manca de Web Audio no bloquegen el joc. Verificació local en tres motors i publicació via PR/CI.",
+      "checks": [
+        "Implementar síntesi local amb límits de volum i neteja.",
+        "Connectar cues a accions reals i lliurament confirmat.",
+        "Afegir control accessible de silenci.",
+        "Provar àudio, cicle de vida i regressions locals.",
+        "Publicar amb PR i CI."
+      ],
+      "evidence": [
+        "docs/PLA-RULETA-SONS.md",
+        "output/roulette-panorama/sound-typecheck.log",
+        "output/roulette-panorama/sound-unit.log",
+        "output/roulette-panorama/sound-panorama.log",
+        "output/roulette-panorama/sound-animation.log"
+      ],
+      "progress": "Sons sintetitzats locals, silenci persistent, neteja i cap interferència amb música. 15 casos visuals i 18 d’animació correctes en tres motors; 357 unitàries i typecheck correctes. Comprovacions natives d’àudio en curs; WebKit Windows sense API queda documentat. Pendent PR/CI i publicació 0.6.8.",
+      "change_log_id": "H178"
     }
   ]
 }

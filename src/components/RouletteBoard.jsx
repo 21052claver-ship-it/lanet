@@ -21,6 +21,7 @@ export default function RouletteBoard({
   disabled,
   balance,
   onError,
+  onPlace,
   resetToken,
   result = null,
   settledBets = [],
@@ -65,6 +66,7 @@ export default function RouletteBoard({
         ? bets.map((b) => (b.id === id ? { ...b, stake: b.stake + chip } : b))
         : [...bets, { id, stake: chip }],
     );
+    onPlace?.();
     setAnnouncement(
       `${chip} pastissos a ${BETS_BY_ID[id].label}. Total al tapet: ${total + chip}.`,
     );

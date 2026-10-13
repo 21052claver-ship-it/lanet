@@ -199,6 +199,21 @@
   border: 1px solid #b5aa8a66;
   flex-shrink: 0;
 }
+.casino-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.casino-header .casino-sound-toggle {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
+  justify-content: center;
+}
+.casino-header .casino-sound-toggle[aria-pressed='false'] {
+  opacity: 0.7;
+}
 .casino-stage {
   display: flex;
   align-items: flex-end;

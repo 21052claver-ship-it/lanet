@@ -21,6 +21,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
     [1280, 720],
     [1366, 768],
     [1920, 1080],
+    [320, 812],
     [390, 844],
   ]) {
     const context = await browser.newContext({
@@ -85,6 +86,17 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
       assert.ok(await p.locator('.topbar').isVisible(), 'Topbar remains visible');
       assert.equal(await p.locator('.topbar').getAttribute('aria-hidden'), null);
       assert.equal(await p.locator('.casino-room').getAttribute('aria-modal'), null);
+      for (const selector of [
+        '.casino-sound-toggle',
+        '.casino-header-actions > button:last-child',
+      ]) {
+        const button = await p.locator(selector).boundingBox();
+        assert.ok(
+          button && button.x >= room.x && button.x + button.width <= room.x + room.width + 1,
+          `Header control remains inside room at ${width}px: ${selector}`,
+        );
+      }
+      await p.screenshot({ path: `${out}/${engine}-${width}-entry.png` });
       if (width >= 1200) {
         assert.ok(await p.locator('.sidebar').isVisible(), 'Sidebar remains visible');
         const topbar = await p.locator('.topbar').boundingBox();
