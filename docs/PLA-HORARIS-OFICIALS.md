@@ -47,3 +47,5 @@ Publicada **0.6.9**: [release](https://github.com/21052claver-ship-it/lanet/rele
 ## Revisió de l’edició de gestió
 
 T74-02 amplia la coherència a l’editor de variants: un desament ha de conservar professorat per dia, treball personal i IDs, inclòs amb clients antics. Es distingeixen explícitament professorat general, propi i treball personal. Validació de tipus, permisos i solapaments abans del batch. Versió 0.6.10 pendent de PR/CI i publicació, sense noves migracions.
+
+Revisió de gestió publicada **0.6.10**: [release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.10) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38455769429) · [registre](releases/0.6.10.json). T74-02 verificada.

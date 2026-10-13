@@ -7268,7 +7268,7 @@
       "id": "T74-02",
       "phase": "F74",
       "title": "Conservar professorat per dia en editar l’horari",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R03",
         "R90"
@@ -7294,13 +7294,17 @@
         "Publicar amb PR, CI i registre de versió."
       ],
       "evidence": [
+        "docs/releases/0.6.10.json",
         "output/official-schedule-0.6.10/unit.log",
         "output/official-schedule-0.6.10/typecheck.log",
         "output/official-schedule-0.6.10/browser/results.json",
         "output/official-schedule-0.6.10/api-results.json",
-        "output/official-schedule-0.6.10/predictions-sync.log"
+        "output/official-schedule-0.6.10/predictions-sync.log",
+        "output/official-schedule-0.6.10/ci-main/official-schedule/browser/results.json",
+        "output/official-schedule-0.6.10/provider-verification.json",
+        "output/releases/0.6.10/receipt.json"
       ],
-      "progress": "370 unitàries, 27 fluxos de navegador (9 d’edició) en tres motors i D1/workerd local correctes. Professorat per dia, treball personal i IDs conservats; desplegable de dia corregit a 320 px. Tipus/lint i compilació correctes. Versió 0.6.10 preparada, pendent de PR/CI i publicació, sense noves migracions. CI de main ha detectat una carrera a la prova de resposta perduda d’una aposta. La prova ara espera la confirmació del servidor i l’avortament de resposta abans de verificar D1; 13 casos WebKit locals correctes, sense canviar regles ni assertions de saldo. Nova validació CI pendent.",
+      "progress": "Publicada 0.6.10 a lanet.es via PR23/24 i CI exacta de main. Edició compatible amb clients antics, professorat per dia/treball personal i IDs conservats, modes i solapaments validats. 370 unitàries, 27 fluxos locals i 27 a CI en tres motors, inclosos 9 casos d’edició, i D1 local correctes. Catàleg oficial, domini, commit i rebut immutable confirmats via proveïdor; sense migracions ni dades de producció modificades.",
       "change_log_id": "H180"
     }
   ]
