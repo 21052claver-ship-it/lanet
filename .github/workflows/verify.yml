@@ -42,11 +42,13 @@ jobs:
           - group: navigation
             tests: |
               npm run test:official-schedule
-              npm run test:student-guide
-              npm run test:course-grades
               npm run test:schedule-cards
               npm run test:workspace-recovery
               npm run test:mobile-navigation
+          - group: academics
+            tests: |
+              npm run test:student-guide
+              npm run test:course-grades
           - group: board
             tests: |
               npm run test:predictions
