@@ -1269,7 +1269,7 @@
 .roulette-award {
   position: fixed;
   inset: 0;
-  z-index: 85;
+  z-index: 95;
   pointer-events: none;
   overflow: hidden;
 }
@@ -1434,13 +1434,13 @@
 .casino-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 90;
+  z-index: 60;
   background: #12271fe6;
 }
 .casino-room.casino-panorama {
   position: fixed;
   inset: 12px;
-  z-index: 91;
+  z-index: 61;
   max-width: none;
   margin: 0;
   overflow: auto;

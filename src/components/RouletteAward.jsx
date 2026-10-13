@@ -8,7 +8,15 @@ export default function RouletteAward({ spin }) {
     const measure = () => {
       const header = document.querySelector('.cake-balance')?.getBoundingClientRect();
       const local = document.querySelector('.casino-balance')?.getBoundingClientRect();
-      const box = header && header.bottom > 0 && header.top < innerHeight ? header : local;
+      const result = document.querySelector('.roulette-result')?.getBoundingClientRect();
+      const visible = (box) => box && box.bottom > 0 && box.top < innerHeight;
+      const box = visible(local)
+        ? local
+        : visible(result)
+          ? result
+          : visible(header)
+            ? header
+            : local;
       setDestination({
         x: box ? box.left + box.width / 2 - innerWidth / 2 : 0,
         y: box ? box.top + box.height / 2 - innerHeight / 2 : -innerHeight / 3,

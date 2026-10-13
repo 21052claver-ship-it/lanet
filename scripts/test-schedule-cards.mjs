@@ -45,7 +45,9 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
       p.on('pageerror', (e) => errors.push(e.message));
       try {
         await p.goto(f.base + '/#schedule');
-        await p.locator('.timeline-event .event-card').first().waitFor();
+        const firstDay = p.locator('.timetable-days [role="tab"]').first();
+        if (await firstDay.isVisible()) await firstDay.click();
+        await p.locator('.timeline-event:visible .event-card').first().waitFor();
         const cards = p.locator('.timeline-event:visible .event-card');
         const measurements = await cards.evaluateAll((nodes) =>
           nodes.map((card) => ({

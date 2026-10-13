@@ -7073,7 +7073,10 @@
         "scripts/test-roulette-board.mjs",
         "scripts/test-secret-room.mjs",
         ".github/workflows/verify.yml",
-        "docs/PLA-RULETA-PANORAMICA.md"
+        "docs/PLA-RULETA-PANORAMICA.md",
+        "src/components/RouletteAward.jsx",
+        "scripts/test-roulette-animation.mjs",
+        "scripts/test-schedule-cards.mjs"
       ],
       "acceptance": "Tots els elements principals visibles sense scroll a 1280x720, 1366x768 i 1920x1080. Resultat exacte i apostes exteriors guanyadores ressaltats després del gir, zero correcte, sense pistes durant animació ni alteració de saldo/càlculs. Mòbil accessible sense retalls.",
       "checks": [
@@ -7083,7 +7086,7 @@
         "Passar PR/CI abans de publicar."
       ],
       "evidence": [],
-      "progress": "12 casos panoràmics/resultat, 27 de tapet, 18 d’animació i 36 de sala correctes en tres motors; tipus/lint correctes. Mateixes comprovacions CI repartides en 4 grups sense saltar controls; Verify final obligatori. Preparant publicació 0.6.5."
+      "progress": "93 casos locals correctes; CI detecta capes de formularis de prediccions i prova horari dependent de dilluns. Correccions preparades, amb celebració per davant i destinació de premi dins de la sala. Revalidació en curs abans de publicar."
     }
   ]
 }
