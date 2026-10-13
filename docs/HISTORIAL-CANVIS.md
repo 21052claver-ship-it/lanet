@@ -1141,3 +1141,9 @@ Publicació H181 confirmada: [0.6.11](https://github.com/21052claver-ship-it/lan
 Definits permisos per sala/grup, formularis revisats diferenciats, esborranys, enviament idempotent i reintents, lectura estable, notificacions discretes i accessibilitat. Pla d’implementació per etapes amb proves locals i revisió de migracions. Aquesta tasca verifica una proposta documental: no implementa un xat ni modifica la versió 0.6.11 publicada. Incorporació documental subjecta a PR i Validate; no es desplega producte.
 
 Evidències: [propostes i rànquing](PROPOSTES-XATS-CONTINGUTS.md), [mockup A](designs/xats-continguts/01-espais-assignatura.png), [B](designs/xats-continguts/02-biblioteca-carpetes.png), [C](designs/xats-continguts/03-biblioteca-xats-separats.png), [D](designs/xats-continguts/04-conversa-primer.png). Prompts i manifest de revisió privats a output/subject-chat-ux/.
+
+### H183 Fer determinista la selecció del dia a la prova d’horari
+
+**14 octubre 2026 · T76-02.** La validació de la PR29 revela una carrera a la prova de targetes: consultava si el selector era visible abans que l’horari estigués renderitzat. Després de mitjanit, el dia per defecte ja no contenia esdeveniments de la fixture. Fallit reproduït localment. Ara s’espera el selector i s’exigeixen tots els intervals; el bootstrap de la fixture fixa un dimecres sense esdeveniments perquè el cas també es comprovi els dilluns.
+
+15 escenaris locals correctes en Chromium, Firefox i WebKit, cinc amplades entre 320 i 1440; ESLint correcte. Assertions de text, mides, contingut, desbordament i detall conservades. Només canvia la validació local: cap canvi de producte, dades reals o versió publicada. Evidències privades: output/subject-chat-ux/schedule-cards-before/results.json, schedule-cards-after/results.json i ci-navigation-attempt2-raw.log. Incorporació subjecta a Validate de la branca actualitzada.

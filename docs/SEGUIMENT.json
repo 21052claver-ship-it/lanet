@@ -7423,6 +7423,29 @@
       ],
       "progress": "Exploració documental completada: quatre alternatives, vuit pantalles desktop/mòbil generades amb imagegen i revisades visualment. Recomanació A, espais per assignatura amb carpetes per tema i xat contextual; rànquing heurístic explícit, no test amb estudiants. Definits fils, referències a materials, permisos, esborranys, reintents, silenci i pla d’implementació. Traçabilitat via PR i Validate segons el flux del repositori. Cap servei de xat implementat, cap canvi de dades ni nova publicació de producte; continua 0.6.11.",
       "change_log_id": "H182"
+    },
+    {
+      "id": "T76-02",
+      "phase": "F76",
+      "title": "Sincronitzar la prova de targetes d’horari abans de seleccionar el dia",
+      "status": "verified",
+      "requirements": ["R22", "R23", "R92"],
+      "depends_on": ["T76-01"],
+      "files": ["scripts/test-schedule-cards.mjs"],
+      "acceptance": "La prova selecciona explícitament el dilluns de la fixture després de carregar l’horari; comprova les targetes dels cinc intervals, sense dependre del dia actual ni relaxar assertions. Cap canvi de producte ni de dades reals.",
+      "checks": [
+        "Identificar el fallit amb logs bruts i evidències de CI.",
+        "Reproduir-lo localment amb el dia actual sense esdeveniments.",
+        "Esperar la pantalla preparada i provar les cinc amplades en tres motors.",
+        "Executar audit:source i esperar Validate del nou commit."
+      ],
+      "evidence": [
+        "output/subject-chat-ux/ci-navigation-attempt2-raw.log",
+        "output/subject-chat-ux/schedule-cards-before/results.json",
+        "output/subject-chat-ux/schedule-cards-after/results.json"
+      ],
+      "progress": "Fallida reproduïda localment a 320px després del canvi de dia. La prova espera els tabs adjunts, selecciona dilluns al mòbil i exigeix tots els intervals de la fixture. Bootstrap local fixa dimecres, sense esdeveniments, per cobrir el cas qualsevol dia. 15 casos locals en Chromium/Firefox/WebKit i ESLint correctes. Canvi exclusiu de validació, sense producte ni dades reals; incorporació amb la PR29 i Validate del nou commit.",
+      "change_log_id": "H183"
     }
   ]
 }
