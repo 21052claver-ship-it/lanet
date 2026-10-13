@@ -43,3 +43,7 @@ Els usuaris existents reben un avís per confirmar les assignatures i variants. 
 La migració remota es fa separadament del pipeline, després de comprovar que és l’única pendent i conservar una còpia privada. Es revisen recompte i integritat del catàleg via proveïdor, sense exposar usuaris. L’esquema és additiu, compatible amb el desplegament anterior durant l’actualització; una reversió de frontend no exigeix restaurar dades personals. El registre final incorpora PR, CI, versió, desplegament i evidències privades.
 
 Publicada **0.6.9**: [release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.9) · [CI exacta](https://github.com/21052claver-ship-it/lanet/actions/runs/38443480810) · [registre](releases/0.6.9.json). T74-01 verificada; migració assajada en còpia privada i aplicada separadament, sense alterar les dades personals existents.
+
+## Revisió de l’edició de gestió
+
+T74-02 amplia la coherència a l’editor de variants: un desament ha de conservar professorat per dia, treball personal i IDs, inclòs amb clients antics. Es distingeixen explícitament professorat general, propi i treball personal. Validació de tipus, permisos i solapaments abans del batch. Versió 0.6.10 pendent de PR/CI i publicació, sense noves migracions.

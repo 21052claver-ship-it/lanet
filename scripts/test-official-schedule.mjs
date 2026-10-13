@@ -15,6 +15,7 @@ const cases = [
   { group: '2B', width: 1440 },
   { group: '2C', width: 1440 },
   { group: '2A', width: 320 },
+  { group: '2C', width: 320 },
   { group: '2B', width: 768 },
 ];
 const expected = {
@@ -232,8 +233,65 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
           assert.ok(await page.getByRole('button', { name: 'Continuar', exact: true }).isEnabled());
           await page.getByRole('button', { name: 'Tancar', exact: true }).click();
         }
+        const managementRoundTrip = group === '2C' && [320, 390, 1440].includes(width);
+        if (managementRoundTrip) {
+          f.db.prepare("UPDATE users SET role='admin' WHERE id='browser'").run();
+          await page.goto(f.base + '/#admin');
+          for (const [id, label] of [
+            ['2C-lit', 'Literatura catalana'],
+            ['2C-latin', 'Llatí'],
+          ]) {
+            const before = f.db
+              .prepare('SELECT * FROM slots WHERE offering_id=? ORDER BY id')
+              .all(id);
+            await page.getByRole('button', { name: 'Editar ' + label, exact: true }).click();
+            if (id === '2C-lit') {
+              assert.equal(
+                await page
+                  .getByLabel('Nom del professor de la franja 1', { exact: true })
+                  .inputValue(),
+                'Mª José Agustí',
+              );
+              assert.equal(
+                await page
+                  .getByLabel('Nom del professor de la franja 2', { exact: true })
+                  .inputValue(),
+                'Elena Domènech',
+              );
+            } else {
+              assert.equal(
+                await page.getByLabel('Indicació de la franja 1', { exact: true }).inputValue(),
+                'Treball personal · Llatí online',
+              );
+              assert.equal(await page.locator('.slot-teacher-editor input[required]').count(), 1);
+            }
+            await fits(page);
+            const dayLabels = page.locator(
+              '.slot-editor > div > .select-control:first-child .select-value',
+            );
+            if (await dayLabels.count())
+              assert.ok(
+                await dayLabels.evaluateAll((els) =>
+                  els.every((el) => el.getBoundingClientRect().height < 40),
+                ),
+                'Day names must not wrap vertically in the slot editor',
+              );
+            await page
+              .getByRole('dialog')
+              .screenshot({ path: `${out}/${prefix}-5-management-${id}.png` });
+            await page
+              .getByRole('dialog')
+              .getByRole('button', { name: 'Desar', exact: true })
+              .click();
+            await page.getByRole('dialog').waitFor({ state: 'hidden' });
+            assert.deepEqual(
+              f.db.prepare('SELECT * FROM slots WHERE offering_id=? ORDER BY id').all(id),
+              before,
+            );
+          }
+        }
         assert.deepEqual(errors, []);
-        results.push({ engine, group, width, passed: true });
+        results.push({ engine, group, width, managementRoundTrip, passed: true });
         console.log(
           `${prefix}: route, subjects, teachers, preview, persistence and class links OK`,
         );

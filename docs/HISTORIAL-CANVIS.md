@@ -1115,3 +1115,7 @@ Verificació local: 208 combinacions completes, 366 unitàries, 24 casos de nave
 Evidències: [pla i abast](PLA-HORARIS-OFICIALS.md), output/official-schedule/unit.log, typecheck.log, browser/results.json i api-results.json. Cap visita a la web pública ni prova amb dades reals.
 
 Publicació H179 confirmada: [0.6.9](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.9), commit 22752b3b2668e6117e1589f6bd4b6ce2db8979b9, [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38443480810), migració 0026 aplicada amb còpia privada assajada i catàleg contrastat via proveïdor. Dades personals i plantilles preservades; 208 combinacions, 366 unitàries, 24 casos locals i 24 a CI, 15 regressions d’horari i D1 local correctes. Domini lanet.es, desplegament i rebut immutable verificats sense visitar la web pública.
+
+### H180 Conservar detalls en editar una variant
+
+**13 octubre 2026 · T74-02.** La revisió final detecta que l’editor de gestió ometia teacher/note en reinserir les franges: podia perdre professorat per dia i treball personal. Conservació compatible amb clients antics, IDs verificats de la mateixa variant i editor explícit de professorat general, específic o treball personal. Es rebutgen modes invàlids i solapaments abans de modificar dades. Comprovacions i publicació 0.6.10 en curs; cap nova migració ni canvi de dades de producció.

@@ -12,7 +12,8 @@ import {
   SCHOOL_PERIODS,
 } from '../shared/official-schedule.js';
 
-const state = `output/official-schedule/d1-${Date.now()}`;
+const out = process.env.LANET_API_TEST_OUTPUT || 'output/official-schedule';
+const state = `${out}/d1-${Date.now()}`;
 mkdirSync(state, { recursive: true });
 const config = parse(readFileSync('wrangler.local.jsonc', 'utf8'));
 config.main = resolve('worker/entry.ts');
@@ -44,10 +45,12 @@ function cli(args) {
   assert.equal(r.status, 0, 'Local D1 command must succeed; see ' + state + '/d1.log');
 }
 cli(['d1', 'migrations', 'apply', 'DB', '--local']);
-const tokens = Object.fromEntries(['2A', '2B', '2C', 'delegate'].map((g) => [g, randomUUID()]));
+const tokens = Object.fromEntries(
+  ['2A', '2B', '2C', 'delegate', 'admin'].map((g) => [g, randomUUID()]),
+);
 const fixtures = Object.entries(tokens).map(([g, token]) => {
   const hash = createHash('sha256').update(token).digest('hex');
-  return `INSERT INTO users(id,email,name,password_hash,salt,google_sub,group_id,role) VALUES('${g}','timetable-${g}@fje.edu','Prova horari ${g}','unused','fixture','local-${g}','2A','${g === 'delegate' ? 'delegate' : 'student'}');
+  return `INSERT INTO users(id,email,name,password_hash,salt,google_sub,group_id,role) VALUES('${g}','timetable-${g}@fje.edu','Prova horari ${g}','unused','fixture','local-${g}','2A','${g === 'admin' ? 'admin' : g === 'delegate' ? 'delegate' : 'student'}');
   INSERT INTO sessions(hash,user_id,expires,auth_provider) VALUES('${hash}','${g}',${Date.now() + 3600000},'google');
   INSERT INTO enrollments VALUES('${g}','2A-math');
   INSERT INTO grade_entries(id,user_id,subject_id,term,category,title,grade,weight,position) VALUES('kept-${g}','${g}','math',1,'exam','Nota existent',8.6,37,0);`;
@@ -144,11 +147,28 @@ try {
     403,
   );
   console.log('Delegate group restriction preserved.');
+  const cat = await request('admin', '/catalog');
+  for (const id of ['2A-phil', '2C-lit', '2C-latin']) {
+    const offering = cat.offerings.find((o) => o.id === id);
+    const slots = cat.slots.filter((s) => s.offering_id === id);
+    await request('admin', '/admin/offerings', {
+      ...offering,
+      slots: slots.map(({ id, day, start, end, room }) => ({ id, day, start, end, room })),
+    });
+    const after = await request('admin', '/catalog');
+    assert.deepEqual(
+      after.slots.filter((s) => s.offering_id === id).sort((a, b) => a.id.localeCompare(b.id)),
+      slots.sort((a, b) => a.id.localeCompare(b.id)),
+    );
+  }
+  console.log(
+    'Management: per-day teachers, personal work and IDs preserved by old payloads on real local D1.',
+  );
   completed = true;
 } finally {
   writeFileSync(state + '/server.log', logs);
   writeFileSync(
-    'output/official-schedule/api-results.json',
+    `${out}/api-results.json`,
     JSON.stringify(
       { localOnly: true, publicSiteVisited: false, state, results, passed: completed },
       null,

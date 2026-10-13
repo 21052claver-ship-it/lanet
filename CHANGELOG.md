@@ -2,6 +2,11 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.6.10] - 2026-10-13
+
+- Editar una variant conserva el professorat de cada dia, les indicacions de treball personal i els identificadors de franja, també amb formularis antics.
+- L’editor distingeix professorat general, professorat específic i treball personal; modes invàlids, IDs aliens i solapaments no poden modificar altres franges.
+
 ## [0.6.9] - 2026-10-13
 
 - Horaris BAT2 2026–27 del document oficial aportat: tres itineraris, hores i pauses reals, professorat i aules per dia, i bloc continu de matemàtiques de divendres.
