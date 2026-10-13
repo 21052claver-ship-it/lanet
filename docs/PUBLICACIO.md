@@ -7,3 +7,5 @@ Sala de ruleta panoràmica amb roda, crupier, tapet i girar visibles sense scrol
 [Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.5) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38389023037) · [Registre](releases/0.6.5.json). PR14 i CI exacta de main correctes, release immutable i digest del rebut verificat. Controls CI paral·lels, tots obligatoris.
 
 HTTPS, www 308 i fitxers públics main/Bakery/icona/HTML verificats amb SHA-256. Google únic @fje.edu, callback .es, D1/R2 EU i moderació preservats. Sense migracions ni dades d’usuaris modificades.
+
+Actualització 0.6.6 publicada: ruleta ocupa tota la finestra, sense el marc anterior de 12px. [Registre verificat](releases/0.6.6.json).

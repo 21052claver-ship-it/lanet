@@ -7100,7 +7100,7 @@
       "id": "T73-02",
       "phase": "F73",
       "title": "Fer la sala de ruleta realment a pantalla completa",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R89"
       ],
@@ -7120,9 +7120,11 @@
       "evidence": [
         "output/roulette-panorama/fullscreen-results.json",
         "output/roulette-panorama/fullscreen-typecheck.log",
-        "output/roulette-panorama/fullscreen-unit.log"
+        "output/roulette-panorama/fullscreen-unit.log",
+        "docs/releases/0.6.6.json",
+        "output/releases/0.6.6/receipt.json"
       ],
-      "progress": "12 casos locals correctes en Chromium, Firefox i WebKit; límits exactes, sense marc i regressions de guanyadors. Typecheck, unitàries i auditoria correctes. Pendent CI i publicació 0.6.6.",
+      "progress": "Publicada 0.6.6 a lanet.es mitjançant PR16, CI verda exacta de main i rebut del proveïdor. 12 casos locals amb límits exactes de finestra en tres motors, inclòs mòbil.",
       "change_log_id": "H176"
     }
   ]

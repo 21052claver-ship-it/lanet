@@ -19,3 +19,5 @@ Evidències privades: output/roulette-panorama, output/roulette-board, output/ro
 Les mateixes proves de navegador s’executen en quatre grups independents: navegació, tapet/apostes, sala/animació i compatibilitat. Tots executen sobre el mateix commit amb una compilació local nova i sense secrets. El job final Validate depèn dels controls bàsics i de tota la matriu: qualsevol error, cancel·lació o grup incomplet impedeix l’èxit. Es conserven totes les proves anteriors, el smoke d’àudio Firefox i els artefactes d’evidència, més la nova prova panoràmica. No hi ha desplegament automàtic ni secrets nous a GitHub.
 
 Publicada 0.6.5: https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.5. SHA 65da6a8506f92edde9ce6fa559cd5d826a3c7750, CI i rebuts confirmats; fitxers públics verificats.
+
+Correcció 0.6.6: sala als quatre límits de finestra, sense marc exterior. 12 casos locals Chromium/Firefox/WebKit correctes, inclòs mòbil. Publicació i CI confirmades a releases/0.6.6.json.
