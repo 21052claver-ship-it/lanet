@@ -392,6 +392,7 @@ for (const name of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,webki
       );
       assert.equal(marks()[0].grade, null);
       await dialog.locator('.bonus-grade-input').fill('0,26');
+      assert.equal(await dialog.locator('.bonus-grade-input').inputValue(), '0,26');
       await dialog.locator('.bonus-grade-input').press('Tab');
       await dialog.locator('.bonus-grade-input[aria-invalid="true"]').waitFor();
       assert.equal(marks()[0].grade, null);

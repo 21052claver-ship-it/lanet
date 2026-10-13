@@ -7342,7 +7342,10 @@
         "src/components/SchoolGuide.jsx",
         "src/contents.css",
         "src/student-guide.css",
-        "scripts/test-student-guide.mjs"
+        "scripts/test-student-guide.mjs",
+        "src/components/CourseGrades.jsx",
+        "src/pages/Grades.jsx",
+        "scripts/test-course-grades.mjs"
       ],
       "acceptance": "Classificació d’avaluació fidel, pesos orientatius explícits sense substituir preferències, dates i rangs verificats, TR 30/42/21/7, límit compartit de plusos i recursos sense credencials. Proves locals accessibles i responsive; publicació amb PR i CI.",
       "checks": [
@@ -7360,7 +7363,7 @@
         "output/student-guide-0.6.11/browser/results.json",
         "output/student-guide-0.6.11/course-regression/course-browser-results.json"
       ],
-      "progress": "376 unitàries, tipus/lint i 24 regressions anuals correctes. 12 fluxos de guia/calendari/TR en tres motors, amb privadesa i persistència, correctes; revisió visual final i publicació via PR/CI en curs. Sense migracions ni canvis de dades reals.",
+      "progress": "Primera CI de main detecta esborrany buit després de desfer a WebKit. Captura immediata del text i instantània de validació del plus corregides; 24 regressions anuals locals correctes. Nova CI requerida abans de publicar 0.6.11; producció continua a 0.6.10.",
       "change_log_id": "H181"
     }
   ]

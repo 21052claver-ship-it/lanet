@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { clientId } from '../../shared/client-id';
 import {
   Plus,
@@ -139,6 +139,7 @@ export default function CourseGrades({ subjects }) {
 function BonusGrade({ bonus }) {
   const { hideGrades, gradeWrites } = useApp();
   const { drafts, setDrafts } = gradeWrites;
+  const immediateDraft = useRef();
   const [editing, setEditing] = useState(false),
     [error, setError] = useState('');
   const failed = gradeWrites.failed.find((entry) => entry.id === bonus.id);
@@ -146,8 +147,9 @@ function BonusGrade({ bonus }) {
     drafts[bonus.id] ??
     (failed ? (failed.grade === null ? '' : String(failed.grade).replace('.', ',')) : undefined);
   async function commit() {
-    if (!(bonus.id in drafts)) return;
-    const submitted = drafts[bonus.id];
+    const submitted = immediateDraft.current ?? drafts[bonus.id];
+    if (submitted === undefined) return;
+    immediateDraft.current = undefined;
     try {
       const grade = parseBonusGrade(submitted, bonus.capacity * 0.25);
       setError('');
@@ -187,8 +189,10 @@ function BonusGrade({ bonus }) {
             event.target.select();
           }}
           onChange={(event) => {
+            const value = event.currentTarget.value;
+            immediateDraft.current = value;
             setError('');
-            setDrafts((current) => ({ ...current, [bonus.id]: event.target.value }));
+            setDrafts((current) => ({ ...current, [bonus.id]: value }));
           }}
           onBlur={() => {
             setEditing(false);
@@ -203,8 +207,10 @@ function BonusGrade({ bonus }) {
               hideGrades &&
               ['Backspace', 'Delete'].includes(event.key) &&
               !event.currentTarget.value
-            )
+            ) {
+              immediateDraft.current = '';
               setDrafts((current) => ({ ...current, [bonus.id]: '' }));
+            }
           }}
         />
         <small>De 0 a {numberLabel(bonus.capacity * 0.25, 2)}</small>

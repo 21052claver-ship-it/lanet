@@ -8,6 +8,8 @@ Cada publicació nova té una versió SemVer, un tag Git immutable, una release 
 - Calendari BAT2 2026–27 amb trimestrals, TR, activitats i PAU/PAP contrastades: rangs complets, dates passades opcionals i exportació ICS.
 - Calculadora privada de Treball de Recerca amb pesos 30/42/21/7, mode discret i desament explícit en aquest navegador; guia del curs amb recursos i límit compartit dels plusos acadèmics i de voluntariat.
 
+- Captura immediata dels esborranys de notes, plusos i TR per conservar el text mentre acaben operacions anteriors.
+
 ## [0.6.10] - 2026-10-13
 
 - Editar una variant conserva el professorat de cada dia, les indicacions de treball personal i els identificadors de franja, també amb formularis antics.
