@@ -2,6 +2,12 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.6.12] - 2026-10-14
+
+- M’agrada, desats i vots s’actualitzen en prémer, amb confirmació lleugera de l’estat i comptador del servidor sense esperar una recàrrega completa.
+- Seguiment compartit entre targetes i detalls, bloqueig de clics duplicats, reversió en errors i resincronització de respostes perdudes; permisos i recompenses idempotents preservats.
+- Estats activats més visibles amb icones plenes, fons i contorns diferenciats, hover, focus de teclat i àrees tàctils accessibles; els controls pendents conserven el contrast.
+
 ## [0.6.11] - 2026-10-13
 
 - Classificació acumulativa del centre aplicada a la nota final i a la previsió PAU quan no hi ha pesos personals desats; configuracions existents preservades i pesos orientatius identificats.

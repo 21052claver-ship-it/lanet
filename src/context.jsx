@@ -3,6 +3,7 @@ import { api } from './api';
 import { createDataSync, runMutation, privacyAfterFailure } from '../shared/async-state';
 import { useGradeWrites } from './grade-writes';
 import { emptyPau } from '../shared/pau';
+import { useReactionWrites } from './reaction-writes';
 // Preserve the provider identity across Vite module refreshes during development.
 const AppContext = import.meta.hot?.data.appContext ?? createContext();
 if (import.meta.hot) import.meta.hot.data.appContext = AppContext;
@@ -84,6 +85,7 @@ export function AppProvider({ initial, children }) {
       setData((current) => ({ ...current, preferences: { ...current.preferences, ...patch } })),
     );
   const gradeWrites = useGradeWrites(data, setData, mutate);
+  const reactions = useReactionWrites(data, setData, sync.current, notify);
   const go = useCallback((p) => {
     setPage(p);
     location.hash = p;
@@ -109,6 +111,7 @@ export function AppProvider({ initial, children }) {
         holdWallet,
         refresh,
         mutate,
+        reactions,
         remove: (path, success) => mutate(path, {}, success, undefined, 'DELETE'),
         notify,
         modal,

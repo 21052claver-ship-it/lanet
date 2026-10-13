@@ -73,7 +73,7 @@ export default function Notes() {
   );
 }
 function Materials() {
-  const { data, enrolled, subject, subjectFilter, setSubjectFilter, open, mutate } = useApp();
+  const { data, enrolled, subject, subjectFilter, setSubjectFilter, open } = useApp();
   const selectedSubjects =
     subjectFilter === 'all'
       ? (data.preferences?.notesSubjects ??
@@ -96,11 +96,6 @@ function Materials() {
   if (order === 'likes') items.sort((a, b) => b.likes - a.likes);
   if (order === 'title') items.sort((a, b) => a.title.localeCompare(b.title, 'ca'));
   if (order === 'recent') items.sort((a, b) => b.created_at.localeCompare(a.created_at));
-  async function reaction(n, action) {
-    try {
-      await mutate(`/notes/${n.id}/${action}`, { active: action === 'like' ? !n.liked : !n.saved });
-    } catch {}
-  }
   return (
     <>
       <div className="resource-toolbar notes-toolbar">
@@ -176,7 +171,7 @@ function Materials() {
               >
                 {n.status === 'published' && (
                   <div className="note-save">
-                    <SaveButton item={n} onClick={() => reaction(n, 'save')} />
+                    <SaveButton item={n} resource="notes" />
                   </div>
                 )}
                 {(first || pdf) && (
@@ -255,7 +250,7 @@ function Materials() {
                 <footer className="resource-card-footer">
                   {n.status === 'published' && (
                     <>
-                      <LikeButton item={n} onClick={() => reaction(n, 'like')} />
+                      <LikeButton item={n} resource="notes" />
                     </>
                   )}
                   {n.author_id === data.user.id && (

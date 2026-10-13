@@ -23,7 +23,7 @@ import { dateLabel } from '../../shared/domain';
 import { ActivityArt, Avatar } from '../art';
 import { matchesSearch } from '../../shared/search';
 export default function Pluses() {
-  const { data, enrolled, subject, open, mutate } = useApp();
+  const { data, enrolled, subject, open } = useApp();
   const [tab, setTab] = useState('upcoming'),
     [query, setQuery] = useState(''),
     [filtersOpen, setFiltersOpen] = useState(false);
@@ -47,13 +47,6 @@ export default function Pluses() {
       ),
   );
   items.sort((a, b) => (a.date + (a.start || '')).localeCompare(b.date + (b.start || '')));
-  async function reaction(p, action) {
-    try {
-      await mutate(`/pluses/${p.id}/${action}`, {
-        active: action === 'like' ? !p.liked : !p.saved,
-      });
-    } catch {}
-  }
   return (
     <>
       <PageTitle title="Plusos" subtitle="Activitats que poden sumar al teu curs">
@@ -98,7 +91,7 @@ export default function Pluses() {
           {items.map((p) => (
             <article className="plus-card panel" key={p.id}>
               <div className="plus-save">
-                <SaveButton item={p} onClick={() => reaction(p, 'save')} />
+                <SaveButton item={p} resource="pluses" />
               </div>
               <button
                 className="plus-visual"
@@ -158,7 +151,7 @@ export default function Pluses() {
                 </div>
               </div>
               <footer className="plus-footer">
-                <LikeButton item={p} onClick={() => reaction(p, 'like')} />
+                <LikeButton item={p} resource="pluses" />
                 <Button variant="ghost" onClick={() => open('plusDetail', p)}>
                   Veure plus
                   <ArrowRight size={17} />

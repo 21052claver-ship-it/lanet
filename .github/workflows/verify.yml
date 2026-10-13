@@ -49,6 +49,7 @@ jobs:
             tests: |
               npm run test:student-guide
               npm run test:course-grades
+              npm run test:reactions
           - group: board
             tests: |
               npm run test:predictions
@@ -102,6 +103,7 @@ jobs:
           path: |
             output/course-grades/
             output/student-guide/browser/
+            output/reactions/browser/
             output/official-schedule/browser/
             output/schedule-cards/browser/
             output/workspace-recovery/

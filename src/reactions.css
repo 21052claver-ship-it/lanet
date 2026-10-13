@@ -1,0 +1,91 @@
+/* Selected states stay visible while a request is pending, on mouse and touch. */
+.reaction-button,
+.app-shell .reaction-button {
+  position: relative;
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid #ded4c9;
+  background: #fffaf5;
+  color: #665445;
+  transition:
+    background-color 120ms,
+    border-color 120ms,
+    box-shadow 120ms;
+}
+.reaction-button svg {
+  flex-shrink: 0;
+}
+.like-button.liked,
+.app-shell .like-button.liked {
+  background: #ffe2eb;
+  border-color: #c55779;
+  color: #8b2448;
+  box-shadow: inset 0 0 0 1px #c5577933;
+  font-weight: 800;
+}
+.save-button.saved,
+.app-shell .save-button.saved {
+  background: #ffead3;
+  border-color: #aa6d25;
+  color: #754616;
+  box-shadow: inset 0 0 0 1px #aa6d2533;
+}
+.vote-button.voted,
+.app-shell .vote-button.voted {
+  background: #e7ddff;
+  border-color: #8061b1;
+  color: #533778;
+  box-shadow: inset 0 0 0 1px #8061b155;
+}
+.reaction-check {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+}
+.reaction-button:disabled,
+.app-shell .reaction-button:disabled,
+.vote-button[aria-busy='true'] {
+  opacity: 1;
+  cursor: progress;
+}
+.reaction-button[aria-busy='true'] {
+  border-style: dashed;
+}
+.reaction-button:focus-visible,
+.app-shell .reaction-button:focus-visible {
+  outline: 3px solid #684d3c;
+  outline-offset: 3px;
+}
+.reaction-button:active:not(:disabled) > svg:first-child {
+  transform: scale(0.9);
+}
+@media (hover: hover) {
+  .reaction-button:hover:not(:disabled),
+  .app-shell .reaction-button:hover:not(:disabled) {
+    background: #fff0e5;
+    border-color: #a88770;
+  }
+  .like-button.liked:hover:not(:disabled),
+  .app-shell .like-button.liked:hover:not(:disabled) {
+    background: #ffd2e0;
+    border-color: #b33b61;
+  }
+  .save-button.saved:hover:not(:disabled),
+  .app-shell .save-button.saved:hover:not(:disabled) {
+    background: #ffdfb9;
+    border-color: #8e5718;
+  }
+  .vote-button.voted:hover:not(:disabled),
+  .app-shell .vote-button.voted:hover:not(:disabled) {
+    background: #d9caff;
+    border-color: #684895;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reaction-button {
+    transition: none;
+  }
+  .reaction-button:active:not(:disabled) > svg:first-child {
+    transform: none;
+  }
+}

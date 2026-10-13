@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**185/186 tasques verificades · 92 requisits · 77 fases · límit d’una tasca activa.**
+**185/187 tasques verificades · 93 requisits · 78 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **cap**.
+Tasca activa: **T77-01 — Accelerar i distingir els botons de reacció**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -426,5 +426,9 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 
 - [x] **T76-01** Comparar i representar visualment les alternatives de xats i carpetes — Verificat.
 - [x] **T76-02** Sincronitzar la prova de targetes d’horari abans de seleccionar el dia — Verificat.
+
+## F77 Reaccions immediates i visibles
+
+- [ ] **T77-01** Accelerar i distingir els botons de reacció — En revisió.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

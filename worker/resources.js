@@ -112,7 +112,25 @@ export async function resourceRoute(request, env, user, path) {
             rid,
           ),
         ]);
-      return { ok: true };
+      const reaction =
+        action === 'save'
+          ? await one(
+              env,
+              'SELECT EXISTS(SELECT 1 FROM saves WHERE user_id=? AND type=? AND target_id=?) AS saved',
+              user.id,
+              type,
+              rid,
+            )
+          : await one(
+              env,
+              `SELECT (SELECT COUNT(*) FROM likes WHERE type=? AND target_id=? AND active=1) AS likes, COALESCE((SELECT active FROM likes WHERE user_id=? AND type=? AND target_id=?),0) AS liked`,
+              type,
+              rid,
+              user.id,
+              type,
+              rid,
+            );
+      return { ok: true, reaction };
     }
     if (action === 'unlock' && resource === 'notes') {
       if (record.author_id === user.id || record.price === 0) return { ok: true };
@@ -170,7 +188,14 @@ export async function resourceRoute(request, env, user, path) {
           rid,
         );
       else await run(env, 'DELETE FROM votes WHERE user_id=? AND proposal_id=?', user.id, rid);
-      return { ok: true };
+      const reaction = await one(
+        env,
+        'SELECT (SELECT COUNT(*) FROM votes WHERE proposal_id=?) AS votes, EXISTS(SELECT 1 FROM votes WHERE proposal_id=? AND user_id=?) AS voted',
+        rid,
+        rid,
+        user.id,
+      );
+      return { ok: true, reaction };
     }
     if (action === 'calendar' && resource === 'pluses') {
       await run(
