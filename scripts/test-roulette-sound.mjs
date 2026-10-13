@@ -242,6 +242,14 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
           await page.waitForFunction(
             () => document.getElementById('sound-test-music').currentTime > 0,
           );
+          await page.locator('#sound-test-music').evaluate((audio) => {
+            audio.dataset.beforeVolume = String(audio.volume);
+            audio.dataset.interference = '';
+            for (const event of ['seeking', 'volumechange'])
+              audio.addEventListener(event, () => {
+                audio.dataset.interference += event + ' ';
+              });
+          });
         }
         await page.locator('[data-bet-id^="red:"]').click();
         if (!['unsupported', 'blocked'].includes(scenario)) {
@@ -287,10 +295,25 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
             );
             const music = await page
               .locator('#sound-test-music')
-              .evaluate((e) => ({ paused: e.paused, volume: e.volume, time: e.currentTime }));
+              .evaluate((e) => ({
+                paused: e.paused,
+                volume: e.volume,
+                beforeVolume: Number(e.dataset.beforeVolume),
+                time: e.currentTime,
+                ended: e.ended,
+                ready: e.readyState,
+                error: e.error?.message,
+                interference: e.dataset.interference,
+              }));
             assert.ok(
-              !music.paused && music.time > 5 && music.volume === 0.07,
-              'Effects never stop, seek or alter music',
+              !music.paused &&
+                Math.abs(music.volume - music.beforeVolume) < 0.000001 &&
+                !music.interference,
+              `Effects never stop, seek or alter music: ${JSON.stringify(music)}`,
+            );
+            await page.waitForFunction(
+              (time) => document.getElementById('sound-test-music').currentTime > time + 0.1,
+              music.time,
             );
           } else
             assert.equal(
@@ -321,7 +344,9 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
           await page.waitForFunction(() => window.soundProbe.peak > 0.00001);
           await page.getByRole('button', { name: 'Tornar al forn', exact: true }).click();
           await page.waitForFunction(
-            () => window.soundProbe.closed === 1 && window.soundProbe.active === 0,
+            () =>
+              window.soundProbe.closed === 1 &&
+              window.soundProbe.contexts.every((c) => c.state === 'closed'),
           );
         }
       }
