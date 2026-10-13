@@ -1429,3 +1429,259 @@
     animation: none;
   }
 }
+
+/* A dedicated room keeps the wheel and felt in view instead of stacking pages. */
+.casino-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: #12271fe6;
+}
+.casino-room.casino-panorama {
+  position: fixed;
+  inset: 12px;
+  z-index: 91;
+  max-width: none;
+  margin: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scroll-margin: 0;
+}
+.casino-panorama .casino-table-layout {
+  min-width: 0;
+}
+.roulette-information {
+  position: relative;
+  font-size: 12px;
+  margin-top: 8px;
+}
+.roulette-information > summary {
+  cursor: pointer;
+  padding: 8px 0;
+  font-weight: 750;
+}
+.roulette-information[open] > .roulette-information-content {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  width: min(520px, 100%);
+  max-height: 60dvh;
+  overflow: auto;
+  z-index: 12;
+  padding: 18px;
+  border: 1px solid #cbb58f;
+  border-radius: 16px;
+  background: #fff8eb;
+  box-shadow: 0 12px 36px #12271f55;
+}
+.tapet-cell.is-result {
+  box-shadow: inset 0 0 0 4px #ffe198;
+  filter: brightness(1.25);
+  z-index: 0;
+}
+.tapet-target.is-winning {
+  outline: 2px solid #ffe198;
+  outline-offset: -3px;
+  box-shadow: inset 0 0 16px #ffe19855;
+}
+.tapet-number.is-winning::after,
+.tapet-zero-number.is-winning::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 2px solid #ffe198;
+  border-radius: 7px;
+  pointer-events: none;
+}
+@media (min-width: 1200px) and (min-height: 620px) {
+  .casino-panorama {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: 52px minmax(0, 1fr);
+    padding: 12px;
+    gap: 8px;
+  }
+  .casino-panorama .casino-header {
+    padding: 0 8px;
+    grid-column: 1;
+  }
+  .casino-panorama .casino-header h2 {
+    font-size: 23px;
+    margin: 0;
+  }
+  .casino-panorama .casino-header p,
+  .casino-panorama .casino-eyebrow {
+    display: none;
+  }
+  .casino-panorama .casino-tables {
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0;
+    max-width: none;
+    align-self: center;
+  }
+  .casino-panorama .casino-table-layout {
+    grid-column: 1/-1;
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr) minmax(768px, 2fr);
+    gap: 12px;
+    min-height: 0;
+  }
+  .casino-panorama .casino-stage {
+    min-height: 0;
+    padding: 20px 12px;
+    display: block;
+  }
+  .casino-panorama .roulette-device {
+    width: min(100%, 320px);
+    margin: 0 auto;
+  }
+  .casino-panorama .casino-host {
+    position: absolute;
+    right: -16px;
+    bottom: 0;
+    width: 185px;
+    height: 275px;
+  }
+  .casino-panorama .casino-arch {
+    width: 55%;
+    right: 0;
+    height: 80%;
+  }
+  .casino-panorama .casino-counter {
+    height: 90px;
+    bottom: -12px;
+  }
+  .casino-panorama .casino-play-panel {
+    padding: 10px 12px;
+    border-radius: 20px;
+    min-width: 0;
+  }
+  .casino-panorama .casino-balance {
+    margin-bottom: 7px;
+    padding-bottom: 7px;
+    font-size: 12px;
+  }
+  .casino-panorama .casino-balance strong {
+    font-size: 20px;
+  }
+  .casino-panorama .casino-balance .reference-art {
+    width: 28px;
+    height: 28px;
+  }
+  .casino-panorama .casino-bet-controls legend {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .casino-panorama .roulette-play-modes {
+    margin-bottom: 7px;
+  }
+  .casino-panorama .roulette-play-modes button {
+    min-height: 36px;
+    padding-block: 5px;
+    font-size: 12px;
+  }
+  .casino-panorama .roulette-board {
+    position: relative;
+  }
+  .casino-panorama .tapet-help,
+  .casino-panorama .tapet-preview {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .casino-panorama .tapet-toolbar {
+    margin-bottom: 8px;
+    gap: 8px;
+  }
+  .casino-panorama .tapet-denominations .denomination {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    font-size: 13px;
+  }
+  .casino-panorama .tapet-edit button {
+    min-height: 40px;
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+  .casino-panorama .tapet-container {
+    padding: 8px;
+    border-width: 4px;
+    margin-bottom: 7px;
+  }
+  .casino-panorama .tapet-grid {
+    height: 144px;
+  }
+  .casino-panorama .tapet-outsides {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .casino-panorama .tapet-outside {
+    min-height: 30px;
+    padding: 5px 2px;
+    font-size: 10px;
+  }
+  .casino-panorama .tapet-total {
+    margin: 7px 0;
+    gap: 2px;
+    font-size: 12px;
+    padding-right: 225px;
+    min-height: 34px;
+  }
+  .casino-panorama .tapet-total span {
+    font-size: 10px;
+  }
+  .casino-panorama .tapet-ticket {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    font-size: 11px;
+  }
+  .casino-panorama .tapet-ticket[open] ul {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    width: 360px;
+    max-height: 45dvh;
+    overflow: auto;
+    background: #fff8eb;
+    padding: 14px;
+    border: 1px solid #cbb58f;
+    border-radius: 12px;
+    z-index: 10;
+  }
+  .app-shell .casino-panorama .roulette-spin {
+    min-height: 44px;
+  }
+  .casino-panorama .roulette-result,
+  .casino-panorama .roulette-result.has-result {
+    margin: 5px 0 0;
+    padding: 6px;
+    min-height: 48px;
+    font-size: 12px;
+  }
+  .casino-panorama .result-pocket {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+  .casino-panorama .roulette-information {
+    margin: 0;
+  }
+  .casino-panorama .roulette-information > summary {
+    padding: 5px 0;
+  }
+}
+
+.tapet-number.is-winning,
+.tapet-zero-number.is-winning {
+  z-index: 1;
+}

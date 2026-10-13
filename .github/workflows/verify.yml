@@ -48,6 +48,7 @@ jobs:
       - run: npm run test:predictions
       - run: npm run test:abuse
       - run: npm run test:roulette-animation
+      - run: npm run test:roulette-panorama
       - run: npm run test:roulette-board
       - run: npm run test:secret-room
       - run: npm run test:mobile-navigation

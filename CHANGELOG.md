@@ -2,6 +2,12 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.6.5] - 2026-10-13
+
+- Sala de ruleta panoràmica: roda i crupier al costat del tapet, fitxes i botó de girar, sense scroll del joc a 1280×720 o superior.
+- Número i caselles guanyadores ressaltats en acabar el gir, incloses les posicions premiades amb fitxes; zero i neteja de les marques entre girs.
+- Regles, historial i detall de fitxes desplegables; sala accessible amb focus contingut i retorn al forn amb Escape.
+
 ## [0.6.4] - 2026-10-12
 
 - Domini principal lanet.es, callback Google propi i redireccions web dels àlies; configuració preparada per publicar després de confirmar DNS i HTTPS.

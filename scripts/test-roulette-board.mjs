@@ -182,6 +182,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
           await p.getByRole('button', { name: 'Desfer', exact: true }).isDisabled(),
           true,
         );
+        await p.locator('.roulette-information > summary').click();
         await p.locator('.roulette-history > summary').click();
         await p.locator('.roulette-ticket-result').first().locator('summary').click();
         assert.equal(
@@ -255,6 +256,12 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         assert.equal(await p.evaluate(() => document.activeElement.dataset.betId), 'number:36');
         await p.getByRole('button', { name: 'Fer girar la ruleta', exact: true }).click();
         await p.locator('.roulette-device.is-spinning').waitFor();
+        assert.equal(
+          await p.locator('.tapet-target.is-winning').count(),
+          0,
+          'No result on table during spin',
+        );
+        assert.equal(await p.locator('.tapet-cell.is-result').count(), 0);
         assert.equal(await b.isDisabled(), true);
         assert.equal(
           await p.getByRole('button', { name: 'Desfer', exact: true }).isDisabled(),

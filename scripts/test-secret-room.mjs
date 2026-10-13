@@ -213,6 +213,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         const spin = await assertResult(page, fixture);
         assert.equal(spin.number, 17);
         assert.equal(spin.stake, 2);
+        await page.locator('.roulette-information > summary').click();
         await page.locator('.roulette-history summary').click();
         assert.equal(await page.locator('.roulette-history li').count(), 1);
       },
@@ -225,6 +226,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         await page.getByRole('radio', { name: /Negre/ }).tap();
         await page.getByRole('button', { name: 'Fer girar la ruleta', exact: true }).tap();
         assert.equal((await assertResult(page, fixture)).kind, 'black');
+        await page.locator('.roulette-information > summary').click();
         await page.locator('.roulette-history summary').click();
         await page.screenshot({ path: `${out}/${engine}-casino-390-result.png`, fullPage: true });
       },
