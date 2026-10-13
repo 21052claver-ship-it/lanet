@@ -376,13 +376,13 @@ export default function SecretCasino({ onExit }) {
   return (
     <Dialog.Root
       open
+      modal={false}
       onOpenChange={(open) => {
         if (!open) onExit();
       }}
     >
-      <Dialog.Portal container={document.querySelector('.app-shell')}>
-        <Dialog.Overlay className="casino-backdrop" />
-        <Dialog.Content asChild>
+      <div className="casino-space">
+        <Dialog.Content asChild onInteractOutside={(event) => event.preventDefault()}>
           <section className={`casino-room casino-panorama mode-${betMode}`}>
             <header className="casino-header">
               <div>
@@ -780,7 +780,7 @@ export default function SecretCasino({ onExit }) {
             )}
           </section>
         </Dialog.Content>
-      </Dialog.Portal>
+      </div>
     </Dialog.Root>
   );
 }

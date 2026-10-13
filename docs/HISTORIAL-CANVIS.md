@@ -1089,3 +1089,9 @@ Evidències: [docs/releases/0.6.5.json](../docs/releases/0.6.5.json), [docs/PLA-
 Evidències privades: output/roulette-panorama/fullscreen-results.json, fullscreen-typecheck.log i fullscreen-unit.log.
 
 Publicació H176 confirmada: [0.6.6](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.6), commit b38e425a40a92acf0af764db88797518d0adb484, [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38393347476) i rebut immutable validats.
+
+### H177 Integrar la ruleta dins la plataforma
+
+**13 octubre 2026 · T73-03.** La sala torna al flux de la pàgina, amb menú i barra superior accessibles. Disposició basada en el contenidor real i tapet horitzontal amb amplada suficient; eliminat el títol redundant de Pastisseria mentre es visita la sala. Proves locals de distribució, tipus i unitàries correctes; regressions, PR i publicació pendents.
+
+Evidències privades: output/roulette-panorama/inline-browser.log, inline-typecheck.log i inline-unit.log.

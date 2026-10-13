@@ -238,12 +238,16 @@ export default function Bakery() {
   }
   return (
     <>
-      <PageTitle
-        title="Pastisseria"
-        subtitle={
-          testMode ? 'Mode de prova · Un pastís cada minut.' : 'Un pastís acabat de fer, cada dia.'
-        }
-      />
+      {secret !== 'room' && (
+        <PageTitle
+          title="Pastisseria"
+          subtitle={
+            testMode
+              ? 'Mode de prova · Un pastís cada minut.'
+              : 'Un pastís acabat de fer, cada dia.'
+          }
+        />
+      )}
       {tab !== 'bakery' && (
         <Tabs
           items={[

@@ -66,19 +66,32 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
       );
       await p.getByRole('dialog').waitFor();
       const room = await p.locator('.casino-room').boundingBox();
+      const main = await p.locator('main').boundingBox();
       assert.ok(
         room &&
-          Math.abs(room.x) <= 1 &&
-          Math.abs(room.y) <= 1 &&
-          Math.abs(room.width - width) <= 1 &&
-          Math.abs(room.height - height) <= 1,
-        `Room fills viewport ${width}x${height}: ${JSON.stringify(room)}`,
+          main &&
+          room.x >= main.x &&
+          room.width < width &&
+          room.y > 0 &&
+          room.x + room.width <= main.x + main.width + 1,
+        `Room stays inside workspace ${width}x${height}: ${JSON.stringify(room)}`,
       );
       assert.equal(
-        await p.locator('.casino-room').evaluate((e) => getComputedStyle(e).borderRadius),
-        '0px',
-        'Fullscreen room has no inset rounded frame',
+        await p.locator('.casino-room').evaluate((e) => getComputedStyle(e).position),
+        'relative',
+        'Room follows page flow instead of taking over the viewport',
       );
+      assert.equal(await p.locator('.casino-backdrop').count(), 0, 'No fullscreen backdrop');
+      assert.ok(await p.locator('.topbar').isVisible(), 'Topbar remains visible');
+      assert.equal(await p.locator('.topbar').getAttribute('aria-hidden'), null);
+      assert.equal(await p.locator('.casino-room').getAttribute('aria-modal'), null);
+      if (width >= 1200) {
+        assert.ok(await p.locator('.sidebar').isVisible(), 'Sidebar remains visible');
+        const topbar = await p.locator('.topbar').boundingBox();
+        assert.ok(room.y >= topbar.y + topbar.height - 1, 'Room does not cover topbar');
+        await p.locator('.sidebar .nav-item').first().click({ trial: true });
+        await p.locator('.topbar .profile-button').click({ trial: true });
+      }
       if (width >= 1200) {
         for (const selector of [
           '.roulette-device',

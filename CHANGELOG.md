@@ -2,6 +2,11 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.6.7] - 2026-10-13
+
+- Ruleta integrada a la pàgina, amb barra superior i navegació accessibles; s'elimina la sala que ocupava tota la finestra.
+- Disposició del joc adaptada a l'amplada real del contingut, també amb barra lateral desplegada.
+
 ## [0.6.6] - 2026-10-13
 
 - La sala de ruleta ocupa tota la finestra, sense marges exteriors ni cantonades que deixin veure la plataforma de sota.
