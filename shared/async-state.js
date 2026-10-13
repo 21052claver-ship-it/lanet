@@ -2,21 +2,38 @@
 export function createDataSync({ read, apply }) {
   let version = 0;
   let writes = 0;
+  let reads = 0;
+  let deferredRefresh = false;
+  async function refresh() {
+    const request = ++version;
+    deferredRefresh = writes > 0;
+    reads++;
+    try {
+      const result = await read();
+      if (request === version && writes === 0) apply(result);
+      return result;
+    } finally {
+      reads--;
+    }
+  }
   return {
     beginWrite() {
+      if (reads > 0) deferredRefresh = true;
       writes++;
       version++;
     },
     endWrite() {
       writes--;
       version++;
+      if (writes === 0 && deferredRefresh) {
+        // A small reaction may finish last, without requesting its own bootstrap.
+        // Recover invalidated reads; an explicit refresh in this turn takes priority.
+        queueMicrotask(() => {
+          if (writes === 0 && deferredRefresh) void refresh().catch(() => {});
+        });
+      }
     },
-    async refresh() {
-      const request = ++version;
-      const result = await read();
-      if (request === version && writes === 0) apply(result);
-      return result;
-    },
+    refresh,
   };
 }
 

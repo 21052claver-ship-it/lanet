@@ -168,6 +168,33 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         assert.match(await button.innerText(), /1/);
         assert.equal(writes, 2);
       });
+      await check('create-while-reaction-pending', async (page, f, hold) => {
+        const started = hold(),
+          finish = hold();
+        await page.route(f.base + '/api/notes/browser-note/like', async (route) => {
+          started.release();
+          await finish.promise;
+          await route.continue();
+        });
+        await page.locator('.note-card .like-button').click();
+        await started.promise;
+        await page.getByRole('button', { name: 'Comparteix un apunt', exact: true }).click();
+        await page
+          .getByRole('textbox', { name: 'Títol', exact: true })
+          .fill('Resum nou amb reacció pendent');
+        await page
+          .getByRole('textbox', { name: 'Text dels apunts', exact: true })
+          .fill('Apunt local per comprovar la sincronització entre accions.');
+        await page.getByRole('button', { name: 'Publicar apunts', exact: true }).click();
+        await page.getByRole('dialog').waitFor({ state: 'hidden' });
+        finish.release();
+        await page
+          .getByRole('button', { name: 'Obrir Resum nou amb reacció pendent', exact: true })
+          .waitFor();
+        const original = page.locator('.note-card').filter({ hasText: 'PDF de prova local' });
+        await state(original.locator('.like-button'), true, false);
+        assert.equal(await page.locator('.note-card').count(), 2);
+      });
       await check('saved-filter-rollback', async (page, f, hold) => {
         const save = page.locator('.note-card .save-button');
         await save.click();

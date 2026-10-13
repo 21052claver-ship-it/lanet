@@ -7491,7 +7491,9 @@
         "src/pages/Community.jsx",
         "src/forms-resources.jsx",
         "tests/reactions.test.js",
-        "scripts/test-reactions.mjs"
+        "scripts/test-reactions.mjs",
+        "shared/async-state.js",
+        "tests/async-state.test.js"
       ],
       "acceptance": "Canvi visual abans de resposta, comptadors canònics, cap duplicat, reversió/resincronització en errors, coherència entre targeta/detall, hover/focus i seleccionat diferents, tres motors locals i publicació versionada amb PR/CI.",
       "checks": [
@@ -7509,7 +7511,7 @@
         "output/reactions/chromium/results.json",
         "output/reactions/browser/results.json"
       ],
-      "progress": "Implementació i revisió visual completades. 381 unitàries, tipus/lint, build i 24 casos locals correctes en tres motors: resposta retinguda, dobles clics, comptador canònic, lectura antiga, canvi de vista, desats amb error i save/like paral·lels amb resposta perduda. PR/CI i publicació 0.6.12 pendents; sense migracions ni dades reals modificades.",
+      "progress": "Implementació i revisió visual completades. 383 unitàries, tipus/lint, build i 30 casos locals correctes en tres motors. S’afegeix recuperació de les lectures descartades quan una reacció acaba després d’un altre desament, amb proves unitàries i de publicar un apunt en paral·lel. PR30 incorporada; correcció de concurrència, CI i publicació 0.6.12 pendents. Sense migracions ni dades reals modificades.",
       "change_log_id": "H184"
     }
   ]
