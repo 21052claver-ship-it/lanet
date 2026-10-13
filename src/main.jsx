@@ -27,6 +27,7 @@ import './compatibility.css';
 import './responsive.css';
 import './course-grades.css';
 import './course-setup.css';
+import './reactions.css';
 
 function Root() {
   React.useEffect(() => {

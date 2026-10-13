@@ -1,29 +1,19 @@
 import VerifiedImage from '../components/VerifiedImage';
 import Select from '../components/Select';
-import React, { useState, useRef } from 'react';
-import {
-  Plus,
-  ArrowUp,
-  ArrowRight,
-  NotePencil,
-  ChatCircle,
-  Flag,
-  UsersThree,
-} from '@phosphor-icons/react';
+import React, { useState } from 'react';
+import { Plus, ArrowRight, NotePencil, ChatCircle, Flag, UsersThree } from '@phosphor-icons/react';
 import { useApp } from '../context';
-import { PageTitle, Button, Tabs, Empty, RichText, IconButton } from '../ui';
+import { PageTitle, Button, Tabs, Empty, RichText, IconButton, VoteButton } from '../ui';
 import { dateLabel } from '../../shared/domain';
 import { ReferenceArt, Avatar } from '../art';
 import { matchesSearch } from '../../shared/search';
 
 export default function Community() {
-  const { data, communityTab: tab, setCommunityTab: setTab, open, mutate } = useApp();
+  const { data, communityTab: tab, setCommunityTab: setTab, open } = useApp();
   const [status, setStatus] = useState('all');
   const [order, setOrder] = useState('votes');
   const [query, setQuery] = useState('');
   const [scope, setScope] = useState('group');
-  const [voting, setVoting] = useState(new Set());
-  const voteLocks = useRef(new Set());
   const manager = data.user.role !== 'student';
   const group = data.groups.find((g) => g.id === data.user.group_id);
   const announcements = data.announcements.filter((a) => scope === 'group' || !a.group_id);
@@ -41,18 +31,6 @@ export default function Community() {
     .sort((a, b) =>
       order === 'votes' ? b.votes - a.votes : b.created_at.localeCompare(a.created_at),
     );
-  async function vote(p) {
-    if (voteLocks.current.has(p.id)) return;
-    voteLocks.current.add(p.id);
-    setVoting(new Set(voteLocks.current));
-    try {
-      await mutate('/proposals/' + p.id + '/vote', { active: !p.voted });
-    } catch {
-    } finally {
-      voteLocks.current.delete(p.id);
-      setVoting(new Set(voteLocks.current));
-    }
-  }
   return (
     <>
       <PageTitle title="Comunitat" subtitle="La gent i les coses del teu grup">
@@ -160,16 +138,7 @@ export default function Community() {
                   </button>
                 </h3>
                 <div>
-                  <button
-                    className={'vote-button ' + (p.voted ? 'voted' : '')}
-                    disabled={voting.has(p.id)}
-                    aria-busy={voting.has(p.id)}
-                    aria-label={(p.voted ? 'Retirar vot de ' : 'Votar ') + p.title}
-                    aria-pressed={!!p.voted}
-                    onClick={() => vote(p)}
-                  >
-                    <ArrowUp size={17} />
-                  </button>
+                  <VoteButton item={p} showCount={false} />
                   <span>{p.votes} vots</span>
                   <span className={'status-badge status-' + p.status.replace(' ', '-')}>
                     {p.status}
@@ -266,17 +235,7 @@ export default function Community() {
             {proposals.length ? (
               proposals.map((p) => (
                 <article className="panel proposal-row" key={p.id}>
-                  <button
-                    className={`vote-button ${p.voted ? 'voted' : ''}`}
-                    disabled={voting.has(p.id)}
-                    aria-busy={voting.has(p.id)}
-                    aria-label={`${p.voted ? 'Retirar vot de' : 'Votar'} ${p.title}`}
-                    aria-pressed={!!p.voted}
-                    onClick={() => vote(p)}
-                  >
-                    <ArrowUp size={19} />
-                    <strong>{p.votes}</strong>
-                  </button>
+                  <VoteButton item={p} />
                   <div className="proposal-content">
                     <div className="proposal-heading">
                       <h2>{p.title}</h2>

@@ -301,11 +301,6 @@ export function Reader({ item }) {
     documents = n.files.filter(
       (f) => !f.mime?.startsWith('image/') && !f.mime?.startsWith('video/') && f.accessible,
     );
-  async function reaction(action) {
-    try {
-      await mutate(`/notes/${n.id}/${action}`, { active: action === 'like' ? !n.liked : !n.saved });
-    } catch {}
-  }
   return (
     <div className="reader">
       <div className="reader-meta">
@@ -413,8 +408,8 @@ export function Reader({ item }) {
       )}
       {n.status === 'published' && (
         <div className="reader-actions">
-          <LikeButton item={n} onClick={() => reaction('like')} />
-          <SaveButton item={n} onClick={() => reaction('save')} />
+          <LikeButton item={n} resource="notes" />
+          <SaveButton item={n} resource="notes" />
           <span className="muted">Donar les gràcies és gratuït</span>
           {n.author_id === data.user.id && (
             <Button onClick={() => open('note', n)}>
@@ -663,14 +658,8 @@ export function PlusDetail({ item }) {
       </div>
       <FormError error={error} />
       <div className="reader-actions">
-        <LikeButton
-          item={p}
-          onClick={() => mutate(`/pluses/${p.id}/like`, { active: !p.liked }).catch(() => {})}
-        />
-        <SaveButton
-          item={p}
-          onClick={() => mutate(`/pluses/${p.id}/save`, { active: !p.saved }).catch(() => {})}
-        />
+        <LikeButton item={p} resource="pluses" />
+        <SaveButton item={p} resource="pluses" />
         {p.author_id === data.user.id && <Button onClick={() => open('plus', p)}>Editar</Button>}
         <IconButton
           label="Informar d’un problema"

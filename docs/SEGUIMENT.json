@@ -372,6 +372,10 @@
     {
       "id": "R92",
       "description": "Dissenyar xats per assignatura i organització de continguts amb carpetes: alternatives visuals, rànquing i proposta UX coherent."
+    },
+    {
+      "id": "R93",
+      "description": "Resposta immediata i estat visual clar de m’agrada, desats i vots, amb confirmació segura i recuperació d’errors."
     }
   ],
   "phases": [
@@ -911,6 +915,13 @@
       "title": "Propostes UX de continguts i xats per assignatura",
       "depends_on": [
         "F75"
+      ]
+    },
+    {
+      "id": "F77",
+      "title": "Reaccions immediates i visibles",
+      "depends_on": [
+        "F76"
       ]
     }
   ],
@@ -7429,9 +7440,17 @@
       "phase": "F76",
       "title": "Sincronitzar la prova de targetes d’horari abans de seleccionar el dia",
       "status": "verified",
-      "requirements": ["R22", "R23", "R92"],
-      "depends_on": ["T76-01"],
-      "files": ["scripts/test-schedule-cards.mjs"],
+      "requirements": [
+        "R22",
+        "R23",
+        "R92"
+      ],
+      "depends_on": [
+        "T76-01"
+      ],
+      "files": [
+        "scripts/test-schedule-cards.mjs"
+      ],
       "acceptance": "La prova selecciona explícitament el dilluns de la fixture després de carregar l’horari; comprova les targetes dels cinc intervals, sense dependre del dia actual ni relaxar assertions. Cap canvi de producte ni de dades reals.",
       "checks": [
         "Identificar el fallit amb logs bruts i evidències de CI.",
@@ -7446,6 +7465,52 @@
       ],
       "progress": "Fallida reproduïda localment a 320px després del canvi de dia. La prova espera els tabs adjunts, selecciona dilluns al mòbil i exigeix tots els intervals de la fixture. Bootstrap local fixa dimecres, sense esdeveniments, per cobrir el cas qualsevol dia. 15 casos locals en Chromium/Firefox/WebKit i ESLint correctes. Canvi exclusiu de validació, sense producte ni dades reals; incorporació amb la PR29 i Validate del nou commit.",
       "change_log_id": "H183"
+    },
+    {
+      "id": "T77-01",
+      "phase": "F77",
+      "title": "Accelerar i distingir els botons de reacció",
+      "status": "review",
+      "requirements": [
+        "R22",
+        "R23",
+        "R25",
+        "R93"
+      ],
+      "depends_on": [
+        "T76-02"
+      ],
+      "files": [
+        "shared/reaction-writer.js",
+        "src/reaction-writes.jsx",
+        "src/ui.jsx",
+        "src/reactions.css",
+        "worker/resources.js",
+        "src/pages/Notes.jsx",
+        "src/pages/Pluses.jsx",
+        "src/pages/Community.jsx",
+        "src/forms-resources.jsx",
+        "tests/reactions.test.js",
+        "scripts/test-reactions.mjs"
+      ],
+      "acceptance": "Canvi visual abans de resposta, comptadors canònics, cap duplicat, reversió/resincronització en errors, coherència entre targeta/detall, hover/focus i seleccionat diferents, tres motors locals i publicació versionada amb PR/CI.",
+      "checks": [
+        "Revisar la latència de mutació i els controls existents.",
+        "Implementar confirmació lleugera i reaccions optimistes compartides.",
+        "Distingir estat seleccionat, hover, focus i pendent.",
+        "Provar concurrència, errors, persistència i responsive amb fixtures locals.",
+        "Publicar amb PR, CI, release i rebut."
+      ],
+      "evidence": [
+        "output/reactions/verification.json",
+        "output/reactions/unit.log",
+        "output/reactions/typecheck.log",
+        "output/reactions/build.log",
+        "output/reactions/chromium/results.json",
+        "output/reactions/browser/results.json"
+      ],
+      "progress": "Implementació i revisió visual completades. 381 unitàries, tipus/lint, build i 24 casos locals correctes en tres motors: resposta retinguda, dobles clics, comptador canònic, lectura antiga, canvi de vista, desats amb error i save/like paral·lels amb resposta perduda. PR/CI i publicació 0.6.12 pendents; sense migracions ni dades reals modificades.",
+      "change_log_id": "H184"
     }
   ]
 }

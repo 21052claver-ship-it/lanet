@@ -1,5 +1,6 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { COMPACT_LAYOUT_QUERY } from './responsive';
+import { useApp } from './context';
 import * as Dialog from '@radix-ui/react-dialog';
 import {
   X,
@@ -23,6 +24,8 @@ import {
   Leaf,
   ArrowRight,
   SpinnerGap,
+  ArrowUp,
+  Check,
   GraduationCap,
   Ruler,
   Circuitry,
@@ -174,52 +177,67 @@ export function Tabs({ items, value, onChange, label = 'Vista', className = '' }
     </div>
   );
 }
-function usePendingAction(action) {
-  const pending = useRef(false);
-  const [busy, setBusy] = useState(false);
-  async function run() {
-    if (pending.current) return;
-    pending.current = true;
-    setBusy(true);
-    try {
-      await action();
-    } catch {
-      // The mutation already reports the error. Release the action for retry.
-    } finally {
-      pending.current = false;
-      setBusy(false);
-    }
-  }
-  return [busy, run];
+function useReaction(item, resource, action) {
+  const { reactions } = useApp();
+  return [
+    reactions.isPending(resource, item.id, action),
+    () => reactions.toggle(resource, item.id, action),
+  ];
 }
-export function LikeButton({ item, onClick }) {
-  const [busy, react] = usePendingAction(onClick);
+export function LikeButton({ item, resource }) {
+  const [busy, react] = useReaction(item, resource, 'like');
   return (
     <button
-      className={`like-button ${item.liked ? 'liked' : ''}`}
+      type="button"
+      className={`like-button reaction-button ${item.liked ? 'liked' : ''}`}
+      title={busy ? 'Desant el canvi…' : item.liked ? 'Retirar el m’agrada' : 'Donar m’agrada'}
       aria-pressed={!!item.liked}
       aria-busy={busy}
       disabled={busy}
       onClick={react}
     >
-      <Heart size={19} weight={item.liked ? 'fill' : 'regular'} />
+      <Heart size={19} weight={item.liked ? 'fill' : 'regular'} aria-hidden="true" />
       {item.liked ? 'T’agrada' : 'M’agrada'}
       <span>· {item.likes}</span>
     </button>
   );
 }
-export function SaveButton({ item, onClick }) {
-  const [busy, save] = usePendingAction(onClick);
+export function SaveButton({ item, resource }) {
+  const [busy, save] = useReaction(item, resource, 'save');
   return (
     <IconButton
+      type="button"
+      className={`icon-button reaction-button save-button ${item.saved ? 'saved' : ''}`}
       label={item.saved ? 'Treure dels desats' : 'Desar'}
+      title={busy ? 'Desant el canvi…' : item.saved ? 'Treure dels desats' : 'Desar'}
       aria-pressed={!!item.saved}
       aria-busy={busy}
       disabled={busy}
       onClick={save}
     >
-      <BookmarkSimple size={21} weight={item.saved ? 'fill' : 'regular'} />
+      <BookmarkSimple size={21} weight={item.saved ? 'fill' : 'regular'} aria-hidden="true" />
     </IconButton>
+  );
+}
+export function VoteButton({ item, showCount = true }) {
+  const [busy, vote] = useReaction(item, 'proposals', 'vote');
+  return (
+    <button
+      type="button"
+      className={`vote-button reaction-button ${item.voted ? 'voted' : ''}`}
+      aria-label={`${item.voted ? 'Retirar vot de' : 'Votar'} ${item.title}`}
+      title={busy ? 'Desant el vot…' : item.voted ? 'Ja has votat · Retirar vot' : 'Votar proposta'}
+      aria-pressed={!!item.voted}
+      aria-busy={busy}
+      disabled={busy}
+      onClick={vote}
+    >
+      <ArrowUp size={19} weight={item.voted ? 'bold' : 'regular'} aria-hidden="true" />
+      {showCount && <strong>{item.votes}</strong>}
+      {!!item.voted && (
+        <Check size={11} weight="bold" className="reaction-check" aria-hidden="true" />
+      )}
+    </button>
   );
 }
 export function Modal({ open, onClose, title, description, children, wide = false }) {
