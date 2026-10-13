@@ -6871,7 +6871,7 @@
       "id": "T69-01",
       "phase": "F69",
       "title": "Connectar lanet.es, validar HTTPS i migrar l’origen principal",
-      "status": "pending",
+      "status": "verified",
       "requirements": [
         "R83"
       ],
@@ -6895,19 +6895,15 @@
         "Validar DNS/HTTPS, passar CI i publicar amb rebut i historial."
       ],
       "evidence": [
+        "docs/releases/0.6.4.json",
         "docs/PLA-DOMINI-LANET-ES.md",
-        "output/domain-lanet-es/dns-before.json",
-        "output/domain-lanet-es/provider-before.json",
-        "output/domain-lanet-es/provider-prepared.json",
-        "output/domain-lanet-es/pages-domains.json",
-        "output/domain-lanet-es/cloudflare-dns.jpg",
-        "output/domain-lanet-es/cloudflare-tls.jpg",
-        "output/domain-lanet-es/cloudflare-https.jpg",
-        "output/domain-lanet-es/cloudflare-nameservers.jpg",
-        "output/domain-lanet-es/local-checks.json"
+        "output/domain-lanet-es/activation-check.json",
+        "output/net-pastel/public-verification.json",
+        "output/net-pastel/cloudflare-domains-active.png",
+        "output/releases/0.6.4/receipt.json"
       ],
-      "change_log_id": "H170",
-      "progress": "Delegació IONOS desada, correu i TXT preservats; registres web i dominis Pages preparats. Canvi canònic integrat amb PR #11 i versió 0.6.4; pendent activació Cloudflare i HTTPS abans de publicar. Callback .es confirmat pel propietari."
+      "change_log_id": "H174",
+      "progress": "Completa a 0.6.4: delegació Cloudflare aplicada, lanet.es/www actius amb SSL; origen/callback.es i redireccions efectius. Correu IONOS i D1/R2/moderació preservats. Algunes caches públiques encara retenen la IP anterior temporalment."
     },
     {
       "id": "T70-01",
@@ -7005,7 +7001,7 @@
       "id": "T72-01",
       "phase": "F72",
       "title": "Polir navegació, perfil i ponderacions PAU",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R86",
         "R87",
@@ -7036,8 +7032,16 @@
         "Comprovar tancament des de Perfil i recuperació d’errors de xarxa en tres motors.",
         "Verificar targetes de ponderació amb noms llargs, icones i coeficients a 320px, tablet i horitzontal en tres motors."
       ],
-      "evidence": [],
-      "progress": "Icona pastel, logout al perfil i ponderacions visuals integrats. 39 casos PAU en Chromium/Firefox/WebKit correctes; captures a 320 i 820 px revisades. Build Pages, tipus/lint correctes. Pendent de CI actualitzada i publicació 0.6.4."
+      "evidence": [
+        "docs/releases/0.6.4.json",
+        "docs/PLA-NET-PASTEL.md",
+        "output/net-pastel/public-verification.json",
+        "output/pau-visual-verified/pau-browser-results.json",
+        "output/profile-logout/results.json",
+        "output/releases/0.6.4/receipt.json"
+      ],
+      "progress": "Publicada 0.6.4 amb PR11 i CI exacta de main, release immutable, digests i HTTP real.es verificats. 39 casos PAU i 24 de recuperació en tres motors; captures locals revisades. Cap dada real modificada.",
+      "change_log_id": "H173"
     }
   ]
 }

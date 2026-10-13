@@ -6,10 +6,10 @@ Tasca única T69-01. Marc autoritza configurar el domini d’IONOS a Cloudflare 
 - [x] Preparar zona Cloudflare Free i dominis personalitzats del projecte Pages `lanet`.
 - [x] Revisar els registres IONOS i conservar correu, TXT i serveis auxiliars.
 - [x] Desar els nameservers de Cloudflare a IONOS i detectar-los al DNS públic.
-- [ ] Confirmar zona activa i HTTPS vàlid a `lanet.es` i `www.lanet.es`.
+- [x] Confirmar zona activa i HTTPS vàlid a `lanet.es` i `www.lanet.es`.
 - [x] Callback `https://lanet.es/api/auth/google/callback` confirmat per Marc; altres callbacks i marca compartida conservats.
 - [x] Preparar origen canònic, redireccions i metadades amb proves locals.
-- [ ] Passar PR/CI, publicar 0.6.4 i verificar el rebut i la configuració efectiva.
+- [x] Passar PR/CI, publicar 0.6.4 i verificar el rebut i la configuració efectiva.
 
 ## Infraestructura
 
@@ -35,3 +35,5 @@ Mateix client Google, marca compartida conservada, accés exclusiu @fje.edu, con
 4. PR fusionada, CI del commit exacte de main, publicació immutable i comprovació del rebut/proveïdor.
 
 Les comprovacions d’infraestructura utilitzen DNS, negociació TLS i API del proveïdor. No visiten l’aplicació pública ni modifiquen dades d’usuaris.
+
+Publicada 0.6.4: https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.4. Commit dd7fa5f3c857a51f80c4b345a703d191a51e7bc9; dominis actius i SSL vàlid, proves HTTP i digests publicats verificats.

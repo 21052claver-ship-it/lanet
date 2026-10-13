@@ -1,11 +1,9 @@
-# Verificació · accés a la NET oficial
+# Verificació · La Net 0.6.4
 
-Versió 0.6.3, commit 12536d1112d6a6c9d449d4481c9d19e1d5a51236.
+Commit dd7fa5f3c857a51f80c4b345a703d191a51e7bc9. [CI completa](https://github.com/21052claver-ship-it/lanet/actions/runs/38262263060) correcta després de la PR #11. 357 proves unitàries i controls de tipus/lint/build correctes. 39 casos PAU en Chromium/Firefox/WebKit i 24 de recuperació de sessió; cinc disposicions de la icona. Captures locals a 320 i 820 px revisades.
 
-Accés La NET oficial a sidebar oberta/plegada i menú Més, amb logotip aportat reinterpretat en 3D, transparència i WebP de 13 KB. Enllaç exacte a login.net.fje.edu en pestanya nova, amb nom accessible, noopener/noreferrer i tancament de Més. Disposició i teclat verificats amb fixtures locals.
+Publicació confirmada per Cloudflare i GitHub, release immutable i digest del rebut verificat. HTTPS real amb validació de certificat a lanet.es i www.lanet.es, HTTP 200 a l’arrel i redirecció www 308. Fitxers publicats de PAU, app, CSS, HTML i icona coincideixen amb SHA-256 del rebut. Status d’accés Google únic correcte i configuració efectiva del callback .es confirmada via proveïdor. D1/R2 EU i MEDIA_SAFETY preservats.
 
-357 proves unitàries, tipus/lint i build correctes. Cinc comprovacions locals de l’enllaç a 320, 390, 844, 1024 i 1440 px: URL, pestanya nova sense opener, teclat, icona carregada, sidebar plegada i absència de desbordament. Nou casos de navegació mòbil en Chromium, Firefox i WebKit correctes. Captures locals revisades. Portal extern simulat, sense iniciar-hi sessió ni fer peticions reals.
+La verificació HTTP utilitza el DNS autoritatiu actual. El navegador obert encara ha retornat un error SSL perquè el seu resolutor conserva la IP antiga d’IONOS; no s’ha ignorat ni desactivat cap validació TLS. Cloudflare UI mostra ambdós dominis Active / SSL enabled i producció La Net 0.6.4. No s’ha iniciat sessió amb un compte real ni provat dispositius físics.
 
-CI completa correcta i publicació confirmada pel proveïdor. [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38250108288) · [Registre](releases/0.6.3.json) · [Pla i prompt](PLA-NET-OFICIAL.md). Evidències privades a output/official-net.
-
-No s’ha visitat l’aplicació pública ni s’han provat dispositius físics. Origen, callback, Google únic i bindings preservats; cap migració ni canvi de dades.
+Evidències privades a output/net-pastel, output/pau-visual-verified, output/profile-logout i output/domain-lanet-es. [Registre públic](releases/0.6.4.json).
