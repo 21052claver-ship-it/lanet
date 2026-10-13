@@ -1129,3 +1129,5 @@ Publicació H180 confirmada: [0.6.10](https://github.com/21052claver-ship-it/lan
 **13 octubre 2026 · T75-01.** Presentació de 34 pàgines revisada íntegrament; classificació d’avaluació connectada a Notes, CSV i previsió PAU sense substituir pesos personals. Calendari de referència amb rangs, dates PAU/PAP contrastades, exportació ICS; TR 30/42/21/7 amb calculadora privada local i guia de recursos/plusos. Sense migracions ni dades de producció modificades. Proves i publicació 0.6.11 en curs.
 
 Evidències: [pla i decisions](PLA-GUIA-BAT2.md), output/student-guide-0.6.11/source.json, unit.log, typecheck.log i browser/results.json.
+
+H181 · La primera CI de main detecta a WebKit que un esborrany pot quedar buit després de desfer: el callback diferit llegia el valor mutable del camp. Captura immediata del text a notes, plusos i TR, amb instantània de validació del plus i comprovació explícita de conservació del valor. Publicació pendent de la correcció i nova CI; 0.6.10 continua publicada.

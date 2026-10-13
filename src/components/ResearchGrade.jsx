@@ -70,8 +70,9 @@ export default function ResearchGrade() {
                 }}
                 onBlur={() => setFocused(null)}
                 onChange={(event) => {
-                  setPrivateDraft(event.target.value);
-                  setMarks((current) => ({ ...current, [part.id]: event.target.value }));
+                  const value = event.currentTarget.value;
+                  setPrivateDraft(value);
+                  setMarks((current) => ({ ...current, [part.id]: value }));
                   setStatus('');
                 }}
                 onKeyDown={(event) => {

@@ -240,7 +240,10 @@ export default function Grades() {
               : (draft ?? (row.grade === null ? '' : numberLabel(row.grade, 1)))
           }
           placeholder={hideGrades ? (row.grade === null ? 'Afegir' : '•••') : '—'}
-          onChange={(e) => setDrafts((d) => ({ ...d, [row.id]: e.target.value }))}
+          onChange={(e) => {
+            const value = e.currentTarget.value;
+            setDrafts((d) => ({ ...d, [row.id]: value }));
+          }}
           onFocus={(e) => {
             setSelected(row.subject_id);
             setEditingGrade(row.id);
