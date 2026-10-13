@@ -2,6 +2,12 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.6.8] - 2026-10-13
+
+- Sons suaus de fitxa, bola que s’alenteix i pastissos que arriben al saldo; generats localment sense fitxers ni descàrregues.
+- Control accessible per silenciar els sons, amb preferència desada; sense autoplay, repetició en recuperar apostes ni sons pendents en sortir o amagar la pestanya.
+- Els efectes respecten la música i el joc continua funcionant si el navegador no permet àudio.
+
 ## [0.6.7] - 2026-10-13
 
 - Ruleta integrada a la pàgina, amb barra superior i navegació accessibles; s'elimina la sala que ocupava tota la finestra.

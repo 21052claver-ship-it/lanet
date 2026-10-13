@@ -1,6 +1,6 @@
 {
   "name": "la-net",
-  "version": "0.6.7",
+  "version": "0.6.8",
   "private": true,
   "type": "module",
   "scripts": {
@@ -47,7 +47,8 @@
     "test:roulette-animation": "node scripts/test-roulette-animation.mjs",
     "test:schedule-cards": "node scripts/test-schedule-cards.mjs",
     "test:workspace-recovery": "node scripts/test-workspace-recovery.mjs",
-    "test:roulette-panorama": "node scripts/test-roulette-panorama.mjs"
+    "test:roulette-panorama": "node scripts/test-roulette-panorama.mjs",
+    "test:roulette-sound": "node scripts/test-roulette-sound.mjs"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.3.0",

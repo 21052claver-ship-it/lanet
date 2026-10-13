@@ -1097,3 +1097,9 @@ Publicació H176 confirmada: [0.6.6](https://github.com/21052claver-ship-it/lane
 Evidències privades: output/roulette-panorama/inline-browser.log, inline-typecheck.log i inline-unit.log.
 
 Publicació H177 confirmada: [0.6.7](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.7), commit 5e3f3ebf3163c19a5725af4e8d374dbea23a1b7c, [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38421356223) i rebut immutable validats. 132 casos locals en tres motors i 357 unitàries correctes; sense dades reals modificades.
+
+### H178 Afegir sons suaus a la ruleta
+
+**13 octubre 2026 · T73-04.** Sons locals de fitxa, bola i lliurament del premi; silenci accessible persistent. Sense autoplay ni repetició en recuperar, neteja en sortir/amagar i reproductor de música independent. Tipus, unitàries, disposició i animació correctes; àudio natiu, CI i publicació pendents. WebKit Windows no exposa Web Audio: limitació registrada explícitament, joc verificat sense API.
+
+Evidències: docs/PLA-RULETA-SONS.md i logs privats output/roulette-panorama/sound-*.log.

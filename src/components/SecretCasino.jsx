@@ -1,5 +1,13 @@
 import React, { useEffect, useLayoutEffect, useId, useRef, useState } from 'react';
-import { ArrowLeft, Cake, ArrowClockwise, ChartBar, CircleDashed } from '@phosphor-icons/react';
+import {
+  ArrowLeft,
+  Cake,
+  ArrowClockwise,
+  ChartBar,
+  CircleDashed,
+  SpeakerHigh,
+  SpeakerSlash,
+} from '@phosphor-icons/react';
 import * as Dialog from '@radix-ui/react-dialog';
 import RouletteAward from './RouletteAward';
 import { rouletteFrame, AWARD_MS } from '../../shared/roulette-motion';
@@ -24,6 +32,7 @@ import {
   roulettePayout,
 } from '../../shared/roulette';
 import { useMediaQuery } from '../responsive';
+import { useRouletteSound } from '../useRouletteSound';
 import '../roulette.css';
 
 const colorNames = { red: 'Vermell', black: 'Negre', green: 'Verd' };
@@ -181,6 +190,13 @@ export function RouletteWheel({ angle, spinning, result, motion }) {
   );
 }
 export default function SecretCasino({ onExit }) {
+  const {
+    sound,
+    enabled: soundEnabled,
+    supported: soundSupported,
+    toggle: toggleSound,
+  } = useRouletteSound();
+  const audioRound = useRef(null);
   const [motion, setMotion] = useState(null);
   const [awarding, setAwarding] = useState(false);
   const committed = useRef(null);
@@ -243,6 +259,9 @@ export default function SecretCasino({ onExit }) {
     load();
   }, []);
   useEffect(() => {
+    if (table !== 'roulette') sound.stop();
+  }, [table, sound]);
+  useEffect(() => {
     const syncPending = (event) => {
       if (event.key !== storageKey || locked.current || committed.current) return;
       try {
@@ -276,9 +295,17 @@ export default function SecretCasino({ onExit }) {
       [spin, ...current.filter((s) => s.request_id !== spin.request_id)].slice(0, 20),
     );
     if (spin.payout) window.dispatchEvent(new Event('lanet:cake-arrived'));
+    if (audioRound.current?.id === spin.request_id && !audioRound.current.reward) {
+      audioRound.current.reward = true;
+      if (spin.payout > 0) sound.reward(spin.net > 0);
+    }
   }
   function finish(spin, instant = false) {
     if (!mounted.current) return;
+    if (audioRound.current?.id === spin.request_id && !audioRound.current.land) {
+      audioRound.current.land = true;
+      sound.land();
+    }
     setSpinning(false);
     setResult(spin);
     setChips([]);
@@ -311,6 +338,7 @@ export default function SecretCasino({ onExit }) {
       return;
     }
     locked.current = true;
+    sound.prepare();
     setPending(payload);
     setBusy(true);
     setError('');
@@ -329,6 +357,9 @@ export default function SecretCasino({ onExit }) {
           if (!mounted.current) return;
           setPending(null);
           committed.current = response.spin;
+          audioRound.current = recover
+            ? null
+            : { id: response.spin.request_id, land: false, reward: false };
           if (!reduced && !recover) holdWallet(Math.max(0, walletBalance - response.spin.stake));
           setData((current) => ({
             ...current,
@@ -338,6 +369,7 @@ export default function SecretCasino({ onExit }) {
           setAngle(wheelRotation(angle, response.spin.result));
           if (reduced || recover) finish(response.spin, true);
           else {
+            sound.roll(SPIN_MS);
             setSpinning(true);
             finishTimer.current = setTimeout(() => finish(response.spin), SPIN_MS);
           }
@@ -394,10 +426,35 @@ export default function SecretCasino({ onExit }) {
                 </Dialog.Title>
                 <Dialog.Description>La pastissera tenia un altre barret.</Dialog.Description>
               </div>
-              <Button variant="ghost" onClick={onExit}>
-                <ArrowLeft size={18} />
-                Tornar al forn
-              </Button>
+              <div className="casino-header-actions">
+                <Button
+                  variant="ghost"
+                  className="casino-sound-toggle"
+                  disabled={!soundSupported}
+                  aria-pressed={soundEnabled && soundSupported}
+                  aria-label={
+                    soundEnabled ? 'Silenciar sons de la ruleta' : 'Activar sons de la ruleta'
+                  }
+                  title={
+                    !soundSupported
+                      ? 'Sons no disponibles en aquest navegador'
+                      : soundEnabled
+                        ? 'Silenciar sons'
+                        : 'Activar sons'
+                  }
+                  onClick={toggleSound}
+                >
+                  {soundEnabled && soundSupported ? (
+                    <SpeakerHigh size={20} />
+                  ) : (
+                    <SpeakerSlash size={20} />
+                  )}
+                </Button>
+                <Button variant="ghost" onClick={onExit}>
+                  <ArrowLeft size={18} />
+                  Tornar al forn
+                </Button>
+              </div>
             </header>
             <nav className="casino-tables" aria-label="Taules de la sala secreta">
               <Button
@@ -506,6 +563,7 @@ export default function SecretCasino({ onExit }) {
                             settledBets={spinning || busy ? [] : result?.bets || []}
                             bets={chips}
                             onChange={setChips}
+                            onPlace={sound.chip}
                             balance={walletBalance + (spinning ? boardStake : 0)}
                             disabled={disabled}
                             onError={setError}
