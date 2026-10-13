@@ -1,7 +1,7 @@
-# Publicació · La Net 0.6.10
+# Publicació · La Net 0.6.11
 
-https://lanet.es · Commit 61592226ddf77ae7e3fcb545d8c0a805078c9ed3. Pages 37212a24-bf03-44ef-a383-a0da2c795cd4.
+https://lanet.es · Commit 54e1009692b57c3e0c489955fc8b78b35cab0a7e. Pages 535d3b8d-1f7c-4f34-95dc-bb1646483764.
 
-Horaris oficials BAT2 amb selector visual d’itinerari, optatives i professorat. L’editor de gestió conserva el professorat de cada dia, treball personal i IDs; distingeix els tres modes i rebutja solapaments. Desplegable de dia millorat en mòbil.
+Classificació acumulativa BAT2 amb pesos orientatius i preferències personals conservades. Calendari del centre i PAU/PAP 2027 amb rangs i ICS; calculadora TR privada local 30/42/21/7 i guia del curs.
 
-[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.10) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38455769429) · [Registre](releases/0.6.10.json). PR23/24 i CI exacta correctes. Catàleg oficial, domini, commit canònic i rebut immutable confirmats via proveïdor. Cap nova migració; la còpia privada i la migració 0026 de 0.6.9 es conserven.
+[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.11) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38469595627) · [Registre](releases/0.6.11.json). PR26/27 i CI exacta correctes; domini, commit canònic i rebut immutable verificats via proveïdor. Sense migracions ni canvis OAuth o dades de producció.

@@ -20,7 +20,9 @@ T75-01 · una sola tasca activa. Font privada aportada per Marc: presentació de
 - [x] Implementació de classificació, referència de calendari, recerca i guia.
 - [x] Proves de models, preferències existents, dates inclusives i exportació.
 - [x] Revisió visual a 320/390/820/1440 en Chromium, Firefox i WebKit; mode discret i persistència.
-- [ ] Regressions de notes, horari i PAU, auditoria de font i PR amb Validate.
-- [ ] CI del commit fusionat, publicació 0.6.11 i comprovació via proveïdor.
+- [x] Regressions de notes, horari i PAU, auditoria de font i PR amb Validate.
+- [x] CI del commit fusionat, publicació 0.6.11 i comprovació via proveïdor.
 
 Sense migracions, canvis OAuth/DNS ni proves a la web pública. Les fixtures utilitzen exclusivament usuaris i dades sintètics locals.
+
+Publicada **0.6.11**: [release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.11) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38469595627) · [registre](releases/0.6.11.json). Verificació via proveïdor, sense visitar la web pública.

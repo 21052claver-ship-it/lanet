@@ -7322,7 +7322,7 @@
       "id": "T75-01",
       "phase": "F75",
       "title": "Contrastar i integrar la guia acadèmica del curs",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R01",
         "R07",
@@ -7361,9 +7361,15 @@
         "output/student-guide-0.6.11/unit.log",
         "output/student-guide-0.6.11/typecheck.log",
         "output/student-guide-0.6.11/browser/results.json",
-        "output/student-guide-0.6.11/course-regression/course-browser-results.json"
+        "output/student-guide-0.6.11/course-regression/course-browser-results.json",
+        "docs/releases/0.6.11.json",
+        "output/student-guide-0.6.11/pau-regression/top5-browser-results.json",
+        "output/student-guide-0.6.11/ci-main/student-guide/browser/results.json",
+        "output/student-guide-0.6.11/ci-main/course-grades/course-browser-results.json",
+        "output/student-guide-0.6.11/provider-verification.json",
+        "output/releases/0.6.11/receipt.json"
       ],
-      "progress": "Primera CI de main detecta esborrany buit després de desfer a WebKit. Captura immediata del text i instantània de validació del plus corregides; 24 regressions anuals locals correctes. Nova CI requerida abans de publicar 0.6.11; producció continua a 0.6.10.",
+      "progress": "Publicada 0.6.11 a lanet.es via PR26/27 i CI exacta de main. 34 pàgines revisades, classificació acumulativa amb preferències preservades, calendari de rangs i ICS, TR 30/42/21/7 privat local i guia de recursos. 376 unitàries i 60 fluxos locals en tres motors correctes; guia i notes també verificades a CI. Domini, commit, tag/release i digest del rebut confirmats via proveïdor. Sense migracions ni dades reals modificades.",
       "change_log_id": "H181"
     }
   ]
