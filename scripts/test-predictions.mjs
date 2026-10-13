@@ -454,12 +454,17 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         const page = await pageFor();
         await page.locator('.prediction-card').click();
         let intercepted = false;
+        let confirmCommit;
+        const committedBet = new Promise((resolve) => {
+          confirmCommit = resolve;
+        });
         await page.route('**/api/predictions/*/bets', async (route) => {
           if (!intercepted) {
             intercepted = true;
             const response = await route.fetch();
             assert.equal(response.status(), 200);
             await route.abort('failed');
+            confirmCommit();
           } else await route.continue();
         });
         const refreshAfterLoss = page.waitForResponse(
@@ -470,6 +475,22 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         );
         await page.getByRole('button', { name: 'Apostar 1 a A', exact: true }).click();
         await page.getByRole('button', { name: 'Recuperar acció', exact: true }).waitFor();
+        // Recovery is visible while the request is pending. Wait for the fixture's
+        // confirmed server write and deliberate response loss before checking D1.
+        let deadline;
+        try {
+          await Promise.race([
+            committedBet,
+            new Promise((_, reject) => {
+              deadline = setTimeout(
+                () => reject(new Error('Lost-response fixture did not confirm the committed bet.')),
+                15000,
+              );
+            }),
+          ]);
+        } finally {
+          clearTimeout(deadline);
+        }
         assert.equal(f.db.prepare('SELECT COUNT(*) n FROM prediction_bets').get().n, 1);
         await (await refreshAfterLoss).finished();
         await page.waitForFunction(

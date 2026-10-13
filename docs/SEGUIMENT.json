@@ -7282,7 +7282,8 @@
         "src/course-setup.css",
         "tests/official-schedule.test.js",
         "scripts/test-official-schedule.mjs",
-        "scripts/test-official-schedule-api.mjs"
+        "scripts/test-official-schedule-api.mjs",
+        "scripts/test-predictions.mjs"
       ],
       "acceptance": "Desar una variant conserva IDs, professorat específic i treball personal, també amb clients antics. Editor explícit per franja, permisos i rebuig de solapaments; proves locals/D1 i publicació via PR/CI sense migracions addicionals.",
       "checks": [
@@ -7296,9 +7297,10 @@
         "output/official-schedule-0.6.10/unit.log",
         "output/official-schedule-0.6.10/typecheck.log",
         "output/official-schedule-0.6.10/browser/results.json",
-        "output/official-schedule-0.6.10/api-results.json"
+        "output/official-schedule-0.6.10/api-results.json",
+        "output/official-schedule-0.6.10/predictions-sync.log"
       ],
-      "progress": "370 unitàries, 27 fluxos de navegador (9 d’edició) en tres motors i D1/workerd local correctes. Professorat per dia, treball personal i IDs conservats; desplegable de dia corregit a 320 px. Tipus/lint i compilació correctes. Versió 0.6.10 preparada, pendent de PR/CI i publicació, sense noves migracions.",
+      "progress": "370 unitàries, 27 fluxos de navegador (9 d’edició) en tres motors i D1/workerd local correctes. Professorat per dia, treball personal i IDs conservats; desplegable de dia corregit a 320 px. Tipus/lint i compilació correctes. Versió 0.6.10 preparada, pendent de PR/CI i publicació, sense noves migracions. CI de main ha detectat una carrera a la prova de resposta perduda d’una aposta. La prova ara espera la confirmació del servidor i l’avortament de resposta abans de verificar D1; 13 casos WebKit locals correctes, sense canviar regles ni assertions de saldo. Nova validació CI pendent.",
       "change_log_id": "H180"
     }
   ]
