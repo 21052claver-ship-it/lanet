@@ -21,3 +21,7 @@ Les mateixes proves de navegador s’executen en quatre grups independents: nave
 Publicada 0.6.5: https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.5. SHA 65da6a8506f92edde9ce6fa559cd5d826a3c7750, CI i rebuts confirmats; fitxers públics verificats.
 
 Correcció 0.6.6: sala als quatre límits de finestra, sense marc exterior. 12 casos locals Chromium/Firefox/WebKit correctes, inclòs mòbil. Publicació i CI confirmades a releases/0.6.6.json.
+
+## Correcció de presentació 0.6.7
+
+La ruleta ha de quedar dins del contingut de La Net. S’elimina el portal/overlay i la posició fixa. La sala accessible no és modal: menú i perfil continuen disponibles. Composició compacta basada en amplada real, no en l’amplada total del navegador; el tapet només es comprimeix quan hi ha espai per als 157 objectius. Cal verificar navegador, formularis, Escape, animació i recuperació abans de publicar.
