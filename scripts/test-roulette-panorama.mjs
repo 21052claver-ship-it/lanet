@@ -53,6 +53,40 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
     });
     await context.addCookies([{ name: 'lanet_session', value: f.token, url: f.base }]);
     const p = await context.newPage();
+    const requests = [];
+    p.on('request', (request) => {
+      if (request.url().endsWith('/api/roulette') && request.method() === 'POST')
+        requests.push({ event: 'sent' });
+    });
+    p.on('requestfailed', (request) => {
+      if (request.url().endsWith('/api/roulette'))
+        requests.push({ event: 'failed', error: request.failure()?.errorText });
+    });
+    p.on('response', (response) => {
+      if (response.url().endsWith('/api/roulette') && response.request().method() === 'POST')
+        requests.push({ event: 'response', status: response.status() });
+    });
+    async function playSpin() {
+      const button = p.getByRole('button', { name: 'Fer girar la ruleta', exact: true });
+      if (width < 1200) {
+        await button.evaluate((e) =>
+          e.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' }),
+        );
+        const control = await button.boundingBox(),
+          bar = await p.locator('.bottom-nav').boundingBox();
+        if (bar)
+          assert.ok(
+            control.y + control.height <= bar.y,
+            'Spin control remains fully above mobile navigation',
+          );
+      }
+      await Promise.all([
+        p.waitForRequest(
+          (request) => request.url().endsWith('/api/roulette') && request.method() === 'POST',
+        ),
+        button.click(),
+      ]);
+    }
     p.setDefaultTimeout(12000);
     try {
       await p.goto(f.base + '/#bakery');
@@ -125,7 +159,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
       }
       assert.ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
       await p.locator('[data-bet-id^="red:"]').click();
-      await p.getByRole('button', { name: 'Fer girar la ruleta', exact: true }).click();
+      await playSpin();
       await p.locator('.roulette-result.has-result').waitFor();
       const number = Number(await p.locator('.roulette-board').getAttribute('data-result'));
       assert.equal(number, 0);
@@ -144,7 +178,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
       fixedResult = 17;
       await p.locator('[data-bet-id="split:16-17"]').click();
       await p.locator('[data-bet-id^="red:"]').click();
-      await p.getByRole('button', { name: 'Fer girar la ruleta', exact: true }).click();
+      await playSpin();
       await p.locator('.roulette-board[data-result="17"]').waitFor();
       assert.equal(await p.locator('.tapet-cell.is-result').getAttribute('data-number'), '17');
       assert.equal(
@@ -181,7 +215,16 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
       console.log(`${engine} ${width}x${height} OK`);
     } catch (error) {
       await p.screenshot({ path: `${out}/${engine}-${width}-failed.png` });
-      results.push({ engine, width, height, passed: false, error: error.message });
+      results.push({
+        engine,
+        width,
+        height,
+        passed: false,
+        error: error.message,
+        requests,
+        pending: await p.locator('.casino-pending').allTextContents(),
+        alerts: await p.locator('[role="alert"]').allTextContents(),
+      });
       console.error(error.message);
     } finally {
       await context.close();

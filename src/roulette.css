@@ -532,6 +532,7 @@
   border-color: #315442;
   color: #fff9ee;
   font-weight: 800;
+  scroll-margin-block: 100px;
 }
 .casino-room button:disabled {
   cursor: default;
