@@ -1081,3 +1081,9 @@ Evidències: [docs/releases/0.6.4.json](../docs/releases/0.6.4.json), [docs/PLA-
 **13 d’oct. 2026, 13:29 · T73-01.** Publicada 0.6.5 a lanet.es: sala panoràmica sense scroll en resolucions verificades, ressaltat de guanyadors després del gir, formularis i premis en capes correctes; 147 casos locals, CI completa i digests públics correctes.
 
 Evidències: [docs/releases/0.6.5.json](../docs/releases/0.6.5.json), [docs/PLA-RULETA-PANORAMICA.md](../docs/PLA-RULETA-PANORAMICA.md), [output/roulette-panorama/results.json](../output/roulette-panorama/results.json), [output/roulette-panorama/public-verification.json](../output/roulette-panorama/public-verification.json), [output/releases/0.6.5/receipt.json](../output/releases/0.6.5/receipt.json).
+
+### H176 Ruleta als quatre límits de pantalla
+
+**13 octubre 2026 · T73-02.** Eliminat el marc exterior de 12px i les cantonades. 12 casos locals en tres motors verifiquen dimensió exacta del viewport, mòbil, controls i resultats; typecheck i unitàries correctes. Publicació 0.6.6 pendent de PR i CI.
+
+Evidències privades: output/roulette-panorama/fullscreen-results.json, fullscreen-typecheck.log i fullscreen-unit.log.

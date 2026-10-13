@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**177/178 tasques verificades · 89 requisits · 74 fases · límit d’una tasca activa.**
+**177/179 tasques verificades · 89 requisits · 74 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **cap**.
+Tasca activa: **T73-02 — Fer la sala de ruleta realment a pantalla completa**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -409,5 +409,6 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 ## F73 Ruleta panoràmica i resultat visual
 
 - [x] **T73-01** Organitzar la sala de ruleta i ressaltar el resultat al tapet — Verificat.
+- [ ] **T73-02** Fer la sala de ruleta realment a pantalla completa — En revisió.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

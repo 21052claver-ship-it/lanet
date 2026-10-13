@@ -7095,6 +7095,35 @@
       ],
       "progress": "Publicada 0.6.5 amb PR14 i CI exacta main, release immutable, SHA/digests i HTTP.es verificats. 147 casos locals en tres motors correctes; sense migracions ni dades modificades.",
       "change_log_id": "H175"
+    },
+    {
+      "id": "T73-02",
+      "phase": "F73",
+      "title": "Fer la sala de ruleta realment a pantalla completa",
+      "status": "review",
+      "requirements": [
+        "R89"
+      ],
+      "depends_on": [
+        "T73-01"
+      ],
+      "files": [
+        "src/roulette.css",
+        "scripts/test-roulette-panorama.mjs"
+      ],
+      "acceptance": "Sala als quatre límits del viewport, sense marc exterior, en tres motors i mòbil; tapet i controls accessibles.",
+      "checks": [
+        "Eliminar marge i marc de sala.",
+        "Verificar límits exactes localment en tres motors.",
+        "Publicar mitjançant PR i CI."
+      ],
+      "evidence": [
+        "output/roulette-panorama/fullscreen-results.json",
+        "output/roulette-panorama/fullscreen-typecheck.log",
+        "output/roulette-panorama/fullscreen-unit.log"
+      ],
+      "progress": "12 casos locals correctes en Chromium, Firefox i WebKit; límits exactes, sense marc i regressions de guanyadors. Typecheck, unitàries i auditoria correctes. Pendent CI i publicació 0.6.6.",
+      "change_log_id": "H176"
     }
   ]
 }
