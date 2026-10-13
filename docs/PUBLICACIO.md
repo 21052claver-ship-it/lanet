@@ -1,11 +1,7 @@
-# Publicació · La Net 0.6.5
+# Publicació · La Net 0.6.7
 
-https://lanet.es · Pages d15cbf9f-0b4f-4981-80bb-a96ff5cd28b0. Commit 65da6a8506f92edde9ce6fa559cd5d826a3c7750.
+https://lanet.es · Commit 5e3f3ebf3163c19a5725af4e8d374dbea23a1b7c. Pages bdd5435f.
 
-Sala de ruleta panoràmica amb roda, crupier, tapet i girar visibles sense scroll a 1280×720, 1366×768 i 1920×1080. Número, categories i posicions premiades ressaltats després d’aturar-se. Regles i historial desplegables, Escape i focus contingut. Celebració visible i lliurament al saldo conservat.
+La ruleta queda integrada al contingut de La Net, amb barra superior i menú accessibles. Sense overlay ni posició fixa; disposició segons amplada real disponible. Formularis, retorn al forn, recuperació d’apostes, resultats i animació de premis conservats.
 
-[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.5) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38389023037) · [Registre](releases/0.6.5.json). PR14 i CI exacta de main correctes, release immutable i digest del rebut verificat. Controls CI paral·lels, tots obligatoris.
-
-HTTPS, www 308 i fitxers públics main/Bakery/icona/HTML verificats amb SHA-256. Google únic @fje.edu, callback .es, D1/R2 EU i moderació preservats. Sense migracions ni dades d’usuaris modificades.
-
-Actualització 0.6.6 publicada: ruleta ocupa tota la finestra, sense el marc anterior de 12px. [Registre verificat](releases/0.6.6.json).
+[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.7) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38421356223) · [Registre](releases/0.6.7.json). PR18 i CI exacta de main correctes; tag/release immutable i digest del rebut verificats. Sense migracions ni dades d’usuaris modificades.

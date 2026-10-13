@@ -25,3 +25,5 @@ Correcció 0.6.6: sala als quatre límits de finestra, sense marc exterior. 12 c
 ## Correcció de presentació 0.6.7
 
 La ruleta ha de quedar dins del contingut de La Net. S’elimina el portal/overlay i la posició fixa. La sala accessible no és modal: menú i perfil continuen disponibles. Composició compacta basada en amplada real, no en l’amplada total del navegador; el tapet només es comprimeix quan hi ha espai per als 157 objectius. Cal verificar navegador, formularis, Escape, animació i recuperació abans de publicar.
+
+Publicació 0.6.7 confirmada: sala integrada amb menú i barra, focus no modal, tapet i premis verificats localment; CI exacta i proveïdor correctes. Registre: releases/0.6.7.json.
