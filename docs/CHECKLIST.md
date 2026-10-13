@@ -2,7 +2,7 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**183/184 tasques verificades · 91 requisits · 76 fases · límit d’una tasca activa.**
+**184/185 tasques verificades · 92 requisits · 77 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
@@ -421,5 +421,9 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 ## F75 Informació acadèmica BAT2 2026-27
 
 - [x] **T75-01** Contrastar i integrar la guia acadèmica del curs — Verificat.
+
+## F76 Propostes UX de continguts i xats per assignatura
+
+- [x] **T76-01** Comparar i representar visualment les alternatives de xats i carpetes — Verificat.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

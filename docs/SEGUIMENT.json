@@ -368,6 +368,10 @@
     {
       "id": "R91",
       "description": "Integrar la presentació BAT2 2026-27: avaluació acumulativa, calendari, recerca i recursos, preservant les dades personals."
+    },
+    {
+      "id": "R92",
+      "description": "Dissenyar xats per assignatura i organització de continguts amb carpetes: alternatives visuals, rànquing i proposta UX coherent."
     }
   ],
   "phases": [
@@ -900,6 +904,13 @@
       "title": "Informació acadèmica BAT2 2026-27",
       "depends_on": [
         "F74"
+      ]
+    },
+    {
+      "id": "F76",
+      "title": "Propostes UX de continguts i xats per assignatura",
+      "depends_on": [
+        "F75"
       ]
     }
   ],
@@ -7371,6 +7382,47 @@
       ],
       "progress": "Publicada 0.6.11 a lanet.es via PR26/27 i CI exacta de main. 34 pàgines revisades, classificació acumulativa amb preferències preservades, calendari de rangs i ICS, TR 30/42/21/7 privat local i guia de recursos. 376 unitàries i 60 fluxos locals en tres motors correctes; guia i notes també verificades a CI. Domini, commit, tag/release i digest del rebut confirmats via proveïdor. Sense migracions ni dades reals modificades.",
       "change_log_id": "H181"
+    },
+    {
+      "id": "T76-01",
+      "phase": "F76",
+      "title": "Comparar i representar visualment les alternatives de xats i carpetes",
+      "status": "verified",
+      "requirements": [
+        "R03",
+        "R22",
+        "R23",
+        "R92"
+      ],
+      "depends_on": [
+        "T75-01"
+      ],
+      "files": [
+        "docs/PROPOSTES-XATS-CONTINGUTS.md",
+        "docs/designs/xats-continguts/01-espais-assignatura.png",
+        "docs/designs/xats-continguts/02-biblioteca-carpetes.png",
+        "docs/designs/xats-continguts/03-biblioteca-xats-separats.png",
+        "docs/designs/xats-continguts/04-conversa-primer.png"
+      ],
+      "acceptance": "Quatre alternatives diferenciades en desktop i mòbil, identitat visual de La Net preservada, rànquing raonat, proposta recomanada i comportaments de chat/materials definits. Mockups revisats, dades fictícies i traçabilitat; cap canvi prematur de dades o de producte.",
+      "checks": [
+        "Revisar arquitectura actual, permisos i patrons UX.",
+        "Definir quatre arquitectures i criteris de rànquing.",
+        "Generar quatre mockups amb imagegen i revisar-los.",
+        "Documentar recomanació, estats, accessibilitat i pla d’implementació.",
+        "Registrar les evidències via PR amb CI."
+      ],
+      "evidence": [
+        "docs/PROPOSTES-XATS-CONTINGUTS.md",
+        "docs/designs/xats-continguts/01-espais-assignatura.png",
+        "docs/designs/xats-continguts/02-biblioteca-carpetes.png",
+        "docs/designs/xats-continguts/03-biblioteca-xats-separats.png",
+        "docs/designs/xats-continguts/04-conversa-primer.png",
+        "output/subject-chat-ux/review.json",
+        "output/subject-chat-ux/prompts.json"
+      ],
+      "progress": "Exploració documental completada: quatre alternatives, vuit pantalles desktop/mòbil generades amb imagegen i revisades visualment. Recomanació A, espais per assignatura amb carpetes per tema i xat contextual; rànquing heurístic explícit, no test amb estudiants. Definits fils, referències a materials, permisos, esborranys, reintents, silenci i pla d’implementació. Traçabilitat via PR i Validate segons el flux del repositori. Cap servei de xat implementat, cap canvi de dades ni nova publicació de producte; continua 0.6.11.",
+      "change_log_id": "H182"
     }
   ]
 }
