@@ -7058,7 +7058,7 @@
       "id": "T73-01",
       "phase": "F73",
       "title": "Organitzar la sala de ruleta i ressaltar el resultat al tapet",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R89"
       ],
@@ -7086,8 +7086,15 @@
         "Provar disposició, límits del tapet, zero, canvi de gir i moviment reduït localment en tres motors.",
         "Passar PR/CI abans de publicar."
       ],
-      "evidence": [],
-      "progress": "93 casos locals correctes; CI detecta capes de formularis de prediccions i prova horari dependent de dilluns. Correccions preparades, amb celebració per davant i destinació de premi dins de la sala. Revalidació en curs abans de publicar."
+      "evidence": [
+        "docs/releases/0.6.5.json",
+        "docs/PLA-RULETA-PANORAMICA.md",
+        "output/roulette-panorama/results.json",
+        "output/roulette-panorama/public-verification.json",
+        "output/releases/0.6.5/receipt.json"
+      ],
+      "progress": "Publicada 0.6.5 amb PR14 i CI exacta main, release immutable, SHA/digests i HTTP.es verificats. 147 casos locals en tres motors correctes; sense migracions ni dades modificades.",
+      "change_log_id": "H175"
     }
   ]
 }

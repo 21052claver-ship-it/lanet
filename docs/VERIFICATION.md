@@ -1,9 +1,9 @@
-# Verificació · La Net 0.6.4
+# Verificació · La Net 0.6.5
 
-Commit dd7fa5f3c857a51f80c4b345a703d191a51e7bc9. [CI completa](https://github.com/21052claver-ship-it/lanet/actions/runs/38262263060) correcta després de la PR #11. 357 proves unitàries i controls de tipus/lint/build correctes. 39 casos PAU en Chromium/Firefox/WebKit i 24 de recuperació de sessió; cinc disposicions de la icona. Captures locals a 320 i 820 px revisades.
+Commit 65da6a8506f92edde9ce6fa559cd5d826a3c7750. [CI completa](https://github.com/21052claver-ship-it/lanet/actions/runs/38389023037) correcta sobre main després de PR14: core i quatre grups de navegador, agregació Validate que requereix tots success. Totes les comprovacions prèvies es conserven, sense secrets de producció.
 
-Publicació confirmada per Cloudflare i GitHub, release immutable i digest del rebut verificat. HTTPS real amb validació de certificat a lanet.es i www.lanet.es, HTTP 200 a l’arrel i redirecció www 308. Fitxers publicats de PAU, app, CSS, HTML i icona coincideixen amb SHA-256 del rebut. Status d’accés Google únic correcte i configuració efectiva del callback .es confirmada via proveïdor. D1/R2 EU i MEDIA_SAFETY preservats.
+Proves locals en Chromium/Firefox/WebKit: 12 panoràmiques (zero, gir següent, apostes entre números, sense scroll i Escape), 27 tapet/157 objectius, 18 animació/lliurament, 36 sala/recuperació, 39 prediccions i 15 horari. Captures revisades; controls de tipus/lint i compilació correctes. Prova d’horari selecciona explícitament el dia de fixture, sense dependre del dia real. Formularis de prediccions diferenciats de la sala accessible.
 
-La verificació HTTP utilitza el DNS autoritatiu actual. El navegador obert encara ha retornat un error SSL perquè el seu resolutor conserva la IP antiga d’IONOS; no s’ha ignorat ni desactivat cap validació TLS. Cloudflare UI mostra ambdós dominis Active / SSL enabled i producció La Net 0.6.4. No s’ha iniciat sessió amb un compte real ni provat dispositius físics.
+Desplegament real confirmat; HTML, main/Bakery JS/CSS i icona publicats coincideixen amb el rebut. HTTPS certificat validat, arrel HTTP200 i www308. Google únic i callback.es correctes; DB/R2 EU i MEDIA_SAFETY preservats. Comprovacions HTTP només GET, sense iniciar compte ni apostar a producció. Dispositius físics no provats.
 
-Evidències privades a output/net-pastel, output/pau-visual-verified, output/profile-logout i output/domain-lanet-es. [Registre públic](releases/0.6.4.json).
+[Registre públic](releases/0.6.5.json). Evidències privades a output/roulette-panorama i logs output/net-pastel/panorama-*.log.

@@ -8,7 +8,7 @@ T73-01: una sola sala amb roda, crupier, tapet i botó de girar. El càlcul, l�
 - [x] Regles i historial en desplegable; detall de fitxes consultable sense desplaçar el joc panoràmic.
 - [x] Número guanyador i categories exteriors ressaltats en acabar; posicions amb fitxes premiades identificades. Zero no ressalta cap aposta exterior.
 - [x] Sense pistes durant el gir; neteja de marques a l’aposta següent i número visible per sobre del ressaltat.
-- [ ] Completar regressions locals, PR/CI i publicació versionada.
+- [x] Completar regressions locals, PR/CI i publicació versionada.
 
 Icones i imatges existents, verd fosc, crema i fusta coherents amb la sala. Sense crear ni alterar dades de producció. Les proves creen moneders i resultats deterministes exclusivament en bases de dades locals aïllades.
 
@@ -17,3 +17,5 @@ Evidències privades: output/roulette-panorama, output/roulette-board, output/ro
 ## Publicació més ràpida
 
 Les mateixes proves de navegador s’executen en quatre grups independents: navegació, tapet/apostes, sala/animació i compatibilitat. Tots executen sobre el mateix commit amb una compilació local nova i sense secrets. El job final Validate depèn dels controls bàsics i de tota la matriu: qualsevol error, cancel·lació o grup incomplet impedeix l’èxit. Es conserven totes les proves anteriors, el smoke d’àudio Firefox i els artefactes d’evidència, més la nova prova panoràmica. No hi ha desplegament automàtic ni secrets nous a GitHub.
+
+Publicada 0.6.5: https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.5. SHA 65da6a8506f92edde9ce6fa559cd5d826a3c7750, CI i rebuts confirmats; fitxers públics verificats.
