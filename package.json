@@ -1,6 +1,6 @@
 {
   "name": "la-net",
-  "version": "0.6.8",
+  "version": "0.6.9",
   "private": true,
   "type": "module",
   "scripts": {
@@ -48,7 +48,9 @@
     "test:schedule-cards": "node scripts/test-schedule-cards.mjs",
     "test:workspace-recovery": "node scripts/test-workspace-recovery.mjs",
     "test:roulette-panorama": "node scripts/test-roulette-panorama.mjs",
-    "test:roulette-sound": "node scripts/test-roulette-sound.mjs"
+    "test:roulette-sound": "node scripts/test-roulette-sound.mjs",
+    "test:official-schedule": "node scripts/test-official-schedule.mjs",
+    "test:official-schedule-api": "node scripts/test-official-schedule-api.mjs"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.3.0",

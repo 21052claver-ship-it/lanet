@@ -237,3 +237,6 @@ R31: cartell una mica més gran, més fusta, imatge sola a tota la superfície, 
 ## R32 · Selectors de vista visuals
 
 La petició de Marc del 10 d’octubre substitueix el subratllat de R28 per una base agrupada i una única opció emplenada amb contorn. Horari/Agenda incorporen icones; el component compartit manté la coherència de les altres seccions. [Pla i límits](PLA-SELECTORS-VISUALS.md). F19 té tres tasques consecutives; total de 32 requisits, 20 fases i 83 tasques, amb una sola activa.
+
+
+R90: horaris oficials BAT2 2026–27 a partir del PDF aportat per Marc. [Pla d’horaris](PLA-HORARIS-OFICIALS.md): transcripció revisada → migració de catàleg → selector visual i enllaços → proves locals → còpia privada, PR/CI i publicació. Tres itineraris, optatives i professorat segons el cas; 208 combinacions completes, 30 hores setmanals i conservació de qualificacions i referències. Tasca única T74-01, fase F74.

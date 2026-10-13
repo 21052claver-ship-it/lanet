@@ -75,11 +75,13 @@ export default function Grades() {
     toolbarRef.current?.querySelector('.section-options summary')?.focus();
   }
   const subjectOrder = ['math', 'smath', 'phy', 'chem', 'cat', 'cast', 'eng', 'hist', 'phil'];
-  const enrolled = [...currentSubjects].sort(
-    (a, b) =>
-      (subjectOrder.indexOf(a.id) < 0 ? 99 : subjectOrder.indexOf(a.id)) -
-      (subjectOrder.indexOf(b.id) < 0 ? 99 : subjectOrder.indexOf(b.id)),
-  );
+  const enrolled = currentSubjects
+    .filter((s) => s.assessed !== 0)
+    .sort(
+      (a, b) =>
+        (subjectOrder.indexOf(a.id) < 0 ? 99 : subjectOrder.indexOf(a.id)) -
+        (subjectOrder.indexOf(b.id) < 0 ? 99 : subjectOrder.indexOf(b.id)),
+    );
   const [term, setTerm] = useState(1),
     [sheet, setSheet] = useState('summary'),
     [selected, setSelected] = useState(enrolled[0]?.id || null);

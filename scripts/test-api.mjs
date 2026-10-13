@@ -304,9 +304,8 @@ try {
     assert.equal(aUser.has_password, false);
     assert.equal(aUser.google_sub, undefined);
   });
-  const offerings = ['cat', 'cast', 'eng', 'hist', 'phil', 'math', 'phy', 'chem'].map(
-    (s) => '2B-' + s,
-  );
+  const assessedSubjects = ['cat', 'cast', 'eng', 'hist', 'phil', 'math', 'phy', 'dt', 'ods'];
+  const offerings = [...assessedSubjects.map((s) => '2B-' + s), '2B-tutor-puigpinos'];
   await check('Perfil: identitat immutable i preferencies editables', async () => {
     for (const key of ['name', 'given_name', 'family_name', 'email', 'avatar_url', 'google_sub'])
       await b.request('/profile', { [key]: 'Modified', preferences: { volume: 0.99 } }, 403);
@@ -325,11 +324,11 @@ try {
   await check('Curs personalitzat i plantilles completes', async () => {
     await a.request('/configure', { group_id: '2B', path: 'science', offerings });
     const d = await a.request('/bootstrap');
-    assert.equal(d.enrollments.length, 8);
-    assert.equal(d.grades.length, 288);
+    assert.equal(d.enrollments.length, 10);
+    assert.equal(d.grades.length, 324);
     assert.ok(d.grades.every((g) => g.grade === null));
     assert.ok(d.grades.every((g) => g.category !== 'participation'));
-    for (const subject of ['cat', 'cast', 'eng', 'hist', 'phil', 'math', 'phy', 'chem'])
+    for (const subject of assessedSubjects)
       for (const term of [1, 2, 3]) {
         const entries = d.grades.filter((g) => g.subject_id === subject && g.term === term);
         assert.equal(entries.length, 12);
@@ -541,7 +540,7 @@ try {
       place: 'Biblioteca',
       subjects: [
         { subject_id: 'phy', bonus: '+0,25' },
-        { subject_id: 'chem', bonus: '+0,50' },
+        { subject_id: 'dt', bonus: '+0,50' },
       ],
     });
     await b.request(`/pluses/${plus.id}/calendar`, {});
@@ -607,12 +606,12 @@ try {
   });
   await check('Un plus de 0,50 ocupa els dos espais i limita la nota corregida', async () => {
     const bonus = await a.request('/grades/bonus', {
-      subject_id: 'chem',
+      subject_id: 'dt',
       plus_id: plus.id,
       maximum: 0.5,
       grade: 0.45,
     });
-    await a.request('/grades/bonus', { subject_id: 'chem', title: 'Un altre', maximum: 0.25 }, 409);
+    await a.request('/grades/bonus', { subject_id: 'dt', title: 'Un altre', maximum: 0.25 }, 409);
     await a.request('/grades/batch', { entries: [{ id: bonus.id, grade: 0.51 }] }, 400);
     assert.equal(
       (await a.request('/bootstrap')).gradeBonuses.find((row) => row.id === bonus.id).grade,

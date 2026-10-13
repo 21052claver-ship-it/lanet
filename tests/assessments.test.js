@@ -14,7 +14,7 @@ import { assessmentInput } from '../worker/assessment-input.js';
 function legacyFixture() {
   const db = new DatabaseSync(':memory:');
   for (const file of readdirSync('migrations')
-    .filter((file) => file.endsWith('.sql') && file !== '0011_assessment_model.sql')
+    .filter((file) => file.endsWith('.sql') && file < '0011_assessment_model.sql')
     .sort())
     db.exec(readFileSync(`migrations/${file}`, 'utf8'));
   for (const user of ['blank', 'graded', 'custom', 'inactive', 'exam_only']) {

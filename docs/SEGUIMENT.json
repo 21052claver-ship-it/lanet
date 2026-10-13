@@ -360,6 +360,10 @@
     {
       "id": "R89",
       "description": "Ruleta panoràmica sense scroll amb roda, crupier, tapet i girar visibles; ressaltar caselles guanyadores només en acabar el gir"
+    },
+    {
+      "id": "R90",
+      "description": "Horaris oficials BAT2 2026-27, itineraris A/B/C, optatives i professorat amb selector visual i persistència coherent"
     }
   ],
   "phases": [
@@ -878,6 +882,13 @@
       "title": "Ruleta panoràmica i resultat visual",
       "depends_on": [
         "F72"
+      ]
+    },
+    {
+      "id": "F74",
+      "title": "Horaris oficials i configuració visual",
+      "depends_on": [
+        "F73"
       ]
     }
   ],
@@ -7203,6 +7214,49 @@
       ],
       "progress": "Publicada 0.6.8 via PR20 i CI exacta de main. Sons suaus locals, silenci persistent i neteja; música, saldo i recuperació conservats. 15 proves natives/fallback locals correctes (6 omeses per manca d’API WebKit Windows), 15 visuals, 18 d’animació i 357 unitàries. CI d’àudio i domini/commit canònic confirmats.",
       "change_log_id": "H178"
+    },
+    {
+      "id": "T74-01",
+      "phase": "F74",
+      "title": "Importar horaris oficials i connectar el selector visual",
+      "status": "review",
+      "requirements": [
+        "R01",
+        "R03",
+        "R90"
+      ],
+      "depends_on": [
+        "T73-04"
+      ],
+      "files": [
+        "shared/official-schedule.js",
+        "migrations/0026_official_schedule.sql",
+        "src/components/CourseSetup.jsx",
+        "src/course-setup.css",
+        "src/pages/WeekTimeline.jsx",
+        "src/pages/Schedule.jsx",
+        "worker/data.js",
+        "tests/official-schedule.test.js",
+        "scripts/test-official-schedule.mjs",
+        "scripts/test-official-schedule-api.mjs"
+      ],
+      "acceptance": "Horaris fidels al PDF: tres itineraris, optatives, professors i aules alineats; 30 franges setmanals per combinació, pauses correctes i bloc continu de divendres. Selector accessible per passos, resum i persistència; dades personals conservades. Migració revisada amb còpia privada i publicació via PR/CI.",
+      "checks": [
+        "Llegir i revisar visualment les cinc pàgines del PDF.",
+        "Crear catàleg verificable i migració limitada al catàleg.",
+        "Connectar selector, perfil, horari i detall de classe.",
+        "Provar combinacions, validació servidor i UI en tres motors.",
+        "Revisar/aplicar migració amb còpia privada i publicar amb CI."
+      ],
+      "evidence": [
+        "docs/PLA-HORARIS-OFICIALS.md",
+        "output/official-schedule/unit.log",
+        "output/official-schedule/typecheck.log",
+        "output/official-schedule/browser/results.json",
+        "output/official-schedule/api-results.json"
+      ],
+      "progress": "Model contrastat amb el PDF: 208 combinacions sense coincidències; selector, perfil, horari i detalls connectats. 366 unitàries, 24 casos visuals en tres motors i API amb D1 local correctes. Migració revisada, única pendent al proveïdor; còpia privada, PR/CI i publicació pendents.",
+      "change_log_id": "H179"
     }
   ]
 }

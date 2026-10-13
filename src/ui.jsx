@@ -24,6 +24,11 @@ import {
   ArrowRight,
   SpinnerGap,
   GraduationCap,
+  Ruler,
+  Circuitry,
+  Palette,
+  Handshake,
+  Plant,
 } from '@phosphor-icons/react';
 export const NAV = [
   ['schedule', 'Horari i agenda', CalendarDots],
@@ -48,6 +53,13 @@ export function SubjectIcon({ id, size = 19, ...props }) {
       eng: Translate,
       hist: GlobeHemisphereWest,
       phil: Brain,
+      dt: Ruler,
+      tech: Circuitry,
+      art: Palette,
+      eco: ChartLine,
+      geo: GlobeHemisphereWest,
+      ods: Plant,
+      tutor: Handshake,
     }[id] || BookOpen;
   return <Icon size={size} {...props} />;
 }

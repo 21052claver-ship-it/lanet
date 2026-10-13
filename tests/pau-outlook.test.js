@@ -20,6 +20,16 @@ const entries = [
   { subject_id: 'chem', term: 1, weight: 100, grade: 7 },
   { subject_id: 'cat', term: 1, weight: 100, grade: 9 },
 ];
+test('Tutoria is excluded from academic average and PAU coverage', () => {
+  const result = currentPauProfile({ grades: entries }, [
+    ...subjects,
+    { id: 'tutor', name: 'Tutoria', assessed: 0 },
+  ]);
+  assert.equal(result.total, 3);
+  assert.equal(result.known, 3);
+  assert.equal(result.average, 8);
+  assert.ok(!result.subjects.some((s) => s.id === 'tutor'));
+});
 test('PAU top 5: ordered unique bounded codes and source are validated, legacy objective survives', () => {
   const old = emptyPau();
   delete old.topFive;

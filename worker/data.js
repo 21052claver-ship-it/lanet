@@ -1,4 +1,4 @@
-import { rows, one, sql, run, fail, publicUser, id, str, choice } from './utils.js';
+import { rows, one, sql, fail, publicUser, str } from './utils.js';
 import { madridDay, nextBid, slotConflicts } from '../shared/domain.js';
 import { readPreferences } from '../shared/preferences.js';
 import { publicBanner, BANNER_SLOTS } from '../shared/banner.js';
@@ -6,6 +6,14 @@ import { googleAvailable } from './google-config.js';
 import { bakeryRewardPolicy } from '../shared/bakery-reward.js';
 import { bakeryStatus } from './bakery.js';
 import { expirePredictions } from './predictions.js';
+import {
+  SCHEDULE_VERSION,
+  SCHEDULE_SOURCE,
+  SCHOOL_PERIODS,
+  SCHOOL_BREAKS,
+  OFFICIAL_ROUTES,
+  curriculumIssues,
+} from '../shared/official-schedule.js';
 export async function catalog(env) {
   const [subjects, groups, offerings, slots, templates] = await Promise.all([
     rows(env, 'SELECT * FROM subjects ORDER BY rowid'),
@@ -14,7 +22,21 @@ export async function catalog(env) {
     rows(env, 'SELECT * FROM slots'),
     rows(env, 'SELECT * FROM templates ORDER BY term,position'),
   ]);
-  return { subjects, groups, offerings, slots, templates };
+  return {
+    subjects,
+    groups,
+    offerings,
+    slots,
+    templates,
+    schoolSchedule: offerings.some((o) => o.active === 1 && o.schedule_version === SCHEDULE_VERSION)
+      ? {
+          version: SCHEDULE_VERSION,
+          source: SCHEDULE_SOURCE,
+          periods: SCHOOL_PERIODS,
+          breaks: SCHOOL_BREAKS,
+        }
+      : null,
+  };
 }
 export async function canReadNote(env, user, note) {
   return (
@@ -189,8 +211,10 @@ export async function bootstrap(env, user) {
   };
 }
 export async function configure(env, user, b) {
-  const group = str(b.group_id, 60, true),
-    path = choice(b.path, ['science', 'social', 'humanities']);
+  const group = str(b.group_id, 60, true);
+  const route = OFFICIAL_ROUTES.find((r) => r.id === group);
+  if (!route || b.path !== route.path) fail(400, 'Tria un dels tres itineraris oficials.');
+  const path = route.path;
   if (user.role === 'delegate' && group !== user.group_id)
     fail(403, 'L’administrador ha d’assignar-te un altre grup abans que el puguis gestionar.');
   if (!(await one(env, 'SELECT id FROM groups WHERE id=?', group)))
@@ -198,18 +222,22 @@ export async function configure(env, user, b) {
   if (!Array.isArray(b.offerings) || b.offerings.length < 5 || b.offerings.length > 20)
     fail(400, 'Tria les assignatures del curs.');
   const cat = await catalog(env);
-  const selected = [...new Set(b.offerings)].map((oid) => cat.offerings.find((o) => o.id === oid));
-  if (selected.some((o) => !o || o.group_id !== group || !['common', path].includes(o.path)))
-    fail(400, 'Hi ha una assignatura que no correspon al teu grup o itinerari.');
+  const issues = curriculumIssues(cat, group, b.offerings);
+  if (issues.length) fail(400, issues.join(' '));
+  const selected = b.offerings.map((oid) => cat.offerings.find((o) => o.id === oid));
   if (new Set(selected.map((o) => o.subject_id)).size !== selected.length)
     fail(400, 'Tria una sola variant de cada assignatura.');
-  const common = cat.offerings.filter((o) => o.group_id === group && o.path === 'common');
-  if (common.some((o) => !selected.some((s) => s.subject_id === o.subject_id)))
-    fail(400, 'Has de seleccionar les assignatures comunes.');
   if (slotConflicts(selected, cat.slots).length)
     fail(400, 'Dues assignatures coincideixen a la mateixa hora. Tria una alternativa.');
   const batch = [
-    sql(env, 'UPDATE users SET group_id=?,path=?,configured=1 WHERE id=?', group, path, user.id),
+    sql(
+      env,
+      'UPDATE users SET group_id=?,path=?,configured=1,schedule_version=? WHERE id=?',
+      group,
+      path,
+      SCHEDULE_VERSION,
+      user.id,
+    ),
     sql(env, 'DELETE FROM enrollments WHERE user_id=?', user.id),
     ...selected.map((o) =>
       sql(env, 'INSERT INTO enrollments(user_id,offering_id) VALUES(?,?)', user.id, o.id),
