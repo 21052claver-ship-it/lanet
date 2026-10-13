@@ -7131,7 +7131,7 @@
       "id": "T73-03",
       "phase": "F73",
       "title": "Integrar la ruleta dins la plataforma",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R89"
       ],
@@ -7152,11 +7152,16 @@
         "Publicar via PR i CI."
       ],
       "evidence": [
-        "output/roulette-panorama/inline-browser.log",
-        "output/roulette-panorama/inline-typecheck.log",
-        "output/roulette-panorama/inline-unit.log"
+        "docs/releases/0.6.7.json",
+        "output/releases/0.6.7/receipt.json",
+        "output/roulette-panorama/inline-results.json",
+        "output/roulette-board/browser/results.json",
+        "output/roulette-animation/results.json",
+        "output/predictions/browser-results.json",
+        "output/secret-room/secret-room-browser-results.json",
+        "output/roulette-panorama/inline-provider-verification.json"
       ],
-      "progress": "Sala integrada al contingut; eliminat overlay i posició fixa. 12 casos locals de distribució correctes en tres motors, typecheck i unitàries correctes. Regressions de navegació, apostes i animació en curs; PR i publicació 0.6.7 pendents.",
+      "progress": "Publicada 0.6.7 a lanet.es via PR18 i CI exacta de main. Sala integrada, navegació visible i accessible; 132 casos locals en tres motors i 357 unitàries correctes. Rebut Cloudflare, tag/release i digest verificats.",
       "change_log_id": "H177"
     }
   ]
