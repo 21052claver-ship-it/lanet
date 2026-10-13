@@ -1119,3 +1119,5 @@ Publicació H179 confirmada: [0.6.9](https://github.com/21052claver-ship-it/lane
 ### H180 Conservar detalls en editar una variant
 
 **13 octubre 2026 · T74-02.** La revisió final detecta que l’editor de gestió ometia teacher/note en reinserir les franges: podia perdre professorat per dia i treball personal. Conservació compatible amb clients antics, IDs verificats de la mateixa variant i editor explícit de professorat general, específic o treball personal. Es rebutgen modes invàlids i solapaments abans de modificar dades. Comprovacions i publicació 0.6.10 en curs; cap nova migració ni canvi de dades de producció.
+
+H180 · Validació de main: el bloc de prediccions detecta una carrera a la prova de resposta perduda (assertion abans del commit confirmat). Corregida només la sincronització de la fixture; es conserven les assertions de càrrec únic, saldo i recuperació. 13 casos WebKit locals correctes. Publicació 0.6.10 pendent de nova CI verda; la versió 0.6.9 continua pública.
