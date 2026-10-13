@@ -1,11 +1,9 @@
-# Verificació · La Net 0.6.9
+# Verificació · La Net 0.6.10
 
-[CI completa](https://github.com/21052claver-ship-it/lanet/actions/runs/38443480810) correcta per a main 22752b3b2668e6117e1589f6bd4b6ce2db8979b9, després de PR22.
+[CI completa](https://github.com/21052claver-ship-it/lanet/actions/runs/38455769429) correcta per a main 61592226ddf77ae7e3fcb545d8c0a805078c9ed3, després de PR23/24.
 
-208 combinacions exhaustives: 30 hores setmanals cadascuna, sense coincidències. Transcripció contrastada amb les cinc pàgines del PDF, professorat per dia, optatives, tutoria, aules i pauses. 366 unitàries, 24 fluxos de navegador locals i 24 a CI en tres motors, 15 regressions de targetes i API amb D1/workerd local correctes. Tipus/lint, compilació i auditoria correctes.
+370 unitàries, incloses les 208 combinacions oficials i la conservació de metadades en desar variants. Clients antics, IDs aliens/duplicats, tipus invàlids, modes general/específic/personal i solapaments comprovats. D1/workerd local verifica tres itineraris i l’edició de Filosofia, Literatura i Llatí amb payload antic.
 
-Migració assajada sobre una còpia privada exportada de D1: totes les columnes personals anteriors i les plantilles existents conservades, integritat local correcta. Única migració pendent 0026 aplicada separadament amb CI verda; 53 ofertes i 155 franges contrastades exactament via proveïdor.
+27 fluxos de navegador locals i 27 a CI en Chromium, Firefox i WebKit; inclosos 9 casos d’edició de variants a 320, 390 i 1440 px. Comprovació que els noms de dia no es comprimeixen verticalment. Tipus/lint, compilació i auditoria correctes.
 
-L’API històrica general test:api s’atura al control antiabús per acumulació d’infraccions deliberades entre escenaris; no es presenta com a passada ni s’han relaxat els controls. La prova específica d’horari és independent i obligatòria a CI.
-
-Domini, desplegament i commit canònic confirmats amb API/CLI del proveïdor; tag, release immutable i SHA-256 del rebut correctes. Cap prova contra comptes reals o la web pública. Dispositius físics no provats. [Registre](releases/0.6.9.json).
+Catàleg del proveïdor contrastat amb el model: 53 ofertes i 155 franges intactes. Domini, commit canònic, tag/release immutable i digest del rebut verificats. Sense migracions addicionals ni dades de producció modificades. Cap prova contra la web pública ni dispositius físics. La limitació de la suite API històrica general es conserva al registre de 0.6.9; la prova D1 específica és obligatòria a CI. [Registre](releases/0.6.10.json).
