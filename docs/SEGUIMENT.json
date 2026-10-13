@@ -7083,7 +7083,7 @@
         "Passar PR/CI abans de publicar."
       ],
       "evidence": [],
-      "progress": "Sala panoràmica i ressaltat implementats; 12 comprovacions locals de disposició/resultat en tres motors correctes, tipus/lint correctes. Regressions de tapet/animació/sala en curs; preparant PR i publicació 0.6.5."
+      "progress": "12 casos panoràmics/resultat, 27 de tapet, 18 d’animació i 36 de sala correctes en tres motors; tipus/lint correctes. Mateixes comprovacions CI repartides en 4 grups sense saltar controls; Verify final obligatori. Preparant publicació 0.6.5."
     }
   ]
 }

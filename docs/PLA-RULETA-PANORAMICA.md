@@ -13,3 +13,7 @@ T73-01: una sola sala amb roda, crupier, tapet i botó de girar. El càlcul, l�
 Icones i imatges existents, verd fosc, crema i fusta coherents amb la sala. Sense crear ni alterar dades de producció. Les proves creen moneders i resultats deterministes exclusivament en bases de dades locals aïllades.
 
 Evidències privades: output/roulette-panorama, output/roulette-board, output/roulette-animation i output/secret-room. Els resums locals comproven tots els 157 objectius del tapet, límits, recuperació idempotent, animació, saldo i retorn del focus.
+
+## Publicació més ràpida
+
+Les mateixes proves de navegador s’executen en quatre grups independents: navegació, tapet/apostes, sala/animació i compatibilitat. Tots executen sobre el mateix commit amb una compilació local nova i sense secrets. El job final Validate depèn dels controls bàsics i de tota la matriu: qualsevol error, cancel·lació o grup incomplet impedeix l’èxit. Es conserven totes les proves anteriors, el smoke d’àudio Firefox i els artefactes d’evidència, més la nova prova panoràmica. No hi ha desplegament automàtic ni secrets nous a GitHub.
