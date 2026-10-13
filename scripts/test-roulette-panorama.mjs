@@ -65,6 +65,20 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
           !document.querySelector('.casino-bet-controls').disabled,
       );
       await p.getByRole('dialog').waitFor();
+      const room = await p.locator('.casino-room').boundingBox();
+      assert.ok(
+        room &&
+          Math.abs(room.x) <= 1 &&
+          Math.abs(room.y) <= 1 &&
+          Math.abs(room.width - width) <= 1 &&
+          Math.abs(room.height - height) <= 1,
+        `Room fills viewport ${width}x${height}: ${JSON.stringify(room)}`,
+      );
+      assert.equal(
+        await p.locator('.casino-room').evaluate((e) => getComputedStyle(e).borderRadius),
+        '0px',
+        'Fullscreen room has no inset rounded frame',
+      );
       if (width >= 1200) {
         for (const selector of [
           '.roulette-device',

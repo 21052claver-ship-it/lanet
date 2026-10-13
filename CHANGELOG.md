@@ -2,6 +2,11 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.6.6] - 2026-10-13
+
+- La sala de ruleta ocupa tota la finestra, sense marges exteriors ni cantonades que deixin veure la plataforma de sota.
+- Comprovació dels quatre límits de pantalla en Chromium, Firefox i WebKit, també en mòbil.
+
 ## [0.6.5] - 2026-10-13
 
 - Sala de ruleta panoràmica: roda i crupier al costat del tapet, fitxes i botó de girar, sense scroll del joc a 1280×720 o superior.
