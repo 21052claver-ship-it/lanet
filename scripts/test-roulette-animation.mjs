@@ -102,6 +102,14 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         }
         if (scenario === 'win') {
           await page.locator('.roulette-award.is-profit').waitFor();
+          assert.ok(
+            await page.evaluate(
+              () =>
+                Number(getComputedStyle(document.querySelector('.roulette-award')).zIndex) >
+                Number(getComputedStyle(document.querySelector('.casino-room')).zIndex),
+            ),
+            'Prize celebration appears above the room',
+          );
           assert.equal(await balance(), '4', 'prize held while cakes fly');
           assert.equal(await page.locator('.roulette-prize-flight').count(), 2);
           await page.screenshot({ path: `${out}/${engine}-win.png` });

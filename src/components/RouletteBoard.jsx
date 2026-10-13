@@ -15,7 +15,16 @@ import {
 const onTable = TABLE_BETS.filter((b) => roulettePosition(b));
 const outside = TABLE_BETS.filter((b) => !roulettePosition(b));
 
-export default function RouletteBoard({ bets, onChange, disabled, balance, onError, resetToken }) {
+export default function RouletteBoard({
+  bets,
+  onChange,
+  disabled,
+  balance,
+  onError,
+  resetToken,
+  result = null,
+  settledBets = [],
+}) {
   const [chip, setChip] = useState(1),
     [undoHistory, setUndoHistory] = useState({ token: resetToken, entries: [] }),
     [preview, setPreview] = useState(null),
@@ -98,6 +107,14 @@ export default function RouletteBoard({ bets, onChange, disabled, balance, onErr
   }
   function target(b) {
     const type = rouletteTargetClass(b);
+    const winning =
+      Number.isInteger(result) &&
+      b.numbers.includes(result) &&
+      (b.kind === 'number' ||
+        !roulettePosition(b) ||
+        b.kind === 'column' ||
+        amounts[b.id] > 0 ||
+        settledBets.some((bet) => bet.id === b.id));
     const color = ['red', 'black'].includes(b.kind) ? b.kind : null;
     return (
       <button
@@ -105,10 +122,12 @@ export default function RouletteBoard({ bets, onChange, disabled, balance, onErr
         type="button"
         disabled={disabled}
         tabIndex={focused === b.id ? 0 : -1}
-        className={`tapet-target ${type} ${color ? `pocket-${color}` : ''} ${amounts[b.id] ? 'has-chips' : ''} ${preview === b.id ? 'is-preview' : ''} ${b.kind === 'dozen' ? 'tapet-dozen' : ''}`}
+        className={`tapet-target ${type} ${color ? `pocket-${color}` : ''} ${amounts[b.id] ? 'has-chips' : ''} ${preview === b.id ? 'is-preview' : ''} ${b.kind === 'dozen' ? 'tapet-dozen' : ''} ${winning ? 'is-winning' : ''}`}
         style={roulettePositionStyle(b)}
         aria-label={`${b.label} · retorn ×${b.multiplier}${amounts[b.id] ? ` · ${amounts[b.id]} apostats` : ''}`}
         aria-describedby={helpId}
+        data-winning={winning || undefined}
+        title={winning ? `${b.label} · Casella guanyadora` : b.label}
         onFocus={() => {
           setFocused(b.id);
           setPreview(b.id);
@@ -143,7 +162,7 @@ export default function RouletteBoard({ bets, onChange, disabled, balance, onErr
   }
   const maxReturn = Math.max(...Array.from({ length: 37 }, (_, n) => roulettePayout({ bets }, n)));
   return (
-    <div className="roulette-board">
+    <div className="roulette-board" data-result={result ?? undefined}>
       <p className="tapet-help">
         Tria una fitxa i posa-la sobre un número, una línia o una cruïlla. A la vora, 3 cobreix una
         fila i 6 en cobreix dues.
@@ -206,7 +225,7 @@ export default function RouletteBoard({ bets, onChange, disabled, balance, onErr
         <div className="tapet-surface">
           <div className="tapet-grid">
             <span
-              className={`tapet-cell tapet-zero-cell pocket-green ${active?.numbers.includes(0) ? 'is-covered' : ''}`}
+              className={`tapet-cell tapet-zero-cell pocket-green ${active?.numbers.includes(0) ? 'is-covered' : ''} ${result === 0 ? 'is-result' : ''}`}
               data-number="0"
               aria-hidden="true"
             />
@@ -216,7 +235,7 @@ export default function RouletteBoard({ bets, onChange, disabled, balance, onErr
                 <span
                   key={n}
                   data-number={n}
-                  className={`tapet-cell pocket-${rouletteColor(n)} ${active?.numbers.includes(n) ? 'is-covered' : ''}`}
+                  className={`tapet-cell pocket-${rouletteColor(n)} ${active?.numbers.includes(n) ? 'is-covered' : ''} ${result === n ? 'is-result' : ''}`}
                   style={roulettePositionStyle(BETS_BY_ID[`number:${n}`])}
                   aria-hidden="true"
                 />

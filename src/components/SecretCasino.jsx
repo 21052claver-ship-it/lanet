@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useId, useRef, useState } from 'react';
 import { ArrowLeft, Cake, ArrowClockwise, ChartBar, CircleDashed } from '@phosphor-icons/react';
+import * as Dialog from '@radix-ui/react-dialog';
 import RouletteAward from './RouletteAward';
 import { rouletteFrame, AWARD_MS } from '../../shared/roulette-motion';
 import PredictionRoom from './PredictionRoom';
@@ -373,376 +374,413 @@ export default function SecretCasino({ onExit }) {
   }, [reduced, spinning, awarding]);
   const disabled = busy || spinning || awarding || !!pending;
   return (
-    <section className="casino-room" aria-labelledby="casino-heading">
-      <header className="casino-header">
-        <div>
-          <span className="casino-eyebrow">Sota la pastisseria</span>
-          <h2 id="casino-heading" ref={heading} tabIndex={-1}>
-            La sala secreta
-          </h2>
-          <p>La pastissera tenia un altre barret.</p>
-        </div>
-        <Button variant="ghost" onClick={onExit}>
-          <ArrowLeft size={18} />
-          Tornar al forn
-        </Button>
-      </header>
-      <nav className="casino-tables" aria-label="Taules de la sala secreta">
-        <Button
-          aria-pressed={table === 'roulette'}
-          disabled={disabled}
-          onClick={() => setTable('roulette')}
-        >
-          <CircleDashed size={21} aria-hidden="true" />
-          Ruleta
-        </Button>
-        <Button
-          aria-pressed={table === 'predictions'}
-          disabled={disabled}
-          onClick={() => setTable('predictions')}
-        >
-          <ChartBar size={21} aria-hidden="true" />
-          Prediccions A/B
-        </Button>
-      </nav>
-      {table === 'predictions' ? (
-        <PredictionRoom />
-      ) : (
-        <>
-          <div className="casino-stage">
-            <div className="casino-arch" aria-hidden="true" />
-            <RouletteWheel
-              angle={angle}
-              spinning={spinning}
-              result={result?.result}
-              motion={motion}
-            />
-            <div className="casino-host">
-              <img
-                src="/images/croupier-v1.webp"
-                alt="La pastissera, ara amb armilla verda, corbatí i barret de crupier"
-                width="512"
-                height="768"
-              />
-            </div>
-            <div className="casino-counter" aria-hidden="true" />
-          </div>
-          <div className="casino-play-panel">
-            <div
-              className={`casino-balance ${result?.payout && !spinning && !awarding ? 'prize-arrived' : ''}`}
-            >
-              <ReferenceArt name="cake" size={36} />
-              <span>
-                <strong>{walletBalance}</strong> pastissos disponibles
-              </span>
-              <small>Punts virtuals · sense diners</small>
-            </div>
-            {!loaded && !pending && (
-              <p role="status">
-                {error ? 'No s’ha pogut carregar la sala.' : 'Obrint el teu moneder…'}
-              </p>
-            )}
-            {!loaded && error && <Button onClick={load}>Tornar a carregar</Button>}
-            {pending && (
-              <div className="casino-pending" role="status">
-                <strong>Aposta pendent de confirmar</strong>
-                <p>
-                  {pending.bets ? ticketStake(pending) : pending.stake} pastissos ·{' '}
-                  {betLabel(pending)}. Recuperar-la no crea cap aposta nova.
-                </p>
-                <Button variant="primary" busy={busy} onClick={() => spin(true)}>
-                  <ArrowClockwise size={18} />
-                  Recuperar aposta
-                </Button>
+    <Dialog.Root
+      open
+      onOpenChange={(open) => {
+        if (!open) onExit();
+      }}
+    >
+      <Dialog.Portal container={document.querySelector('.app-shell')}>
+        <Dialog.Overlay className="casino-backdrop" />
+        <Dialog.Content asChild>
+          <section className={`casino-room casino-panorama mode-${betMode}`}>
+            <header className="casino-header">
+              <div>
+                <span className="casino-eyebrow">Sota la pastisseria</span>
+                <Dialog.Title asChild>
+                  <h2 ref={heading} tabIndex={-1}>
+                    La sala secreta
+                  </h2>
+                </Dialog.Title>
+                <Dialog.Description>La pastissera tenia un altre barret.</Dialog.Description>
               </div>
-            )}
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-                spin();
-              }}
-            >
-              <fieldset disabled={disabled || !loaded} className="casino-bet-controls">
-                <legend>Tria la teva aposta</legend>
-                <div className="roulette-play-modes" role="group" aria-label="Manera d’apostar">
-                  <button
-                    type="button"
-                    aria-pressed={betMode === 'board'}
-                    onClick={() => setBetMode('board')}
-                  >
-                    Repartir fitxes
-                  </button>
-                  <button
-                    type="button"
-                    aria-pressed={betMode === 'quick'}
-                    disabled={chips.length > 0}
-                    title={chips.length ? 'Retira primer les fitxes del tapet.' : undefined}
-                    onClick={() => setBetMode('quick')}
-                  >
-                    Aposta ràpida
-                  </button>
-                </div>
-                {betMode === 'board' ? (
-                  <RouletteBoard
-                    resetToken={boardRound}
-                    bets={chips}
-                    onChange={setChips}
-                    balance={walletBalance + (spinning ? boardStake : 0)}
-                    disabled={disabled}
-                    onError={setError}
-                  />
-                ) : (
-                  <>
-                    <div className="roulette-choices" role="radiogroup" aria-label="Tipus d’aposta">
-                      {[
-                        ['red', 'Vermell', '×2'],
-                        ['black', 'Negre', '×2'],
-                        ['number', 'Número', '×36'],
-                      ].map(([value, label, pay]) => (
-                        <button
-                          key={value}
-                          type="button"
-                          role="radio"
-                          aria-checked={kind === value}
-                          tabIndex={kind === value ? 0 : -1}
-                          className={`bet-choice bet-${value} ${kind === value ? 'selected' : ''}`}
-                          onClick={() => setKind(value)}
-                          onKeyDown={(event) => {
-                            const choices = ['red', 'black', 'number'];
-                            const index = choices.indexOf(value);
-                            const next =
-                              event.key === 'Home'
-                                ? 0
-                                : event.key === 'End'
-                                  ? 2
-                                  : ['ArrowRight', 'ArrowDown'].includes(event.key)
-                                    ? (index + 1) % 3
-                                    : ['ArrowLeft', 'ArrowUp'].includes(event.key)
-                                      ? (index + 2) % 3
-                                      : null;
-                            if (next === null) return;
-                            event.preventDefault();
-                            setKind(choices[next]);
-                            event.currentTarget.parentElement
-                              .querySelectorAll('[role="radio"]')
-                              [next].focus();
-                          }}
-                        >
-                          <span className="bet-dot" />
-                          {label}
-                          <small>{pay}</small>
-                        </button>
-                      ))}
+              <Button variant="ghost" onClick={onExit}>
+                <ArrowLeft size={18} />
+                Tornar al forn
+              </Button>
+            </header>
+            <nav className="casino-tables" aria-label="Taules de la sala secreta">
+              <Button
+                aria-pressed={table === 'roulette'}
+                disabled={disabled}
+                onClick={() => setTable('roulette')}
+              >
+                <CircleDashed size={21} aria-hidden="true" />
+                Ruleta
+              </Button>
+              <Button
+                aria-pressed={table === 'predictions'}
+                disabled={disabled}
+                onClick={() => setTable('predictions')}
+              >
+                <ChartBar size={21} aria-hidden="true" />
+                Prediccions A/B
+              </Button>
+            </nav>
+            {table === 'predictions' ? (
+              <PredictionRoom />
+            ) : (
+              <>
+                <div className="casino-table-layout">
+                  <div className="casino-stage">
+                    <div className="casino-arch" aria-hidden="true" />
+                    <RouletteWheel
+                      angle={angle}
+                      spinning={spinning}
+                      result={result?.result}
+                      motion={motion}
+                    />
+                    <div className="casino-host">
+                      <img
+                        src="/images/croupier-v1.webp"
+                        alt="La pastissera, ara amb armilla verda, corbatí i barret de crupier"
+                        width="512"
+                        height="768"
+                      />
                     </div>
-                    {kind === 'number' && (
-                      <div
-                        className="roulette-numbers"
-                        role="group"
-                        aria-label="Tria un número del 0 al 36"
-                      >
-                        {Array.from({ length: 37 }, (_, n) => (
+                    <div className="casino-counter" aria-hidden="true" />
+                  </div>
+                  <div className="casino-play-panel">
+                    <div
+                      className={`casino-balance ${result?.payout && !spinning && !awarding ? 'prize-arrived' : ''}`}
+                    >
+                      <ReferenceArt name="cake" size={36} />
+                      <span>
+                        <strong>{walletBalance}</strong> pastissos disponibles
+                      </span>
+                      <small>Punts virtuals · sense diners</small>
+                    </div>
+                    {!loaded && !pending && (
+                      <p role="status">
+                        {error ? 'No s’ha pogut carregar la sala.' : 'Obrint el teu moneder…'}
+                      </p>
+                    )}
+                    {!loaded && error && <Button onClick={load}>Tornar a carregar</Button>}
+                    {pending && (
+                      <div className="casino-pending" role="status">
+                        <strong>Aposta pendent de confirmar</strong>
+                        <p>
+                          {pending.bets ? ticketStake(pending) : pending.stake} pastissos ·{' '}
+                          {betLabel(pending)}. Recuperar-la no crea cap aposta nova.
+                        </p>
+                        <Button variant="primary" busy={busy} onClick={() => spin(true)}>
+                          <ArrowClockwise size={18} />
+                          Recuperar aposta
+                        </Button>
+                      </div>
+                    )}
+                    <form
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        spin();
+                      }}
+                    >
+                      <fieldset disabled={disabled || !loaded} className="casino-bet-controls">
+                        <legend>Tria la teva aposta</legend>
+                        <div
+                          className="roulette-play-modes"
+                          role="group"
+                          aria-label="Manera d’apostar"
+                        >
                           <button
-                            key={n}
                             type="button"
-                            aria-label={`Apostar al número ${n}`}
-                            aria-pressed={number === n}
-                            tabIndex={number === n ? 0 : -1}
-                            className={`number-bet pocket-${rouletteColor(n)} ${number === n ? 'selected' : ''}`}
-                            onClick={() => setNumber(n)}
-                            onKeyDown={(event) => {
-                              const columns = matchMedia('(max-width: 600px)').matches ? 6 : 13;
-                              const next =
-                                event.key === 'Home'
-                                  ? 0
-                                  : event.key === 'End'
-                                    ? 36
-                                    : event.key === 'ArrowRight'
-                                      ? (n + 1) % 37
-                                      : event.key === 'ArrowLeft'
-                                        ? (n + 36) % 37
-                                        : event.key === 'ArrowDown'
-                                          ? (n + columns) % 37
-                                          : event.key === 'ArrowUp'
-                                            ? (n + 37 - columns) % 37
-                                            : null;
-                              if (next === null) return;
-                              event.preventDefault();
-                              setNumber(next);
-                              event.currentTarget.parentElement
-                                .querySelectorAll('button')
-                                [next].focus();
+                            aria-pressed={betMode === 'board'}
+                            onClick={() => setBetMode('board')}
+                          >
+                            Repartir fitxes
+                          </button>
+                          <button
+                            type="button"
+                            aria-pressed={betMode === 'quick'}
+                            disabled={chips.length > 0}
+                            title={chips.length ? 'Retira primer les fitxes del tapet.' : undefined}
+                            onClick={() => setBetMode('quick')}
+                          >
+                            Aposta ràpida
+                          </button>
+                        </div>
+                        {betMode === 'board' ? (
+                          <RouletteBoard
+                            resetToken={boardRound}
+                            result={spinning || busy ? null : result?.result}
+                            settledBets={spinning || busy ? [] : result?.bets || []}
+                            bets={chips}
+                            onChange={setChips}
+                            balance={walletBalance + (spinning ? boardStake : 0)}
+                            disabled={disabled}
+                            onError={setError}
+                          />
+                        ) : (
+                          <>
+                            <div
+                              className="roulette-choices"
+                              role="radiogroup"
+                              aria-label="Tipus d’aposta"
+                            >
+                              {[
+                                ['red', 'Vermell', '×2'],
+                                ['black', 'Negre', '×2'],
+                                ['number', 'Número', '×36'],
+                              ].map(([value, label, pay]) => (
+                                <button
+                                  key={value}
+                                  type="button"
+                                  role="radio"
+                                  aria-checked={kind === value}
+                                  tabIndex={kind === value ? 0 : -1}
+                                  className={`bet-choice bet-${value} ${kind === value ? 'selected' : ''}`}
+                                  onClick={() => setKind(value)}
+                                  onKeyDown={(event) => {
+                                    const choices = ['red', 'black', 'number'];
+                                    const index = choices.indexOf(value);
+                                    const next =
+                                      event.key === 'Home'
+                                        ? 0
+                                        : event.key === 'End'
+                                          ? 2
+                                          : ['ArrowRight', 'ArrowDown'].includes(event.key)
+                                            ? (index + 1) % 3
+                                            : ['ArrowLeft', 'ArrowUp'].includes(event.key)
+                                              ? (index + 2) % 3
+                                              : null;
+                                    if (next === null) return;
+                                    event.preventDefault();
+                                    setKind(choices[next]);
+                                    event.currentTarget.parentElement
+                                      .querySelectorAll('[role="radio"]')
+                                      [next].focus();
+                                  }}
+                                >
+                                  <span className="bet-dot" />
+                                  {label}
+                                  <small>{pay}</small>
+                                </button>
+                              ))}
+                            </div>
+                            {kind === 'number' && (
+                              <div
+                                className="roulette-numbers"
+                                role="group"
+                                aria-label="Tria un número del 0 al 36"
+                              >
+                                {Array.from({ length: 37 }, (_, n) => (
+                                  <button
+                                    key={n}
+                                    type="button"
+                                    aria-label={`Apostar al número ${n}`}
+                                    aria-pressed={number === n}
+                                    tabIndex={number === n ? 0 : -1}
+                                    className={`number-bet pocket-${rouletteColor(n)} ${number === n ? 'selected' : ''}`}
+                                    onClick={() => setNumber(n)}
+                                    onKeyDown={(event) => {
+                                      const columns = matchMedia('(max-width: 600px)').matches
+                                        ? 6
+                                        : 13;
+                                      const next =
+                                        event.key === 'Home'
+                                          ? 0
+                                          : event.key === 'End'
+                                            ? 36
+                                            : event.key === 'ArrowRight'
+                                              ? (n + 1) % 37
+                                              : event.key === 'ArrowLeft'
+                                                ? (n + 36) % 37
+                                                : event.key === 'ArrowDown'
+                                                  ? (n + columns) % 37
+                                                  : event.key === 'ArrowUp'
+                                                    ? (n + 37 - columns) % 37
+                                                    : null;
+                                      if (next === null) return;
+                                      event.preventDefault();
+                                      setNumber(next);
+                                      event.currentTarget.parentElement
+                                        .querySelectorAll('button')
+                                        [next].focus();
+                                    }}
+                                  >
+                                    {n}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                            <div className="roulette-stake-row">
+                              <label htmlFor="roulette-stake">Pastissos a apostar</label>
+                              <div className="roulette-stepper">
+                                <button
+                                  type="button"
+                                  aria-label="Treure un pastís de l’aposta"
+                                  disabled={amount <= 1}
+                                  onClick={() => setStake(String(Math.max(1, amount - 1)))}
+                                >
+                                  −
+                                </button>
+                                <input
+                                  id="roulette-stake"
+                                  type="number"
+                                  inputMode="numeric"
+                                  min="1"
+                                  max={Math.min(MAX_STAKE, walletBalance)}
+                                  step="1"
+                                  value={stake}
+                                  onChange={(event) => setStake(event.target.value)}
+                                  required
+                                />
+                                <button
+                                  type="button"
+                                  aria-label="Afegir un pastís a l’aposta"
+                                  disabled={amount >= Math.min(MAX_STAKE, walletBalance)}
+                                  onClick={() =>
+                                    setStake(String(Math.min(MAX_STAKE, walletBalance, amount + 1)))
+                                  }
+                                >
+                                  +
+                                </button>
+                              </div>
+                            </div>
+                            <p className="roulette-bet-summary">
+                              {quickValid ? (
+                                <>
+                                  {amount} {amount === 1 ? 'pastís' : 'pastissos'} a{' '}
+                                  <strong>{betLabel({ kind, number })}</strong> · Retorn si
+                                  encertes: <strong>{amount * (kind === 'number' ? 36 : 2)}</strong>
+                                </>
+                              ) : walletBalance < 1 ? (
+                                'No tens pastissos disponibles. Pots tornar al forn.'
+                              ) : (
+                                `Tria entre 1 i ${Math.min(MAX_STAKE, walletBalance)} pastissos sencers.`
+                              )}
+                            </p>
+                          </>
+                        )}
+                        <Button
+                          type="submit"
+                          variant="primary roulette-spin"
+                          disabled={!valid || disabled || !loaded}
+                          busy={busy}
+                        >
+                          <Cake size={20} />
+                          {busy
+                            ? 'Confirmant aposta…'
+                            : spinning
+                              ? 'La ruleta està girant…'
+                              : awarding
+                                ? 'Lliurant pastissos…'
+                                : 'Fer girar la ruleta'}
+                        </Button>
+                      </fieldset>
+                    </form>
+                    <FormError error={error} />
+                    <div
+                      className={`roulette-result ${result && !awarding ? 'has-result' : ''} ${awarding ? 'is-awarding' : ''}`}
+                      role="status"
+                      aria-live="polite"
+                      aria-atomic="true"
+                    >
+                      {spinning ? (
+                        <p>La bola està buscant el seu número…</p>
+                      ) : result ? (
+                        <>
+                          <span className={`result-pocket pocket-${rouletteColor(result.result)}`}>
+                            {result.result}
+                          </span>
+                          <div>
+                            <strong>
+                              Ha sortit el {result.result} ·{' '}
+                              {colorNames[rouletteColor(result.result)]}
+                            </strong>
+                            <p>
+                              {result.payout
+                                ? `Retorn: ${result.payout} · Balanç de l’aposta: ${result.net > 0 ? '+' : ''}${result.net}`
+                                : `Retorn: 0 · Balanç de l’aposta: −${result.stake}`}{' '}
+                              pastissos
+                            </p>
+                            {result.payout > 0 && (
+                              <small>
+                                {awarding
+                                  ? 'Pastissos en camí al teu saldo…'
+                                  : 'Pastissos rebuts al teu saldo.'}
+                              </small>
+                            )}
+                          </div>
+                        </>
+                      ) : (
+                        <p>Reparteix les fitxes i fes girar quan ho tinguis preparat.</p>
+                      )}
+                    </div>
+                    {awarding && <RouletteAward spin={result} />}
+                    <details className="roulette-information">
+                      <summary>Regles i historial</summary>
+                      <div className="roulette-information-content">
+                        {result && !spinning && <TicketDetails spin={result} />}
+                        <details className="roulette-rules">
+                          <summary>Com funciona la ruleta?</summary>
+                          <p>
+                            37 números, del 0 al 36, tots amb la mateixa probabilitat. El zero és
+                            verd: vermell i negre perden si surt zero.
+                          </p>
+                          <p>
+                            Número ×36; cavall (2 números) ×18; fila o trio (3) ×12; cantonada o
+                            primers quatre (4) ×9; dues files (6) ×6; columna o dotzena (12) ×3;
+                            vermell/negre, parell/senar i 1–18/19–36 (18) ×2. El zero perd a totes
+                            les apostes exteriors. Els retorns inclouen l’aposta. Es sumen els
+                            retorns de totes les posicions guanyadores. Mínim 1 per posició, màxim{' '}
+                            {MAX_STAKE} per gir i dins del teu saldo.
+                          </p>
+                          <p>
+                            El resultat es decideix al servidor abans de l’animació. Els pastissos
+                            són punts gratuïts de La Net; no es compren ni es canvien per diners.
+                          </p>
+                        </details>
+                        <details className="roulette-history">
+                          <summary>
+                            Els teus últims girs <span>{history.length}</span>
+                          </summary>
+                          {history.length ? (
+                            <ol>
+                              {history.map((s) => (
+                                <li key={s.request_id}>
+                                  <span
+                                    className={`history-pocket pocket-${rouletteColor(s.result)}`}
+                                  >
+                                    {s.result}
+                                  </span>
+                                  <div>
+                                    <strong>{betLabel(s)}</strong>
+                                    <small>
+                                      {s.stake} apostats · {s.payout} de retorn
+                                    </small>
+                                    <TicketDetails spin={s} />
+                                  </div>
+                                  <b>
+                                    {s.net > 0 ? '+' : ''}
+                                    {s.net}
+                                  </b>
+                                </li>
+                              ))}
+                            </ol>
+                          ) : (
+                            <p>Encara no has fet cap aposta.</p>
+                          )}
+                          <Button
+                            variant="ghost"
+                            disabled={disabled}
+                            onClick={() => {
+                              load();
+                              refresh().catch(() => {});
                             }}
                           >
-                            {n}
-                          </button>
-                        ))}
+                            Actualitzar moviments
+                          </Button>
+                        </details>
                       </div>
-                    )}
-                    <div className="roulette-stake-row">
-                      <label htmlFor="roulette-stake">Pastissos a apostar</label>
-                      <div className="roulette-stepper">
-                        <button
-                          type="button"
-                          aria-label="Treure un pastís de l’aposta"
-                          disabled={amount <= 1}
-                          onClick={() => setStake(String(Math.max(1, amount - 1)))}
-                        >
-                          −
-                        </button>
-                        <input
-                          id="roulette-stake"
-                          type="number"
-                          inputMode="numeric"
-                          min="1"
-                          max={Math.min(MAX_STAKE, walletBalance)}
-                          step="1"
-                          value={stake}
-                          onChange={(event) => setStake(event.target.value)}
-                          required
-                        />
-                        <button
-                          type="button"
-                          aria-label="Afegir un pastís a l’aposta"
-                          disabled={amount >= Math.min(MAX_STAKE, walletBalance)}
-                          onClick={() =>
-                            setStake(String(Math.min(MAX_STAKE, walletBalance, amount + 1)))
-                          }
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-                    <p className="roulette-bet-summary">
-                      {quickValid ? (
-                        <>
-                          {amount} {amount === 1 ? 'pastís' : 'pastissos'} a{' '}
-                          <strong>{betLabel({ kind, number })}</strong> · Retorn si encertes:{' '}
-                          <strong>{amount * (kind === 'number' ? 36 : 2)}</strong>
-                        </>
-                      ) : walletBalance < 1 ? (
-                        'No tens pastissos disponibles. Pots tornar al forn.'
-                      ) : (
-                        `Tria entre 1 i ${Math.min(MAX_STAKE, walletBalance)} pastissos sencers.`
-                      )}
-                    </p>
-                  </>
-                )}
-                <Button
-                  type="submit"
-                  variant="primary roulette-spin"
-                  disabled={!valid || disabled || !loaded}
-                  busy={busy}
-                >
-                  <Cake size={20} />
-                  {busy
-                    ? 'Confirmant aposta…'
-                    : spinning
-                      ? 'La ruleta està girant…'
-                      : awarding
-                        ? 'Lliurant pastissos…'
-                        : 'Fer girar la ruleta'}
-                </Button>
-              </fieldset>
-            </form>
-            <FormError error={error} />
-            <div
-              className={`roulette-result ${result && !awarding ? 'has-result' : ''} ${awarding ? 'is-awarding' : ''}`}
-              role="status"
-              aria-live="polite"
-              aria-atomic="true"
-            >
-              {spinning ? (
-                <p>La bola està buscant el seu número…</p>
-              ) : result ? (
-                <>
-                  <span className={`result-pocket pocket-${rouletteColor(result.result)}`}>
-                    {result.result}
-                  </span>
-                  <div>
-                    <strong>
-                      Ha sortit el {result.result} · {colorNames[rouletteColor(result.result)]}
-                    </strong>
-                    <p>
-                      {result.payout
-                        ? `Retorn: ${result.payout} · Balanç de l’aposta: ${result.net > 0 ? '+' : ''}${result.net}`
-                        : `Retorn: 0 · Balanç de l’aposta: −${result.stake}`}{' '}
-                      pastissos
-                    </p>
-                    {result.payout > 0 && (
-                      <small>
-                        {awarding
-                          ? 'Pastissos en camí al teu saldo…'
-                          : 'Pastissos rebuts al teu saldo.'}
-                      </small>
-                    )}
+                    </details>
                   </div>
-                </>
-              ) : (
-                <p>Reparteix les fitxes i fes girar quan ho tinguis preparat.</p>
-              )}
-            </div>
-            {awarding && <RouletteAward spin={result} />}
-            {result && !spinning && <TicketDetails spin={result} />}
-            <details className="roulette-rules">
-              <summary>Com funciona la ruleta?</summary>
-              <p>
-                37 números, del 0 al 36, tots amb la mateixa probabilitat. El zero és verd: vermell
-                i negre perden si surt zero.
-              </p>
-              <p>
-                Número ×36; cavall (2 números) ×18; fila o trio (3) ×12; cantonada o primers quatre
-                (4) ×9; dues files (6) ×6; columna o dotzena (12) ×3; vermell/negre, parell/senar i
-                1–18/19–36 (18) ×2. El zero perd a totes les apostes exteriors. Els retorns inclouen
-                l’aposta. Es sumen els retorns de totes les posicions guanyadores. Mínim 1 per
-                posició, màxim {MAX_STAKE} per gir i dins del teu saldo.
-              </p>
-              <p>
-                El resultat es decideix al servidor abans de l’animació. Els pastissos són punts
-                gratuïts de La Net; no es compren ni es canvien per diners.
-              </p>
-            </details>
-            <details className="roulette-history">
-              <summary>
-                Els teus últims girs <span>{history.length}</span>
-              </summary>
-              {history.length ? (
-                <ol>
-                  {history.map((s) => (
-                    <li key={s.request_id}>
-                      <span className={`history-pocket pocket-${rouletteColor(s.result)}`}>
-                        {s.result}
-                      </span>
-                      <div>
-                        <strong>{betLabel(s)}</strong>
-                        <small>
-                          {s.stake} apostats · {s.payout} de retorn
-                        </small>
-                        <TicketDetails spin={s} />
-                      </div>
-                      <b>
-                        {s.net > 0 ? '+' : ''}
-                        {s.net}
-                      </b>
-                    </li>
-                  ))}
-                </ol>
-              ) : (
-                <p>Encara no has fet cap aposta.</p>
-              )}
-              <Button
-                variant="ghost"
-                disabled={disabled}
-                onClick={() => {
-                  load();
-                  refresh().catch(() => {});
-                }}
-              >
-                Actualitzar moviments
-              </Button>
-            </details>
-          </div>
-        </>
-      )}
-    </section>
+                </div>
+              </>
+            )}
+          </section>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }

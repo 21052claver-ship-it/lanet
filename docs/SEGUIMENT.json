@@ -356,6 +356,10 @@
     {
       "id": "R88",
       "description": "Ponderacions PAU visuals amb icones, colors i coeficients clars, coherents i adaptades al mòbil"
+    },
+    {
+      "id": "R89",
+      "description": "Ruleta panoràmica sense scroll amb roda, crupier, tapet i girar visibles; ressaltar caselles guanyadores només en acabar el gir"
     }
   ],
   "phases": [
@@ -867,6 +871,13 @@
       "title": "Poliment visual de navegació, perfil i ponderacions PAU",
       "depends_on": [
         "F71"
+      ]
+    },
+    {
+      "id": "F73",
+      "title": "Ruleta panoràmica i resultat visual",
+      "depends_on": [
+        "F72"
       ]
     }
   ],
@@ -7042,6 +7053,41 @@
       ],
       "progress": "Publicada 0.6.4 amb PR11 i CI exacta de main, release immutable, digests i HTTP real.es verificats. 39 casos PAU i 24 de recuperació en tres motors; captures locals revisades. Cap dada real modificada.",
       "change_log_id": "H173"
+    },
+    {
+      "id": "T73-01",
+      "phase": "F73",
+      "title": "Organitzar la sala de ruleta i ressaltar el resultat al tapet",
+      "status": "review",
+      "requirements": [
+        "R89"
+      ],
+      "depends_on": [
+        "T72-01"
+      ],
+      "files": [
+        "src/components/SecretCasino.jsx",
+        "src/components/RouletteBoard.jsx",
+        "src/roulette.css",
+        "scripts/test-roulette-panorama.mjs",
+        "scripts/test-roulette-board.mjs",
+        "scripts/test-secret-room.mjs",
+        ".github/workflows/verify.yml",
+        "docs/PLA-RULETA-PANORAMICA.md",
+        "src/components/RouletteAward.jsx",
+        "scripts/test-roulette-animation.mjs",
+        "scripts/test-schedule-cards.mjs",
+        "scripts/test-predictions.mjs"
+      ],
+      "acceptance": "Tots els elements principals visibles sense scroll a 1280x720, 1366x768 i 1920x1080. Resultat exacte i apostes exteriors guanyadores ressaltats després del gir, zero correcte, sense pistes durant animació ni alteració de saldo/càlculs. Mòbil accessible sense retalls.",
+      "checks": [
+        "Implementar composició de sala i informació secundària desplegable.",
+        "Ressaltar resultat complet només després de la bola aturada.",
+        "Provar disposició, límits del tapet, zero, canvi de gir i moviment reduït localment en tres motors.",
+        "Passar PR/CI abans de publicar."
+      ],
+      "evidence": [],
+      "progress": "93 casos locals correctes; CI detecta capes de formularis de prediccions i prova horari dependent de dilluns. Correccions preparades, amb celebració per davant i destinació de premi dins de la sala. Revalidació en curs abans de publicar."
     }
   ]
 }
