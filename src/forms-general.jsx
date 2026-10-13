@@ -1,18 +1,10 @@
 import Select from './components/Select';
+import CourseSetup from './components/CourseSetup';
+import { OFFICIAL_ROUTES } from '../shared/official-schedule';
 import SubjectPicker from './components/SubjectPicker';
 import { DEFAULT_PREFERENCES } from '../shared/preferences';
 import React, { useState } from 'react';
-import {
-  Plus,
-  Trash,
-  Check,
-  Warning,
-  Clock,
-  MapPin,
-  LockSimple,
-  ArrowRight,
-  SignOut,
-} from '@phosphor-icons/react';
+import { Plus, Trash, Clock, MapPin, LockSimple, ArrowRight, SignOut } from '@phosphor-icons/react';
 import { useApp } from './context';
 import { Avatar } from './art';
 import { useTimer } from './timer';
@@ -28,159 +20,9 @@ import {
 } from './ui';
 import { useSubmit, Attachments } from './form-utils';
 import { readLocalJSON, writeLocalJSON, removeLocalValue } from '../shared/local-state';
-import {
-  slotConflicts,
-  weightedGrades,
-  neededGrade,
-  numberLabel,
-  dateLabel,
-  madridDay,
-} from '../shared/domain';
+import { weightedGrades, neededGrade, numberLabel, dateLabel, madridDay } from '../shared/domain';
 export function ConfigureForm() {
-  const { data, close, mutate } = useApp();
-  const [group, setGroup] = useState(data.user.group_id || data.groups[0]?.id),
-    [path, setPath] = useState(data.user.path || 'science'),
-    [selected, setSelected] = useState(
-      data.enrollments.length
-        ? data.enrollments.map((e) => e.offering_id)
-        : data.offerings
-            .filter(
-              (o) =>
-                o.group_id === (data.user.group_id || data.groups[0]?.id) &&
-                ['common', data.user.path || 'science'].includes(o.path) &&
-                o.subject_id !== 'bio',
-            )
-            .filter((o, i, a) => a.findIndex((x) => x.subject_id === o.subject_id) === i)
-            .map((o) => o.id),
-    );
-  const { busy, error, submit } = useSubmit(close);
-  const offerings = data.offerings.filter(
-    (o) => o.group_id === group && ['common', path].includes(o.path),
-  );
-  const subjects = data.subjects.filter((s) => offerings.some((o) => o.subject_id === s.id));
-  const conflicts = slotConflicts(selected, data.slots);
-  function defaults(g, p) {
-    setSelected(
-      data.offerings
-        .filter((o) => o.group_id === g && ['common', p].includes(o.path) && o.subject_id !== 'bio')
-        .filter((o, i, arr) => arr.findIndex((a) => a.subject_id === o.subject_id) === i)
-        .map((o) => o.id),
-    );
-  }
-  function toggle(oid) {
-    if (selected.includes(oid)) {
-      setSelected(selected.filter((x) => x !== oid));
-      return;
-    }
-    const newSlots = data.slots.filter((s) => s.offering_id === oid);
-    setSelected([
-      ...selected.filter(
-        (old) =>
-          !data.slots.some(
-            (s) =>
-              s.offering_id === old &&
-              newSlots.some((n) => n.day === s.day && n.start < s.end && s.start < n.end),
-          ) &&
-          data.offerings.find((o) => o.id === old)?.subject_id !==
-            data.offerings.find((o) => o.id === oid)?.subject_id,
-      ),
-      oid,
-    ]);
-  }
-  return (
-    <form
-      onSubmit={submit(() =>
-        mutate(
-          '/configure',
-          { group_id: group, path, offerings: selected },
-          'El curs i l’horari ja estan configurats.',
-        ),
-      )}
-    >
-      <div className="form-grid">
-        <Field label="Grup">
-          <Select
-            value={group || ''}
-            disabled={data.user.role === 'delegate'}
-            onChange={(e) => {
-              setGroup(e.target.value);
-              defaults(e.target.value, path);
-            }}
-          >
-            {data.groups.map((g) => (
-              <option key={g.id} value={g.id}>
-                {g.name}
-              </option>
-            ))}
-          </Select>
-        </Field>
-        <Field label="Itinerari">
-          <Select
-            value={path}
-            onChange={(e) => {
-              setPath(e.target.value);
-              defaults(group, e.target.value);
-            }}
-          >
-            <option value="science">Científic i tecnològic</option>
-            <option value="social">Ciències socials</option>
-            <option value="humanities">Humanitats</option>
-          </Select>
-        </Field>
-      </div>
-      <p className="muted">
-        Les franges les prepara el delegat. Tria les assignatures i les variants que fas.
-      </p>
-      <div className="course-subjects">
-        {subjects.map((s) => {
-          const variants = offerings.filter((o) => o.subject_id === s.id),
-            chosen = variants.find((o) => selected.includes(o.id));
-          return (
-            <div className="course-subject" key={s.id}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={!!chosen}
-                  disabled={variants.every((o) => o.path === 'common')}
-                  onChange={() => toggle(variants[0].id)}
-                />
-                <SubjectChip subject={s} />
-                {s.path === 'common' && <small>Comuna</small>}
-              </label>
-              <Select
-                aria-label={`Professor i variant de ${s.short}`}
-                value={chosen?.id || variants[0]?.id}
-                onChange={(e) =>
-                  setSelected([
-                    ...selected.filter((x) => !variants.some((o) => o.id === x)),
-                    e.target.value,
-                  ])
-                }
-              >
-                {variants.map((o) => (
-                  <option key={o.id} value={o.id}>
-                    {o.teacher} · {o.variant || 'Principal'}
-                  </option>
-                ))}
-              </Select>
-            </div>
-          );
-        })}
-      </div>
-      {!selected.length && (
-        <Button type="button" onClick={() => defaults(group, path)}>
-          Seleccionar el curs recomanat
-        </Button>
-      )}
-      {conflicts.length > 0 && (
-        <p className="form-error">
-          Hi ha assignatures amb franges coincidents. Tria una alternativa.
-        </p>
-      )}
-      <FormError error={error} />
-      <FormFooter busy={busy} onCancel={close} label="Desar el meu curs" />
-    </form>
-  );
+  return <CourseSetup />;
 }
 export function EventForm({ item }) {
   const { data, enrolled, close, mutate, open } = useApp();
@@ -550,7 +392,7 @@ export function ProfileForm({ item = {}, onLogout, logoutBusy = false, logoutErr
           </div>
           <div className="profile-course">
             <strong>
-              {data.groups.find((g) => g.id === data.user.group_id)?.name || 'El meu curs'}
+              {OFFICIAL_ROUTES.find((r) => r.id === data.user.group_id)?.label || 'El meu curs'}
             </strong>
             <span>{enrolled.length} assignatures al meu horari</span>
             <Button type="button" onClick={() => open('configure')}>
@@ -559,12 +401,7 @@ export function ProfileForm({ item = {}, onLogout, logoutBusy = false, logoutErr
           </div>
           <FormError error={logoutError} />
           <div className="form-footer">
-            <Button
-              type="button"
-              onClick={onLogout}
-              disabled={logoutBusy}
-              aria-busy={logoutBusy}
-            >
+            <Button type="button" onClick={onLogout} disabled={logoutBusy} aria-busy={logoutBusy}>
               <SignOut size={18} aria-hidden="true" />
               {logoutBusy ? 'Tancant sessió…' : 'Tancar sessió'}
             </Button>

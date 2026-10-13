@@ -2,6 +2,11 @@ import React, { useState } from 'react';
 import { useApp } from '../context';
 import { Tabs } from '../ui';
 import { DAYS, DAYS_SHORT, timeMinutes, scheduleBounds, dateLabel } from '../../shared/domain';
+import {
+  mergeAdjacentSlots,
+  slotTeacher,
+  schoolScheduleBounds,
+} from '../../shared/official-schedule';
 
 function label(minutes) {
   return `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
@@ -27,7 +32,9 @@ function eventLanes(events) {
 export default function WeekTimeline({ dates, slots, events, context, eventCard }) {
   const { data, subject, open } = useApp();
   const [day, setDay] = useState(() => Math.max(0, dates.slice(0, 5).indexOf(data.today)));
-  const bounds = scheduleBounds(slots);
+  const bounds = schoolScheduleBounds(slots, data.schoolSchedule) || scheduleBounds(slots);
+  const mergedSlots = mergeAdjacentSlots(slots);
+  const breaks = data.schoolSchedule?.breaks || [];
   const range = bounds.end - bounds.start;
   const percent = (minutes) => `${((minutes - bounds.start) / range) * 100}%`;
   const position = (start, end) => ({
@@ -38,8 +45,7 @@ export default function WeekTimeline({ dates, slots, events, context, eventCard 
     ...new Set([
       bounds.start,
       bounds.end,
-      660,
-      690,
+      ...breaks.flatMap((b) => [timeMinutes(b.start), timeMinutes(b.end)]),
       ...(slots.some((s) => s.day < 5)
         ? []
         : Array.from({ length: Math.ceil(range / 60) }, (_, i) => bounds.start + i * 60)),
@@ -100,7 +106,7 @@ export default function WeekTimeline({ dates, slots, events, context, eventCard 
           ))}
         </div>
         {dates.slice(0, 5).map((d, dayIndex) => {
-          const dailySlots = slots.filter((s) => s.day === dayIndex);
+          const dailySlots = mergedSlots.filter((s) => s.day === dayIndex);
           const dailyEvents = events
             .filter(
               (e) =>
@@ -110,10 +116,12 @@ export default function WeekTimeline({ dates, slots, events, context, eventCard 
                 (e.end ? timeMinutes(e.end) : timeMinutes(e.start) + 60) > bounds.start,
             )
             .sort((a, b) => a.start.localeCompare(b.start));
-          const hasBreak =
-            dailySlots.some((s) => timeMinutes(s.end) <= 660) &&
-            dailySlots.some((s) => timeMinutes(s.start) >= 690) &&
-            !dailySlots.some((s) => timeMinutes(s.start) < 690 && timeMinutes(s.end) > 660);
+          const dailyBreaks = breaks.filter(
+            (b) =>
+              dailySlots.some((s) => s.end <= b.start) &&
+              dailySlots.some((s) => s.start >= b.end) &&
+              !dailySlots.some((s) => s.start < b.end && s.end > b.start),
+          );
           return (
             <div
               key={d}
@@ -124,17 +132,18 @@ export default function WeekTimeline({ dates, slots, events, context, eventCard 
               {ticks.map((n) => (
                 <span className="timeline-line" key={n} style={{ top: percent(n) }} />
               ))}
-              {hasBreak && (
+              {dailyBreaks.map((b) => (
                 <div
+                  key={b.start}
                   className="timeline-break"
-                  style={position(660, 690)}
-                  aria-label="11:00–11:30 · Pati"
+                  style={position(timeMinutes(b.start), timeMinutes(b.end))}
+                  aria-label={`${b.start}–${b.end} · ${b.label}`}
                 >
                   <span className={dayIndex === 2 ? '' : 'day-break-label'}>
-                    11:00–11:30 · Pati
+                    {b.start}–{b.end} · {b.label}
                   </span>
                 </div>
-              )}
+              ))}
               {dailySlots.map((slot) => {
                 const offering = data.offerings.find((o) => o.id === slot.offering_id);
                 const s = subject(offering?.subject_id);
@@ -154,19 +163,16 @@ export default function WeekTimeline({ dates, slots, events, context, eventCard 
                       background: s?.color,
                       '--subject': s?.color,
                     }}
-                    aria-label={`${s?.name || s?.short}, ${slot.start} a ${slot.end}, ${offering?.teacher || ''}, aula ${slot.room || 'sense especificar'}`}
+                    aria-label={`${s?.name || s?.short}, ${slot.start} a ${slot.end}, ${slotTeacher(slot, offering) || slot.note || ''}, aula ${slot.room || 'sense especificar'}`}
                     onClick={() => open('class', { subject: s, offering, slot })}
                   >
-                    <strong>
-                      {['math', 'smath', 'cast'].includes(s?.id)
-                        ? s?.name || s?.short
-                        : s?.short || s?.name}
-                    </strong>
+                    <strong>{s?.short || s?.name}</strong>
                     <small>
-                      {slot.room}
-                      {slot.room ? ' · ' : ''}
-                      {slot.start}
+                      {slot.room ? `Aula ${slot.room}` : ''} · {slot.start}
                     </small>
+                    <span className="class-teacher">
+                      {slotTeacher(slot, offering) || slot.note}
+                    </span>
                   </button>
                 );
               })}

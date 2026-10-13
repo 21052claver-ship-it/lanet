@@ -18,27 +18,29 @@ export const PAU_COURSE_SUBJECTS = {
   lit: 'catalan-literature',
 };
 export function currentPauProfile(data, enrolled) {
-  const subjects = enrolled.map((subject) => {
-    const entries = (data.grades || []).filter((e) => e.subject_id === subject.id);
-    const result = courseGrade(
-      entries,
-      (data.gradeBonuses || []).filter((b) => b.subject_id === subject.id),
-      (data.courseSettings || []).find((s) => s.subject_id === subject.id),
-    );
-    const grade = result.total === null ? null : Math.max(0, Math.min(10, result.total));
-    const coverage = result.terms.reduce(
-      (sum, t) =>
-        sum + (t.total > 0 ? t.weight * Math.min(1, Math.max(0, t.evaluated / t.total)) : 0),
-      0,
-    );
-    return {
-      id: subject.id,
-      name: subject.name || subject.short,
-      grade,
-      pauId: PAU_COURSE_SUBJECTS[subject.id] || null,
-      coverage,
-    };
-  });
+  const subjects = enrolled
+    .filter((subject) => subject.assessed !== 0)
+    .map((subject) => {
+      const entries = (data.grades || []).filter((e) => e.subject_id === subject.id);
+      const result = courseGrade(
+        entries,
+        (data.gradeBonuses || []).filter((b) => b.subject_id === subject.id),
+        (data.courseSettings || []).find((s) => s.subject_id === subject.id),
+      );
+      const grade = result.total === null ? null : Math.max(0, Math.min(10, result.total));
+      const coverage = result.terms.reduce(
+        (sum, t) =>
+          sum + (t.total > 0 ? t.weight * Math.min(1, Math.max(0, t.evaluated / t.total)) : 0),
+        0,
+      );
+      return {
+        id: subject.id,
+        name: subject.name || subject.short,
+        grade,
+        pauId: PAU_COURSE_SUBJECTS[subject.id] || null,
+        coverage,
+      };
+    });
   const known = subjects.filter((s) => s.grade !== null);
   return {
     subjects,

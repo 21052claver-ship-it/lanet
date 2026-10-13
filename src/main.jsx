@@ -26,6 +26,7 @@ import './banner-slots.css';
 import './compatibility.css';
 import './responsive.css';
 import './course-grades.css';
+import './course-setup.css';
 
 function Root() {
   React.useEffect(() => {

@@ -3,6 +3,7 @@ import { Clock, MapPin, BookOpen, ArrowRight } from '@phosphor-icons/react';
 import { useApp } from './context';
 import { Modal, SubjectChip, RichText, Button } from './ui';
 import { dateLabel, DAYS } from '../shared/domain';
+import { slotTeacher } from '../shared/official-schedule';
 import { BoardDetail } from './components/WoodBoard';
 import { CourseSubject } from './components/CourseGrades';
 import {
@@ -102,7 +103,9 @@ export default function Forms({ onLogout, logoutBusy = false, logoutError = '' }
       open
       onClose={close}
       title={title}
-      wide={['note', 'reader', 'gradeSheet', 'offering', 'template', 'plus'].includes(type)}
+      wide={['configure', 'note', 'reader', 'gradeSheet', 'offering', 'template', 'plus'].includes(
+        type,
+      )}
     >
       {Form ? (
         <Form
@@ -118,7 +121,7 @@ export default function Forms({ onLogout, logoutBusy = false, logoutError = '' }
           <ul className="detail-list">
             <li>
               <BookOpen size={19} />
-              {item.offering.teacher} · {item.offering.variant}
+              {slotTeacher(item.slot, item.offering) || item.slot.note || 'Treball personal'}
             </li>
             <li>
               <Clock size={19} />
@@ -126,7 +129,7 @@ export default function Forms({ onLogout, logoutBusy = false, logoutError = '' }
             </li>
             <li>
               <MapPin size={19} />
-              {item.slot.room || 'Aula per confirmar'}
+              {item.slot.room ? `Aula ${item.slot.room}` : 'Aula per confirmar'}
             </li>
           </ul>
           <Button
@@ -137,7 +140,7 @@ export default function Forms({ onLogout, logoutBusy = false, logoutError = '' }
               close();
             }}
           >
-            Apunts de l’assignatura
+            Continguts de l’assignatura
             <ArrowRight size={18} />
           </Button>
         </div>

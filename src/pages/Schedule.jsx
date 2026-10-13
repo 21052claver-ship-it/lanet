@@ -34,6 +34,12 @@ import { download } from '../api';
 import { readLocalJSON, writeLocalJSON } from '../../shared/local-state';
 import { ReferenceArt, Avatar } from '../art';
 import { useCompactLayout } from '../responsive';
+import {
+  OFFICIAL_ROUTES,
+  SCHEDULE_VERSION,
+  curriculumIssues,
+  schoolScheduleBounds,
+} from '../../shared/official-schedule';
 function EventDetailContainer({ compact, title, onClose, children }) {
   return compact ? (
     <Modal open title={title} onClose={onClose}>
@@ -146,6 +152,11 @@ export default function Schedule() {
   const dates = weekDates(date),
     chosenIds = data.enrollments.map((e) => e.offering_id);
   const slots = data.slots.filter((s) => chosenIds.includes(s.offering_id));
+  const route = OFFICIAL_ROUTES.find((r) => r.id === data.user.group_id);
+  const needsReview =
+    data.schoolSchedule &&
+    (data.user.schedule_version !== SCHEDULE_VERSION ||
+      curriculumIssues(data, data.user.group_id, chosenIds).length > 0);
   const examOnly = filterKind === 'exam';
   const events = data.events.filter(
     (e) =>
@@ -173,7 +184,7 @@ export default function Schedule() {
     .filter((e) => e.date >= data.today && !e.done)
     .sort((a, b) => (a.date + (a.start || '')).localeCompare(b.date + (b.start || '')))
     .slice(0, 5);
-  const bounds = scheduleBounds(slots);
+  const bounds = schoolScheduleBounds(slots, data.schoolSchedule) || scheduleBounds(slots);
   const outsideEvents = weekEvents.filter((e) => eventOutsideSchedule(e, dates, bounds));
   const monthStart = date.slice(0, 7) + '-01';
   const monthDates = Array.from({ length: 42 }, (_, i) => addDays(monday(monthStart), i));
@@ -229,7 +240,7 @@ export default function Schedule() {
         title={view === 'schedule' ? 'El teu horari' : 'La teva agenda'}
         subtitle={
           view === 'schedule'
-            ? `${data.groups.find((g) => g.id === data.user.group_id)?.name || 'El meu curs'} · ${{ science: 'Científic i tecnològic', social: 'Ciències socials', humanities: 'Humanitats' }[data.user.path] || 'Les teves assignatures'}`
+            ? `${route?.label || 'El meu curs'}${route ? ` · Grup ${route.id.slice(1)}` : ''} · 2026–2027`
             : 'Exàmens, proves, tasques, lliuraments i activitats en un sol lloc'
         }
       >
@@ -238,6 +249,19 @@ export default function Schedule() {
           Afegir a l’agenda
         </Button>
       </PageTitle>
+      {needsReview && view === 'schedule' && (
+        <div className="schedule-review-notice" role="status">
+          <div>
+            <strong>Ja tenim l’horari oficial</strong>
+            <span>
+              Confirma l’itinerari, les optatives i el professorat per actualitzar el teu horari.
+            </span>
+          </div>
+          <Button onClick={() => open('configure')} variant="primary">
+            Revisar el meu horari <ArrowRight size={17} />
+          </Button>
+        </div>
+      )}
       <div className="calendar-toolbar">
         <Tabs
           label="Horari o agenda"

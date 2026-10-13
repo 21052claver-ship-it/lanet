@@ -1105,3 +1105,11 @@ Publicació H177 confirmada: [0.6.7](https://github.com/21052claver-ship-it/lane
 Evidències: docs/PLA-RULETA-SONS.md i logs privats output/roulette-panorama/sound-*.log.
 
 Publicació H178 confirmada: [0.6.8](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.8), commit 3ae9e52e0c11d9f65f73c842bb564e83269734d0, [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38432733507), domini principal i rebut immutable verificats. Àudio local: 15 casos correctes, 6 omesos; CI: 21 correctes, 0 omesos. Sense dades reals modificades.
+
+### H179 Horaris oficials i selector visual de curs
+
+**13 octubre 2026 · T74-01.** Transcrites i contrastades les cinc pàgines del PDF BAT2 2026–27 aportat per Marc. Tres itineraris vinculats a grup, optatives per blocs, professorat quan hi ha alternatives i tutoria; resum setmanal abans de desar. Horari amb hores i pauses reals, professorat i aules per dia, matemàtiques contínues de divendres i treball personal de Llatí. Perfil i continguts connectats; Tutoria exclosa de notes i PAU. Catàleg amb referències històriques i notes personals conservades.
+
+Verificació local: 208 combinacions completes, 366 unitàries, 24 casos de navegador en Chromium/Firefox/WebKit i API amb workerd/D1 local. La prova D1 va detectar el límit de SELECT compost; generador corregit amb VALUES i migració local aplicada correctament. La suite històrica test:api acumula infraccions deliberades i s’atura al control antiabús; no es presenta com a passada. Les comprovacions específiques d’horari estan aïllades i passen, sense relaxar controls de producció. Migració remota, PR, CI i publicació pendents.
+
+Evidències: [pla i abast](PLA-HORARIS-OFICIALS.md), output/official-schedule/unit.log, typecheck.log, browser/results.json i api-results.json. Cap visita a la web pública ni prova amb dades reals.

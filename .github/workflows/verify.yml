@@ -28,7 +28,9 @@ jobs:
       - run: npm run audit:source
       - run: npm run typecheck
       - run: npm test
+      - run: node scripts/generate-official-schedule.mjs --check
       - run: npm run pages:build
+      - run: npm run test:official-schedule-api
   browsers:
     name: Browser checks (${{ matrix.group }})
     runs-on: ubuntu-24.04
@@ -39,6 +41,7 @@ jobs:
         include:
           - group: navigation
             tests: |
+              npm run test:official-schedule
               npm run test:schedule-cards
               npm run test:workspace-recovery
               npm run test:mobile-navigation
@@ -93,6 +96,7 @@ jobs:
           name: local-browser-evidence-${{ matrix.group }}
           retention-days: 7
           path: |
+            output/official-schedule/browser/
             output/schedule-cards/browser/
             output/workspace-recovery/
             output/predictions/

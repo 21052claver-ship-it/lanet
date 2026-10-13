@@ -2,6 +2,13 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.6.9] - 2026-10-13
+
+- Horaris BAT2 2026–27 del document oficial aportat: tres itineraris, hores i pauses reals, professorat i aules per dia, i bloc continu de matemàtiques de divendres.
+- Configurador visual en tres passos: itinerari, optatives i professorat, i resum setmanal abans de desar. Selecció amb colors i icones, teclat, perfil connectat i recuperació d’errors.
+- Validació de combinacions al servidor i avís als comptes existents per confirmar el nou horari; qualificacions, continguts i referències conservats. Tutoria sense exàmens ni impacte en la previsió PAU.
+- Migració de catàleg separada del desplegament, amb còpia privada i comprovació d’integritat; proves exhaustives de les 208 combinacions i fluxos locals en tres navegadors.
+
 ## [0.6.8] - 2026-10-13
 
 - Sons suaus de fitxa, bola que s’alenteix i pastissos que arriben al saldo; generats localment sense fitxers ni descàrregues.

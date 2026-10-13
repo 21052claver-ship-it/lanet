@@ -9,7 +9,7 @@ test('Beta: safe publisher, real visible samples, free notes and idempotent prog
   const { db, env } = testEnvironment();
   try {
     for (const [id, name, short, color, path] of SUBJECTS)
-      db.prepare('INSERT OR IGNORE INTO subjects VALUES(?,?,?,?,?)').run(
+      db.prepare('INSERT OR IGNORE INTO subjects(id,name,short,color,path) VALUES(?,?,?,?,?)').run(
         id,
         name,
         short,
