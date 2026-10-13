@@ -106,3 +106,44 @@ test('un error de privadesa conserva qualsevol estat ocult sol·licitat o anteri
   assert.equal(privacyAfterFailure(false, true), true);
   assert.equal(privacyAfterFailure(false, false), false);
 });
+
+test('una recàrrega descartada durant una reacció es recupera en acabar l’última escriptura', async () => {
+  const requests = [deferred(), deferred()],
+    applied = [];
+  let reads = 0;
+  const sync = createDataSync({
+    read: () => requests[reads++].promise,
+    apply: (value) => applied.push(value),
+  });
+  sync.beginWrite();
+  const partial = sync.refresh();
+  requests[0].resolve({ created: true, liked: false });
+  await partial;
+  assert.deepEqual(applied, []);
+  sync.endWrite();
+  await Promise.resolve();
+  assert.equal(reads, 2);
+  requests[1].resolve({ created: true, liked: true });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.deepEqual(applied, [{ created: true, liked: true }]);
+});
+
+test('una lectura iniciada després d’un desament però abans d’una reacció tampoc es perd', async () => {
+  const requests = [deferred(), deferred()],
+    applied = [];
+  let reads = 0;
+  const sync = createDataSync({
+    read: () => requests[reads++].promise,
+    apply: (value) => applied.push(value),
+  });
+  const saved = sync.refresh();
+  sync.beginWrite();
+  sync.endWrite();
+  await Promise.resolve();
+  assert.equal(reads, 2);
+  requests[0].resolve({ created: true, liked: false });
+  await saved;
+  requests[1].resolve({ created: true, liked: true });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.deepEqual(applied, [{ created: true, liked: true }]);
+});

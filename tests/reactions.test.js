@@ -78,10 +78,12 @@ test('a rejected like rolls back only its own fields while a save commits indepe
 });
 test('late snapshots cannot undo a confirmed optimistic reaction', async () => {
   const stale = gate(),
+    fresh = gate(),
     post = gate();
+  let reads = 0;
   let item = { id: 'n', liked: false, likes: 0 };
   const sync = createDataSync({
-    read: () => stale.promise,
+    read: () => (reads++ === 0 ? stale.promise : fresh.promise),
     apply: (value) => {
       item = value;
     },
@@ -100,6 +102,10 @@ test('late snapshots cannot undo a confirmed optimistic reaction', async () => {
   await pending;
   stale.resolve({ id: 'n', liked: false, likes: 0 });
   await old;
+  assert.equal(item.liked, true);
+  assert.equal(item.likes, 2);
+  fresh.resolve({ id: 'n', liked: true, likes: 2 });
+  await new Promise((resolve) => setImmediate(resolve));
   assert.equal(item.liked, true);
   assert.equal(item.likes, 2);
 });
