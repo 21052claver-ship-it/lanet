@@ -39,6 +39,12 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
       await context.route('**/*', (r) =>
         new URL(r.request().url()).origin === f.base ? r.continue() : r.abort(),
       );
+      // Start on a day without fixture events, even when this runs on Monday.
+      await context.route(f.base + '/api/bootstrap', async (route) => {
+        const response = await route.fetch();
+        const payload = await response.json();
+        await route.fulfill({ response, json: { ...payload, today: addDays(day, 2) } });
+      });
       await context.addCookies([{ name: 'lanet_session', value: f.token, url: f.base }]);
       const p = await context.newPage();
       const errors = [];
@@ -46,9 +52,11 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
       try {
         await p.goto(f.base + '/#schedule');
         const firstDay = p.locator('.timetable-days [role="tab"]').first();
+        await firstDay.waitFor({ state: 'attached' });
         if (await firstDay.isVisible()) await firstDay.click();
         await p.locator('.timeline-event:visible .event-card').first().waitFor();
         const cards = p.locator('.timeline-event:visible .event-card');
+        assert.equal(await cards.count(), width <= 760 ? 5 : 7, 'All fixture intervals visible');
         const measurements = await cards.evaluateAll((nodes) =>
           nodes.map((card) => ({
             title: card.title,
