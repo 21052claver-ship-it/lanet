@@ -369,7 +369,8 @@
     max-width: 64%;
   }
   .app-shell .tabs.view-tabs.contents-sections {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     width: 100%;
   }
   .app-shell .tabs.view-tabs.contents-sections > button {
@@ -377,6 +378,7 @@
     padding-inline: 8px;
     font-size: 13px;
     gap: 5px;
+    justify-content: center;
   }
   .library-form-row {
     grid-template-columns: minmax(0, 1fr);

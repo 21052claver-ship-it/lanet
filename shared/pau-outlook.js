@@ -1,4 +1,4 @@
-import { courseGrade } from './course-grades.js';
+import { courseGrade, courseSettingsFor } from './course-grades.js';
 import { emptyPau, pauAdmission, roundPau, validatePau } from './pau.js';
 
 // Only explicit curriculum mappings; language courses are not literature exams.
@@ -25,7 +25,7 @@ export function currentPauProfile(data, enrolled) {
       const result = courseGrade(
         entries,
         (data.gradeBonuses || []).filter((b) => b.subject_id === subject.id),
-        (data.courseSettings || []).find((s) => s.subject_id === subject.id),
+        courseSettingsFor(data.courseSettings, subject.id),
       );
       const grade = result.total === null ? null : Math.max(0, Math.min(10, result.total));
       const coverage = result.terms.reduce(

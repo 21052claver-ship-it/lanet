@@ -22,6 +22,7 @@ import { PageTitle, Button, Tabs, SubjectChip, LikeButton, SaveButton, Empty } f
 import { Avatar, ReferenceArt } from '../art';
 import { matchesSearch } from '../../shared/search';
 import ContentLibrary from '../components/ContentLibrary';
+import SchoolGuide from '../components/SchoolGuide';
 import '../contents.css';
 export default function Notes() {
   const { open } = useApp();
@@ -43,6 +44,7 @@ export default function Notes() {
           ['materials', 'Materials', Books],
           ['formula', 'Formularis', FunctionIcon],
           ['tool', 'Eines i webs', Toolbox],
+          ['guide', 'Guia del curs', Books],
         ]}
         value={section}
         onChange={setSection}
@@ -54,10 +56,18 @@ export default function Notes() {
             ? 'Materials compartits'
             : section === 'formula'
               ? 'Formularis de fórmules'
-              : 'Eines i webs d’ajuda'
+              : section === 'guide'
+                ? 'Guia acadèmica del curs'
+                : 'Eines i webs d’ajuda'
         }
       >
-        {section === 'materials' ? <Materials /> : <ContentLibrary key={section} kind={section} />}
+        {section === 'materials' ? (
+          <Materials />
+        ) : section === 'guide' ? (
+          <SchoolGuide />
+        ) : (
+          <ContentLibrary key={section} kind={section} />
+        )}
       </section>
     </div>
   );

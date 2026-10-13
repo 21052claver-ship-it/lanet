@@ -1,0 +1,205 @@
+.school-calendar {
+  margin: 0 0 20px;
+  padding: 0;
+}
+.school-calendar > summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  cursor: pointer;
+  list-style: none;
+}
+.school-calendar > summary::after {
+  content: '+';
+  font-size: 24px;
+  margin-left: auto;
+}
+.school-calendar[open] > summary::after {
+  content: '−';
+}
+.school-calendar summary span {
+  display: grid;
+  gap: 4px;
+}
+.school-calendar summary small {
+  color: var(--muted, #706779);
+  font-weight: 400;
+}
+.school-calendar-content {
+  padding: 0 20px 20px;
+}
+.school-calendar-tools {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0 0 16px;
+}
+.school-calendar-tools label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.school-date-grid,
+.school-resource-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: 12px;
+}
+.school-date {
+  padding: 16px;
+  background: #f8f5ef;
+  border-radius: 14px;
+  border: 1px solid #eae3d9;
+}
+.school-date.term {
+  background: #f0ecf8;
+}
+.school-date.research {
+  background: #edf3ef;
+}
+.school-date.pau,
+.school-date.pap {
+  background: #edf2f7;
+}
+.school-date-category {
+  font-size: 12px;
+  color: #655d70;
+}
+.school-date h3 {
+  font-size: 15px;
+  margin: 6px 0;
+}
+.school-date p {
+  font-size: 13px;
+  margin: 0;
+}
+.school-date a {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 12px;
+}
+.research-grade {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 24px;
+}
+.research-parts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 24px 0;
+}
+.research-parts label {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 16px;
+  background: #f5f1ea;
+}
+.research-parts label > span {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+}
+.research-parts label strong {
+  color: #755f90;
+  font-size: 24px;
+}
+.research-parts input {
+  width: 100%;
+  min-width: 0;
+}
+.research-result {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px;
+  border-radius: 16px;
+  background: #eaf1e8;
+}
+.research-result small {
+  display: block;
+  margin-top: 5px;
+}
+.research-result > strong {
+  font-size: 30px;
+}
+.school-guide {
+  display: grid;
+  gap: 18px;
+}
+.school-guide > .panel {
+  padding: 24px;
+}
+.school-evaluation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.school-subjects {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.school-resource-grid a {
+  border: 1px solid #e8e1d7;
+  border-radius: 14px;
+  padding: 16px;
+  display: grid;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+.school-resource-grid a:hover {
+  background: #f8f5ef;
+}
+.school-resource-grid strong {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.school-resource-grid span {
+  color: #706779;
+  font-size: 14px;
+}
+.school-procedures summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+.course-evaluation-kind {
+  font-size: 12px;
+  color: #706779;
+  margin: -4px 0 14px;
+}
+@media (max-width: 600px) {
+  .research-grade,
+  .school-guide > .panel {
+    padding: 16px;
+  }
+  .school-calendar > summary {
+    padding: 15px;
+  }
+  .school-calendar-content {
+    padding: 0 15px 15px;
+  }
+  .research-parts {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .research-parts label {
+    padding: 12px;
+  }
+  .research-grade .section-heading {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .school-evaluation-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}

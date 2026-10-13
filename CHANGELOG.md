@@ -2,6 +2,12 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.6.11] - 2026-10-13
+
+- Classificació acumulativa del centre aplicada a la nota final i a la previsió PAU quan no hi ha pesos personals desats; configuracions existents preservades i pesos orientatius identificats.
+- Calendari BAT2 2026–27 amb trimestrals, TR, activitats i PAU/PAP contrastades: rangs complets, dates passades opcionals i exportació ICS.
+- Calculadora privada de Treball de Recerca amb pesos 30/42/21/7, mode discret i desament explícit en aquest navegador; guia del curs amb recursos i límit compartit dels plusos acadèmics i de voluntariat.
+
 ## [0.6.10] - 2026-10-13
 
 - Editar una variant conserva el professorat de cada dia, les indicacions de treball personal i els identificadors de franja, també amb formularis antics.

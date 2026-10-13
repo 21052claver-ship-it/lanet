@@ -42,6 +42,8 @@ jobs:
           - group: navigation
             tests: |
               npm run test:official-schedule
+              npm run test:student-guide
+              npm run test:course-grades
               npm run test:schedule-cards
               npm run test:workspace-recovery
               npm run test:mobile-navigation
@@ -96,6 +98,8 @@ jobs:
           name: local-browser-evidence-${{ matrix.group }}
           retention-days: 7
           path: |
+            output/course-grades/
+            output/student-guide/browser/
             output/official-schedule/browser/
             output/schedule-cards/browser/
             output/workspace-recovery/

@@ -16,18 +16,20 @@ import { useSubmit } from '../form-utils';
 import { numberLabel, TERM_LABELS } from '../../shared/domain';
 import {
   courseGrade,
+  courseSettingsFor,
   bonusMaximum,
   parseBonusGrade,
   BONUS_TYPES,
   COURSE_WEIGHTS,
   CUMULATIVE_WEIGHTS,
 } from '../../shared/course-grades';
+import { evaluationKind } from '../../shared/student-guide';
 
 function subjectResult(data, subjectId) {
   return courseGrade(
     data.grades.filter((entry) => entry.subject_id === subjectId),
     (data.gradeBonuses || []).filter((bonus) => bonus.subject_id === subjectId),
-    (data.courseSettings || []).find((setting) => setting.subject_id === subjectId),
+    courseSettingsFor(data.courseSettings, subjectId),
   );
 }
 function FinalFigures({ result }) {
@@ -93,6 +95,16 @@ export default function CourseGrades({ subjects }) {
                 </span>
                 {subject.name || subject.short}
               </h2>
+              <p className="course-evaluation-kind">
+                {evaluationKind(subject.id) === 'cumulative'
+                  ? 'Acumulativa'
+                  : evaluationKind(subject.id) === 'equal'
+                    ? 'No acumulativa'
+                    : 'Pesos configurables'}
+                {(data.courseSettings || []).some((setting) => setting.subject_id === subject.id)
+                  ? ' · càlcul personalitzat'
+                  : ' · pesos orientatius'}
+              </p>
               <TermFigures result={result} />
               <FinalFigures result={result} />
               <div className="course-card-footer">
@@ -418,7 +430,7 @@ function AddBonus({ subjectId, remaining, initialPlus, onDone }) {
 }
 function CourseSettings({ subjectId }) {
   const { data, mutate, setData } = useApp();
-  const initial = (data.courseSettings || []).find((setting) => setting.subject_id === subjectId);
+  const initial = courseSettingsFor(data.courseSettings, subjectId);
   const [mode, setMode] = useState(
     initial?.equal_terms !== 0
       ? 'equal'
@@ -519,6 +531,10 @@ function CourseSettings({ subjectId }) {
           Limitar la nota final a 10
         </label>
         <p className="assessment-hint">
+          La classificació acumulativa és la del centre. Els percentatges són orientatius; confirma
+          els criteris de la matèria amb el professorat. La teva configuració desada es conserva.
+        </p>
+        <p className="assessment-hint">
           Els plusos se sumen després de calcular la base del curs. Els pesos personalitzats han de
           sumar el 100%.
         </p>
@@ -563,7 +579,8 @@ export function CourseSubject({ item }) {
         </div>
         <p className="assessment-hint">
           Dos plusos de 0,25 o un de 0,50. Escriu la nota que t’han posat; buit vol dir pendent i
-          zero és una nota corregida.
+          zero és una nota corregida. Els plusos acadèmics i de voluntariat comparteixen el límit de
+          0,50 per assignatura.
         </p>
         {bonuses.map((bonus) => (
           <BonusRow key={bonus.id} bonus={bonus} />

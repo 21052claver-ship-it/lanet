@@ -364,6 +364,10 @@
     {
       "id": "R90",
       "description": "Horaris oficials BAT2 2026-27, itineraris A/B/C, optatives i professorat amb selector visual i persistència coherent"
+    },
+    {
+      "id": "R91",
+      "description": "Integrar la presentació BAT2 2026-27: avaluació acumulativa, calendari, recerca i recursos, preservant les dades personals."
     }
   ],
   "phases": [
@@ -889,6 +893,13 @@
       "title": "Horaris oficials i configuració visual",
       "depends_on": [
         "F73"
+      ]
+    },
+    {
+      "id": "F75",
+      "title": "Informació acadèmica BAT2 2026-27",
+      "depends_on": [
+        "F74"
       ]
     }
   ],
@@ -7306,6 +7317,51 @@
       ],
       "progress": "Publicada 0.6.10 a lanet.es via PR23/24 i CI exacta de main. Edició compatible amb clients antics, professorat per dia/treball personal i IDs conservats, modes i solapaments validats. 370 unitàries, 27 fluxos locals i 27 a CI en tres motors, inclosos 9 casos d’edició, i D1 local correctes. Catàleg oficial, domini, commit i rebut immutable confirmats via proveïdor; sense migracions ni dades de producció modificades.",
       "change_log_id": "H180"
+    },
+    {
+      "id": "T75-01",
+      "phase": "F75",
+      "title": "Contrastar i integrar la guia acadèmica del curs",
+      "status": "review",
+      "requirements": [
+        "R01",
+        "R07",
+        "R23",
+        "R25",
+        "R91"
+      ],
+      "depends_on": [
+        "T74-02"
+      ],
+      "files": [
+        "shared/student-guide.js",
+        "shared/course-grades.js",
+        "src/components/SchoolCalendar.jsx",
+        "src/components/ResearchGrade.jsx",
+        "tests/student-guide.test.js",
+        "src/components/SchoolGuide.jsx",
+        "src/contents.css",
+        "src/student-guide.css",
+        "scripts/test-student-guide.mjs"
+      ],
+      "acceptance": "Classificació d’avaluació fidel, pesos orientatius explícits sense substituir preferències, dates i rangs verificats, TR 30/42/21/7, límit compartit de plusos i recursos sense credencials. Proves locals accessibles i responsive; publicació amb PR i CI.",
+      "checks": [
+        "Revisar les 34 pàgines i contrastar dates PAU/PAP oficials.",
+        "Integrar classificació i càlcul coherent a Notes, CSV i PAU.",
+        "Integrar calendari de rangs, TR i recursos sense sobrecarregar.",
+        "Provar privadesa, persistència, navegadors i preservació de preferències.",
+        "Publicar amb PR, CI i rebut immutable."
+      ],
+      "evidence": [
+        "output/student-guide-0.6.11/source.json",
+        "docs/PLA-GUIA-BAT2.md",
+        "output/student-guide-0.6.11/unit.log",
+        "output/student-guide-0.6.11/typecheck.log",
+        "output/student-guide-0.6.11/browser/results.json",
+        "output/student-guide-0.6.11/course-regression/course-browser-results.json"
+      ],
+      "progress": "376 unitàries, tipus/lint i 24 regressions anuals correctes. 12 fluxos de guia/calendari/TR en tres motors, amb privadesa i persistència, correctes; revisió visual final i publicació via PR/CI en curs. Sense migracions ni canvis de dades reals.",
+      "change_log_id": "H181"
     }
   ]
 }

@@ -17,6 +17,9 @@ for (const name of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,webki
     fixture.db.exec(
       "DELETE FROM grade_bonuses WHERE user_id='browser'; DELETE FROM grade_course_settings WHERE user_id='browser'; DELETE FROM user_preferences WHERE user_id='browser'",
     );
+    fixture.db.exec(
+      "INSERT INTO grade_course_settings(user_id,subject_id,equal_terms,term1_weight,term2_weight,term3_weight,limit_to_ten) VALUES('browser','math',1,33.33,33.33,33.34,1)",
+    );
     const context = await browser.newContext({
       viewport: { width, height: 900 },
       hasTouch: width < 1000,

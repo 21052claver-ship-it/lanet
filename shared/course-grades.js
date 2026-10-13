@@ -1,4 +1,5 @@
 import { weightedGrades } from './domain.js';
+import { evaluationKind } from './student-guide.js';
 
 export const BONUS_TYPES = [
   { capacity: 1, maximum: 0.25, label: 'Fins a 0,25 punts' },
@@ -21,7 +22,22 @@ export function parseBonusGrade(raw, maximum) {
     throw new Error(`La nota del plus ha de ser entre 0 i ${String(maximum).replace('.', ',')}.`);
   return value;
 }
-export function courseGrade(entries, bonuses = [], settings = {}) {
+export function courseSettingsFor(settings, subjectId) {
+  const saved = (settings || []).find((setting) => setting.subject_id === subjectId);
+  if (saved) return saved;
+  const cumulative = evaluationKind(subjectId) === 'cumulative';
+  const weights = cumulative ? CUMULATIVE_WEIGHTS : COURSE_WEIGHTS;
+  return {
+    subject_id: subjectId,
+    equal_terms: cumulative ? 0 : 1,
+    term1_weight: weights[0],
+    term2_weight: weights[1],
+    term3_weight: weights[2],
+    limit_to_ten: 1,
+  };
+}
+export function courseGrade(entries, bonuses = [], settings, subjectId = entries[0]?.subject_id) {
+  settings = settings ?? courseSettingsFor([], subjectId);
   const equal = settings.equal_terms !== 0 && settings.equal_terms !== false;
   const weights = equal
     ? [1, 1, 1]

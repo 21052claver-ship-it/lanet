@@ -75,7 +75,8 @@ test('PAU outlook: per-subject course weights and corrected pluses retained, cap
   assert.equal(p.coverage, 100);
   const partial = currentPauProfile({ grades: entries }, subjects);
   assert.equal(partial.average, 8);
-  assert.equal(partial.coverage, 33);
+  // All three subjects are cumulative: the first trimester covers 16.67%.
+  assert.equal(partial.coverage, 17);
 });
 test('PAU outlook: ratio is coverage of historical cutoff, uses actual weighted subject marks and best two', () => {
   const p = currentPauProfile({ grades: entries }, subjects),
