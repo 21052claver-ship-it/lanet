@@ -7,3 +7,5 @@ Proves locals en Chromium/Firefox/WebKit: 12 panoràmiques (zero, gir següent, 
 Desplegament real confirmat; HTML, main/Bakery JS/CSS i icona publicats coincideixen amb el rebut. HTTPS certificat validat, arrel HTTP200 i www308. Google únic i callback.es correctes; DB/R2 EU i MEDIA_SAFETY preservats. Comprovacions HTTP només GET, sense iniciar compte ni apostar a producció. Dispositius físics no provats.
 
 [Registre públic](releases/0.6.5.json). Evidències privades a output/roulette-panorama i logs output/net-pastel/panorama-*.log.
+
+Actualització 0.6.6 publicada: ruleta ocupa tota la finestra, sense el marc anterior de 12px. [Registre verificat](releases/0.6.6.json).

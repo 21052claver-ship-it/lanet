@@ -1087,3 +1087,5 @@ Evidències: [docs/releases/0.6.5.json](../docs/releases/0.6.5.json), [docs/PLA-
 **13 octubre 2026 · T73-02.** Eliminat el marc exterior de 12px i les cantonades. 12 casos locals en tres motors verifiquen dimensió exacta del viewport, mòbil, controls i resultats; typecheck i unitàries correctes. Publicació 0.6.6 pendent de PR i CI.
 
 Evidències privades: output/roulette-panorama/fullscreen-results.json, fullscreen-typecheck.log i fullscreen-unit.log.
+
+Publicació H176 confirmada: [0.6.6](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.6), commit b38e425a40a92acf0af764db88797518d0adb484, [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38393347476) i rebut immutable validats.
