@@ -1,7 +1,9 @@
-# Verificació · La Net 0.6.7
+# Verificació · La Net 0.6.8
 
-[CI completa](https://github.com/21052claver-ship-it/lanet/actions/runs/38421356223) correcta sobre main 5e3f3ebf3163c19a5725af4e8d374dbea23a1b7c, després de PR18.
+[CI completa](https://github.com/21052claver-ship-it/lanet/actions/runs/38432733507) correcta a main 3ae9e52e0c11d9f65f73c842bb564e83269734d0, després de PR20.
 
-132 casos locals Chromium/Firefox/WebKit: 12 disposició integrada (sense takeover, menú/perfil clicables, zero, resultats i Escape), 27 tapet/157 objectius, 18 animació/lliurament, 36 sala/recuperació i 39 prediccions. 357 unitàries, typecheck/lint, compilació i auditoria correctes. Captura 1280×720 revisada amb barra i menú visibles; mòbil desplaçable. Dispositius físics no provats.
+Àudio natiu mesurat amb AnalyserNode: música simultània, preferència, silenci en gir, segon pla, fonts acotades, lliurament, sortida, denegació i recuperació sense repetir sons. Local: 15 casos correctes; 6 omesos per manca de Web Audio al WebKit Windows. CI Linux: 21 correctes, 0 omesos. Omissions registrades explícitament; no es presenten mocks com a so natiu.
 
-Publicació confirmada via API/CLI de Cloudflare; tag, release immutable i SHA256 del rebut correctes. Sense proves amb comptes reals, ni apostes o dades reals modificades. [Registre](releases/0.6.7.json).
+15 proves visuals en tres motors, inclosos 320px i control visible dins la sala; 18 d’animació i 357 unitàries correctes. Tipus/lint, compilació i auditoria correctes. Dispositius físics no provats.
+
+Publicació, domini i commit canònic confirmats via API/CLI de Cloudflare; tag, release immutable i SHA256 del rebut correctes. Sense proves amb comptes reals ni dades modificades. [Registre](releases/0.6.8.json).

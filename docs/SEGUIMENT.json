@@ -7168,7 +7168,7 @@
       "id": "T73-04",
       "phase": "F73",
       "title": "Afegir sons suaus a la ruleta",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R89"
       ],
@@ -7192,13 +7192,16 @@
         "Publicar amb PR i CI."
       ],
       "evidence": [
+        "docs/releases/0.6.8.json",
         "docs/PLA-RULETA-SONS.md",
-        "output/roulette-panorama/sound-typecheck.log",
-        "output/roulette-panorama/sound-unit.log",
-        "output/roulette-panorama/sound-panorama.log",
-        "output/roulette-panorama/sound-animation.log"
+        "output/releases/0.6.8/receipt.json",
+        "output/roulette-sound/results.json",
+        "output/roulette-sound/layout-results.json",
+        "output/roulette-sound/animation-results.json",
+        "output/roulette-sound/provider-verification.json",
+        "output/roulette-sound/ci-main/roulette-sound/results.json"
       ],
-      "progress": "Sons sintetitzats locals, silenci persistent, neteja i cap interferència amb música. 15 casos visuals i 18 d’animació correctes en tres motors; 357 unitàries i typecheck correctes. Comprovacions natives d’àudio en curs; WebKit Windows sense API queda documentat. Pendent PR/CI i publicació 0.6.8.",
+      "progress": "Publicada 0.6.8 via PR20 i CI exacta de main. Sons suaus locals, silenci persistent i neteja; música, saldo i recuperació conservats. 15 proves natives/fallback locals correctes (6 omeses per manca d’API WebKit Windows), 15 visuals, 18 d’animació i 357 unitàries. CI d’àudio i domini/commit canònic confirmats.",
       "change_log_id": "H178"
     }
   ]

@@ -1103,3 +1103,5 @@ Publicació H177 confirmada: [0.6.7](https://github.com/21052claver-ship-it/lane
 **13 octubre 2026 · T73-04.** Sons locals de fitxa, bola i lliurament del premi; silenci accessible persistent. Sense autoplay ni repetició en recuperar, neteja en sortir/amagar i reproductor de música independent. Tipus, unitàries, disposició i animació correctes; àudio natiu, CI i publicació pendents. WebKit Windows no exposa Web Audio: limitació registrada explícitament, joc verificat sense API.
 
 Evidències: docs/PLA-RULETA-SONS.md i logs privats output/roulette-panorama/sound-*.log.
+
+Publicació H178 confirmada: [0.6.8](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.8), commit 3ae9e52e0c11d9f65f73c842bb564e83269734d0, [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38432733507), domini principal i rebut immutable verificats. Àudio local: 15 casos correctes, 6 omesos; CI: 21 correctes, 0 omesos. Sense dades reals modificades.

@@ -1,7 +1,7 @@
-# Publicació · La Net 0.6.7
+# Publicació · La Net 0.6.8
 
-https://lanet.es · Commit 5e3f3ebf3163c19a5725af4e8d374dbea23a1b7c. Pages bdd5435f.
+https://lanet.es · Commit 3ae9e52e0c11d9f65f73c842bb564e83269734d0. Pages 59d27001-3e09-48e9-a106-e109c44d8f30.
 
-La ruleta queda integrada al contingut de La Net, amb barra superior i menú accessibles. Sense overlay ni posició fixa; disposició segons amplada real disponible. Formularis, retorn al forn, recuperació d’apostes, resultats i animació de premis conservats.
+Sons locals de fitxa, bola alentint-se i premi després del lliurament. Silenci persistent accessible, neteja en sortir o amagar la pestanya i música independent. La ruleta continua integrada dins de la pàgina.
 
-[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.7) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38421356223) · [Registre](releases/0.6.7.json). PR18 i CI exacta de main correctes; tag/release immutable i digest del rebut verificats. Sense migracions ni dades d’usuaris modificades.
+[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.8) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38432733507) · [Registre](releases/0.6.8.json). PR20 i CI exacta de main correctes; cinc grups de navegador obligatoris. Tag/release immutable, digest del rebut, commit canònic i lanet.es actiu verificats via proveïdor. Sense migracions ni dades d’usuaris modificades.
