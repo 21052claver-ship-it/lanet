@@ -1123,3 +1123,9 @@ Publicació H179 confirmada: [0.6.9](https://github.com/21052claver-ship-it/lane
 H180 · Validació de main: el bloc de prediccions detecta una carrera a la prova de resposta perduda (assertion abans del commit confirmat). Corregida només la sincronització de la fixture; es conserven les assertions de càrrec únic, saldo i recuperació. 13 casos WebKit locals correctes. Publicació 0.6.10 pendent de nova CI verda; la versió 0.6.9 continua pública.
 
 Publicació H180 confirmada: [0.6.10](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.10), commit 61592226ddf77ae7e3fcb545d8c0a805078c9ed3, [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38455769429). 370 unitàries, 27 fluxos locals i 27 a CI, inclosos 9 d’edició de variants, i D1 local correctes. Professorat per dia, treball personal i IDs conservats; catàleg oficial sense canvis, domini i rebut immutable confirmats via proveïdor. Sense noves migracions ni dades de producció modificades.
+
+### H181 Integrar la informació acadèmica BAT2
+
+**13 octubre 2026 · T75-01.** Presentació de 34 pàgines revisada íntegrament; classificació d’avaluació connectada a Notes, CSV i previsió PAU sense substituir pesos personals. Calendari de referència amb rangs, dates PAU/PAP contrastades, exportació ICS; TR 30/42/21/7 amb calculadora privada local i guia de recursos/plusos. Sense migracions ni dades de producció modificades. Proves i publicació 0.6.11 en curs.
+
+Evidències: [pla i decisions](PLA-GUIA-BAT2.md), output/student-guide-0.6.11/source.json, unit.log, typecheck.log i browser/results.json.

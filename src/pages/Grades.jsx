@@ -1,7 +1,8 @@
 import Select from '../components/Select';
 import OptionsMenu from '../components/OptionsMenu';
 import CourseGrades from '../components/CourseGrades';
-import { courseGrade } from '../../shared/course-grades';
+import ResearchGrade from '../components/ResearchGrade';
+import { courseGrade, courseSettingsFor } from '../../shared/course-grades';
 import {
   EXTRA_ACTIVITY_SLOTS,
   extraActivityTitle,
@@ -341,7 +342,7 @@ export default function Grades() {
         const result = courseGrade(
           data.grades.filter((entry) => entry.subject_id === s.id),
           (data.gradeBonuses || []).filter((bonus) => bonus.subject_id === s.id),
-          (data.courseSettings || []).find((setting) => setting.subject_id === s.id),
+          courseSettingsFor(data.courseSettings, s.id),
         );
         csvRows.push([
           s.short,
@@ -382,88 +383,101 @@ export default function Grades() {
   const summary = weightedGrades(sheetRows);
   return (
     <>
-      <PageTitle title="Les meves notes" subtitle="Privades i amb desament automàtic" />
+      <PageTitle
+        title="Les meves notes"
+        subtitle={
+          view === 'research'
+            ? 'Treball de Recerca · calculadora personal'
+            : 'Privades i amb desament automàtic'
+        }
+      />
       <Tabs
         className="grade-view-tabs"
         label="Vista de les notes"
         items={[
           ['terms', 'Trimestres'],
           ['course', 'Nota final'],
+          ['research', 'Recerca'],
         ]}
         value={view}
-        onChange={setView}
+        onChange={(value) => {
+          setView(value);
+          setExportConfirm(false);
+        }}
       />
-      <div className="grades-toolbar" ref={toolbarRef}>
-        <GradePrivacyToggle />
-        {view === 'terms' && (
-          <Select
-            aria-label="Trimestre"
-            value={term}
-            onChange={(e) => {
-              setTerm(Number(e.target.value));
-            }}
-          >
-            {TERM_LABELS.map((t, i) => (
-              <option key={t} value={i + 1}>
-                {t}
-              </option>
-            ))}
-          </Select>
-        )}
-        {gradeWrites.canUndo && (
-          <Button
-            disabled={!gradeWrites.canUndo}
-            aria-label="Desfer l’última nota"
-            onClick={gradeWrites.undo}
-          >
-            <ArrowCounterClockwise size={18} />
-          </Button>
-        )}
-        <OptionsMenu label="Opcions del full de notes">
-          <Button variant="ghost" disabled={!enrolled.length} onClick={() => csv()}>
-            <Export size={18} /> Exportar les notes en CSV
-          </Button>
-          {view === 'terms' && selectedSubject && (
-            <>
-              <Button
-                variant="ghost"
-                onClick={() => open('goal', { subject_id: selectedSubject.id, term })}
-              >
-                <Target size={17} /> Objectiu i previsió
-              </Button>
-              <Button
-                variant="ghost"
-                disabled={busy}
-                onClick={() => open('restoreGrades', { subject_id: selectedSubject.id, term })}
-              >
-                Recuperar plantilla
-              </Button>
-            </>
+      {view !== 'research' && (
+        <div className="grades-toolbar" ref={toolbarRef}>
+          <GradePrivacyToggle />
+          {view === 'terms' && (
+            <Select
+              aria-label="Trimestre"
+              value={term}
+              onChange={(e) => {
+                setTerm(Number(e.target.value));
+              }}
+            >
+              {TERM_LABELS.map((t, i) => (
+                <option key={t} value={i + 1}>
+                  {t}
+                </option>
+              ))}
+            </Select>
           )}
-          <p className="options-help">
-            {view === 'terms'
-              ? 'Tab i Enter per avançar · Enganxa des d’Excel · Ctrl+Z per desfer. '
-              : 'Configura els pesos i els plusos des de cada assignatura. '}
-            Una casella buida és pendent; zero és una nota vàlida.
-          </p>
-        </OptionsMenu>
-        <span className={`grade-save-status ${busy ? 'is-busy' : 'sr-only'}`} role="status">
-          {busy ? 'Desant…' : 'Els canvis es desen automàticament'}
-        </span>
-        {view === 'terms' && (
-          <Button
-            variant="primary"
-            className="grades-add"
-            disabled={!enrolled.length || busy}
-            onClick={() =>
-              open('gradeSheet', { subject_id: selectedSubject?.id || enrolled[0]?.id, term })
-            }
-          >
-            <SlidersHorizontal size={20} />
-            Configurar avaluació
-          </Button>
-        )}
-      </div>
+          {gradeWrites.canUndo && (
+            <Button
+              disabled={!gradeWrites.canUndo}
+              aria-label="Desfer l’última nota"
+              onClick={gradeWrites.undo}
+            >
+              <ArrowCounterClockwise size={18} />
+            </Button>
+          )}
+          <OptionsMenu label="Opcions del full de notes">
+            <Button variant="ghost" disabled={!enrolled.length} onClick={() => csv()}>
+              <Export size={18} /> Exportar les notes en CSV
+            </Button>
+            {view === 'terms' && selectedSubject && (
+              <>
+                <Button
+                  variant="ghost"
+                  onClick={() => open('goal', { subject_id: selectedSubject.id, term })}
+                >
+                  <Target size={17} /> Objectiu i previsió
+                </Button>
+                <Button
+                  variant="ghost"
+                  disabled={busy}
+                  onClick={() => open('restoreGrades', { subject_id: selectedSubject.id, term })}
+                >
+                  Recuperar plantilla
+                </Button>
+              </>
+            )}
+            <p className="options-help">
+              {view === 'terms'
+                ? 'Tab i Enter per avançar · Enganxa des d’Excel · Ctrl+Z per desfer. '
+                : 'Configura els pesos i els plusos des de cada assignatura. '}
+              Una casella buida és pendent; zero és una nota vàlida.
+            </p>
+          </OptionsMenu>
+          <span className={`grade-save-status ${busy ? 'is-busy' : 'sr-only'}`} role="status">
+            {busy ? 'Desant…' : 'Els canvis es desen automàticament'}
+          </span>
+          {view === 'terms' && (
+            <Button
+              variant="primary"
+              className="grades-add"
+              disabled={!enrolled.length || busy}
+              onClick={() =>
+                open('gradeSheet', { subject_id: selectedSubject?.id || enrolled[0]?.id, term })
+              }
+            >
+              <SlidersHorizontal size={20} />
+              Configurar avaluació
+            </Button>
+          )}
+        </div>
+      )}
       {exportConfirm && (
         <div className="grade-export-confirm course-export-confirm" role="alert">
           <p>
@@ -514,7 +528,9 @@ export default function Grades() {
           <span>Notes ocultes. Pots escriure a qualsevol casella per afegir-ne una.</span>
         </div>
       )}
-      {view === 'course' ? (
+      {view === 'research' ? (
+        <ResearchGrade />
+      ) : view === 'course' ? (
         <CourseGrades subjects={enrolled} />
       ) : (
         <>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Select from '../components/Select';
 import AgendaList from '../components/AgendaList';
+import SchoolCalendar from '../components/SchoolCalendar';
 import OptionsMenu from '../components/OptionsMenu';
 import { EVENT_KINDS, eventKind, eventLabel, eventOrigin } from '../../shared/agenda';
 import {
@@ -313,6 +314,7 @@ export default function Schedule() {
           </OptionsMenu>
         </div>
       </div>
+      {view === 'calendar' && <SchoolCalendar />}
       {view === 'calendar' && (
         <div className="agenda-filters">
           <Select
@@ -561,7 +563,7 @@ export default function Schedule() {
                     }}
                   >
                     <ReferenceArt name="grades" size={29} />
-                    Veure apunts
+                    Veure continguts
                   </Button>
                 )}
                 {(selectedEvent.owner_id === data.user.id ||

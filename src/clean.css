@@ -858,6 +858,7 @@
 }
 .app-shell .calendar-navigation-row {
   gap: 12px;
+  flex-wrap: wrap;
 }
 .app-shell .bakery-layout {
   grid-template-columns: minmax(0, 1fr) 270px;

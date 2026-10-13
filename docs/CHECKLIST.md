@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**182/183 tasques verificades · 90 requisits · 75 fases · límit d’una tasca activa.**
+**182/184 tasques verificades · 91 requisits · 76 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **cap**.
+Tasca activa: **T75-01 — Contrastar i integrar la guia acadèmica del curs**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -417,5 +417,9 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 
 - [x] **T74-01** Importar horaris oficials i connectar el selector visual — Verificat.
 - [x] **T74-02** Conservar professorat per dia en editar l’horari — Verificat.
+
+## F75 Informació acadèmica BAT2 2026-27
+
+- [ ] **T75-01** Contrastar i integrar la guia acadèmica del curs — En revisió.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

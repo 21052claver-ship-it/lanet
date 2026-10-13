@@ -41,6 +41,7 @@ import {
 import { matchesSearch } from '../../shared/search';
 import { currentPauProfile, degreeOutlook } from '../../shared/pau-outlook';
 import PauChoices, { PauOutlook } from '../components/PauChoices';
+import SchoolCalendar from '../components/SchoolCalendar';
 import '../pau.css';
 
 const number = (n) =>
@@ -460,6 +461,7 @@ export default function Pau() {
       >
         <GradePrivacyToggle />
       </PageTitle>
+      <SchoolCalendar onlyAdmission />
       <div className="pau-topline">
         <Tabs
           label="Apartat PAU"
