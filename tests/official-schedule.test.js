@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { testEnvironment } from './helpers/d1.js';
 import { catalog, configure } from '../worker/data.js';
+import { adminRoute } from '../worker/admin.js';
 import { slotConflicts, timeMinutes } from '../shared/domain.js';
 import {
   OFFICIAL_OFFERINGS,
@@ -37,6 +38,115 @@ const user = (db) => {
   );
   return db.prepare("SELECT * FROM users WHERE id='schedule-fixture'").get();
 };
+const manage = (env, user, value) =>
+  adminRoute(
+    new Request('https://lanet.example/api/admin/offerings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(value),
+    }),
+    env,
+    user,
+    '/api/admin/offerings',
+  );
+test('management round trip preserves IDs, per-day teachers and Latin personal work for old clients', async () => {
+  const { db, env } = testEnvironment();
+  const manager = { ...user(db), role: 'admin' };
+  for (const id of ['2A-phil', '2C-lit', '2C-latin']) {
+    const offering = db.prepare('SELECT * FROM offerings WHERE id=?').get(id);
+    const before = db.prepare('SELECT * FROM slots WHERE offering_id=? ORDER BY id').all(id);
+    await manage(env, manager, {
+      ...offering,
+      slots: before.map(({ id, day, start, end, room }) => ({ id, day, start, end, room })),
+    });
+    assert.deepEqual(
+      db.prepare('SELECT * FROM slots WHERE offering_id=? ORDER BY id').all(id),
+      before,
+    );
+  }
+  db.close();
+});
+test('management explicitly distinguishes general, per-day and personal teachers', async () => {
+  const { db, env } = testEnvironment();
+  const manager = { ...user(db), role: 'admin' };
+  const offering = db.prepare("SELECT * FROM offerings WHERE id='2C-lit'").get();
+  const slots = db.prepare("SELECT * FROM slots WHERE offering_id='2C-lit' ORDER BY day").all();
+  await manage(env, manager, {
+    ...offering,
+    teacher: 'Professorat general de prova',
+    slots: slots.map((s, i) => ({
+      ...s,
+      teacher_mode: ['general', 'custom', 'personal', 'custom'][i],
+      teacher: i === 1 ? 'Docent de dimarts' : s.teacher,
+      note: i === 2 ? '' : s.note,
+    })),
+  });
+  const after = db.prepare("SELECT * FROM slots WHERE offering_id='2C-lit' ORDER BY day").all();
+  assert.equal(after[0].teacher, null);
+  assert.equal(
+    slotTeacher(after[0], { teacher: 'Professorat general de prova' }),
+    'Professorat general de prova',
+  );
+  assert.equal(after[1].teacher, 'Docent de dimarts');
+  assert.equal(after[2].teacher, '');
+  assert.equal(after[2].note, 'Treball personal');
+  assert.equal(after[3].teacher, 'Elena Domènech');
+  assert.deepEqual(
+    after.map((s) => s.id),
+    slots.map((s) => s.id),
+  );
+  db.close();
+});
+test('management rejects invalid teacher modes and overlapping periods atomically', async () => {
+  const { db, env } = testEnvironment();
+  const manager = { ...user(db), role: 'admin' };
+  const offering = db.prepare("SELECT * FROM offerings WHERE id='2C-lit'").get();
+  const slots = db.prepare("SELECT * FROM slots WHERE offering_id='2C-lit' ORDER BY day").all();
+  for (const patch of [
+    { teacher_mode: 'bad' },
+    { teacher_mode: 'custom', teacher: '' },
+    { teacher: {} },
+  ])
+    await assert.rejects(
+      manage(env, manager, {
+        ...offering,
+        slots: slots.map((s, i) => (i ? s : { ...s, ...patch })),
+      }),
+      { status: 400 },
+    );
+  await assert.rejects(
+    manage(env, manager, { ...offering, slots: [...slots, { ...slots[0], id: 'new-id' }] }),
+    { status: 400 },
+  );
+  for (const invalid of [null, [], 42])
+    await assert.rejects(
+      manage(env, manager, { ...offering, slots: [invalid, ...slots.slice(1)] }),
+      { status: 400 },
+    );
+  assert.deepEqual(
+    db.prepare("SELECT * FROM slots WHERE offering_id='2C-lit' ORDER BY day").all(),
+    slots,
+  );
+  await assert.rejects(
+    manage(env, { ...manager, role: 'delegate', group_id: '2A' }, { ...offering, slots }),
+    { status: 403 },
+  );
+  db.close();
+});
+test('management cannot overwrite another offering slot ID', async () => {
+  const { db, env } = testEnvironment();
+  const manager = { ...user(db), role: 'admin' };
+  const other = db.prepare("SELECT * FROM slots WHERE offering_id='2A-eng' LIMIT 1").get();
+  const offering = db.prepare("SELECT * FROM offerings WHERE id='2C-lit'").get();
+  const slots = db.prepare("SELECT * FROM slots WHERE offering_id='2C-lit'").all();
+  await manage(env, manager, {
+    ...offering,
+    slots: slots.map((s, i) => (i ? s : { ...s, id: other.id })),
+  });
+  assert.deepEqual(db.prepare('SELECT * FROM slots WHERE id=?').get(other.id), other);
+  assert.equal(db.prepare("SELECT COUNT(*) AS n FROM slots WHERE offering_id='2C-lit'").get().n, 4);
+  db.close();
+});
 
 test('all 208 official combinations have exactly six nonoverlapping periods per day', () => {
   let count = 0;

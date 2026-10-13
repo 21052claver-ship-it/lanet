@@ -99,14 +99,54 @@ export async function adminRoute(request, env, user, path) {
     const key = b.id || id();
     if (!Array.isArray(b.slots) || !b.slots.length || b.slots.length > 12)
       fail(400, 'Indica les franges de classe.');
-    const slots = b.slots.map((s) => ({
-      day: integer(s.day, 0, 6),
-      start: time(s.start),
-      end: time(s.end),
-      room: str(s.room, 80),
-    }));
+    const previousSlots = current
+      ? await rows(env, 'SELECT * FROM slots WHERE offering_id=?', key)
+      : [];
+    // Older forms omit per-slot metadata. Inherit only from this offering;
+    // null follows its general teacher, while an empty teacher means personal work.
+    const slots = b.slots.map((s) => {
+      if (!s || typeof s !== 'object' || Array.isArray(s))
+        fail(400, 'Revisa les dades de la franja.');
+      if (s.teacher !== undefined && s.teacher !== null && typeof s.teacher !== 'string')
+        fail(400, 'Indica un nom de professor vàlid.');
+      if (s.note !== undefined && typeof s.note !== 'string')
+        fail(400, 'La indicació de la franja ha de ser text.');
+      const previous =
+        previousSlots.find((p) => p.id === s.id) ||
+        previousSlots.find((p) => p.day === s.day && p.start === s.start && p.end === s.end);
+      let teacher =
+        s.teacher === undefined
+          ? (previous?.teacher ?? null)
+          : s.teacher === null
+            ? null
+            : str(s.teacher, 100);
+      if (s.teacher_mode !== undefined) {
+        const mode = choice(s.teacher_mode, ['general', 'custom', 'personal']);
+        teacher = mode === 'general' ? null : mode === 'personal' ? '' : str(s.teacher, 100, true);
+      }
+      return {
+        id: previous?.id || id(),
+        day: integer(s.day, 0, 6),
+        start: time(s.start),
+        end: time(s.end),
+        room: str(s.room, 80),
+        teacher,
+        note:
+          (s.note === undefined ? previous?.note || '' : str(s.note, 200)) ||
+          (teacher === '' ? 'Treball personal' : ''),
+      };
+    });
     if (slots.some((s) => !s.start || !s.end || s.end <= s.start))
       fail(400, 'Revisa les hores de classe.');
+    if (
+      new Set(slots.map((s) => s.id)).size !== slots.length ||
+      slots.some((s, i) =>
+        slots
+          .slice(i + 1)
+          .some((other) => s.day === other.day && s.start < other.end && other.start < s.end),
+      )
+    )
+      fail(400, 'Les franges de la mateixa assignatura no es poden solapar.');
     await env.DB.batch([
       sql(
         env,
@@ -122,13 +162,15 @@ export async function adminRoute(request, env, user, path) {
       ...slots.map((s) =>
         sql(
           env,
-          'INSERT INTO slots(id,offering_id,day,start,end,room) VALUES(?,?,?,?,?,?)',
-          id(),
+          'INSERT INTO slots(id,offering_id,day,start,end,room,teacher,note) VALUES(?,?,?,?,?,?,?,?)',
+          s.id,
           key,
           s.day,
           s.start,
           s.end,
           s.room,
+          s.teacher,
+          s.note,
         ),
       ),
     ]);

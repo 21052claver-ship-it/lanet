@@ -1,0 +1,40 @@
+{
+  "recordedAt": "2026-10-13T18:16:41.226Z",
+  "version": "0.6.9",
+  "sourceCommit": "22752b3b2668e6117e1589f6bd4b6ce2db8979b9",
+  "origin": "https://lanet.es",
+  "releaseUrl": "https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.9",
+  "immutable": true,
+  "tagCommitMatches": true,
+  "receiptDigestMatches": true,
+  "ci": "https://github.com/21052claver-ship-it/lanet/actions/runs/38443480810",
+  "ciSuccess": true,
+  "pullRequest": "https://github.com/21052claver-ship-it/lanet/pull/22",
+  "cloudflareDeployment": "4158c7ab-aef6-44b6-bd1a-a93a34f21ee9",
+  "providerConfirmed": true,
+  "productionCommitMatches": true,
+  "domainActive": true,
+  "githubDeployment": 7046349916,
+  "tests": {
+    "unit": 366,
+    "curriculumCombinations": 208,
+    "browser": 24,
+    "ciBrowser": 24,
+    "scheduleCards": 15,
+    "localD1Routes": 3
+  },
+  "migration": {
+    "name": "0026_official_schedule.sql",
+    "sha256": "8fc19688c9233e6a23e2c6833cc959b30f90433e7a7f3f866ee0f96ca80d276c",
+    "applied": true,
+    "privateBackupVerified": true,
+    "personalDataPreservedInRehearsal": true,
+    "existingTemplatesPreserved": true,
+    "providerCatalogMatches": true,
+    "officialOfferings": 53,
+    "officialSlots": 155
+  },
+  "realDevicesTested": false,
+  "userDataModified": false,
+  "publicSiteVisited": false
+}

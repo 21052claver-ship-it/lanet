@@ -99,14 +99,33 @@ export function OfferingForm({ item }) {
       path: 'common',
       ...item,
     }),
-    [slots, setSlots] = useState(
-      item.id
+    [slots, setSlots] = useState(() =>
+      (item.id
         ? data.slots.filter((s) => s.offering_id === item.id)
-        : [{ day: 0, start: '08:00', end: '09:00', room: '' }],
+        : [{ day: 0, start: '08:10', end: '09:10', room: '' }]
+      ).map((s) => ({
+        ...s,
+        teacher_mode: s.teacher == null ? 'general' : s.teacher === '' ? 'personal' : 'custom',
+      })),
     );
   const { busy, error, submit } = useSubmit(close);
   function update(i, k, v) {
     setSlots(slots.map((s, j) => (i === j ? { ...s, [k]: v } : s)));
+  }
+  function teacherMode(index, mode) {
+    setSlots((all) =>
+      all.map((slot, i) =>
+        i !== index
+          ? slot
+          : {
+              ...slot,
+              teacher_mode: mode,
+              teacher:
+                mode === 'personal' ? '' : mode === 'general' ? null : slot.teacher || f.teacher,
+              note: mode === 'personal' ? slot.note || 'Treball personal' : '',
+            },
+      ),
+    );
   }
   return (
     <form
@@ -144,7 +163,7 @@ export function OfferingForm({ item }) {
               ))}
           </Select>
         </Field>
-        <Field label="Professor/a">
+        <Field label="Professorat general">
           <input
             value={f.teacher}
             maxLength={100}
@@ -160,6 +179,10 @@ export function OfferingForm({ item }) {
           />
         </Field>
       </div>
+      <p className="muted">
+        Cada franja pot seguir el professorat general, tenir professorat propi o ser treball
+        personal.
+      </p>
       <h3>Franges de classe</h3>
       <div className="slot-editor">
         {slots.map((s, i) => (
@@ -204,12 +227,54 @@ export function OfferingForm({ item }) {
             >
               <Trash size={17} />
             </IconButton>
+            <div className="slot-teacher-editor">
+              <Field label={`Professorat de la franja ${i + 1}`}>
+                <Select value={s.teacher_mode} onChange={(e) => teacherMode(i, e.target.value)}>
+                  <option value="general">Professorat general</option>
+                  <option value="custom">Professorat d’aquest dia</option>
+                  <option value="personal">Treball personal</option>
+                </Select>
+              </Field>
+              {s.teacher_mode === 'custom' && (
+                <Field label={`Nom del professor de la franja ${i + 1}`}>
+                  <input
+                    value={s.teacher || ''}
+                    required
+                    maxLength={100}
+                    onChange={(e) => update(i, 'teacher', e.target.value)}
+                  />
+                </Field>
+              )}
+              <Field label={`Indicació de la franja ${i + 1}`}>
+                <input
+                  value={s.note || ''}
+                  maxLength={200}
+                  placeholder={
+                    s.teacher_mode === 'personal' ? 'Treball personal · Llatí online' : 'Opcional'
+                  }
+                  onChange={(e) => update(i, 'note', e.target.value)}
+                />
+              </Field>
+            </div>
           </div>
         ))}
       </div>
       <Button
         type="button"
-        onClick={() => setSlots([...slots, { day: 0, start: '08:00', end: '09:00', room: '' }])}
+        onClick={() =>
+          setSlots([
+            ...slots,
+            {
+              day: 0,
+              start: '08:10',
+              end: '09:10',
+              room: '',
+              teacher_mode: 'general',
+              teacher: null,
+              note: '',
+            },
+          ])
+        }
       >
         <Plus size={17} />
         Afegir franja

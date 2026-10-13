@@ -1,6 +1,48 @@
 .course-setup {
   --course-accent: #846147;
 }
+.slot-editor .slot-teacher-editor {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #eee7df;
+}
+.slot-teacher-editor .field {
+  min-width: 0;
+  margin: 0;
+}
+.slot-teacher-editor .field > span {
+  font-size: 12px;
+}
+@media (max-width: 600px) {
+  .slot-editor > div {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 44px;
+  }
+  .slot-editor > div > .select-control:first-child {
+    grid-column: 1 / -1;
+  }
+  .slot-editor > div > input:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .slot-editor > div > input:nth-child(3) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .slot-editor > div > .icon-button {
+    grid-column: 3;
+    grid-row: 2;
+  }
+  .slot-editor > div > input:nth-child(4) {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+  .slot-editor .slot-teacher-editor {
+    grid-template-columns: 1fr;
+  }
+}
 .course-setup fieldset {
   min-width: 0;
   padding: 0;

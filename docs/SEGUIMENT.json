@@ -7219,7 +7219,7 @@
       "id": "T74-01",
       "phase": "F74",
       "title": "Importar horaris oficials i connectar el selector visual",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R01",
         "R03",
@@ -7249,14 +7249,57 @@
         "Revisar/aplicar migració amb còpia privada i publicar amb CI."
       ],
       "evidence": [
+        "docs/releases/0.6.9.json",
         "docs/PLA-HORARIS-OFICIALS.md",
         "output/official-schedule/unit.log",
         "output/official-schedule/typecheck.log",
         "output/official-schedule/browser/results.json",
-        "output/official-schedule/api-results.json"
+        "output/official-schedule/api-results.json",
+        "output/schedule-cards/browser/results.json",
+        "output/official-schedule/ci-main/official-schedule/browser/results.json",
+        "output/official-schedule/migration-proof.json",
+        "output/official-schedule/provider-verification.json",
+        "output/releases/0.6.9/receipt.json"
       ],
-      "progress": "Model contrastat amb el PDF: 208 combinacions sense coincidències; selector, perfil, horari i detalls connectats. 366 unitàries, 24 casos visuals en tres motors i API amb D1 local correctes. Migració revisada, única pendent al proveïdor; còpia privada, PR/CI i publicació pendents.",
+      "progress": "Publicada 0.6.9 a lanet.es via PR22 i CI exacta de main. PDF contrastat, 208 combinacions completes, 366 unitàries, 24 fluxos visuals en tres motors, 15 regressions i D1 local correctes. Còpia privada assajada: dades personals i plantilles preservades. Migració 0026 aplicada; 53 ofertes i 155 franges exactes confirmades via proveïdor. Domini, commit, tag/release i rebut immutable verificats.",
       "change_log_id": "H179"
+    },
+    {
+      "id": "T74-02",
+      "phase": "F74",
+      "title": "Conservar professorat per dia en editar l’horari",
+      "status": "review",
+      "requirements": [
+        "R03",
+        "R90"
+      ],
+      "depends_on": [
+        "T74-01"
+      ],
+      "files": [
+        "worker/admin.js",
+        "src/forms-admin.jsx",
+        "src/course-setup.css",
+        "tests/official-schedule.test.js",
+        "scripts/test-official-schedule.mjs",
+        "scripts/test-official-schedule-api.mjs"
+      ],
+      "acceptance": "Desar una variant conserva IDs, professorat específic i treball personal, també amb clients antics. Editor explícit per franja, permisos i rebuig de solapaments; proves locals/D1 i publicació via PR/CI sense migracions addicionals.",
+      "checks": [
+        "Reproduir pèrdua de metadades en desar.",
+        "Conservar professorat, notes i IDs verificats de la variant.",
+        "Editar professorat general, propi i treball personal de forma explícita.",
+        "Provar API, permisos i UI en tres motors.",
+        "Publicar amb PR, CI i registre de versió."
+      ],
+      "evidence": [
+        "output/official-schedule-0.6.10/unit.log",
+        "output/official-schedule-0.6.10/typecheck.log",
+        "output/official-schedule-0.6.10/browser/results.json",
+        "output/official-schedule-0.6.10/api-results.json"
+      ],
+      "progress": "370 unitàries, 27 fluxos de navegador (9 d’edició) en tres motors i D1/workerd local correctes. Professorat per dia, treball personal i IDs conservats; desplegable de dia corregit a 320 px. Tipus/lint i compilació correctes. Versió 0.6.10 preparada, pendent de PR/CI i publicació, sense noves migracions.",
+      "change_log_id": "H180"
     }
   ]
 }
