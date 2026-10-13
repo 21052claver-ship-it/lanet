@@ -1075,3 +1075,9 @@ Evidències: [docs/releases/0.6.4.json](../docs/releases/0.6.4.json), [docs/PLA-
 **12 d’oct. 2026, 16:53 · T69-01.** Domini lanet.es publicat com a principal a 0.6.4, www redirigeix i HTTPS vàlid en ambdós; callback Google, dades i correu preservats. Propagació DNS encara possible en caches antigues.
 
 Evidències: [docs/releases/0.6.4.json](../docs/releases/0.6.4.json), [docs/PLA-DOMINI-LANET-ES.md](../docs/PLA-DOMINI-LANET-ES.md), [output/domain-lanet-es/activation-check.json](../output/domain-lanet-es/activation-check.json), [output/net-pastel/public-verification.json](../output/net-pastel/public-verification.json), [output/net-pastel/cloudflare-domains-active.png](../output/net-pastel/cloudflare-domains-active.png), [output/releases/0.6.4/receipt.json](../output/releases/0.6.4/receipt.json).
+
+### H175 Organitzar la sala de ruleta i ressaltar el resultat al tapet
+
+**13 d’oct. 2026, 13:29 · T73-01.** Publicada 0.6.5 a lanet.es: sala panoràmica sense scroll en resolucions verificades, ressaltat de guanyadors després del gir, formularis i premis en capes correctes; 147 casos locals, CI completa i digests públics correctes.
+
+Evidències: [docs/releases/0.6.5.json](../docs/releases/0.6.5.json), [docs/PLA-RULETA-PANORAMICA.md](../docs/PLA-RULETA-PANORAMICA.md), [output/roulette-panorama/results.json](../output/roulette-panorama/results.json), [output/roulette-panorama/public-verification.json](../output/roulette-panorama/public-verification.json), [output/releases/0.6.5/receipt.json](../output/releases/0.6.5/receipt.json).
