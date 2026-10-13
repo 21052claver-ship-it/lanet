@@ -7076,7 +7076,8 @@
         "docs/PLA-RULETA-PANORAMICA.md",
         "src/components/RouletteAward.jsx",
         "scripts/test-roulette-animation.mjs",
-        "scripts/test-schedule-cards.mjs"
+        "scripts/test-schedule-cards.mjs",
+        "scripts/test-predictions.mjs"
       ],
       "acceptance": "Tots els elements principals visibles sense scroll a 1280x720, 1366x768 i 1920x1080. Resultat exacte i apostes exteriors guanyadores ressaltats després del gir, zero correcte, sense pistes durant animació ni alteració de saldo/càlculs. Mòbil accessible sense retalls.",
       "checks": [

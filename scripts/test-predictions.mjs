@@ -200,7 +200,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         async (f, pageFor) => {
           const page = await pageFor();
           await page.getByRole('button', { name: 'Crear aposta', exact: true }).click();
-          const dialog = page.getByRole('dialog');
+          const dialog = page.locator('.dialog[role="dialog"]');
           assert.equal(
             await dialog
               .getByRole('tab', { name: 'Jo mateix', exact: true })
@@ -239,7 +239,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
           nowAdvance(f, m.closes_at);
           await page.getByRole('button', { name: 'Actualitzar', exact: true }).click();
           await page.getByRole('button', { name: 'Confirmar resultat A/B', exact: true }).click();
-          const result = page.getByRole('dialog');
+          const result = page.locator('.dialog[role="dialog"]');
           await result
             .getByLabel('Justificació i font del resultat', { exact: true })
             .fill('El resultat oficial confirma que ha guanyat l’equip A.');
@@ -283,13 +283,13 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
           await page.locator('.prediction-card').click();
           await page.getByRole('heading', { name: original.title, exact: true }).waitFor();
           await page.getByRole('button', { name: 'Crear aposta', exact: true }).click();
-          let dialog = page.getByRole('dialog');
+          let dialog = page.locator('.dialog[role="dialog"]');
           await dialog.getByRole('button', { name: 'Cancel·lar', exact: true }).click();
           await dialog.waitFor({ state: 'hidden' });
           await page.getByRole('heading', { name: original.title, exact: true }).waitFor();
           assert.equal(f.db.prepare('SELECT COUNT(*) n FROM prediction_markets').get().n, 1);
           await page.getByRole('button', { name: 'Crear aposta', exact: true }).click();
-          dialog = page.getByRole('dialog');
+          dialog = page.locator('.dialog[role="dialog"]');
           await dialog
             .getByLabel('Pregunta', { exact: true })
             .fill('Guanyarà el nostre grup el torneig?');
@@ -330,7 +330,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
       async (f, pageFor) => {
         const creator = await pageFor();
         await creator.getByRole('button', { name: 'Crear aposta', exact: true }).click();
-        const dialog = creator.getByRole('dialog');
+        const dialog = creator.locator('.dialog[role="dialog"]');
         await dialog.getByLabel('Pregunta', { exact: true }).fill('Guanyarà l’equip A el concurs?');
         await dialog.getByLabel('Opció A', { exact: true }).fill('Equip A');
         await dialog.getByLabel('Opció B', { exact: true }).fill('Equip B');
@@ -370,7 +370,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         nowAdvance(f, m.closes_at);
         await resolver.getByRole('button', { name: 'Actualitzar', exact: true }).click();
         await resolver.getByRole('button', { name: 'Confirmar resultat A/B', exact: true }).click();
-        const result = resolver.getByRole('dialog');
+        const result = resolver.locator('.dialog[role="dialog"]');
         await result
           .getByLabel('Justificació i font del resultat', { exact: true })
           .fill('El marcador oficial confirma que ha guanyat l’equip A.');
@@ -498,7 +498,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
       async (f, pageFor) => {
         const page = await pageFor();
         await page.getByRole('button', { name: 'Crear aposta', exact: true }).click();
-        const dialog = page.getByRole('dialog');
+        const dialog = page.locator('.dialog[role="dialog"]');
         await dialog
           .getByLabel('Pregunta', { exact: true })
           .fill('Guanyarà la classe la prova local?');
@@ -545,7 +545,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         const page = await pageFor('resolver');
         await page.locator('.prediction-card').click();
         await page.getByRole('button', { name: 'Confirmar resultat A/B', exact: true }).click();
-        const dialog = page.getByRole('dialog');
+        const dialog = page.locator('.dialog[role="dialog"]');
         await dialog
           .getByLabel('Justificació i font del resultat', { exact: true })
           .fill('L’equip A ha guanyat segons el resultat oficial.');
@@ -585,7 +585,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         await page
           .getByRole('button', { name: 'Anul·lar i retornar pastissos', exact: true })
           .click();
-        const dialog = page.getByRole('dialog');
+        const dialog = page.locator('.dialog[role="dialog"]');
         await dialog
           .getByLabel('Motiu de l’anul·lació', { exact: true })
           .fill('El concurs s’ha anul·lat oficialment.');
