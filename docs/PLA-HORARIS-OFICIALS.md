@@ -41,3 +41,5 @@ Els usuaris existents reben un avís per confirmar les assignatures i variants. 
 `node scripts/generate-official-schedule.mjs --check` comprova que el SQL correspon exactament al model revisat. El generador no accedeix a cap base de dades. Les proves d’API utilitzen D1/R2 locals aïllats. No es visita la web pública ni la seva API per fer proves.
 
 La migració remota es fa separadament del pipeline, després de comprovar que és l’única pendent i conservar una còpia privada. Es revisen recompte i integritat del catàleg via proveïdor, sense exposar usuaris. L’esquema és additiu, compatible amb el desplegament anterior durant l’actualització; una reversió de frontend no exigeix restaurar dades personals. El registre final incorpora PR, CI, versió, desplegament i evidències privades.
+
+Publicada **0.6.9**: [release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.9) · [CI exacta](https://github.com/21052claver-ship-it/lanet/actions/runs/38443480810) · [registre](releases/0.6.9.json). T74-01 verificada; migració assajada en còpia privada i aplicada separadament, sense alterar les dades personals existents.
