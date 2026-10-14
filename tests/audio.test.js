@@ -110,7 +110,7 @@ test('a late MP3 decoding failure recovers with Vorbis and keeps the same player
   element.error = { code: 3 };
   element.canPlayType = () => 'probably';
   element.listeners.get('error')();
-  await Promise.resolve();
+  await new Promise((resolve) => setImmediate(resolve));
   assert.equal(element.src, '/audio/window.ogg');
   assert.equal(audio.element, element);
   assert.equal(audio.state, 'playing');
@@ -289,6 +289,70 @@ test('pause during loading cancels that request without releasing the selected d
   assert.equal(elements.length, 1);
 });
 
+test('native playback progress settles a pending resume and preserves the selected media', async (t) => {
+  const { audio, elements } = engine(t);
+  const first = audio.play('jazz-forecast');
+  const element = elements[0];
+  element.resolve();
+  await first;
+  element.currentTime = 24;
+  element.readyState = 2;
+  element.seeking = false;
+  audio.pause();
+  element.play = () => {
+    element.paused = false;
+    return new Promise(() => {});
+  };
+  const resumed = audio.play('jazz-forecast', 0.37);
+  assert.equal(audio.state, 'loading');
+  element.currentTime = 24.25;
+  element.listeners.get('timeupdate')();
+  assert.equal(await resumed, true);
+  assert.equal(audio.state, 'playing');
+  assert.equal(audio.element, element);
+  assert.equal(element.volume, 0.37);
+  assert.equal(elements.length, 1);
+  for (const name of ['timeupdate', 'seeking', 'seeked'])
+    assert.equal(element.listeners.has(name), false);
+});
+
+test('seeking or stationary media cannot confirm playback; pause releases pending observers', async (t) => {
+  const { audio, elements } = engine(t);
+  const pending = audio.play('window');
+  const element = elements[0];
+  element.readyState = 2;
+  element.seeking = true;
+  element.currentTime = 24;
+  element.listeners.get('seeking')();
+  const staleProgress = element.listeners.get('timeupdate');
+  staleProgress();
+  element.seeking = false;
+  element.listeners.get('seeked')();
+  staleProgress();
+  assert.equal(audio.state, 'loading');
+  audio.pause();
+  assert.equal(await pending, false, 'Cancellation settles without waiting for native play()');
+  element.paused = false;
+  element.currentTime = 26;
+  staleProgress();
+  assert.equal(audio.state, 'paused');
+  for (const name of ['timeupdate', 'seeking', 'seeked'])
+    assert.equal(element.listeners.has(name), false);
+});
+
+test('stop settles an unresolved native start and removes its progress observers', async (t) => {
+  const { audio, elements } = engine(t);
+  const pending = audio.play('night');
+  audio.stop();
+  assert.equal(await pending, false);
+  assert.equal(audio.element, null);
+  assert.equal(audio.cancelStart, null);
+  assert.equal(elements[0].listeners.size, 0);
+  elements[0].reject(Object.assign(new Error('Stopped'), { name: 'AbortError' }));
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(audio.state, 'idle');
+});
+
 test('a fast pause/resume only commits the newest play request', async (t) => {
   const { audio, elements } = engine(t);
   const first = audio.play('garden');
@@ -331,7 +395,7 @@ test('paused playback ignores queued ended events and resumes the same style seq
   assert.equal(elements.length, 2);
   assert.equal(elements[1].src, '/audio/jazz-shuffle.mp3');
   elements[1].resolve();
-  await Promise.resolve();
+  await new Promise((resolve) => setImmediate(resolve));
   assert.equal(audio.state, 'playing');
 });
 

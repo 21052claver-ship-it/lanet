@@ -8029,9 +8029,12 @@
         "output/functional-audit-0.6.16/coverage.json",
         "output/functional-audit-0.6.16/source-audit.json",
         "output/functional-audit-0.6.16/unit.log",
-        "output/functional-audit-0.6.16/api-seventh.log"
+        "output/functional-audit-0.6.16/api-seventh.log",
+        "output/functional-audit-0.6.16/unit-final.log",
+        "output/functional-audit-0.6.16/linux-music-before.log",
+        "output/functional-audit-0.6.16/linux-music-fixed.log"
       ],
-      "progress": "Auditoria local completada: 614 controls, 324 definicions de botó, 29 formularis i 51 fitxers associats a famílies de recorreguts; 166 escenaris addicionals, 62 API amb D1/R2 locals i 446 unitàries correctes. Zero d’objectiu corregit amb regressió abans/després en tres motors. Proves antigues actualitzades als permisos, límits i càrrega diferida vigents sense relaxar producte. 0.6.17 preparada en una sola tanda amb el tancament documental 301c88c; pendent Validate de branca/main i publicació amb rebut. Cap prova pública ni dispositiu físic.",
+      "progress": "Auditoria local: 324 definicions de botó/29 formularis/51 fitxers, 166 recorreguts addicionals més 13 WebKit/Linux, 62 API locals i 449 unitàries. Objectiu zero corregit. CI ha descobert un segon error de represa musical WebKit/Linux, reproduït en Ubuntu local i corregit reconeixent avanç real, amb cancel·lació i neteja sense timers/peticions. Prova de navegador original conservada, tres regressions unitàries noves. Una pujada correctiva a la mateixa PR39 i un únic desplegament 0.6.17 pendent de Validate/CI actualitzada.",
       "change_log_id": "H197"
     }
   ]

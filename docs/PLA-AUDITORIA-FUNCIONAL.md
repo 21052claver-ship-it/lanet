@@ -22,11 +22,19 @@ Els resultats, incidències i límits de cobertura s’incorporaran en completar
 
 Inventari: **614 definicions de controls, 324 definicions de botó i 29 formularis en 51 fitxers**. Les dues aparents absències de handler són adaptadors vàlids de ui.jsx: el tancament gestionat per Radix Dialog.Close i el botó submit de FormFooter. Els destins literals de diàleg tenen una implementació registrada.
 
-S’han executat 39 escenaris nous en Chromium/Firefox/WebKit, més 127 comprovacions addicionals de música, activitats, pujades, retenció, pastisseria i compatibilitat: **166 recorreguts addicionals**, 446 proves unitàries i 62 fluxos sobre D1/R2 locals reals. Chrome i Edge s’han executat amb els navegadors instal·lats; iPhone 13 i Pixel 7 són simulacions. La resta de recorreguts parteix de la CI completa del commit publicat i es tornarà a comprovar amb la CI de la branca actualitzada.
+S’han executat 39 escenaris nous en Chromium/Firefox/WebKit, més 127 comprovacions addicionals de música, activitats, pujades, retenció, pastisseria i compatibilitat: **166 recorreguts addicionals**, més 13 de WebKit/Linux sobre la correcció d’àudio, i 449 proves unitàries i 62 fluxos sobre D1/R2 locals reals. Chrome i Edge s’han executat amb els navegadors instal·lats; iPhone 13 i Pixel 7 són simulacions. La resta de recorreguts parteix de la CI completa del commit publicat i es tornarà a comprovar amb la CI de la branca actualitzada.
 
 Incidència de producte corregida: GoalForm utilitzava target || 8 i substituïa un zero vàlid per 8 en reobrir. Ara utilitza target ?? 8. La regressió va fallar abans de la correcció i passa en els tres motors després de desar, recarregar i reobrir.
 
 També s’han actualitzat proves antigues a l’agenda amb revisió de delegats, l’ocultació dels identificadors privats, el límit de reclamacions/ofertes i el lazy loading. Les proves de taules de validació aïllen els pressupostos temporals entre casos independents; la protecció real continua activa dins de cada escenari i té regressions específiques. La capçalera compacta permet files múltiples i comprova separació bidimensional, el logo complet i àrees tàctils de 44 px. No s’han relaxat els permisos ni els límits del producte per passar proves.
+
+## Correcció de compatibilitat trobada a CI
+
+La PR va detectar un segon error real, reproduït també en Ubuntu 24.04 local: després de saltar a una posició i reprendre música, WebKit/Linux avançava currentTime però mantenia play() pendent i la capçalera continuava carregant. La repetició acotada de CI sobre el mateix commit va confirmar que calia investigar-lo. Sense salt de posició funcionava; esperar seeked tampoc el resolia.
+
+StudyAudio ara accepta avanç real de reproducció, conserva la instància/posició/volum i cancel·la les esperes en pausar, aturar o substituir el disc. Els tres observadors només existeixen mentre s’inicia la reproducció i es retiren en tots els camins; no hi ha timers, polling ni peticions addicionals. Els salts de posició i els elements quiets/pausats no poden simular una confirmació. Tres regressions unitàries noves verifiquen el cas i la neteja; la prova de navegador original es conserva sense relaxar els seus criteris. Referència del contracte multimèdia: [HTML Standard](https://html.spec.whatwg.org/multipage/media.html#dom-media-play).
+
+Evidències privades: linux-music-before.log (fallada reproduïda), linux-music-no-seek.log, linux-music-seek-wait.log, linux-music-fixed.log, music-fixed.log i unit-final.log dins output/functional-audit-0.6.16. Una pujada inicial i una única correcció a la mateixa PR; una sola publicació de producte.
 
 ## Mapa de famílies i recorreguts
 
