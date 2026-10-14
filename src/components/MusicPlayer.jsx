@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Play,
   Pause,
@@ -53,8 +53,16 @@ export default function MusicPlayer() {
         `${track.title} ${track.subtitle} ${track.author} ${MUSIC_STYLES.find((style) => style.id === track.genre)?.label || ''}`,
       ).includes(search),
   );
-  const persistVolume = (event) =>
-    savePreferences({ volume: Number(event.currentTarget.value) }).catch(() => {});
+  const requestedVolume = useRef(volume);
+  const persistVolume = (event) => {
+    const value = Number(event.currentTarget.value);
+    if (requestedVolume.current === value) return;
+    requestedVolume.current = value;
+    savePreferences({ volume: value }).catch(() => {
+      // A failed save can be tried again on blur, without duplicating successes.
+      if (requestedVolume.current === value) requestedVolume.current = null;
+    });
+  };
   return (
     <section className="panel sound-panel record-player">
       <div className="section-heading">

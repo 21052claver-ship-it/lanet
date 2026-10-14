@@ -376,6 +376,10 @@
     {
       "id": "R93",
       "description": "Resposta immediata i estat visual clar de m’agrada, desats i vots, amb confirmació segura i recuperació d’errors."
+    },
+    {
+      "id": "R94",
+      "description": "Depuració global amb fixtures locals, correcció de regressions reproduïdes i publicació verificada"
     }
   ],
   "phases": [
@@ -922,6 +926,13 @@
       "title": "Reaccions immediates i visibles",
       "depends_on": [
         "F76"
+      ]
+    },
+    {
+      "id": "F78",
+      "title": "Depuració de fiabilitat i experiència d’ús",
+      "depends_on": [
+        "F77"
       ]
     }
   ],
@@ -7517,6 +7528,65 @@
       ],
       "progress": "Publicada 0.6.12 a lanet.es via PR30/31 i CI exacta de main. Reaccions immediates amb comptador canònic, bloqueig compartit, reversió i resincronització d’errors; estats seleccionat/hover/focus visibles. 383 unitàries i 30 fluxos locals i 30 de CI correctes en tres motors, inclosa la recuperació d’altres desaments en paral·lel. Domini, commit, tag/release immutable i digest del rebut verificats via proveïdor; sense migracions ni dades reals modificades.",
       "change_log_id": "H184"
+    },
+    {
+      "id": "T78-01",
+      "phase": "F78",
+      "title": "Auditar i corregir fluxos, concurrència i compatibilitat",
+      "status": "review",
+      "requirements": [
+        "R22",
+        "R23",
+        "R25",
+        "R94"
+      ],
+      "depends_on": [
+        "T77-01"
+      ],
+      "files": [
+        "src/context.jsx",
+        "src/components/MusicPlayer.jsx",
+        "scripts/test-roulette-sound.mjs",
+        "docs/PLA-DEPURACIO.md",
+        "shared/preference-writer.js",
+        "src/responsive.css",
+        "tests/preference-writer.test.js",
+        "tests/audio-probe.test.js",
+        "tests/helpers/audio-probe.js",
+        "scripts/test-preferences.mjs",
+        "shared/local-state.js",
+        "tests/local-state.test.js",
+        "scripts/test-workspace-recovery.mjs"
+      ],
+      "acceptance": "Incidències reproduïdes abans de corregir-les; regressions locals i CI completes, captures revisades, versió amb PR/release i rebut del proveïdor. Cap prova ni modificació de dades públiques.",
+      "checks": [
+        "Auditar fluxos principals i concretar incidències amb evidències locals.",
+        "Corregir causes i afegir regressions significatives.",
+        "Comprovar responsive, teclat, errors i persistència en tres motors.",
+        "Passar font, tipus, unitàries, build i Validate.",
+        "Publicar versió immutable i verificar domini/commit via proveïdor."
+      ],
+      "evidence": [
+        "output/platform-polish/verification.json",
+        "output/platform-polish/preferences-before.json",
+        "output/platform-polish/proposal-draft-before.json",
+        "output/platform-polish/unit.log",
+        "output/platform-polish/typecheck.log",
+        "output/platform-polish/build.log",
+        "output/platform-polish/dependency-audit.json",
+        "output/platform-polish/audits/preferences.json",
+        "output/platform-polish/audits/contents.json",
+        "output/platform-polish/audits/pau.json",
+        "output/platform-polish/audits/fast-uploads.json",
+        "output/platform-polish/audits/responsive.json",
+        "output/platform-polish/audits/upload-safety.json",
+        "output/platform-polish/audits/music.json",
+        "output/platform-polish/audits/reactions.json",
+        "output/platform-polish/audits/workspace.json",
+        "output/platform-polish/audits/roulette-sound.json"
+      ],
+      "progress": "388 unitàries, tipus/lint, build i auditoria de font correctes. 294 escenaris locals correctes; 6 casos d’àudio WebKit sense suport natiu en aquest Windows, pendents de Linux CI. Concurrència de volum/discos, patch del perfil, mode discret preservat, esborranys de propostes i toast sense tapar navegació verificats. 0.6.13 pendent de PR/Validate i publicació amb rebut.",
+      "change_log_id": "H185"
     }
   ]
 }

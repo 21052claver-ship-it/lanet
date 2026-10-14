@@ -2,6 +2,15 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.6.13] - 2026-10-14
+
+- Els canvis ràpids de volum i disc es desen en ordre; els canvis pendents s’agrupen i conserven l’últim valor de cada preferència.
+- El perfil desa només els ajustos editats: no substitueix el mode discret, la música o altres preferències actualitzades mentre estava obert.
+- El volum evita peticions duplicades entre teclat, punter i pèrdua de focus, amb possibilitat de tornar a desar després d’un error.
+- Els missatges de confirmació es col·loquen per damunt de la navegació mòbil, també en horitzontal, i no intercepten els controls.
+- La confirmació d’una proposta conserva els esborranys nous començats mentre s’enviava; editar una proposta existent tampoc esborra una idea pendent.
+- Regressions de preferències en tres motors i diagnòstic de frames d’àudio no finits sense relaxar la comprovació de senyal audible.
+
 ## [0.6.12] - 2026-10-14
 
 - M’agrada, desats i vots s’actualitzen en prémer, amb confirmació lleugera de l’estat i comptador del servidor sense esperar una recàrrega completa.
