@@ -416,6 +416,10 @@
     {
       "id": "R103",
       "description": "Desar en Markdown la memòria del projecte, decisions vigents, publicació 0.6.16, verificacions i pendents amb un índex clar i sense exposar dades privades."
+    },
+    {
+      "id": "R104",
+      "description": "Auditar totes les accions i funcions de La Net amb inventari de controls, cobertura de fluxos, permisos, persistència i recuperació; corregir errors reproduïbles amb fixtures locals."
     }
   ],
   "phases": [
@@ -990,6 +994,13 @@
       "title": "Documentació central i continuïtat del projecte",
       "depends_on": [
         "F80"
+      ]
+    },
+    {
+      "id": "F82",
+      "title": "Auditoria funcional integral",
+      "depends_on": [
+        "F81"
       ]
     }
   ],
@@ -7987,6 +7998,41 @@
       ],
       "progress": "Documentació desada i ordenada: índex de 83 Markdown principals, memòria vigent, informe complet de la 0.6.16 i README renovat amb còpia històrica conservada. Propostes de xat marcades com a retirades, origen i flux de publicació actualitzats, proves 243 + 75 i limitacions explícites, pendents reals diferenciats. 1.563 enllaços locals comprovats sense errors, metadades contrastades amb el registre JSON i auditoria de font correcta. Canvi només documental conservat en branca local; sense pujada, nova release, proves públiques ni canvis de producte o dades.",
       "change_log_id": "H196"
+    },
+    {
+      "id": "T82-01",
+      "phase": "F82",
+      "title": "Verificar tots els controls i fluxos de la plataforma",
+      "status": "review",
+      "requirements": [
+        "R104"
+      ],
+      "depends_on": [
+        "T81-01"
+      ],
+      "files": [
+        "src",
+        "worker",
+        "scripts",
+        "tests",
+        "docs/PLA-AUDITORIA-FUNCIONAL.md"
+      ],
+      "acceptance": "Inventari d’accions de totes les pàgines i components contrastat amb proves executades. Comprovar navegació, formularis, cancel·lació, permisos de membre/delegat/admin/propietari, desament i recàrrega, errors/reintents, exportacions i controls en mòbil/escriptori. Cap control sense efecte o destinació sense una justificació explícita. Corregir errors reproduïbles i executar regressions adequades, conservar evidències locals i actualitzar checklist/historial. Usar només fixtures locals; no fer visites ni proves a la web pública ni pujades repetides a GitHub.",
+      "checks": [
+        "Inventariar controls i handlers i associar-los amb fluxos i evidències existents.",
+        "Identificar buits de cobertura i provar-los amb fixtures locals, dades de diferents rols i errors controlats.",
+        "Corregir incidències concretes, provar persistència/recuperació i revisar regressions en tres motors quan correspongui.",
+        "Verificar font i seguiment, documentar abast/resultats/limitacions i consolidar qualsevol publicació necessària."
+      ],
+      "evidence": [
+        "docs/PLA-AUDITORIA-FUNCIONAL.md",
+        "output/functional-audit-0.6.16/coverage.json",
+        "output/functional-audit-0.6.16/source-audit.json",
+        "output/functional-audit-0.6.16/unit.log",
+        "output/functional-audit-0.6.16/api-seventh.log"
+      ],
+      "progress": "Auditoria local completada: 614 controls, 324 definicions de botó, 29 formularis i 51 fitxers associats a famílies de recorreguts; 166 escenaris addicionals, 62 API amb D1/R2 locals i 446 unitàries correctes. Zero d’objectiu corregit amb regressió abans/després en tres motors. Proves antigues actualitzades als permisos, límits i càrrega diferida vigents sense relaxar producte. 0.6.17 preparada en una sola tanda amb el tancament documental 301c88c; pendent Validate de branca/main i publicació amb rebut. Cap prova pública ni dispositiu físic.",
+      "change_log_id": "H197"
     }
   ]
 }

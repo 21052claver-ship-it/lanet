@@ -839,7 +839,7 @@ export function GradeSheetForm({ item }) {
 export function GoalForm({ item }) {
   const { data, close, mutate, hideGrades } = useApp();
   const [target, setTarget] = useState(
-    data.goals.find((g) => g.subject_id === item.subject_id && g.term === item.term)?.target || 8,
+    data.goals.find((g) => g.subject_id === item.subject_id && g.term === item.term)?.target ?? 8,
   );
   const { busy, error, submit } = useSubmit(close);
   const rows = data.grades.filter((r) => r.subject_id === item.subject_id && r.term === item.term),

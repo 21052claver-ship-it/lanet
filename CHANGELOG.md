@@ -2,6 +2,13 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production.
 
+## [0.6.17] - 2026-10-15
+
+- Un objectiu de nota desat com a zero es conserva en reobrir el formulari, sense substituir-lo pel valor inicial de 8.
+- Auditoria dels controls i formularis de totes les seccions, amb regressions de gestió, permisos, retirada de contingut, propostes, avisos, plusos, recuperació de plantilles i tancament de sessió amb reintent.
+- Proves generals de D1/R2 locals actualitzades a l’agenda amb validació de delegats i als límits vigents d’abús; comprovacions de pujades diferides i de controls mòbils sense solapament.
+- CI ampliada amb les regressions funcionals i les proves de música, activitats de notes, pujades segures, retenció de cartells i pastisseria. Cap migració ni canvi de retenció, recursos de producció o regals.
+
 ## [0.6.16] - 2026-10-14
 
 - Primera entrada a pantalla completa amb presentació visual, itinerari, optatives/professorat i revisió de l’horari oficial. Progrés recuperable per compte, focus per pas, mòbil/horitzontal i moviment reduït.

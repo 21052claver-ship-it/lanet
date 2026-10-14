@@ -1,5 +1,6 @@
 import { spawn, spawnSync } from 'node:child_process';
-import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync, readFileSync, readdirSync } from 'node:fs';
+import { DatabaseSync } from 'node:sqlite';
 import { resolve } from 'node:path';
 import { parse } from 'jsonc-parser';
 import { randomUUID, createHash } from 'node:crypto';
@@ -77,6 +78,10 @@ fixtures.push(
   `INSERT INTO sessions(hash,user_id,expires) VALUES('${createHash('sha256').update(legacyToken).digest('hex')}','admin',${Date.now() + 3600000});`,
 );
 fixtures.push(
+  ...['tech1', 'tech2', 'science', 'social'].map(
+    (unit) =>
+      `INSERT INTO delegation_members(unit_id,email,name,position) VALUES('${unit}','admin@fje.edu','Representant local de prova','delegate');`,
+  ),
   "INSERT INTO ledger(id,user_id,amount,reason,ref,day) VALUES('test-start','admin',10000,'Prova','test-start','2026-10-08'),('board-start','board',24,'Prova','board-start','2026-10-08');",
   "INSERT INTO ledger(id,user_id,amount,reason,ref,day) VALUES('retention-start','retention',1000,'Prova','retention-start','2026-10-11');",
 );
@@ -183,8 +188,20 @@ function client(token = '') {
   };
 }
 let passed = 0;
+const databaseDirectory = resolve(state, 'v3/d1/miniflare-D1DatabaseObject');
+const databaseFiles = readdirSync(databaseDirectory).filter((name) =>
+  /^[a-f0-9]{64}\.sqlite$/.test(name),
+);
+assert.equal(databaseFiles.length, 1, 'Exactly one isolated application database');
+const fixtureDatabase = new DatabaseSync(resolve(databaseDirectory, databaseFiles[0]));
+fixtureDatabase.exec('PRAGMA busy_timeout=5000');
+const resetRequestBudgets = () => fixtureDatabase.exec('DELETE FROM rate_limits');
 const check = (label, fn) =>
   Promise.resolve()
+    // Independent scenarios share data, but must not inherit failed-request
+    // budgets. Real guards remain enabled within each scenario and have their
+    // own regressions; upload quarantine is intentionally preserved separately.
+    .then(resetRequestBudgets)
     .then(fn)
     .then(() => {
       passed++;
@@ -497,12 +514,29 @@ try {
     ),
   );
   let event;
-  await check('Esdeveniments privats i permisos de delegat', async () => {
+  await check('Propostes públiques pendents i dates privades protegides', async () => {
+    const current = await a.request('/bootstrap');
+    const offering = current.offerings.find(
+      (o) => o.subject_id === 'math' && current.enrollments.some((e) => e.offering_id === o.id),
+    );
+    assert.ok(offering);
+    const proposal = await a.request('/events', {
+      title: 'Proposta pública pendent',
+      kind: 'exam',
+      date: '2026-10-15',
+      visibility: 'shared',
+      subject_id: 'math',
+      offering_id: offering.id,
+      audience_kind: 'offering',
+    });
+    assert.equal(proposal.status, 'pending');
+    assert.ok(!(await b.request('/bootstrap')).events.some((e) => e.id === proposal.id));
     await a.request(
-      '/events',
-      { title: 'Comú prohibit', kind: 'exam', date: '2026-10-15', visibility: 'shared' },
+      '/events/' + proposal.id + '/review',
+      { decision: 'approve', revision: 1, confirmed: true },
       403,
     );
+    await a.request('/events/' + proposal.id, {}, 200, 'DELETE');
     event = await a.request('/events', {
       title: 'Recordatori privat',
       kind: 'reminder',
@@ -510,13 +544,16 @@ try {
       visibility: 'private',
     });
     assert.ok(!(await b.request('/bootstrap')).events.some((e) => e.id === event.id));
-    await b.request('/events/' + event.id, {}, 403, 'DELETE');
+    // A private identifier is deliberately hidden from other accounts.
+    await b.request('/events/' + event.id, {}, 404, 'DELETE');
+    assert.ok((await a.request('/bootstrap')).events.some((e) => e.id === event.id));
   });
   await check('Un únic pastís diari amb dotze peticions paral·leles', async () => {
     const results = await Promise.all(
-      Array.from({ length: 12 }, () => a.request('/bakery/claim', {})),
+      Array.from({ length: 12 }, () => a.request('/bakery/claim', {}, [200, 429])),
     );
     assert.equal(results.filter((r) => r.claimed).length, 1);
+    assert.ok(results.filter((r) => r._status === 429).every((r) => r.code === 'rate_limited'));
     assert.equal((await a.request('/bootstrap')).user.balance, 1);
   });
   await check(
@@ -741,8 +778,10 @@ try {
       const before = await admin.request('/bootstrap');
       assert.equal(before.banner, null);
       assert.equal(before.minBid, 1);
-      for (const amount of [-1, 0, 0.5, 1.5])
+      for (const amount of [-1, 0, 0.5, 1.5]) {
+        resetRequestBudgets();
         await admin.request('/banner', { title: 'Invàlid', amount, previous_id: null }, 400);
+      }
       const invalid = await admin.request('/bootstrap');
       assert.equal(invalid.banner, null);
       assert.deepEqual(invalid.wallet, before.wallet);
@@ -852,7 +891,8 @@ try {
     'L’opció d’anonimat rebutja valors ambigus sense cobrar ni canviar el cartell',
     async () => {
       const before = await admin.request('/bootstrap');
-      for (const anonymous of ['true', 'false', 0, 1, null, {}, []])
+      for (const anonymous of ['true', 'false', 0, 1, null, {}, []]) {
+        resetRequestBudgets();
         await admin.request(
           '/banner',
           {
@@ -863,6 +903,7 @@ try {
           },
           400,
         );
+      }
       const after = await admin.request('/bootstrap');
       assert.equal(after.banner.id, before.banner.id);
       assert.equal(after.user.balance, before.user.balance);
@@ -1056,6 +1097,7 @@ try {
       }
       for (const slot of [0, 4, 1.5, '2'])
         await admin.request('/banner', { slot, title: 'Invàlid', amount: 1 }, 400);
+      resetRequestBudgets();
       const outcomes = await Promise.all(
         [2, 3].map((slot) =>
           admin.request('/banner', {
@@ -1537,6 +1579,7 @@ try {
   writeFileSync(state + '/server.log', logs);
   process.exitCode = 1;
 } finally {
+  fixtureDatabase.close();
   if (process.platform === 'win32' && server.pid) {
     spawnSync('taskkill', ['/PID', String(server.pid), '/T', '/F'], {
       windowsHide: true,

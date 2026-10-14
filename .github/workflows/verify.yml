@@ -31,6 +31,7 @@ jobs:
       - run: node scripts/generate-official-schedule.mjs --check
       - run: npm run pages:build
       - run: npm run test:official-schedule-api
+      - run: npm run test:api
   browsers:
     name: Browser checks (${{ matrix.group }})
     runs-on: ubuntu-24.04
@@ -44,6 +45,7 @@ jobs:
               npm run test:subject-workspaces
               npm run test:contents
               npm run test:fast-uploads
+              npm run test:uploads
           - group: navigation
             tests: |
               npm run test:onboarding
@@ -64,6 +66,12 @@ jobs:
               npm run test:student-guide
               npm run test:course-grades
               npm run test:reactions
+              npm run test:grade-activities
+          - group: functional
+            tests: |
+              npm run test:functional-controls
+              npm run test:ad-retention
+              npm run test:bakery-minute
           - group: board
             tests: |
               npm run test:predictions
@@ -78,6 +86,7 @@ jobs:
             tests: |
               npm run test:preferences
               npm run test:roulette-sound
+              npm run test:music
           - group: compatibility
             tests: |
               npm run test:responsive
@@ -143,6 +152,12 @@ jobs:
             output/mobile-navigation/
             output/responsive/
             output/security-compat/
+            output/functional-controls/browser/
+            output/ad-retention/browser/
+            output/bakery-minute/
+            output/music-records/
+            output/grade-activities/
+            output/upload-safety/
   validate:
     name: Validate
     if: always()
