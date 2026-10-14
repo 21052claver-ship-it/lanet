@@ -1197,3 +1197,9 @@ H187 publicada: [0.6.15](https://github.com/21052claver-ship-it/lanet/releases/t
 La CI documental de PR37 detecta una suposició d’ordre incorrecta: el servei fictici rebutjava la segona petició rebuda i la prova assumia que era foto-2. Les pujades són paral·leles. S’identifica foto-2 pel contingut PNG fictici (amplada distintiva vàlida), sense canviar el filtre real ni relaxar les comprovacions d’error, reintent, concurrència i conservació. Producte 0.6.15 i CI publicada preservats.
 
 H188 verificada localment: 12 casos en tres motors, sense assertions eliminades ni timeouts ampliats. PR37 inclou només registre documental i fixture; el codi i la publicació 0.6.15 no canvien. La CI de la branca actualitzada continua sent obligatòria abans de fusionar.
+
+### H189 · Primera entrada a pantalla completa
+
+T80-01: benvinguda visual pròpia, tria d’itinerari oficial, optatives i professorat, revisió abans d’entrar. Reutilització de validacions oficials i edició posterior des del perfil. Progrés local per compte, errors recuperables i respecte pel moviment reduït. Pla i criteris a PLA-ONBOARDING.md; proves locals i publicació per PR/CI.
+
+H189 implementada i revisada visualment: 402 unitàries i 45 fluxos locals correctes (18 primera entrada, 27 horaris oficials), tres motors, pantalla estreta/horitzontal, teclat i moviment reduït. Progressos separats per compte, errors recuperables i transició després de desat confirmat fins i tot amb lectura fallida. Focus sincronitzat amb el muntatge del pas i accions sense superposar assignatures. Pendent PR, CI i publicació 0.6.16; sense migracions ni modificació de dades reals.

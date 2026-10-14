@@ -26,6 +26,7 @@ import Forms from './forms';
 import WoodBoard from './components/WoodBoard';
 import RecordArt from './components/RecordArt';
 import OfficialNetLink from './components/OfficialNetLink';
+import Onboarding from './components/Onboarding';
 import { LOFI_TRACKS } from './audio';
 import { googleResult } from '../shared/google-auth';
 import { useCompactLayout } from './responsive';
@@ -165,9 +166,6 @@ function Workspace({ onLogout }) {
   useEffect(() => {
     setMobile(false);
   }, [smallScreen, page]);
-  useEffect(() => {
-    if (!data.user.configured) open('configure');
-  }, []);
   const pages = {
     schedule: Schedule,
     notes: Notes,
@@ -509,6 +507,10 @@ function Workspace({ onLogout }) {
     </div>
   );
 }
+function Entry({ onLogout }) {
+  const { data } = useApp();
+  return data.user.configured ? <Workspace onLogout={onLogout} /> : <Onboarding onLogout={onLogout} />;
+}
 export default function App() {
   const [data, setData] = useState(null),
     [status, setStatus] = useState(null),
@@ -577,7 +579,7 @@ export default function App() {
           >
             Saltar al contingut
           </a>
-          <Workspace onLogout={logout} />
+          <Entry onLogout={logout} />
         </TimerProvider>
       </AppProvider>
     </Boundary>

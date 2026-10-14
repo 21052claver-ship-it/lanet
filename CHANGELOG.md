@@ -1,5 +1,11 @@
 # Historial de versions
 
+## [0.6.16] - 2026-10-14
+
+- Primera entrada a pantalla completa amb presentació visual de La Net i itinerari, assignatures, professorat i resum de l’horari oficial.
+- Progrés recuperable durant la sessió, reintents segurs i entrada després del desat confirmat. Edició posterior del curs conservada.
+- Disseny adaptat al mòbil, navegació amb teclat i animacions suaus que respecten el moviment reduït.
+
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
 ## [0.6.15] - 2026-10-14

@@ -384,6 +384,10 @@
     {
       "id": "R95",
       "description": "Espais per assignatura, temes plans, biblioteca i agenda vinculades; dubtes contextuals segurs i alta ràpida de tasques i exàmens."
+    },
+    {
+      "id": "R96",
+      "description": "Primera entrada professional a pantalla completa amb presentació de La Net, itinerari, assignatures i revisió, sense superposició."
     }
   ],
   "phases": [
@@ -944,6 +948,13 @@
       "title": "Experiència d’estudi per assignatura",
       "depends_on": [
         "F78"
+      ]
+    },
+    {
+      "id": "F80",
+      "title": "Primera entrada a pantalla completa",
+      "depends_on": [
+        "F79"
       ]
     }
   ],
@@ -7740,6 +7751,47 @@
       ],
       "progress": "12 casos locals correctes en Chromium/Firefox/WebKit. La foto rebutjada es distingeix per contingut PNG, sense dependència de l’ordre d’arribada; es conserven l’error amb nom, els dos fitxers vàlids, el reintent i el màxim de tres pujades paral·leles. PR37 haurà de passar Validate abans de fusionar; cap canvi de runtime o release de producte.",
       "change_log_id": "H188"
+    },
+    {
+      "id": "T80-01",
+      "phase": "F80",
+      "title": "Dissenyar, provar i publicar la primera entrada",
+      "status": "review",
+      "requirements": [
+        "R96",
+        "R03"
+      ],
+      "depends_on": [
+        "T79-02"
+      ],
+      "files": [
+        "src/components/Onboarding.jsx",
+        "src/components/CourseSetup.jsx",
+        "src/App.jsx",
+        "src/onboarding.css",
+        "shared/onboarding.js",
+        "scripts/test-onboarding.mjs",
+        "tests/onboarding.test.js",
+        "docs/PLA-ONBOARDING.md"
+      ],
+      "acceptance": "Els comptes nous veuen una pàgina pròpia i completen els tres itineraris amb optatives/professorat oficials. Progrés recuperable, errors sense pèrdua, entrada única després de desar, teclat/mòbil/moviment reduït provats. Els usuaris existents conserven l’edició del perfil. PR i CI exacta abans de publicar.",
+      "checks": [
+        "Definir recorregut, jerarquia i compatibilitat amb la configuració existent.",
+        "Implementar pantalla completa, presentació, quatre passos i progrés per compte.",
+        "Validar tres itineraris, errors, recuperació i entrada confirmada sense duplicar desats.",
+        "Revisar captures, mòbil, teclat, moviment reduït i regressions oficials.",
+        "Tipus, unitàries, build, auditoria de font; PR/Validate i CI exacta; publicar amb rebut."
+      ],
+      "evidence": [
+        "output/onboarding/verification.json",
+        "output/onboarding/unit.log",
+        "output/onboarding/typecheck.log",
+        "output/onboarding/build.log",
+        "output/onboarding/browser/results.json",
+        "output/official-schedule/browser/results.json"
+      ],
+      "progress": "Implementació i revisió visual completades. 402 unitàries i 45 recorreguts locals (18 primera entrada, 27 horaris oficials) en Chromium/Firefox/WebKit: tres itineraris, mòbil 320/390px, tablet/escriptori, horitzontal, teclat, moviment reduït, recuperació, canvi de grup, errors de desat/lectura/sortida i storage denegat. Pendent PR/CI i publicació 0.6.16. Sense migracions ni dades reals.",
+      "change_log_id": "H189"
     }
   ]
 }

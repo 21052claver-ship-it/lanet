@@ -46,6 +46,7 @@ jobs:
               npm run test:fast-uploads
           - group: navigation
             tests: |
+              npm run test:onboarding
               npm run test:official-schedule
               npm run test:schedule-cards
               npm run test:workspace-recovery
@@ -107,6 +108,7 @@ jobs:
           name: local-browser-evidence-${{ matrix.group }}
           retention-days: 7
           path: |
+            output/onboarding/browser/
             output/subject-workspaces/browser/
             output/contents/
             output/fast-uploads/

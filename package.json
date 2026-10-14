@@ -1,6 +1,6 @@
 {
   "name": "la-net",
-  "version": "0.6.15",
+  "version": "0.6.16",
   "private": true,
   "type": "module",
   "scripts": {
@@ -54,7 +54,8 @@
     "test:official-schedule-api": "node scripts/test-official-schedule-api.mjs",
     "test:student-guide": "node scripts/test-student-guide.mjs",
     "test:reactions": "node scripts/test-reactions.mjs",
-    "test:preferences": "node scripts/test-preferences.mjs"
+    "test:preferences": "node scripts/test-preferences.mjs",
+    "test:onboarding": "node scripts/test-onboarding.mjs"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.3.0",
