@@ -7710,6 +7710,36 @@
       ],
       "progress": "Publicada 0.6.15 a lanet.es via PR36 i CI exacta de main: espais per assignatura/tema, biblioteca i agenda contextuals, dubtes segurs per matrícula i variants, esborranys/reintents idempotents i tasques amb confirmació immediata/reversió. 398 unitàries i 111 fluxos locals correctes, CI completa amb 30 nous i 33 de biblioteca. Còpia privada i només migració additiva 0027 aplicada i esquema verificat. Domini, commit, callback, tag/release immutable i digest del rebut verificats via proveïdor. Sense proves contra la web pública ni regals, reinicis o canvis de notes/saldos.",
       "change_log_id": "H187"
+    },
+    {
+      "id": "T79-02",
+      "phase": "F79",
+      "title": "Fer determinista el rebuig parcial de la fixture de pujades",
+      "status": "verified",
+      "requirements": [
+        "R95"
+      ],
+      "depends_on": [
+        "T79-01"
+      ],
+      "files": [
+        "scripts/test-fast-uploads.mjs",
+        "docs/HISTORIAL-CANVIS.md"
+      ],
+      "acceptance": "La fixture rebutja foto-2 pel seu contingut de prova, independentment de l’ordre d’arribada. Error amb el nom correcte, dos fitxers conservats, reintent i concurrència limitada verificats en tres motors locals. La fusió de PR37 continua exigint Validate verd; cap canvi del producte publicat.",
+      "checks": [
+        "Revisar log i captura del fracàs de CI documental.",
+        "Identificar la imatge de prova amb un PNG vàlid distingible, sense tocar el servei real.",
+        "Passar els 12 casos locals en tres motors amb totes les assertions de seguretat i reintent.",
+        "Incorporar per PR37 amb CI verda; preservar la release 0.6.15 immutable."
+      ],
+      "evidence": [
+        "output/subject-workspaces/ci-docs-failed.log",
+        "output/subject-workspaces/fast-uploads-deterministic/fast-browser-results.json",
+        "output/subject-workspaces/fast-uploads-deterministic.log"
+      ],
+      "progress": "12 casos locals correctes en Chromium/Firefox/WebKit. La foto rebutjada es distingeix per contingut PNG, sense dependència de l’ordre d’arribada; es conserven l’error amb nom, els dos fitxers vàlids, el reintent i el màxim de tres pujades paral·leles. PR37 haurà de passar Validate abans de fusionar; cap canvi de runtime o release de producte.",
+      "change_log_id": "H188"
     }
   ]
 }

@@ -2,7 +2,7 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**189/190 tasques verificades · 95 requisits · 80 fases · límit d’una tasca activa.**
+**190/191 tasques verificades · 95 requisits · 80 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
@@ -439,5 +439,6 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 ## F79 Experiència d’estudi per assignatura
 
 - [x] **T79-01** Implementar espais, dubtes i agenda contextual — Verificat.
+- [x] **T79-02** Fer determinista el rebuig parcial de la fixture de pujades — Verificat.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

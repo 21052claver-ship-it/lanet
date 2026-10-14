@@ -17,20 +17,27 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     let active = 0,
       maximum = 0,
       calls = 0,
+      rejectedSecondImage = false,
       release;
     const fixture = await browserFixture({
       mediaSafety: {
-        async fetch() {
-          const n = ++calls;
+        async fetch(request) {
+          // Concurrent requests can arrive in a different order from the file list.
+          // A distinct valid PNG width identifies photo 2 without depending on arrival.
+          const bytes = new Uint8Array(await request.arrayBuffer());
+          const width = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength).getUint32(16);
+          calls++;
           active++;
           maximum = Math.max(maximum, active);
           await new Promise((r) => setTimeout(r, 250));
           active--;
-          if (scenario === 'partial-failure-retry' && n === 2)
+          if (scenario === 'partial-failure-retry' && width === 257 && !rejectedSecondImage) {
+            rejectedSecondImage = true;
             return Response.json(
               { error: 'Imatge rebutjada pel filtre.', code: 'image_blocked' },
               { status: 422 },
             );
+          }
           return new Response(webpFixture, {
             headers: { 'Content-Type': 'image/webp', 'X-LaNet-Safety': 'lanet-image-v1' },
           });
@@ -65,7 +72,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
           Array.from({ length: count }, (_, i) => ({
             name: `foto-${i + 1}.png`,
             mimeType: 'image/png',
-            buffer: pngFixture(),
+            buffer: pngFixture(scenario === 'partial-failure-retry' ? 256 + i : 256),
           })),
         );
         await dialog.getByText(`Pujant i comprovant 0/${count}…`, { exact: true }).waitFor();
@@ -90,7 +97,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
           );
           await dialog
             .locator('input[type=file]')
-            .setInputFiles({ name: 'foto-2.png', mimeType: 'image/png', buffer: pngFixture() });
+            .setInputFiles({ name: 'foto-2.png', mimeType: 'image/png', buffer: pngFixture(257) });
           await page.waitForFunction(
             () => !document.querySelector('.attachment-editor input[type=file]').disabled,
           );
