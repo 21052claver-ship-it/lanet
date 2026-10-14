@@ -1,6 +1,6 @@
 # Espais d’estudi · pla i verificació
 
-T79-01 és l’única tasca activa. Cada pas acaba abans de començar el següent; els fitxers compartits s’editen des d’aquesta tasca. Evidències privades a output/subject-workspaces/, mai dades d’alumnes. Disseny previ: [comparació i mockups](PROPOSTES-XATS-CONTINGUTS.md).
+T79-01 completada. No queda cap tasca activa d’aquesta revisió. Cada pas acaba abans de començar el següent; els fitxers compartits s’editen des d’aquesta tasca. Evidències privades a output/subject-workspaces/, mai dades d’alumnes. Disseny previ: [comparació i mockups](PROPOSTES-XATS-CONTINGUTS.md).
 
 ## Decisió
 
@@ -19,9 +19,9 @@ T79-01 és l’única tasca activa. Cada pas acaba abans de començar el següen
 - [x] Dubtes contextuals per grup/variant, respostes, resolució i moderació; només text i referències a materials existents.
 - [x] Recuperació d’esborranys, errors, reintents sense duplicats i permisos comprovats al servidor.
 - [x] Verificar recorreguts complets i captures a 320/390/820/1440px i horitzontal en tres motors.
-- [ ] Tipus/lint, unitàries, build, auditoria de font, PR i CI completa.
-- [ ] Còpia privada de D1, revisió i aplicació separada de la migració additiva.
-- [ ] Publicació immutable i verificació de domini/commit/rebut via proveïdor.
+- [x] Tipus/lint, unitàries, build, auditoria de font, PR i CI completa.
+- [x] Còpia privada de D1, revisió i aplicació separada de la migració additiva.
+- [x] Publicació immutable i verificació de domini/commit/rebut via proveïdor.
 
 ## Acceptació
 
@@ -40,3 +40,5 @@ La migració afegeix metadades opcionals als materials i taules de dubtes. No al
 Verificació local: 398 unitàries, 30 recorreguts nous, 33 de biblioteca, 12 de publicació/pujades i 36 de recuperació, en tres motors. Captures a 320/390/1440 revisades; botó de tornar i quadrícula de sis tipus de data corregits a partir de captures. La prova WebKit espera el canvi efectiu a Agenda abans de comprovar-lo, mantenint les assertions. Pendent CI i publicació; no provat amb dispositius físics.
 
 Comprovació addicional: tancar el dubte mentre s’envia i obrir el perfil conserva el perfil després de confirmar. Tres motors correctes; el reemplaçament del diàleg compara la instància del formulari que ha enviat. Total local: 111 recorreguts.
+
+Publicació verificada: [0.6.15](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.15) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38609839912) · [registre](releases/0.6.15.json). Còpia privada i migració additiva verificades separadament; comprovació només via proveïdor.

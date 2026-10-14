@@ -1,6 +1,6 @@
 # Depuració de La Net · octubre 2026
 
-Una sola tasca activa, T78-01. Treball seqüencial amb fixtures locals; cap accés de prova a la web pública. Les proves i les captures utilitzen usuaris ficticis.
+Revisió T78 completada, amb una sola tasca activa durant l’execució. Treball seqüencial amb fixtures locals; cap accés de prova a la web pública. Les proves i les captures utilitzen usuaris ficticis.
 
 - [x] Auditar navegació, formularis, continguts, notes, PAU, música i escenaris.
 - [x] Reproduir incidències i registrar causa i efecte abans de corregir-les.
@@ -42,4 +42,6 @@ La CI també identifica que la fixture d’horaris canviava el rol en D1 però n
 - [x] Reproducció amb dues pestanyes locals i només una proposta publicada.
 - [x] Comparació amb el payload del formulari enviat.
 - [x] Regressió de dues pestanyes i resta de recuperació en tres motors.
-- [ ] CI, nova versió 0.6.14, release i rebut; conservar 0.6.13 immutable.
+- [x] CI correcta; publicació agrupada a 0.6.15 amb rebut immutable. 0.6.14 no es va publicar; 0.6.13 conservada.
+
+T78-02 incorporada i validada per PR35/CI; publicació agrupada i confirmada a [0.6.15](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.15) amb T79-01. No hi ha release 0.6.14.

@@ -1,0 +1,38 @@
+{
+  "recordedAt": "2026-10-14T17:59:13.397Z",
+  "version": "0.6.15",
+  "sourceCommit": "639ae540f70c8b3723975e3bc6b907e98341a1f7",
+  "origin": "https://lanet.es",
+  "pullRequest": "https://github.com/21052claver-ship-it/lanet/pull/36",
+  "ci": "https://github.com/21052claver-ship-it/lanet/actions/runs/38609839912",
+  "ciSuccess": true,
+  "releaseUrl": "https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.15",
+  "immutable": true,
+  "tagCommitMatches": true,
+  "receiptDigestMatches": true,
+  "cloudflareDeployment": "9e653955-af33-4013-a69b-7a72e96d0625",
+  "githubDeployment": 7073139418,
+  "providerConfirmed": true,
+  "productionCommitMatches": true,
+  "domainActive": true,
+  "googleCallbackPreserved": true,
+  "tests": {
+    "unit": 398,
+    "localBrowser": 111,
+    "ciSubjectWorkspace": 30,
+    "ciContentLibrary": 33
+  },
+  "migration": {
+    "name": "0027_subject_workspaces.sql",
+    "migrationSha256": "a5ff04920dd2467d54dbd76f3aba16953996ec62d6480914a188c311f225a56b",
+    "privateBackupVerified": true,
+    "onlyReviewedMigrationApplied": true,
+    "schemaVerified": true,
+    "oldMigrationsRerun": false,
+    "balanceOrGradeChanges": false
+  },
+  "previousPublishedVersion": "0.6.13",
+  "unpublishedVersionIncluded": "0.6.14",
+  "publicAppVisited": false,
+  "realDevicesTested": false
+}
