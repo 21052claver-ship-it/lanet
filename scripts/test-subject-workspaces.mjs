@@ -9,6 +9,7 @@ const results = [];
 for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,webkit').split(',')) {
   const browser = await { chromium, firefox, webkit }[engine].launch();
   async function run(name, width, fn, { height = 900, setup } = {}) {
+    if(process.env.LANET_WORKSPACE_CHECK && process.env.LANET_WORKSPACE_CHECK !== name) return;
     const fixture = await browserFixture();
     fixture.db.prepare("UPDATE notes SET topic='Derivades',term=1 WHERE id='browser-note'").run();
     fixture.db
@@ -292,6 +293,26 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
         f.db.prepare('SELECT done FROM event_progress WHERE event_id=?').get(task.id).done,
         1,
       );
+    });
+    await run('question-confirmation-preserves-new-dialog',390,async(p,f)=>{
+      await space(p);
+      await p.getByRole('tab',{name:'Dubtes',exact:true}).click();
+      await p.getByRole('button',{name:'Nou dubte',exact:true}).click();
+      await p.getByRole('textbox',{name:'Títol del dubte',exact:true}).fill('Pregunta pendent');
+      await p.getByRole('textbox',{name:'Explica el dubte',exact:true}).fill('Dubte enviat mentre canvio de pantalla.');
+      let release,arrived;
+      const held=new Promise(r=>release=r),sent=new Promise(r=>arrived=r);
+      await p.route('**/api/discussions',async route=>{if(route.request().method()==='POST'){arrived();await held;}await route.continue();});
+      try {
+        await p.getByRole('button',{name:'Publicar dubte',exact:true}).click();await sent;
+        await close(p);
+        await p.getByRole('button',{name:/Perfil de/}).click();
+        await p.getByRole('dialog',{name:'El meu perfil',exact:true}).waitFor();
+        release();
+        await p.getByText('Dubte publicat.',{exact:true}).waitFor();
+        assert.equal(f.db.prepare('SELECT COUNT(*) n FROM subject_threads').get().n,1);
+        assert.equal(await p.getByRole('dialog',{name:'El meu perfil',exact:true}).count(),1);
+      } finally {release();}
     });
     await run(
       'thread-pagination-and-material-editor',

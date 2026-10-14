@@ -37,4 +37,6 @@ T79-01 és l’única tasca activa. Cada pas acaba abans de començar el següen
 
 La migració afegeix metadades opcionals als materials i taules de dubtes. No altera saldos, notes, matrícules ni fitxers existents. Abans de producció: còpia privada, hash de la còpia, comprovació que només aquesta migració està pendent, revisió del SQL i verificació remota de l’esquema. Cap prova funcional contra la web pública. Google, D1/R2 i lanet.es es conserven.
 
-Verificació local: 398 unitàries, 27 recorreguts nous, 33 de biblioteca, 12 de publicació/pujades i 36 de recuperació, en tres motors. Captures a 320/390/1440 revisades; botó de tornar i quadrícula de sis tipus de data corregits a partir de captures. La prova WebKit espera el canvi efectiu a Agenda abans de comprovar-lo, mantenint les assertions. Pendent CI i publicació; no provat amb dispositius físics.
+Verificació local: 398 unitàries, 30 recorreguts nous, 33 de biblioteca, 12 de publicació/pujades i 36 de recuperació, en tres motors. Captures a 320/390/1440 revisades; botó de tornar i quadrícula de sis tipus de data corregits a partir de captures. La prova WebKit espera el canvi efectiu a Agenda abans de comprovar-lo, mantenint les assertions. Pendent CI i publicació; no provat amb dispositius físics.
+
+Comprovació addicional: tancar el dubte mentre s’envia i obrir el perfil conserva el perfil després de confirmar. Tres motors correctes; el reemplaçament del diàleg compara la instància del formulari que ha enviat. Total local: 111 recorreguts.

@@ -255,7 +255,7 @@ export default function Discussions({ subjectId }) {
 }
 
 export function DiscussionNew({ item }) {
-  const { data, open, notify } = useApp();
+  const { data, replaceModal, notify } = useApp();
   const { rooms, loading, error: roomsError, retry } = useRooms(item.subject_id);
   const [selected, setSelected] = useState(item.offering_id || '');
   const room = rooms.find((r) => r.id === selected) || rooms[0];
@@ -297,7 +297,7 @@ export function DiscussionNew({ item }) {
         onSent={(result) => {
           changed();
           notify('Dubte publicat.');
-          open('discussion', { id: result.id });
+          replaceModal('discussion', { id: result.id });
         }}
       />
     </>
@@ -412,7 +412,7 @@ function DiscussionComposer({ storageKey, subjectId, noteId, send, onSent, reply
 }
 
 export function DiscussionDetail({ item }) {
-  const { data, open, notify } = useApp();
+  const { data, open, close, notify } = useApp();
   const [state, setState] = useState(null),
     [error, setError] = useState(''),
     [updates, setUpdates] = useState(null),
@@ -541,10 +541,7 @@ export function DiscussionDetail({ item }) {
                 await api('/discussions/' + t.id, { method: 'DELETE' });
                 changed();
                 notify('Dubte retirat.');
-                open('discussionNew', {
-                  subject_id: state.room.subject_id,
-                  offering_id: state.room.id,
-                });
+                  close();
               } catch (e) {
                 setError(e.message);
               }

@@ -1187,3 +1187,5 @@ Tancament tècnic H186: PR35 i CI exacta de main 38498922783 correctes (intent 2
 T79-01 iniciada després de T78-02. Execució del disseny A: espais per assignatura, temes plans, dubtes contextuals, formularis/eines revisats i agenda vinculada. Criteris i checklist a PLA-ESPAIS-ASSIGNATURA.md. Proves exclusivament amb fixtures locals; publicació i migració separades, sense regals ni reinicis.
 
 H187 implementada: espais per assignatura, temes/trimestre, biblioteca contextual i agenda, fils de dubtes per matrícula amb respostes idempotents i moderació. Tasques amb confirmació immediata i reversió en error. 398 unitàries i 108 recorreguts locals correctes; captures revisades, inclosos controls de dates sense talls a 320px. Pendent CI, còpia privada/migració additiva i publicació 0.6.15.
+
+H187: confirmació tardana d’un dubte ja tancat no substitueix un diàleg nou. Regressió amb resposta retinguda i perfil obert en tres motors; 111 recorreguts locals en total. PR36 actualitzada i CI nova necessària.

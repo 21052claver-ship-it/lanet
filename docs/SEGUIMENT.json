@@ -7698,9 +7698,10 @@
         "output/subject-workspaces/browser/results.json",
         "output/subject-workspaces/library/contents-browser-results.json",
         "output/subject-workspaces/fast-uploads/fast-browser-results.json",
-        "output/subject-workspaces/recovery/results.json"
+        "output/subject-workspaces/recovery/results.json",
+        "output/subject-workspaces/question-dialog-race/results.json"
       ],
-      "progress": "Implementació completa amb espais, temes, context, biblioteca, dubtes segurs i agenda. 398 unitàries i 108 recorreguts locals en tres motors correctes; captures revisades. Pendent PR/CI, còpia privada i migració revisada, publicació 0.6.15 amb rebut. Inclou la correcció de T78-02; 0.6.14 no publicada.",
+      "progress": "Implementació completa amb espais, temes, context, biblioteca, dubtes segurs i agenda. 398 unitàries i 111 recorreguts locals en tres motors correctes; captures revisades. Pendent PR/CI, còpia privada i migració revisada, publicació 0.6.15 amb rebut. Inclou la correcció de T78-02; 0.6.14 no publicada. Confirmació tardana de dubte respecta el perfil o qualsevol diàleg nou; regressió en tres motors.",
       "change_log_id": "H187"
     }
   ]
