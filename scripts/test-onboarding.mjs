@@ -66,6 +66,12 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         await page.goto(f.base + '/#notes');
         await page.getByRole('heading', { name: /Menys embolics/ }).waitFor();
         await fits(page);
+        if (height < 500)
+          assert.equal(
+            await page.locator('.onboarding-layout').evaluate((e) => getComputedStyle(e).display),
+            'block',
+            'Short landscape screens use the compact progress row',
+          );
         assert.equal(await page.locator('.onboarding-feature').count(), 3);
         assert.equal(
           await page

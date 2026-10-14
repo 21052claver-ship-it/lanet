@@ -355,7 +355,7 @@
     max-width: 130px;
   }
 }
-@media (max-width: 700px) {
+@media (max-width: 700px), (max-height: 500px) {
   .onboarding-header {
     min-height: 76px;
     padding: max(14px, env(safe-area-inset-top)) 18px 14px;

@@ -1203,3 +1203,5 @@ H188 verificada localment: 12 casos en tres motors, sense assertions eliminades 
 T80-01: benvinguda visual pròpia, tria d’itinerari oficial, optatives i professorat, revisió abans d’entrar. Reutilització de validacions oficials i edició posterior des del perfil. Progrés local per compte, errors recuperables i respecte pel moviment reduït. Pla i criteris a PLA-ONBOARDING.md; proves locals i publicació per PR/CI.
 
 H189 implementada i revisada visualment: 402 unitàries i 45 fluxos locals correctes (18 primera entrada, 27 horaris oficials), tres motors, pantalla estreta/horitzontal, teclat i moviment reduït. Progressos separats per compte, errors recuperables i transició després de desat confirmat fins i tot amb lectura fallida. Focus sincronitzat amb el muntatge del pas i accions sense superposar assignatures. Pendent PR, CI i publicació 0.6.16; sense migracions ni modificació de dades reals.
+
+H189 revisió final: contrast del text secundari reforçat i comprovat en la interfície local; la pantalla horitzontal amb poca alçada també mostra el progrés en fila compacta, sense una columna lateral més alta que la finestra. CI requerida amb aquest head actualitzat.
