@@ -5,6 +5,43 @@ export const LOFI_TRACKS = MUSIC_TRACKS.map((track) => ({
   src: `/audio/${track.id}.mp3`,
   oggSrc: `/audio/${track.id}.ogg`,
 }));
+
+// Some native WebKit decoders advance after a seek while play() stays pending.
+// Observe real playback progress, and release every observer on pause/stop.
+function playbackProgress(element) {
+  let position = element.currentTime;
+  let finish;
+  const promise = new Promise((resolve) => (finish = resolve));
+  const reset = () => (position = element.currentTime);
+  const clear = () => {
+    element.removeEventListener('timeupdate', advance);
+    element.removeEventListener('seeking', reset);
+    element.removeEventListener('seeked', reset);
+  };
+  const advance = () => {
+    if (
+      !element.paused &&
+      !element.seeking &&
+      element.readyState >= 2 &&
+      element.currentTime > position + 0.05
+    ) {
+      clear();
+      finish(true);
+    }
+  };
+  element.addEventListener('timeupdate', advance);
+  element.addEventListener('seeking', reset);
+  element.addEventListener('seeked', reset);
+  return {
+    promise,
+    clear,
+    cancel: () => {
+      clear();
+      finish(false);
+    },
+  };
+}
+
 export class StudyAudio {
   constructor(
     createAudio = (src) => {
@@ -24,6 +61,7 @@ export class StudyAudio {
     this.onError = null;
     this.onTrackChange = null;
     this.onStateChange = null;
+    this.cancelStart = null;
   }
   async play(type, volume = 0.3) {
     const track = LOFI_TRACKS.find((item) => item.id === type) || LOFI_TRACKS[0];
@@ -73,14 +111,20 @@ export class StudyAudio {
     return this.start(element, volume);
   }
   async start(element, volume) {
+    this.cancelStart?.();
     const generation = this.generation;
     const request = ++this.request;
     element.volume = this.safeVolume(volume);
     this.setState('loading');
+    const progress = playbackProgress(element);
+    this.cancelStart = progress.cancel;
     try {
-      await element.play();
+      const played = await Promise.race([element.play().then(() => true), progress.promise]);
       const started =
-        generation === this.generation && request === this.request && this.element === element;
+        played &&
+        generation === this.generation &&
+        request === this.request &&
+        this.element === element;
       if (started) this.setState('playing');
       return started;
     } catch (error) {
@@ -101,6 +145,9 @@ export class StudyAudio {
           ? 'Prem Reproduir per permetre la reproducció de música.'
           : 'No s’ha pogut reproduir la música. Torna-ho a provar.',
       );
+    } finally {
+      progress.clear();
+      if (this.cancelStart === progress.cancel) this.cancelStart = null;
     }
   }
   setState(state) {
@@ -109,6 +156,7 @@ export class StudyAudio {
   }
   pause() {
     this.request++;
+    this.cancelStart?.();
     if (!this.element) return;
     this.element.pause();
     this.setState('paused');
@@ -122,6 +170,7 @@ export class StudyAudio {
   stop() {
     this.generation++;
     this.request++;
+    this.cancelStart?.();
     if (this.element) {
       this.element.removeEventListener('error', this.errorHandler);
       this.element.removeEventListener('ended', this.endHandler);

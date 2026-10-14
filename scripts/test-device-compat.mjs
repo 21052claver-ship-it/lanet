@@ -86,11 +86,24 @@ for (const [name, engine, launch, device] of [
           const controls = [...document.querySelectorAll('.topbar-actions > button')].map(
             (button) => button.getBoundingClientRect(),
           );
-          const menu = document.querySelector('.menu-button').getBoundingClientRect();
+          const brand = document.querySelector('.mobile-brand').getBoundingClientRect();
+          const separate = (a, b) =>
+            a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top;
           return (
             document.documentElement.scrollWidth <= innerWidth + 1 &&
-            controls.every((rect) => rect.x >= menu.right && rect.right <= innerWidth) &&
-            controls.every((rect, index) => !index || controls[index - 1].right <= rect.x)
+            brand.width === 90 &&
+            brand.height === 44 &&
+            controls.every(
+              (rect) =>
+                rect.x >= 0 &&
+                rect.right <= innerWidth &&
+                rect.width >= 44 &&
+                rect.height >= 44 &&
+                separate(rect, brand),
+            ) &&
+            controls.every((rect, index) =>
+              controls.slice(0, index).every((other) => separate(rect, other)),
+            )
           );
         }),
         '320px header controls fit while music and timer run together',

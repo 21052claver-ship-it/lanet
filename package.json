@@ -1,6 +1,6 @@
 {
   "name": "la-net",
-  "version": "0.6.16",
+  "version": "0.6.17",
   "private": true,
   "type": "module",
   "scripts": {
@@ -59,7 +59,9 @@
     "test:delegate-agenda": "node scripts/test-delegate-agenda.mjs",
     "test:activity-dashboard": "node scripts/test-activity-dashboard.mjs",
     "test:focus-mode": "node scripts/test-focus-mode.mjs",
-    "test:pau-history": "node scripts/test-pau-history.mjs"
+    "test:pau-history": "node scripts/test-pau-history.mjs",
+    "test:functional-controls": "node scripts/test-functional-controls.mjs",
+    "test:ad-retention": "node scripts/test-ad-retention.mjs"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.3.0",

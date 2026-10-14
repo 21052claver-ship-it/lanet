@@ -32,13 +32,13 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     const balance = () =>
       fixture.db.prepare("SELECT balance FROM users WHERE id='browser'").get().balance;
     const baseline = balance();
-    const request = async (payload = {}) => {
+    const request = async (payload = {}, expected = [200]) => {
       const response = await context.request.post(fixture.base + '/api/bakery/claim', {
         data: payload,
         headers: { Origin: fixture.base },
       });
-      assert.equal(response.status(), 200);
-      return response.json();
+      assert.ok(expected.includes(response.status()));
+      return { ...(await response.json()), _status: response.status() };
     };
     try {
       if (scenario !== 'daily-unchanged') {
@@ -62,17 +62,22 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         await page.getByText('Pastís recollit', { exact: true }).waitFor();
         assert.equal(balance(), baseline + 1);
         await page.reload();
-        await page.locator('.daily-status-line').filter({hasText: 'Pastís d’avui recollit'}).waitFor();
+        await page
+          .locator('.daily-status-line')
+          .filter({ hasText: 'Pastís d’avui recollit' })
+          .waitFor();
       } else if (scenario === 'concurrent-api-and-server-clock') {
         const claims = await Promise.all(
           Array.from({ length: 12 }, () =>
-            request({ now: Date.now() + 9999999, intervalSeconds: 0, amount: 999 }),
+            request({ now: Date.now() + 9999999, intervalSeconds: 0, amount: 999 }, [200, 429]),
           ),
         );
         assert.equal(claims.filter((r) => r.claimed).length, 1);
+        assert.ok(claims.some((r) => r._status === 429));
+        assert.ok(claims.filter((r) => r._status === 429).every((r) => r.code === 'rate_limited'));
         assert.equal(balance(), baseline + 2);
-        const again = await request({ now: Date.now() + 9999999 });
-        assert.equal(again.claimed, false);
+        const again = await request({ now: Date.now() + 9999999 }, [429]);
+        assert.equal(again.code, 'rate_limited');
         assert.equal(balance(), baseline + 2);
         assert.equal(
           fixture.db

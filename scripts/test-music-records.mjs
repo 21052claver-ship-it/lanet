@@ -62,7 +62,7 @@ for (const name of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,webki
       console.log(`${name}: ${label} OK`);
     } catch (error) {
       results.push({ engine: name, label, size, passed: false, error: error.message });
-      console.error(`${name}: ${label} FAILED ${error.message}`);
+      console.error(`${name}: ${label} FAILED ${error.stack || error.message}`);
       await page.screenshot({ path: `${out}/${name}-${label}-failed.png` }).catch(() => {});
     } finally {
       await context.close();

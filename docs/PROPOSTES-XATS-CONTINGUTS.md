@@ -1,5 +1,7 @@
 # Xats i continguts per assignatura · propostes UX
 
+> **Exploració històrica; proposta de xat retirada.** Marc va demanar treure el xat/Dubtes i aquesta decisió està publicada a la [0.6.16](releases/0.6.16.md). Es conserven els mockups, el rànquing i els raonaments per traçabilitat; no autoritzen tornar a implementar converses. Els espais d’assignatura i materials continuen vigents. [Decisions actuals](ESTAT-PROJECTE.md) · [Índex](README.md).
+
 T76-01 · exploració de disseny. Quatre alternatives amb escriptori i mòbil, generades amb l’eina integrada imagegen i revisades. Les persones, els missatges, els fitxers i les dates són ficticis. Són mockups; aquesta proposta no implementa ni publica un servei de xat. Les propostes es van elaborar sobre la versió 0.6.11.
 
 ## Punt de partida i criteri

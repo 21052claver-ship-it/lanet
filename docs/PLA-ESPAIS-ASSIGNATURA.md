@@ -1,5 +1,7 @@
 # Espais d’estudi · pla i verificació
 
+> **Revisió històrica 0.6.15, parcialment substituïda.** A la [0.6.16](releases/0.6.16.md) s’han retirat Dubtes, «Preguntar» i l’API de converses, conservant materials i taules històriques. Es mantenen els espais d’assignatura, temes, cerca, desats i agenda contextual. Els apartats de dubtes següents documenten el que es va implementar anteriorment; no són funcionalitats vigents ni feina pendent. [Estat actual](ESTAT-PROJECTE.md).
+
 T79-01 completada. No queda cap tasca activa d’aquesta revisió. Cada pas acaba abans de començar el següent; els fitxers compartits s’editen des d’aquesta tasca. Evidències privades a output/subject-workspaces/, mai dades d’alumnes. Disseny previ: [comparació i mockups](PROPOSTES-XATS-CONTINGUTS.md).
 
 ## Decisió

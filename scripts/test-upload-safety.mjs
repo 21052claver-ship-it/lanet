@@ -166,6 +166,9 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit })) {
           .run(key, key, key);
         await page.reload();
         const preview = page.getByRole('button', { name: `Previsualitzar ${key}`, exact: true });
+        // The preview uses loading="lazy"; trigger its request before checking
+        // the refused-image fallback, including on small Firefox viewports.
+        await preview.scrollIntoViewIfNeeded();
         await preview.locator('.image-unavailable').waitFor();
         assert.match(
           await preview.locator('.image-unavailable').getAttribute('aria-label'),

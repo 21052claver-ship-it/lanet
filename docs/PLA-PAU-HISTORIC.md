@@ -40,3 +40,5 @@ Les proves són exclusivament locals. Per evitar una compilació concurrent amb 
 37 proves PAU relacionades correctes, incloses 11 específiques de l’històric; tipus/lint correctes. 75 fluxos de navegador correctes en Chromium, Firefox i WebKit: 12 d’històric, 39 de PAU/calculadora i 24 de top 5, amb revisió visual de captures, 320/390/768/1440 px i pantalles horitzontals. Càrrega diferida, cache compartida, reintent, absències, codis separats i notes/preferències privades preservades.
 
 Fonts i regeneració reproduïbles; byte/hash del catàleg i cobertura a `output/pau-history/verification.json`. Aquesta verificació de PAU no substitueix Validate ni les regressions del conjunt final; integració i publicació agrupades pendents del xat coordinador. Cap migració, servei privat ni dada de producció modificada per aquest canvi.
+
+Publicació conjunta confirmada: [0.6.16](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.16) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38638160574) · [registre](releases/0.6.16.json). Validació final de la tanda: 446 unitàries, 318 fluxos locals i tots els jobs CI correctes.

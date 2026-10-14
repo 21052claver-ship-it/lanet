@@ -13,8 +13,8 @@ La configuració existent es reutilitza: mateixes dades oficials, validació de 
 - [x] Recuperar tries locals per compte i versió d’horari; sanejar dades no fiables.
 - [x] Provar els tres itineraris, desats/reintents, reload, sessió i usuaris existents.
 - [x] Revisar captures a mòbil i escriptori; teclat i moviment reduït.
-- [ ] Tipus, unitàries, build i auditoria de font; CI verda de la PR actualitzada.
-- [ ] Fusionar per PR, CI exacta de main, publicar 0.6.16 i verificar rebut del proveïdor.
+- [x] Tipus, unitàries, build i auditoria de font; CI verda de la PR actualitzada.
+- [x] Fusionar per PR, CI exacta de main, publicar 0.6.16 i verificar rebut del proveïdor.
 
 ## Criteris
 
@@ -29,3 +29,5 @@ Retirar el xat/Dubtes i preguntes contextuals de materials. Mantenir Materials, 
 Inclou R98/H191 (agenda validada per delegats) i R99/H192 (dades/dashboard privat), amb els seus plans propis. Una sola tasca activa i una pujada consolidada després de proves locals. Còpia privada, migracions additives 0028/0029, roster privat i servei de manteniment verificats separadament abans de Pages. El rebut de la release immutable és el registre públic de desplegament.
 
 Aquesta tanda també incorpora R100/H193 (Pomodoro/focus), R101/H194 (històric PAU) i R102/H195 (logo mòbil), amb proves i plans propis. Una única pujada després del freeze final; sense canvis de producte a mig validar.
+
+Publicació conjunta confirmada: [0.6.16](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.16) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38638160574) · [registre](releases/0.6.16.json). Validació final de la tanda: 446 unitàries, 318 fluxos locals i tots els jobs CI correctes.

@@ -1,7 +1,9 @@
-# Publicació · La Net 0.6.15
+# Publicació · La Net 0.6.16
 
-https://lanet.es · Commit 639ae540f70c8b3723975e3bc6b907e98341a1f7. Pages 9e653955-af33-4013-a69b-7a72e96d0625.
+[Informe complet en Markdown](releases/0.6.16.md) · [Estat i decisions vigents](ESTAT-PROJECTE.md) · [Índex documental](README.md).
 
-Espais per assignatura i tema, dubtes contextuals segurs, biblioteca i agenda connectades, alta de dates amb esborrany i tasques amb resposta immediata/reversió. Inclou la correcció de dues pestanyes preparada a 0.6.14, que no es va publicar.
+https://lanet.es · Commit 7f267bb342ecf6dc27040fbe104cb556db86ad51. Pages dd70d5a2-ae13-445d-83a4-121014cc8fce.
 
-[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.15) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38609839912) · [Registre](releases/0.6.15.json). Còpia privada de D1 i migració additiva 0027 aplicada separadament; esquema verificat. Domini, commit, callback i rebut immutable verificats via proveïdor. Sense regals/reinicis ni canvis de saldos/notes.
+Primera entrada a pantalla completa amb itinerari, assignatures i professorat oficials. Continguts simplificat a Materials, Formularis i Eines i webs: xat/API retirats i històric conservat. Agenda contextual amb propostes públiques/revisió delegada, avisos i contactes; dashboard privat i retenció limitada. Pomodoro continu, alarma i focus accessible amb cua offline; històric PAU oficial 2022–2026 i comparació top 5. Logo complet al mòbil.
+
+[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.16) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38638160574) · [Registre](releases/0.6.16.json). 446 unitàries, 243 fluxos locals del snapshot més 75 regressions posteriors i CI completa correctes. Còpia privada D1 restaurable, només 0028/0029 i roster autoritzat aplicats; manteniment privat verificat separadament. Domini, commit, callback i rebut immutable confirmats via proveïdor. Sense proves contra la web pública ni regals/reinicis/canvis de notes, saldos o rols globals.
