@@ -21,3 +21,15 @@ export function removeLocalValue(key, storage) {
     return false;
   }
 }
+
+// A confirmed older form must not erase a newer draft in this or another tab.
+export function removeLocalJSONIfUnchanged(key, expected, storage) {
+  try {
+    const target = storage ?? globalThis.localStorage;
+    if (JSON.stringify(JSON.parse(target.getItem(key))) !== JSON.stringify(expected)) return false;
+    target.removeItem(key);
+    return true;
+  } catch {
+    return false;
+  }
+}

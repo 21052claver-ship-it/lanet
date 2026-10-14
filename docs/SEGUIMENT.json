@@ -7553,7 +7553,10 @@
         "tests/preference-writer.test.js",
         "tests/audio-probe.test.js",
         "tests/helpers/audio-probe.js",
-        "scripts/test-preferences.mjs"
+        "scripts/test-preferences.mjs",
+        "shared/local-state.js",
+        "tests/local-state.test.js",
+        "scripts/test-workspace-recovery.mjs"
       ],
       "acceptance": "Incidències reproduïdes abans de corregir-les; regressions locals i CI completes, captures revisades, versió amb PR/release i rebut del proveïdor. Cap prova ni modificació de dades públiques.",
       "checks": [
@@ -7566,6 +7569,7 @@
       "evidence": [
         "output/platform-polish/verification.json",
         "output/platform-polish/preferences-before.json",
+        "output/platform-polish/proposal-draft-before.json",
         "output/platform-polish/unit.log",
         "output/platform-polish/typecheck.log",
         "output/platform-polish/build.log",
@@ -7578,9 +7582,10 @@
         "output/platform-polish/audits/upload-safety.json",
         "output/platform-polish/audits/music.json",
         "output/platform-polish/audits/reactions.json",
+        "output/platform-polish/audits/workspace.json",
         "output/platform-polish/audits/roulette-sound.json"
       ],
-      "progress": "387 unitàries, tipus/lint, build i auditoria de font correctes. 261 escenaris locals correctes; 6 casos d’àudio WebKit sense suport natiu en aquest Windows, pendents de Linux CI. Concurrència de volum/discos, patch del perfil, mode discret preservat i toast sense tapar navegació verificats. 0.6.13 pendent de PR/Validate i publicació amb rebut.",
+      "progress": "388 unitàries, tipus/lint, build i auditoria de font correctes. 294 escenaris locals correctes; 6 casos d’àudio WebKit sense suport natiu en aquest Windows, pendents de Linux CI. Concurrència de volum/discos, patch del perfil, mode discret preservat, esborranys de propostes i toast sense tapar navegació verificats. 0.6.13 pendent de PR/Validate i publicació amb rebut.",
       "change_log_id": "H185"
     }
   ]

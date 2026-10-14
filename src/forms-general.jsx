@@ -19,7 +19,7 @@ import {
   Tabs,
 } from './ui';
 import { useSubmit, Attachments } from './form-utils';
-import { readLocalJSON, writeLocalJSON, removeLocalValue } from '../shared/local-state';
+import { readLocalJSON, writeLocalJSON, removeLocalJSONIfUnchanged } from '../shared/local-state';
 import { weightedGrades, neededGrade, numberLabel, dateLabel, madridDay } from '../shared/domain';
 export function ConfigureForm() {
   return <CourseSetup />;
@@ -188,10 +188,7 @@ export function ProposalForm({ item }) {
     [files, setFiles] = useState(item.id ? item.files || [] : draft.files),
     [uploading, setUploading] = useState(false),
     [draftRemembered, setDraftRemembered] = useState(true);
-  const { busy, error, submit } = useSubmit(() => {
-    removeLocalValue(key);
-    close();
-  });
+  const { busy, error, submit } = useSubmit(close);
   function change(k, v) {
     const next = { ...f, [k]: v };
     setF(next);
@@ -201,10 +198,14 @@ export function ProposalForm({ item }) {
     <form
       onSubmit={submit(() => {
         if (uploading) throw new Error('Espera que acabin de pujar les imatges.');
+        const submittedDraft = readLocalJSON(key, null);
         return mutate(
           '/proposals' + (item.id ? '/' + item.id : ''),
           { ...f, files },
           'Idea compartida. Gràcies per millorar La Net!',
+          () => {
+            if (!item.id) removeLocalJSONIfUnchanged(key, submittedDraft);
+          },
         );
       })}
     >

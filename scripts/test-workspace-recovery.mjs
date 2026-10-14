@@ -129,6 +129,111 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
           finish.release();
         }
       });
+    for (const width of [320, 1440])
+      await check(`proposal-draft-race-${width}`, { width, height: 900 }, async (page, fixture) => {
+        const sent = gate(),
+          finish = gate();
+        await page.route('**/api/proposals', async (route) => {
+          if (route.request().method() !== 'POST') return route.continue();
+          sent.release();
+          await finish.promise;
+          await route.continue();
+        });
+        const openIdea = async () => {
+          if (width < 760)
+            await page.getByRole('button', { name: 'Més seccions', exact: true }).click();
+          await page
+            .getByRole('button', { name: 'Proposa una idea', exact: true })
+            .filter({ visible: true })
+            .first()
+            .click();
+        };
+        const dialog = page.getByRole('dialog');
+        try {
+          await openIdea();
+          await dialog
+            .getByRole('textbox', { name: 'La teva idea', exact: true })
+            .fill('Primera idea de prova');
+          await dialog
+            .getByRole('textbox', { name: 'Com ajudaria?', exact: true })
+            .fill('Publicació local retinguda per comprovar concurrència.');
+          await dialog.getByRole('button', { name: 'Publicar la idea', exact: true }).click();
+          await sent.promise;
+          await dialog.getByRole('button', { name: 'Cancel·lar', exact: true }).click();
+          await openIdea();
+          await dialog
+            .getByRole('textbox', { name: 'La teva idea', exact: true })
+            .fill('Segona idea encara pendent');
+          await dialog
+            .getByRole('textbox', { name: 'Com ajudaria?', exact: true })
+            .fill('Aquest esborrany nou s’ha de conservar.');
+          const updated = page.waitForResponse((r) => r.url().endsWith('/api/bootstrap'));
+          finish.release();
+          await updated;
+          await page.waitForLoadState('networkidle');
+          assert.equal(await dialog.isVisible(), true);
+          assert.equal(
+            fixture.db
+              .prepare("SELECT COUNT(*) AS n FROM proposals WHERE title='Primera idea de prova'")
+              .get().n,
+            1,
+          );
+          assert.equal(
+            fixture.db
+              .prepare(
+                "SELECT COUNT(*) AS n FROM proposals WHERE title='Segona idea encara pendent'",
+              )
+              .get().n,
+            0,
+          );
+          await page.reload();
+          await page.locator('.page-title h1').waitFor();
+          await openIdea();
+          assert.equal(
+            await dialog.getByRole('textbox', { name: 'La teva idea', exact: true }).inputValue(),
+            'Segona idea encara pendent',
+          );
+          assert.equal(
+            await dialog.getByRole('textbox', { name: 'Com ajudaria?', exact: true }).inputValue(),
+            'Aquest esborrany nou s’ha de conservar.',
+          );
+          await dialog.getByRole('button', { name: 'Publicar la idea', exact: true }).click();
+          await dialog.waitFor({ state: 'hidden' });
+          assert.equal(
+            await page.evaluate(() => localStorage.getItem('lanet.proposalDraft.browser')),
+            null,
+            'Confirmed unchanged draft is cleared',
+          );
+        } finally {
+          finish.release();
+        }
+      });
+    await check(
+      'proposal-edit-preserves-draft',
+      { width: 1440, height: 900 },
+      async (page, fixture) => {
+        const draft = { title: 'Nova idea pendent', body: 'Encara no publicada', files: [] };
+        await page.evaluate(
+          (d) => localStorage.setItem('lanet.proposalDraft.browser', JSON.stringify(d)),
+          draft,
+        );
+        await page.goto(fixture.base + '/#community');
+        await page.getByRole('tab', { name: 'Propostes', exact: true }).click();
+        await page.getByRole('button', { name: 'Editar proposta', exact: true }).click();
+        const dialog = page.getByRole('dialog');
+        await dialog
+          .getByRole('textbox', { name: 'La teva idea', exact: true })
+          .fill('Idea existent editada');
+        await dialog.getByRole('button', { name: 'Desar canvis', exact: true }).click();
+        await dialog.waitFor({ state: 'hidden' });
+        assert.deepEqual(
+          await page.evaluate(() =>
+            JSON.parse(localStorage.getItem('lanet.proposalDraft.browser')),
+          ),
+          draft,
+        );
+      },
+    );
     await check('editor-loading-recovery', { width: 320, height: 640 }, async (page) => {
       const started = gate(),
         finish = gate();

@@ -20,6 +20,7 @@ La revisió no implica reexecutar regals, reinicis, migracions o configuració O
 | Desar aparença pot substituir música o privadesa d’una altra pestanya | El formulari enviava totes les preferències capturades en obrir-lo | Patch només dels camps editats; canvi extern de volum, disc i mode discret conservat. Sense edicions, cap POST. |
 | Un gest de volum envia peticions iguals en keyup/pointerup/blur | Cada esdeveniment persistia incondicionalment | Seguiment de l’últim valor demanat, amb reintent possible després d’un error. |
 | La confirmació tapa els botons inferiors al mòbil | Toast fixat a 18px del marge inferior, dins la barra | Posició sobre la navegació segons el layout compacte; comprovació de geometria vertical/horitzontal i controls sense intercepció. |
+| La resposta d’una proposta antiga esborra una idea nova pendent | Neteja incondicional de la clau d’esborrany després de publicar o editar | Neteja només després de confirmació i si l’esborrany encara és el que s’ha enviat; edicions no el netegen. Reload comprova la conservació de la idea nova. |
 | La prova d’àudio queda en NaN després d’un frame invàlid | El màxim acumulat quedava contaminat permanentment | Frames invàlids comptats i diagnosticats; senyal natiu finit exigit. Injecció d’un frame NaN en el cas de silenci/reentrada. |
 
 ## Abast de verificació
@@ -28,4 +29,4 @@ Fixtures amb D1 en memòria i mitjans ficticis: continguts, revisió de delegats
 
 Evidències privades a output/platform-polish/ i resultats de les suites locals. La versió 0.6.13 resta pendent d’incorporació per PR, Validate de main i publicació amb rebut.
 
-Resultat local: 387 unitàries i 261 escenaris de navegador correctes, tipus/lint, build i auditoria de font sense troballes; auditoria npm sense vulnerabilitats conegudes. Les sis comprovacions de Web Audio sense suport natiu a Windows es validen a Linux CI. Una recàrrega prematura de la prova de discos cancel·lava el bootstrap a WebKit: la fixture ara espera acabar la sincronització abans de recarregar; conserva totes les assertions.
+Resultat local: 388 unitàries i 294 escenaris de navegador correctes, tipus/lint, build i auditoria de font sense troballes; auditoria npm sense vulnerabilitats conegudes. Les sis comprovacions de Web Audio sense suport natiu a Windows es validen a Linux CI. Una recàrrega prematura de la prova de discos cancel·lava el bootstrap a WebKit: la fixture ara espera acabar la sincronització abans de recarregar; conserva totes les assertions.

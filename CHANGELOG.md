@@ -8,6 +8,7 @@ Cada publicació nova té una versió SemVer, un tag Git immutable, una release 
 - El perfil desa només els ajustos editats: no substitueix el mode discret, la música o altres preferències actualitzades mentre estava obert.
 - El volum evita peticions duplicades entre teclat, punter i pèrdua de focus, amb possibilitat de tornar a desar després d’un error.
 - Els missatges de confirmació es col·loquen per damunt de la navegació mòbil, també en horitzontal, i no intercepten els controls.
+- La confirmació d’una proposta conserva els esborranys nous començats mentre s’enviava; editar una proposta existent tampoc esborra una idea pendent.
 - Regressions de preferències en tres motors i diagnòstic de frames d’àudio no finits sense relaxar la comprovació de senyal audible.
 
 ## [0.6.12] - 2026-10-14
