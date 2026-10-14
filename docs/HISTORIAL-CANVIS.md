@@ -1189,3 +1189,11 @@ T79-01 iniciada després de T78-02. Execució del disseny A: espais per assignat
 H187 implementada: espais per assignatura, temes/trimestre, biblioteca contextual i agenda, fils de dubtes per matrícula amb respostes idempotents i moderació. Tasques amb confirmació immediata i reversió en error. 398 unitàries i 108 recorreguts locals correctes; captures revisades, inclosos controls de dates sense talls a 320px. Pendent CI, còpia privada/migració additiva i publicació 0.6.15.
 
 H187: confirmació tardana d’un dubte ja tancat no substitueix un diàleg nou. Regressió amb resposta retinguda i perfil obert en tres motors; 111 recorreguts locals en total. PR36 actualitzada i CI nova necessària.
+
+H187 publicada: [0.6.15](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.15), commit 639ae540f70c8b3723975e3bc6b907e98341a1f7, [CI exacta](https://github.com/21052claver-ship-it/lanet/actions/runs/38609839912) i [registre](releases/0.6.15.json). Còpia privada de D1 i només migració 0027 revisada/aplicada; esquema verificat. 398 unitàries, 111 recorreguts locals i CI completa correctes. Domini, commit, callback, tag/release i digest del rebut verificats via proveïdor. La correcció de H186 queda inclosa; 0.6.14 no es va publicar. Cap prova contra la web pública, regals, reinicis o canvi de notes/saldos.
+
+### H188 · Fixture determinista de rebuig parcial
+
+La CI documental de PR37 detecta una suposició d’ordre incorrecta: el servei fictici rebutjava la segona petició rebuda i la prova assumia que era foto-2. Les pujades són paral·leles. S’identifica foto-2 pel contingut PNG fictici (amplada distintiva vàlida), sense canviar el filtre real ni relaxar les comprovacions d’error, reintent, concurrència i conservació. Producte 0.6.15 i CI publicada preservats.
+
+H188 verificada localment: 12 casos en tres motors, sense assertions eliminades ni timeouts ampliats. PR37 inclou només registre documental i fixture; el codi i la publicació 0.6.15 no canvien. La CI de la branca actualitzada continua sent obligatòria abans de fusionar.

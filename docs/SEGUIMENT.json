@@ -7643,16 +7643,17 @@
         "output/proposal-draft-cross-tab/ci-pr-navigation.log",
         "output/proposal-draft-cross-tab/ci-final.json",
         "output/proposal-draft-cross-tab/bonus-stress.json",
-        "output/proposal-draft-cross-tab/release.log"
+        "output/proposal-draft-cross-tab/release.log",
+        "docs/releases/0.6.15.json"
       ],
-      "progress": "Codi incorporat per PR35 i CI exacta de main correcta (run 38498922783, intent 2). 388 unitàries, 36 casos de recuperació i 27 d’horaris locals. Fallada puntual WebKit de notes no reproduïda en 10 repeticions locals; mateix codi i assertions passen a CI. Release 0.6.14 avortada abans de qualsevol mutació externa: el validador exigeix 4 línies per una entrada amb un únic punt. No existeix publicació 0.6.14. Publicació agrupada i correcció del validador a T79-01/0.6.15.",
+      "progress": "Codi incorporat per PR35 i CI exacta de main correcta (run 38498922783, intent 2). 388 unitàries, 36 casos de recuperació i 27 d’horaris locals. Fallada puntual WebKit de notes no reproduïda en 10 repeticions locals; mateix codi i assertions passen a CI. Release 0.6.14 avortada abans de qualsevol mutació externa: el validador exigeix 4 línies per una entrada amb un únic punt. No existeix publicació 0.6.14. Publicació agrupada i correcció del validador a T79-01/0.6.15. Publicació transferida completada amb 0.6.15; rebut i versió immutable verificats.",
       "change_log_id": "H186"
     },
     {
       "id": "T79-01",
       "phase": "F79",
       "title": "Implementar espais, dubtes i agenda contextual",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R95",
         "R01",
@@ -7699,10 +7700,46 @@
         "output/subject-workspaces/library/contents-browser-results.json",
         "output/subject-workspaces/fast-uploads/fast-browser-results.json",
         "output/subject-workspaces/recovery/results.json",
-        "output/subject-workspaces/question-dialog-race/results.json"
+        "output/subject-workspaces/question-dialog-race/results.json",
+        "docs/releases/0.6.15.json",
+        "output/subject-workspaces/migration-verification.json",
+        "output/subject-workspaces/provider-verification.json",
+        "output/releases/0.6.15/receipt.json",
+        "output/subject-workspaces/ci-main/contents/subject-workspaces/browser/results.json",
+        "output/subject-workspaces/ci-main/contents/contents/contents-browser-results.json"
       ],
-      "progress": "Implementació completa amb espais, temes, context, biblioteca, dubtes segurs i agenda. 398 unitàries i 111 recorreguts locals en tres motors correctes; captures revisades. Pendent PR/CI, còpia privada i migració revisada, publicació 0.6.15 amb rebut. Inclou la correcció de T78-02; 0.6.14 no publicada. Confirmació tardana de dubte respecta el perfil o qualsevol diàleg nou; regressió en tres motors.",
+      "progress": "Publicada 0.6.15 a lanet.es via PR36 i CI exacta de main: espais per assignatura/tema, biblioteca i agenda contextuals, dubtes segurs per matrícula i variants, esborranys/reintents idempotents i tasques amb confirmació immediata/reversió. 398 unitàries i 111 fluxos locals correctes, CI completa amb 30 nous i 33 de biblioteca. Còpia privada i només migració additiva 0027 aplicada i esquema verificat. Domini, commit, callback, tag/release immutable i digest del rebut verificats via proveïdor. Sense proves contra la web pública ni regals, reinicis o canvis de notes/saldos.",
       "change_log_id": "H187"
+    },
+    {
+      "id": "T79-02",
+      "phase": "F79",
+      "title": "Fer determinista el rebuig parcial de la fixture de pujades",
+      "status": "verified",
+      "requirements": [
+        "R95"
+      ],
+      "depends_on": [
+        "T79-01"
+      ],
+      "files": [
+        "scripts/test-fast-uploads.mjs",
+        "docs/HISTORIAL-CANVIS.md"
+      ],
+      "acceptance": "La fixture rebutja foto-2 pel seu contingut de prova, independentment de l’ordre d’arribada. Error amb el nom correcte, dos fitxers conservats, reintent i concurrència limitada verificats en tres motors locals. La fusió de PR37 continua exigint Validate verd; cap canvi del producte publicat.",
+      "checks": [
+        "Revisar log i captura del fracàs de CI documental.",
+        "Identificar la imatge de prova amb un PNG vàlid distingible, sense tocar el servei real.",
+        "Passar els 12 casos locals en tres motors amb totes les assertions de seguretat i reintent.",
+        "Incorporar per PR37 amb CI verda; preservar la release 0.6.15 immutable."
+      ],
+      "evidence": [
+        "output/subject-workspaces/ci-docs-failed.log",
+        "output/subject-workspaces/fast-uploads-deterministic/fast-browser-results.json",
+        "output/subject-workspaces/fast-uploads-deterministic.log"
+      ],
+      "progress": "12 casos locals correctes en Chromium/Firefox/WebKit. La foto rebutjada es distingeix per contingut PNG, sense dependència de l’ordre d’arribada; es conserven l’error amb nom, els dos fitxers vàlids, el reintent i el màxim de tres pujades paral·leles. PR37 haurà de passar Validate abans de fusionar; cap canvi de runtime o release de producte.",
+      "change_log_id": "H188"
     }
   ]
 }

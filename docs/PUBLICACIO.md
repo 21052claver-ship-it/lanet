@@ -1,7 +1,7 @@
-# Publicació · La Net 0.6.13
+# Publicació · La Net 0.6.15
 
-https://lanet.es · Commit 6a00486a0534f5305071beece77e66e118fc5540. Pages 683624be-05ce-4d67-a18e-32a9cb535648.
+https://lanet.es · Commit 639ae540f70c8b3723975e3bc6b907e98341a1f7. Pages 9e653955-af33-4013-a69b-7a72e96d0625.
 
-Preferències ràpides amb persistència ordenada, perfil que conserva la resta d’ajustos, esborranys nous protegits i confirmacions que deixen lliure la navegació mòbil.
+Espais per assignatura i tema, dubtes contextuals segurs, biblioteca i agenda connectades, alta de dates amb esborrany i tasques amb resposta immediata/reversió. Inclou la correcció de dues pestanyes preparada a 0.6.14, que no es va publicar.
 
-[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.13) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38493830734) · [Registre](releases/0.6.13.json). PR33 i CI exacta correctes; domini, commit canònic i rebut immutable verificats via proveïdor. Sense migracions ni canvis OAuth o dades de producció.
+[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.15) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38609839912) · [Registre](releases/0.6.15.json). Còpia privada de D1 i migració additiva 0027 aplicada separadament; esquema verificat. Domini, commit, callback i rebut immutable verificats via proveïdor. Sense regals/reinicis ni canvis de saldos/notes.
