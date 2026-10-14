@@ -7470,7 +7470,7 @@
       "id": "T77-01",
       "phase": "F77",
       "title": "Accelerar i distingir els botons de reacció",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R22",
         "R23",
@@ -7509,9 +7509,13 @@
         "output/reactions/typecheck.log",
         "output/reactions/build.log",
         "output/reactions/chromium/results.json",
-        "output/reactions/browser/results.json"
+        "output/reactions/browser/results.json",
+        "docs/releases/0.6.12.json",
+        "output/reactions/ci-main/reactions/browser/results.json",
+        "output/reactions/provider-verification.json",
+        "output/releases/0.6.12/receipt.json"
       ],
-      "progress": "Implementació i revisió visual completades. 383 unitàries, tipus/lint, build i 30 casos locals correctes en tres motors. S’afegeix recuperació de les lectures descartades quan una reacció acaba després d’un altre desament, amb proves unitàries i de publicar un apunt en paral·lel. PR30 incorporada; correcció de concurrència, CI i publicació 0.6.12 pendents. Sense migracions ni dades reals modificades.",
+      "progress": "Publicada 0.6.12 a lanet.es via PR30/31 i CI exacta de main. Reaccions immediates amb comptador canònic, bloqueig compartit, reversió i resincronització d’errors; estats seleccionat/hover/focus visibles. 383 unitàries i 30 fluxos locals i 30 de CI correctes en tres motors, inclosa la recuperació d’altres desaments en paral·lel. Domini, commit, tag/release immutable i digest del rebut verificats via proveïdor; sense migracions ni dades reals modificades.",
       "change_log_id": "H184"
     }
   ]

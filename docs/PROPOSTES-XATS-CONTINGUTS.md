@@ -1,6 +1,6 @@
 # Xats i continguts per assignatura · propostes UX
 
-T76-01 · exploració de disseny. Quatre alternatives amb escriptori i mòbil, generades amb l’eina integrada imagegen i revisades. Les persones, els missatges, els fitxers i les dates són ficticis. Són mockups; aquesta proposta no implementa ni publica un servei de xat. La versió de producte continua sent 0.6.11.
+T76-01 · exploració de disseny. Quatre alternatives amb escriptori i mòbil, generades amb l’eina integrada imagegen i revisades. Les persones, els missatges, els fitxers i les dates són ficticis. Són mockups; aquesta proposta no implementa ni publica un servei de xat. Les propostes es van elaborar sobre la versió 0.6.11.
 
 ## Punt de partida i criteri
 

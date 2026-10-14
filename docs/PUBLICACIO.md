@@ -1,7 +1,7 @@
-# Publicació · La Net 0.6.11
+# Publicació · La Net 0.6.12
 
-https://lanet.es · Commit 54e1009692b57c3e0c489955fc8b78b35cab0a7e. Pages 535d3b8d-1f7c-4f34-95dc-bb1646483764.
+https://lanet.es · Commit cded3be07b67694b1618afad92fbe09b6c6556f9. Pages 975356e9-4f5f-431c-bf23-2f45dda0e993.
 
-Classificació acumulativa BAT2 amb pesos orientatius i preferències personals conservades. Calendari del centre i PAU/PAP 2027 amb rangs i ICS; calculadora TR privada local 30/42/21/7 i guia del curs.
+M’agrada, desats i vots amb resposta immediata, confirmació lleugera i recuperació d’errors. Estat activat visible amb icones, fons i contorns, hover i focus accessibles.
 
-[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.11) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38469595627) · [Registre](releases/0.6.11.json). PR26/27 i CI exacta correctes; domini, commit canònic i rebut immutable verificats via proveïdor. Sense migracions ni canvis OAuth o dades de producció.
+[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.12) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38486363324) · [Registre](releases/0.6.12.json). PR30/31 i CI exacta correctes; domini, commit canònic i rebut immutable verificats via proveïdor. Sense migracions ni canvis OAuth o dades de producció.
