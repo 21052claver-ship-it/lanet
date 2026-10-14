@@ -1179,3 +1179,13 @@ Publicació H185 confirmada: [0.6.13](https://github.com/21052claver-ship-it/lan
 388 unitàries i 36 fluxos de recuperació locals, tipus/lint, build i font correctes. Versió 0.6.14 preparada, pendent de PR/CI i publicació; 0.6.13 es conserva immutable. Evidències: output/platform-polish/cross-tab-before.json i output/proposal-draft-cross-tab/. Cap migració ni dades de producció modificades.
 
 H186 · CI identifica una carrera a la fixture d’horaris oficials: després de promocionar l’usuari fictici a admin, navegar només pel hash conservava el bootstrap amb rol d’alumne. La prova esperava accidentalment el polling de 30s i podia expirar. Ara recarrega explícitament abans d’editar; conserva les assertions de professorat, franges i persistència. Cap canvi de permisos del producte. Log i captura a output/proposal-draft-cross-tab/ci-pr/ i ci-pr-navigation.log.
+
+Tancament tècnic H186: PR35 i CI exacta de main 38498922783 correctes (intent 2, mateixes assertions; incidència WebKit no reproduïda en 10 repeticions locals). 0.6.14 **no publicada**: validador del changelog rebutja una entrada d’un sol punt abans de qualsevol mutació externa. Publicació transferida explícitament a T79-01, versió 0.6.15 conjunta; la pública continua 0.6.13.
+
+### H187 · Espais d’estudi per assignatura
+
+T79-01 iniciada després de T78-02. Execució del disseny A: espais per assignatura, temes plans, dubtes contextuals, formularis/eines revisats i agenda vinculada. Criteris i checklist a PLA-ESPAIS-ASSIGNATURA.md. Proves exclusivament amb fixtures locals; publicació i migració separades, sense regals ni reinicis.
+
+H187 implementada: espais per assignatura, temes/trimestre, biblioteca contextual i agenda, fils de dubtes per matrícula amb respostes idempotents i moderació. Tasques amb confirmació immediata i reversió en error. 398 unitàries i 108 recorreguts locals correctes; captures revisades, inclosos controls de dates sense talls a 320px. Pendent CI, còpia privada/migració additiva i publicació 0.6.15.
+
+H187: confirmació tardana d’un dubte ja tancat no substitueix un diàleg nou. Regressió amb resposta retinguda i perfil obert en tres motors; 111 recorreguts locals en total. PR36 actualitzada i CI nova necessària.

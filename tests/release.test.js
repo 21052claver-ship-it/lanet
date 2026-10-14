@@ -35,4 +35,6 @@ test('Release: notes de la versió exacta i rebuig de notes absents/versió amb 
   assert.ok(!releaseNotes(log, '0.2.0').includes('Base'));
   assert.throws(() => releaseNotes(log, '0.3.0'));
   assert.throws(() => releaseNotes(log, '0.2.0 --force'));
+  assert.match(releaseNotes('## [0.2.0] - 2026-10-14\n\n- Una sola correcció documentada.', '0.2.0'), /correcció/);
+  assert.throws(()=>releaseNotes('## [0.2.0] - 2026-10-14\n\n\n\n', '0.2.0'));
 });

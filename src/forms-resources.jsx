@@ -59,6 +59,8 @@ export function NoteForm({ item }) {
       subject_id: data.preferences?.notesSubjects?.[0] || enrolled[0]?.id || data.subjects[0]?.id,
       body: '',
       summary: '',
+      topic: '',
+      term: '',
       price: 0,
       ...item,
     }),
@@ -127,6 +129,20 @@ export function NoteForm({ item }) {
                   {s.short}
                 </option>
               ))}
+            </Select>
+          </Field>
+        </div>
+        <div className="form-grid">
+          <Field label="Tema" hint="Opcional. S’agrupa amb els materials del mateix tema.">
+            <input value={f.topic || ''} maxLength={80} list="material-topics" onChange={e=>update('topic',e.target.value)} placeholder="Per exemple: Derivades" />
+          </Field>
+          <datalist id="material-topics">
+            {[...new Set(data.notes.filter(n=>n.subject_id===f.subject_id && n.topic).map(n=>n.topic))].map(t=><option key={t} value={t} />)}
+          </datalist>
+          <Field label="Trimestre del material">
+            <Select value={f.term || ''} onChange={e=>update('term',e.target.value)}>
+              <option value="">Tot el curs</option>
+              {[1,2,3].map(t=><option key={t} value={t}>{t===2?'2n':t+'r'} trimestre</option>)}
             </Select>
           </Field>
         </div>
@@ -408,6 +424,7 @@ export function Reader({ item }) {
       )}
       {n.status === 'published' && (
         <div className="reader-actions">
+          {n.status === 'published' && <Button onClick={()=>open('discussionNew',{subject_id:n.subject_id,note_id:n.id})}>Preguntar sobre aquest material</Button>}
           <LikeButton item={n} resource="notes" />
           <SaveButton item={n} resource="notes" />
           <span className="muted">Donar les gràcies és gratuït</span>

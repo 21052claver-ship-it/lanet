@@ -15,7 +15,27 @@ export function AppProvider({ initial, children }) {
     [toast, setToast] = useState(null),
     [page, setPage] = useState(() => location.hash.slice(1) || 'schedule'),
     [communityTab, setCommunityTab] = useState('notices'),
-    [subjectFilter, setSubjectFilter] = useState('all');
+    [subjectFilter, updateSubjectFilter] = useState(() => {
+      const id = new URL(location.href).searchParams.get('subject');
+      return initial.subjects.some(s => s.id === id) ? id : 'all';
+    });
+  const [agendaSubject, setAgendaSubject] = useState(null);
+  const setSubjectFilter = useCallback((id) => {
+    updateSubjectFilter(id);
+    const url = new URL(location.href);
+    url.searchParams.delete('contents');
+    if (id === 'all') url.searchParams.delete('subject');
+    else url.searchParams.set('subject', id);
+    history.pushState(null, '', url);
+  }, []);
+  useEffect(() => {
+    const restore = () => {
+      const id = new URL(location.href).searchParams.get('subject');
+      updateSubjectFilter(data.subjects.some(s => s.id === id) ? id : 'all');
+    };
+    window.addEventListener('popstate', restore);
+    return () => window.removeEventListener('popstate', restore);
+  }, [data.subjects]);
   const [walletHold, holdWallet] = useState(null);
   const walletBalance = walletHold ?? data.user.balance;
   const [hideGrades, setHideGrades] = useState(!!initial.preferences?.hideGrades);
@@ -135,6 +155,7 @@ export function AppProvider({ initial, children }) {
         notify,
         modal,
         open: (type, item = {}) => setModal({ type, item }),
+        replaceModal: (type, item = {}) => setModal(current => current === modal ? {type,item} : current),
         // A delayed response from a dismissed form must not close a newer dialog.
         close: () => setModal((current) => (current === modal ? null : current)),
         page,
@@ -145,6 +166,8 @@ export function AppProvider({ initial, children }) {
         setCommunityTab,
         subjectFilter,
         setSubjectFilter,
+        agendaSubject,
+        setAgendaSubject,
         savePreferences,
         gradeWrites,
         hideGrades,

@@ -100,7 +100,7 @@ export async function bootstrap(env, user) {
     ),
     rows(
       env,
-      `SELECT n.id,n.author_id,n.subject_id,n.title,n.summary,n.price,n.status,n.created_at,(length(trim(n.body))>0) AS has_text,u.name AS author,(SELECT COUNT(*) FROM likes WHERE type='note' AND target_id=n.id AND active=1) AS likes,COALESCE((SELECT active FROM likes WHERE user_id=? AND type='note' AND target_id=n.id),0) AS liked,EXISTS(SELECT 1 FROM saves WHERE user_id=? AND type='note' AND target_id=n.id) AS saved,EXISTS(SELECT 1 FROM unlocks WHERE user_id=? AND note_id=n.id) AS purchased FROM notes n JOIN users u ON u.id=n.author_id WHERE n.status='published' OR n.author_id=? OR EXISTS(SELECT 1 FROM unlocks WHERE user_id=? AND note_id=n.id) ORDER BY n.created_at DESC`,
+      `SELECT n.id,n.author_id,n.subject_id,n.title,n.summary,n.price,n.status,n.created_at,n.topic,n.term,(length(trim(n.body))>0) AS has_text,u.name AS author,(SELECT COUNT(*) FROM likes WHERE type='note' AND target_id=n.id AND active=1) AS likes,COALESCE((SELECT active FROM likes WHERE user_id=? AND type='note' AND target_id=n.id),0) AS liked,EXISTS(SELECT 1 FROM saves WHERE user_id=? AND type='note' AND target_id=n.id) AS saved,EXISTS(SELECT 1 FROM unlocks WHERE user_id=? AND note_id=n.id) AS purchased FROM notes n JOIN users u ON u.id=n.author_id WHERE n.status='published' OR n.author_id=? OR EXISTS(SELECT 1 FROM unlocks WHERE user_id=? AND note_id=n.id) ORDER BY n.created_at DESC`,
       user.id,
       user.id,
       user.id,

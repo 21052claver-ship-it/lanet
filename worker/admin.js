@@ -30,7 +30,9 @@ export async function adminRoute(request, env, user, path) {
         : [],
       reports: await rows(
         env,
-        'SELECT r.*,u.name AS author FROM reports r JOIN users u ON u.id=r.user_id WHERE resolved=0 ORDER BY r.created_at DESC',
+        `SELECT r.*,u.name AS author FROM reports r JOIN users u ON u.id=r.user_id WHERE resolved=0 AND (r.type!='discussion' OR ?='admin' OR EXISTS(SELECT 1 FROM subject_threads t JOIN offerings o ON o.id=t.offering_id WHERE t.id=r.target_id AND o.group_id=?)) ORDER BY r.created_at DESC`,
+        user.role,
+        user.group_id,
       ),
     };
   }
@@ -214,6 +216,11 @@ export async function adminRoute(request, env, user, path) {
     return { ok: true };
   }
   if (path === '/api/admin/reports') {
+    const report = await one(env, 'SELECT * FROM reports WHERE id=?', b.id);
+    if (report?.type === 'discussion' && user.role !== 'admin') {
+      const room = await one(env, 'SELECT o.group_id FROM subject_threads t JOIN offerings o ON o.id=t.offering_id WHERE t.id=?', report.target_id);
+      if (!room || room.group_id !== user.group_id) fail(403, 'Aquest informe correspon a un altre grup.');
+    }
     await run(env, 'UPDATE reports SET resolved=1 WHERE id=?', b.id);
     return { ok: true };
   }

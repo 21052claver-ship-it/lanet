@@ -248,6 +248,8 @@ export default function Admin() {
                     Revisar{' '}
                     {r.type === 'note'
                       ? 'apunts'
+                      : r.type === 'discussion'
+                        ? 'dubte de l’assignatura'
                       : r.type === 'plus'
                         ? 'plus'
                         : r.type === 'proposal'
@@ -259,6 +261,10 @@ export default function Admin() {
                   <div className="row-actions">
                     <Button
                       onClick={() => {
+                        if (r.type === 'discussion') {
+                          open('discussion', {id:r.target_id});
+                          return;
+                        }
                         const item = {
                           note: data.notes,
                           plus: data.pluses,
