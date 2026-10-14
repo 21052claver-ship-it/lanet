@@ -355,9 +355,10 @@ export function AnnouncementForm({ item }) {
   );
 }
 export function ProfileForm({ item = {}, onLogout, logoutBusy = false, logoutError = '' }) {
-  const { data, enrolled, close, mutate, open } = useApp();
+  const { data, enrolled, close, savePreferences, open } = useApp();
   const [section, setSection] = useState(item.section || 'personal');
-  const [preferences, setPreferences] = useState({ ...DEFAULT_PREFERENCES, ...data.preferences });
+  const [original] = useState(() => ({ ...DEFAULT_PREFERENCES, ...data.preferences }));
+  const [preferences, setPreferences] = useState(original);
   const updatePreference = (key, value) => setPreferences((p) => ({ ...p, [key]: value }));
   const { busy, error, submit } = useSubmit();
   return (
@@ -413,7 +414,13 @@ export function ProfileForm({ item = {}, onLogout, logoutBusy = false, logoutErr
       ) : (
         <form
           onSubmit={submit(async () => {
-            await mutate('/preferences', preferences, 'Preferències actualitzades.');
+            const patch = Object.fromEntries(
+              Object.entries(preferences).filter(
+                ([key, value]) => JSON.stringify(value) !== JSON.stringify(original[key]),
+              ),
+            );
+            if (Object.keys(patch).length)
+              await savePreferences(patch, 'Preferències actualitzades.');
             close();
           })}
         >

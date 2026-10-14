@@ -4,6 +4,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { browserFixture } from '../tests/helpers/browser-fixture.mjs';
 import { roulettePayout, ticketStake } from '../shared/roulette.js';
+import { installAudioProbeMeter } from '../tests/helpers/audio-probe.js';
 
 const out = 'output/roulette-sound';
 mkdirSync(out, { recursive: true });
@@ -75,6 +76,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
       await route.continue();
     });
     const recoveryId = randomUUID();
+    await context.addInitScript(installAudioProbeMeter);
     await context.addInitScript(
       ({ scenario, recoveryId }) => {
         window.soundProbe = {
@@ -84,6 +86,8 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
           peak: 0,
           lastPeak: 0,
           active: 0,
+          invalidFrames: 0,
+          finiteFrames: 0,
         };
         if (scenario === 'recovery')
           localStorage.setItem(
@@ -108,11 +112,20 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
           const analyser = ctx.createAnalyser();
           analyser.fftSize = 256;
           const samples = new Float32Array(analyser.fftSize);
+          if (scenario === 'mute-exit') {
+            const nativeRead = analyser.getFloatTimeDomainData.bind(analyser);
+            let firstFrame = true;
+            analyser.getFloatTimeDomainData = (values) => {
+              nativeRead(values);
+              if (firstFrame) {
+                values[0] = NaN;
+                firstFrame = false;
+              }
+            };
+          }
           const sample = setInterval(() => {
             analyser.getFloatTimeDomainData(samples);
-            const peak = Math.max(...samples.map(Math.abs));
-            window.soundProbe.lastPeak = peak;
-            window.soundProbe.peak = Math.max(window.soundProbe.peak, peak);
+            window.measureAudioFrame(window.soundProbe, samples);
           }, 8);
           const gainFactory = ctx.createGain.bind(ctx);
           ctx.createGain = () => {
@@ -193,6 +206,8 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         closed: window.soundProbe.closed,
         peak: window.soundProbe.peak,
         active: window.soundProbe.active,
+        finiteFrames: window.soundProbe.finiteFrames,
+        invalidFrames: window.soundProbe.invalidFrames,
       }));
     try {
       await open();
@@ -254,6 +269,11 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         await page.locator('[data-bet-id^="red:"]').click();
         if (!['unsupported', 'blocked'].includes(scenario)) {
           await page.waitForFunction(() => window.soundProbe.peak > 0.00001);
+          if (scenario === 'mute-exit')
+            assert.ok(
+              (await probe()).invalidFrames >= 1,
+              'Injected invalid frame remains diagnosed',
+            );
           assert.ok((await probe()).peak < 0.25, 'Cues remain quiet with generous headroom');
           assert.equal((await probe()).count, 1, 'A single audio context is reused');
         }
@@ -293,18 +313,16 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
             await page.waitForFunction(() =>
               window.soundProbe.starts.some((s) => Math.abs(s.frequency - 987.77) < 0.05),
             );
-            const music = await page
-              .locator('#sound-test-music')
-              .evaluate((e) => ({
-                paused: e.paused,
-                volume: e.volume,
-                beforeVolume: Number(e.dataset.beforeVolume),
-                time: e.currentTime,
-                ended: e.ended,
-                ready: e.readyState,
-                error: e.error?.message,
-                interference: e.dataset.interference,
-              }));
+            const music = await page.locator('#sound-test-music').evaluate((e) => ({
+              paused: e.paused,
+              volume: e.volume,
+              beforeVolume: Number(e.dataset.beforeVolume),
+              time: e.currentTime,
+              ended: e.ended,
+              ready: e.readyState,
+              error: e.error?.message,
+              interference: e.dataset.interference,
+            }));
             assert.ok(
               !music.paused &&
                 Math.abs(music.volume - music.beforeVolume) < 0.000001 &&
@@ -342,6 +360,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
             .click();
           await page.locator('[data-bet-id^="black:"]').click();
           await page.waitForFunction(() => window.soundProbe.peak > 0.00001);
+          assert.ok((await probe()).invalidFrames >= 1, 'Reload also diagnoses its invalid frame');
           await page.getByRole('button', { name: 'Tornar al forn', exact: true }).click();
           await page.waitForFunction(
             () =>

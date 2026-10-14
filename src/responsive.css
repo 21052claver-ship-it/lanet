@@ -1,4 +1,12 @@
 /* Responsive behavior is shared through data-compact, including phones in landscape. */
+.app-shell[data-compact='true'] ~ .toast {
+  left: 50%;
+  bottom: calc(76px + env(safe-area-inset-bottom));
+  overflow-wrap: anywhere;
+}
+.toast {
+  pointer-events: none;
+}
 .app-shell .workspace,
 .app-shell .main-content,
 .app-shell .page-title > div,

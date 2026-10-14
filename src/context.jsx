@@ -4,6 +4,7 @@ import { createDataSync, runMutation, privacyAfterFailure } from '../shared/asyn
 import { useGradeWrites } from './grade-writes';
 import { emptyPau } from '../shared/pau';
 import { useReactionWrites } from './reaction-writes';
+import { createPreferenceWriter } from '../shared/preference-writer';
 // Preserve the provider identity across Vite module refreshes during development.
 const AppContext = import.meta.hot?.data.appContext ?? createContext();
 if (import.meta.hot) import.meta.hot.data.appContext = AppContext;
@@ -80,10 +81,28 @@ export function AppProvider({ initial, children }) {
       }),
     [notify],
   );
-  const savePreferences = (patch, success) =>
-    mutate('/preferences', patch, success, () =>
-      setData((current) => ({ ...current, preferences: { ...current.preferences, ...patch } })),
+  const preferenceWrites = useRef(null);
+  if (!preferenceWrites.current)
+    preferenceWrites.current = createPreferenceWriter((patch) =>
+      api('/preferences', { method: 'POST', body: patch }),
     );
+  const savePreferences = useCallback(
+    (patch, success) =>
+      runMutation({
+        sync: sync.current,
+        write: () => preferenceWrites.current(patch),
+        onCommitted: ({ patch: saved }) =>
+          setData((current) => ({
+            ...current,
+            preferences: { ...current.preferences, ...saved },
+          })),
+        onSuccess: () => success && notify(success),
+        onError: (error) => notify(error.message, 'error'),
+        onRefreshError: () =>
+          notify('Preferències desades. La vista es tornarà a sincronitzar.', 'warning'),
+      }),
+    [notify],
+  );
   const gradeWrites = useGradeWrites(data, setData, mutate);
   const reactions = useReactionWrites(data, setData, sync.current, notify);
   const go = useCallback((p) => {

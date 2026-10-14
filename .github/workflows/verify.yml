@@ -62,6 +62,7 @@ jobs:
               npm run test:roulette-panorama
           - group: audio
             tests: |
+              npm run test:preferences
               npm run test:roulette-sound
           - group: compatibility
             tests: |
@@ -113,6 +114,7 @@ jobs:
             output/roulette-board/browser/
             output/roulette-panorama/
             output/roulette-sound/
+            output/preferences/browser/
             output/secret-room/
             output/mobile-navigation/
             output/responsive/
