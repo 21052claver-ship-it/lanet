@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ShieldCheck,
   Clock,
@@ -17,6 +17,7 @@ import { previewAgenda } from '../api';
 import { dateLabel } from '../../shared/domain';
 import { eventLabel } from '../../shared/agenda';
 import { canManageEvent } from '../../shared/delegation';
+import { acknowledgeNotifications } from '../../shared/notifications';
 import '../delegation.css';
 
 export function ConflictNotice({ conflicts }) {
@@ -167,8 +168,141 @@ export function AgendaReview({ item }) {
     </form>
   );
 }
+function NotificationInbox({ queue, onReview }) {
+  const { data, open, mutate, setData, refresh } = useApp();
+  const notifications = data.agendaNotifications || [];
+  const events = new Map([...data.events, ...(data.agendaProposals || [])].map((e) => [e.id, e]));
+  const { busy, error, submit, setError } = useSubmit();
+  const [loading, setLoading] = useState(true),
+    [loadError, setLoadError] = useState('');
+  const firstRead = useRef(null);
+  useEffect(() => {
+    let live = true;
+    // Reuse the initial promise under StrictMode; entering the inbox adds no polling.
+    firstRead.current ||= refresh();
+    firstRead.current
+      .catch((e) => {
+        if (live) setLoadError(e.message);
+      })
+      .finally(() => {
+        if (live) setLoading(false);
+      });
+    return () => {
+      live = false;
+    };
+  }, [refresh]);
+  async function reload() {
+    setLoading(true);
+    setLoadError('');
+    setError('');
+    try {
+      await refresh();
+    } catch (e) {
+      setLoadError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+  async function markRead(ids) {
+    if (!ids.length) return;
+    await mutate('/agenda/notifications/read', { ids }, 'Avisos marcats com a llegits.', (result) =>
+      setData((current) => acknowledgeNotifications(current, result)),
+    );
+  }
+  return (
+    <section className="delegate-notifications" aria-label="Notificacions de l’agenda">
+      <div className="delegate-section-heading">
+        <h2>
+          <Bell size={23} /> Notificacions
+        </h2>
+        <div className="row-actions">
+          <Button disabled={loading || busy} onClick={reload}>
+            {loading ? 'Actualitzant…' : 'Actualitzar avisos'}
+          </Button>
+          <Button
+            disabled={loading || busy || !notifications.some((n) => !n.read_at)}
+            onClick={submit(() =>
+              markRead(notifications.filter((n) => !n.read_at).map((n) => n.id)),
+            )}
+          >
+            Marcar com a llegides
+          </Button>
+        </div>
+      </div>
+      <FormError error={error || loadError} />
+      {queue.length > 0 && (
+        <div className="delegate-pending-notice">
+          <Clock size={23} />
+          <div>
+            <strong>
+              {queue.length} {queue.length === 1 ? 'proposta pendent' : 'propostes pendents'} de
+              validar
+            </strong>
+            <p>Comprova-les i publica les dates correctes.</p>
+            <Button onClick={onReview}>Revisar propostes pendents</Button>
+          </div>
+        </div>
+      )}
+      {data.agendaNotificationsMoreUnread && (
+        <p role="status">
+          Hi ha més avisos sense llegir. La bústia en mostra fins a 100; quan els marquis com a
+          llegits, apareixeran els següents. Si falla l’actualització, prem Actualitzar avisos.
+        </p>
+      )}
+      {notifications.length
+        ? notifications.map((n) => {
+            const event = events.get(n.event_id);
+            return (
+              <article
+                className={'panel agenda-notification ' + (n.read_at ? '' : 'unread')}
+                key={n.id}
+              >
+                <CheckCircle size={24} />
+                <div className="agenda-notification-content">
+                  <h3>{n.title}</h3>
+                  <p>{n.body}</p>
+                  <small>
+                    <time dateTime={n.created_at}>{dateLabel(n.created_at.slice(0, 10))}</time> ·{' '}
+                    {n.read_at ? 'Llegida' : 'Pendent de llegir'}
+                  </small>
+                  <div className="row-actions">
+                    {event ? (
+                      <Button
+                        onClick={() =>
+                          open(event.review_status === 'approved' ? 'eventDetail' : 'event', event)
+                        }
+                      >
+                        {event.review_status === 'returned'
+                          ? 'Corregir proposta'
+                          : event.review_status === 'approved'
+                            ? 'Veure data'
+                            : 'Veure proposta'}
+                      </Button>
+                    ) : (
+                      <small>La data relacionada ja no està disponible.</small>
+                    )}
+                    {!n.read_at && (
+                      <Button disabled={busy || loading} onClick={submit(() => markRead([n.id]))}>
+                        Marcar com a llegida
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </article>
+            );
+          })
+        : !loading &&
+          !loadError && (
+            <Empty
+              title="Encara no tens notificacions"
+              body="Aquí rebràs el resultat de les teves propostes públiques."
+            />
+          )}
+    </section>
+  );
+}
 export default function Delegates({ notificationsOnly = false }) {
-  const { data, open, mutate } = useApp();
+  const { data, open, setCommunityTab } = useApp();
   const delegation = data.delegation || { units: [], members: [], managedUnits: [] };
   const manager = delegation.managedUnits.length > 0;
   const proposals = data.agendaProposals || [];
@@ -176,22 +310,7 @@ export default function Delegates({ notificationsOnly = false }) {
     (e) => e.review_status === 'pending' && canManageEvent(data.user, e, delegation),
   );
   const mine = proposals.filter((e) => e.owner_id === data.user.id);
-  const notifications = data.agendaNotifications || [];
-  const [tab, setTab] = useState(manager ? 'pending' : 'mine'),
-    [busy, setBusy] = useState(false);
-  async function markRead() {
-    setBusy(true);
-    try {
-      await mutate(
-        '/agenda/notifications/read',
-        { ids: notifications.filter((n) => !n.read_at).map((n) => n.id) },
-        'Avisos marcats com a llegits.',
-      );
-    } catch {
-    } finally {
-      setBusy(false);
-    }
-  }
+  const [tab, setTab] = useState(manager ? 'pending' : 'mine');
   function card(e) {
     const manage = canManageEvent(data.user, e, delegation);
     return (
@@ -239,45 +358,13 @@ export default function Delegates({ notificationsOnly = false }) {
   }
   if (notificationsOnly)
     return (
-      <section className="delegate-notifications" aria-label="Notificacions de l’agenda">
-        <div className="delegate-section-heading">
-          <h2>
-            <Bell size={23} /> Notificacions
-          </h2>
-          <Button disabled={busy || !notifications.some((n) => !n.read_at)} onClick={markRead}>
-            Marcar com a llegides
-          </Button>
-        </div>
-        {queue.length > 0 && (
-          <div className="delegate-pending-notice">
-            <Clock size={23} />
-            <div>
-              <strong>{queue.length} propostes pendents de validar</strong>
-              <p>Obre Delegats per comprovar-les i publicar les dates correctes.</p>
-            </div>
-          </div>
-        )}
-        {notifications.length ? (
-          notifications.map((n) => (
-            <article
-              className={'panel agenda-notification ' + (n.read_at ? '' : 'unread')}
-              key={n.id}
-            >
-              <CheckCircle size={24} />
-              <div>
-                <h3>{n.title}</h3>
-                <p>{n.body}</p>
-                <small>{dateLabel(n.created_at.slice(0, 10))}</small>
-              </div>
-            </article>
-          ))
-        ) : (
-          <Empty
-            title="Encara no tens notificacions"
-            body="Aquí rebràs el resultat de les teves propostes públiques."
-          />
-        )}
-      </section>
+      <NotificationInbox
+        queue={queue}
+        onReview={() => {
+          setTab('pending');
+          setCommunityTab('delegates');
+        }}
+      />
     );
   return (
     <section className="delegation-hub" aria-label="Delegats i agenda pública">

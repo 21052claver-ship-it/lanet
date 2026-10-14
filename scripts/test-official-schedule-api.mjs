@@ -178,6 +178,15 @@ try {
   const published = await request('2A', '/bootstrap');
   assert.ok(published.events.some((e) => e.id === submitted.id));
   assert.equal(published.agendaNotifications.length, 1);
+  const noticeId = published.agendaNotifications[0].id;
+  await request('2B', '/agenda/notifications/read', { ids: [noticeId] });
+  assert.equal((await request('2A', '/bootstrap')).agendaNotifications[0].read_at, null);
+  const acknowledged = await request('2A', '/agenda/notifications/read', {
+    ids: [noticeId, noticeId],
+  });
+  assert.deepEqual(acknowledged.ids, [noticeId]);
+  assert.ok((await request('2A', '/bootstrap')).agendaNotifications[0].read_at);
+  await request('2A', '/agenda/notifications/read', { ids: [] });
   await request(
     'delegate',
     '/events/' + submitted.id + '/review',
@@ -198,6 +207,7 @@ try {
     scopedReview: true,
     privateDatesProtected: true,
     persistentNotifications: true,
+    scopedIdempotentNotificationReads: true,
   });
   console.log(
     'Agenda: proposals, scoped review, duplicates, privacy and notifications on real local D1 OK.',

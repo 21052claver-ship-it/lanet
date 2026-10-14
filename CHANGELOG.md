@@ -2,6 +2,13 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production.
 
+## [0.6.18] - 2026-10-15
+
+- Les notificacions prioritzen els avisos sense llegir: l’històric recent ja no n’amaga d’antics. Bústia de fins a 100 avisos, amb excés explícit i lots successius sense perdre noves arribades.
+- Lectura individual o agrupada amb una sola escriptura D1 idempotent i limitada al compte autenticat. El comptador conserva les lectures confirmades encara que falli la recàrrega.
+- Actualització en entrar a la bústia, botó de reintent i errors visibles. Accés a la data, correcció de la proposta i cua de validació dels delegats des dels avisos.
+- Comptador accessible que distingeix notificacions sense llegir i propostes per validar. Regressions locals en mòbil/escriptori i D1 real, afegides a CI. Sense migracions, taules, polling ni operacions R2 noves.
+
 ## [0.6.17] - 2026-10-15
 
 - Un objectiu de nota desat com a zero es conserva en reobrir el formulari, sense substituir-lo pel valor inicial de 8.

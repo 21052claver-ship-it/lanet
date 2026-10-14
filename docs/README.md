@@ -30,6 +30,7 @@ El catàleg següent enllaça tots els Markdown del primer nivell de docs. Els d
 
 - [Checklist de la revisió de La Net](CHECKLIST.md).
 - [Auditoria funcional dels controls i formularis](PLA-AUDITORIA-FUNCIONAL.md).
+- [Fiabilitat de les notificacions](PLA-NOTIFICACIONS.md).
 - [La Net · estat actual i decisions vigents](ESTAT-PROJECTE.md).
 - [Historial de canvis de La Net](HISTORIAL-CANVIS.md).
 - [Pla mestre de revisió de La Net](PLA-MESTRE.md).

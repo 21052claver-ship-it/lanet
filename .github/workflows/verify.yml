@@ -56,6 +56,7 @@ jobs:
           - group: school
             tests: |
               npm run test:delegate-agenda
+              npm run test:notifications
               npm run test:activity-dashboard
               npm run test:focus-mode
               npm run test:pau-history
@@ -127,6 +128,7 @@ jobs:
           path: |
             output/onboarding/browser/
             output/delegates/browser/
+            output/notifications/browser/
             output/activity-dashboard/browser/
             output/focus/browser/
             output/pau-history/browser/

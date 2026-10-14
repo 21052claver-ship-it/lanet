@@ -420,6 +420,10 @@
     {
       "id": "R104",
       "description": "Auditar totes les accions i funcions de La Net amb inventari de controls, cobertura de fluxos, permisos, persistència i recuperació; corregir errors reproduïbles amb fixtures locals."
+    },
+    {
+      "id": "R105",
+      "description": "Fer fiables les notificacions: avisos no llegits accessibles, comptador coherent, lectura persistent, accions relacionades, actualització i reintent amb consultes limitades."
     }
   ],
   "phases": [
@@ -1001,6 +1005,13 @@
       "title": "Auditoria funcional integral",
       "depends_on": [
         "F81"
+      ]
+    },
+    {
+      "id": "F83",
+      "title": "Fiabilitat de les notificacions",
+      "depends_on": [
+        "F82"
       ]
     }
   ],
@@ -8041,6 +8052,50 @@
       ],
       "progress": "Auditoria funcional i 0.6.17 publicades via PR39: 36631c5d37896318f3b38cb27fd2858322cd73a4. 324 definicions de botó/29 formularis/51 fitxers, 179 recorreguts addicionals, 62 API D1/R2 locals i 449 unitàries correctes. Objectiu zero i represa musical WebKit/Linux corregits amb regressions, cancel·lació i neteja comprovades. Tots els jobs i Validate correctes; release immutable, digest del rebut, commit/domini/callback i bindings verificats via proveïdor. Una pujada inicial i una correcció de branca i una publicació; reexecució acotada de l’àudio sobre el mateix commit. Cap prova pública, dada real, migració o desplegament privat. Tancament documental conservat localment per agrupar-lo amb una futura tanda.",
       "change_log_id": "H197"
+    },
+    {
+      "id": "T83-01",
+      "phase": "F83",
+      "title": "Corregir i verificar les notificacions",
+      "status": "review",
+      "requirements": [
+        "R105"
+      ],
+      "depends_on": [
+        "T82-01"
+      ],
+      "files": [
+        "src/components/Delegates.jsx",
+        "src/App.jsx",
+        "worker/agenda.js",
+        "tests/delegate-agenda.test.js",
+        "scripts/test-notifications.mjs",
+        "src/pages/Community.jsx",
+        "shared/notifications.js",
+        "tests/notifications.test.js",
+        "docs/PLA-NOTIFICACIONS.md"
+      ],
+      "acceptance": "Cap avís no llegit amagat darrere d’històric llegit. Bústia limitada amb excés explícit, comptador coherent amb propostes pendents, lectura individual i agrupada idempotent i privada. Obrir dates/propostes relacionades i cua de revisió. Recuperar errors sense perdre confirmacions; actualitzar en entrar a la bústia sense nou polling. Proves locals en tres motors, font/CI exactes i una publicació consolidada.",
+      "checks": [
+        "Reproduir incidències i definir lectures limitades amb dades fictícies.",
+        "Corregir bústia, comptador, accions, persistència i recuperació.",
+        "Provar límits, privacitat, concurrència, errors i mòbil en fixtures locals.",
+        "Validar tipus/unitàries/build/font, PR/CI i publicació única amb rebut."
+      ],
+      "evidence": [
+        "docs/PLA-NOTIFICACIONS.md",
+        "output/notifications/final-chromium/results.json",
+        "output/notifications/final-firefox/results.json",
+        "output/notifications/final-webkit/results.json",
+        "output/notifications/delegates/results.json",
+        "output/notifications/api-final/api-results.json",
+        "output/notifications-unit-final.log",
+        "output/notifications-typecheck-final.log",
+        "output/notifications-lint-final.log",
+        "output/notifications-build-final.log"
+      ],
+      "progress": "Correccions verificades localment: 453 unitàries, 30 escenaris de notificacions en tres motors (320/1440 px i canvi a mòbil), 15 regressions de delegats, D1/workerd local, tipus/lint/build correctes. Una lectura SQL indexada i acotada, una escriptura per lot, lectures confirmades preservades, excés accessible, destinacions/reintent i pestanya visible fins i tot amb scrollbar WebKit. Sense migracions/polling/R2 nous. Pendent audit de font de l’índex, PR/CI exactes i publicació única 0.6.18.",
+      "change_log_id": "H198"
     }
   ]
 }
