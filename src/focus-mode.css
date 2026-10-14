@@ -1,0 +1,371 @@
+.study-focus-entry {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0 0 18px;
+}
+.study-continuity {
+  padding: 14px 0 0;
+  border-top: 1px solid #e5ded3;
+  margin-top: 18px;
+}
+.study-continuity summary {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+  font-size: 13px;
+  color: #5c584e;
+}
+.focus-options-grid {
+  display: grid;
+  gap: 16px;
+  margin-top: 18px;
+  text-align: left;
+}
+.focus-option-check {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 14px;
+  cursor: pointer;
+}
+.focus-option-check input {
+  margin-top: 4px;
+  accent-color: #64775b;
+}
+.focus-option-check span strong,
+.focus-option-check span small {
+  display: block;
+}
+.focus-option-check small {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+.focus-alarm-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: center;
+}
+.focus-alarm-options > .field {
+  margin: 0;
+}
+.focus-alarm-options > small {
+  font-size: 12px;
+}
+.focus-mode {
+  --focus-bg: #f4f0e7;
+  --focus-fg: #423f35;
+  --focus-muted: #706a5e;
+  --focus-accent: #697d5b;
+  --focus-surface: #fffdf6;
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: var(--focus-bg);
+  color: var(--focus-fg);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  overflow: auto;
+  padding: clamp(18px, 3vw, 40px);
+  isolation: isolate;
+}
+.focus-mode:fullscreen {
+  overflow: auto;
+}
+.focus-mode.theme-forest {
+  --focus-bg: #e3ebe0;
+  --focus-fg: #283e30;
+  --focus-muted: #506454;
+  --focus-accent: #53794f;
+  --focus-surface: #f6f9ef;
+}
+.focus-mode.theme-night {
+  --focus-bg: #1c2427;
+  --focus-fg: #f3eee3;
+  --focus-muted: #c0cbbd;
+  --focus-accent: #a4bb90;
+  --focus-surface: #2c3738;
+  color-scheme: dark;
+}
+.focus-mode::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse at 20% 100%,
+    color-mix(in srgb, var(--focus-accent) 12%, transparent),
+    transparent 65%
+  );
+}
+.focus-mode-header {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: var(--focus-bg);
+  padding: 4px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+}
+.focus-mode-header > strong,
+.focus-mode-header > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.focus-mode-header strong {
+  font-size: 15px;
+}
+.focus-mode-header button {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  background: var(--focus-surface);
+  color: var(--focus-fg);
+  border: 1px solid color-mix(in srgb, var(--focus-fg) 15%, transparent);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.focus-mode-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 18px 0;
+  min-height: 350px;
+}
+.focus-mode-phase {
+  font-size: clamp(22px, 3vw, 34px);
+  font-weight: 800;
+  margin: 0 0 7px;
+  color: var(--focus-fg);
+}
+.focus-mode-round {
+  font-size: 13px;
+  color: var(--focus-muted);
+  margin: 0;
+}
+.focus-mode .focus-clock {
+  width: clamp(230px, 40vh, 400px);
+  height: clamp(230px, 40vh, 400px);
+  margin: 15px auto;
+  max-width: 100%;
+  background: none;
+  box-shadow: none;
+}
+.focus-mode .timer-ring circle {
+  stroke: color-mix(in srgb, var(--focus-accent) 20%, transparent);
+  stroke-width: 3;
+  fill: none;
+}
+.focus-mode .timer-ring .timer-progress {
+  stroke: var(--focus-accent);
+  stroke-width: 5;
+}
+.focus-mode .timer-number {
+  font-size: clamp(58px, 9vw, 90px);
+  font-variant-numeric: tabular-nums;
+  color: var(--focus-fg);
+}
+.focus-mode .timer-face small {
+  color: var(--focus-muted);
+  font-size: 13px;
+}
+.focus-mode .clock-digital {
+  height: clamp(180px, 30vh, 270px);
+  width: min(100%, 450px);
+}
+.focus-mode-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.focus-mode-actions .button {
+  background: var(--focus-surface);
+  color: var(--focus-fg);
+  border-color: color-mix(in srgb, var(--focus-fg) 20%, transparent);
+  box-shadow: none;
+}
+.focus-mode-actions .button.primary {
+  background: var(--focus-accent);
+  color: var(--focus-bg);
+  min-width: 150px;
+}
+.focus-mode-next {
+  font-size: 12px;
+  color: var(--focus-muted);
+  margin: 15px 0 0;
+}
+.focus-mode-footer {
+  width: min(100%, 620px);
+  margin: 0 auto;
+  flex-shrink: 0;
+}
+.focus-mode-settings {
+  border: 1px solid color-mix(in srgb, var(--focus-fg) 15%, transparent);
+  border-radius: 17px;
+  background: var(--focus-surface);
+}
+.focus-mode-settings > summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 15px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.focus-mode-settings-content {
+  padding: 5px 20px 20px;
+}
+.focus-mode-settings .field > span,
+.focus-mode-settings .field > label {
+  color: var(--focus-fg);
+}
+.focus-mode .tabs {
+  background: var(--focus-bg);
+  border-color: var(--focus-bg);
+  flex-wrap: wrap;
+}
+.focus-mode .tabs button {
+  color: var(--focus-fg);
+}
+.focus-mode .tabs button.active,
+.focus-mode .tabs button[aria-selected='true'] {
+  background: var(--focus-surface);
+  color: var(--focus-fg);
+  border-color: var(--focus-accent);
+}
+.focus-mode .select-trigger {
+  background: var(--focus-bg);
+  color: var(--focus-fg);
+}
+.focus-mode .focus-alarm-options .button {
+  color: var(--focus-fg);
+  background: var(--focus-bg);
+  box-shadow: none;
+}
+.focus-mode input[type='range'] {
+  accent-color: var(--focus-accent);
+  width: 100%;
+}
+.focus-mode-music {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: center;
+  padding-top: 14px;
+}
+.focus-mode-music .button {
+  background: var(--focus-surface);
+  color: var(--focus-fg);
+}
+.focus-mode-music input {
+  max-width: 180px;
+}
+.focus-mode button:focus-visible,
+.focus-mode summary:focus-visible {
+  outline: 3px solid var(--focus-accent);
+  outline-offset: 3px;
+}
+.focus-mode .select-menu {
+  z-index: 3100;
+}
+.focus-queue-hint {
+  font-size: 12px;
+  margin: 12px 0 0;
+  color: #705941;
+}
+@media (max-width: 440px) {
+  .focus-mode {
+    padding: 16px;
+  }
+  .focus-mode .focus-clock {
+    width: 240px;
+    height: 240px;
+  }
+  .focus-mode .clock-digital {
+    height: 180px;
+  }
+  .focus-mode .timer-number {
+    font-size: 60px;
+  }
+  .focus-alarm-options {
+    grid-template-columns: 1fr;
+  }
+  .focus-mode-settings-content {
+    padding: 4px 14px 16px;
+  }
+  .focus-mode-music {
+    gap: 12px;
+  }
+  .focus-mode-music .button {
+    font-size: 12px;
+  }
+  .focus-mode-music input {
+    max-width: 110px;
+  }
+  .focus-mode-main {
+    min-height: 350px;
+  }
+  .focus-mode .tabs button {
+    font-size: 12px;
+    padding: 10px;
+  }
+  .focus-mode-header strong {
+    font-size: 13px;
+  }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .focus-mode {
+    padding: 12px 20px;
+  }
+  .focus-mode-main {
+    min-height: 230px;
+    position: relative;
+    padding: 8px;
+  }
+  .focus-mode .focus-clock {
+    width: 170px;
+    height: 170px;
+    margin: 0;
+  }
+  .focus-mode .timer-number {
+    font-size: 45px;
+  }
+  .focus-mode .timer-face small {
+    display: none;
+  }
+  .focus-mode-phase {
+    font-size: 19px;
+  }
+  .focus-mode-actions {
+    position: absolute;
+    right: 5%;
+    top: 35%;
+    flex-direction: column;
+  }
+  .focus-mode-next {
+    margin-top: 5px;
+  }
+  .focus-mode-round {
+    font-size: 11px;
+  }
+  .focus-mode-settings > summary {
+    padding: 11px;
+  }
+}

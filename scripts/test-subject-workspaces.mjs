@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { randomUUID } from 'node:crypto';
 import { chromium, firefox, webkit } from 'playwright';
 import { browserFixture } from '../tests/helpers/browser-fixture.mjs';
 const out = process.env.LANET_TEST_OUTPUT || 'output/subject-workspaces/browser';
@@ -9,7 +8,7 @@ const results = [];
 for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,webkit').split(',')) {
   const browser = await { chromium, firefox, webkit }[engine].launch();
   async function run(name, width, fn, { height = 900, setup } = {}) {
-    if(process.env.LANET_WORKSPACE_CHECK && process.env.LANET_WORKSPACE_CHECK !== name) return;
+    if (process.env.LANET_WORKSPACE_CHECK && process.env.LANET_WORKSPACE_CHECK !== name) return;
     const fixture = await browserFixture();
     fixture.db.prepare("UPDATE notes SET topic='Derivades',term=1 WHERE id='browser-note'").run();
     fixture.db
@@ -107,61 +106,28 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
           ),
       },
     );
-    await run('contextual-question-lost-reply-response', 390, async (p, f) => {
-      await space(p);
-      await p.getByRole('button', { name: 'Obrir PDF de prova local', exact: true }).click();
-      await p.getByRole('button', { name: 'Preguntar sobre aquest material', exact: true }).click();
-      await p
-        .getByRole('textbox', { name: 'Títol del dubte', exact: true })
-        .fill('Dubte de la cadena');
-      await p
-        .getByRole('textbox', { name: 'Explica el dubte', exact: true })
-        .fill('En quin pas es deriva la funció interior?');
-      await close(p);
-      await p.reload();
-      await p.getByRole('tab', { name: 'Dubtes', exact: true }).click();
-      await p.getByRole('button', { name: 'Nou dubte', exact: true }).click();
-      assert.equal(
-        await p.getByRole('textbox', { name: 'Títol del dubte', exact: true }).inputValue(),
-        'Dubte de la cadena',
-      );
-      await p.getByRole('button', { name: 'Publicar dubte', exact: true }).click();
-      await p.getByRole('heading', { name: 'Dubte de la cadena', exact: true }).waitFor();
-      const t = f.db.prepare('SELECT * FROM subject_threads').get();
-      assert.equal(t.note_id, 'browser-note');
-      let lost = false;
-      await p.route('**/api/discussions/*/reply', async (route) => {
-        if (!lost) {
-          lost = true;
-          const response = await route.fetch();
-          assert.equal(response.status(), 201);
-          await route.abort('failed');
-        } else await route.continue();
+    await run('chat-removed-from-material-and-subject', 390, async (p) => {
+      const chatRequests = [];
+      p.on('request', (r) => {
+        if (r.url().includes('/api/discussions')) chatRequests.push(r.url());
       });
-      const answer = p.getByRole('textbox', { name: 'La teva resposta', exact: true });
-      await answer.fill('Primer derivem la funció exterior. <script>window.hacked=true</script>');
-      await p.getByRole('button', { name: 'Enviar resposta', exact: true }).click();
-      await p
-        .getByRole('alert')
-        .filter({ hasText: /confirmar/ })
-        .waitFor();
-      assert.ok((await answer.inputValue()).includes('Primer derivem'));
-      await p.getByRole('button', { name: 'Enviar resposta', exact: true }).click();
-      await p.locator('.discussion-reply').waitFor();
-      assert.equal(f.db.prepare('SELECT COUNT(*) n FROM subject_replies').get().n, 1);
-      assert.equal(await p.evaluate(() => window.hacked), undefined);
-      await p.getByRole('button', { name: 'Marcar com a resolt', exact: true }).click();
-      await p.locator('.discussion-resolved').waitFor();
+      await space(p);
+      assert.equal(await p.getByRole('tab', { name: 'Dubtes', exact: true }).count(), 0);
+      assert.equal(await p.locator('.contents-sections [role="tab"]').count(), 3);
+      await p.getByRole('button', { name: 'Obrir PDF de prova local', exact: true }).click();
+      await p.getByRole('dialog').waitFor();
       assert.equal(
-        await p.getByRole('textbox', { name: 'La teva resposta', exact: true }).count(),
+        await p
+          .getByRole('button', { name: 'Preguntar sobre aquest material', exact: true })
+          .count(),
         0,
       );
-      await p.getByRole('button', { name: 'Reobrir dubte', exact: true }).click();
-      await p.getByRole('textbox', { name: 'La teva resposta', exact: true }).waitFor();
-      await p
-        .getByRole('button', { name: 'Obrir material: PDF de prova local', exact: true })
-        .click();
-      await p.getByRole('dialog', { name: 'PDF de prova local', exact: true }).waitFor();
+      await close(p);
+      await p.getByRole('tab', { name: 'Formularis', exact: true }).click();
+      await p.locator('.library-caption').waitFor();
+      await p.getByRole('tab', { name: 'Eines i webs', exact: true }).click();
+      await p.locator('.library-caption').waitFor();
+      assert.deepEqual(chatRequests, []);
     });
     await run('contextual-task-exam-draft-and-audience', 320, async (p, f) => {
       await space(p);
@@ -223,6 +189,10 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
       assert.equal(task.display_kind, 'task');
       await p.getByRole('button', { name: 'Afegir examen', exact: true }).click();
       await p.getByRole('textbox', { name: 'Títol', exact: true }).fill('Parcial 2 de derivades');
+      // The seeded exam is today. A second exam needs its own date; duplicates
+      // are now blocked for every user, including in the contextual editor.
+      const nextDate = f.db.prepare("SELECT date(?, '+1 day') AS value").get(task.date).value;
+      await p.getByLabel('Data', { exact: true }).fill(nextDate);
       await p.getByRole('button', { name: 'Desar', exact: true }).click();
       await p.getByRole('dialog').waitFor({ state: 'hidden' });
       assert.equal(
@@ -294,73 +264,74 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
         1,
       );
     });
-    await run('question-confirmation-preserves-new-dialog',390,async(p,f)=>{
+    await run('legacy-chat-link-opens-materials', 320, async (p, f) => {
+      const chatRequests = [];
+      p.on('request', (r) => {
+        if (r.url().includes('/api/discussions')) chatRequests.push(r.url());
+      });
+      await p.goto(f.base + '/?subject=math&contents=discussions#notes');
+      await p.getByRole('region', { name: 'Espai de Matemàtiques II' }).waitFor();
+      await p.getByRole('button', { name: 'Obrir PDF de prova local', exact: true }).waitFor();
+      assert.equal(
+        await p.getByRole('tab', { name: 'Materials', exact: true }).getAttribute('aria-selected'),
+        'true',
+      );
+      assert.equal(await p.getByRole('tab', { name: 'Dubtes', exact: true }).count(), 0);
+      assert.equal(new URL(p.url()).searchParams.get('contents'), null);
+      assert.deepEqual(chatRequests, []);
+    });
+    await run('material-editor-topic-and-term', 1440, async (p, f) => {
       await space(p);
-      await p.getByRole('tab',{name:'Dubtes',exact:true}).click();
-      await p.getByRole('button',{name:'Nou dubte',exact:true}).click();
-      await p.getByRole('textbox',{name:'Títol del dubte',exact:true}).fill('Pregunta pendent');
-      await p.getByRole('textbox',{name:'Explica el dubte',exact:true}).fill('Dubte enviat mentre canvio de pantalla.');
-      let release,arrived;
-      const held=new Promise(r=>release=r),sent=new Promise(r=>arrived=r);
-      await p.route('**/api/discussions',async route=>{if(route.request().method()==='POST'){arrived();await held;}await route.continue();});
-      try {
-        await p.getByRole('button',{name:'Publicar dubte',exact:true}).click();await sent;
-        await close(p);
-        await p.getByRole('button',{name:/Perfil de/}).click();
-        await p.getByRole('dialog',{name:'El meu perfil',exact:true}).waitFor();
-        release();
-        await p.getByText('Dubte publicat.',{exact:true}).waitFor();
-        assert.equal(f.db.prepare('SELECT COUNT(*) n FROM subject_threads').get().n,1);
-        assert.equal(await p.getByRole('dialog',{name:'El meu perfil',exact:true}).count(),1);
-      } finally {release();}
+      await p.getByRole('button', { name: 'Comparteix un apunt', exact: true }).click();
+      await p.getByRole('textbox', { name: 'Títol', exact: true }).fill('Exercicis del nou tema');
+      await p.getByRole('combobox', { name: 'Tema', exact: true }).fill('Integrals');
+      await choose(p, 'Trimestre del material', '2n trimestre');
+      await p
+        .getByRole('textbox', { name: 'Text dels apunts', exact: true })
+        .fill('Material de prova per resoldre integrals.');
+      await p.getByRole('button', { name: 'Publicar apunts', exact: true }).click();
+      await p.getByRole('dialog').waitFor({ state: 'hidden' });
+      const n = f.db.prepare("SELECT * FROM notes WHERE title='Exercicis del nou tema'").get();
+      assert.equal(n.topic, 'Integrals');
+      assert.equal(n.term, 2);
+      assert.equal(n.subject_id, 'math');
+      await p.getByRole('button', { name: /Integrals 1/ }).click();
+      assert.equal(await p.locator('.note-card').count(), 1);
     });
     await run(
-      'thread-pagination-and-material-editor',
-      1440,
+      'archived-reports-have-no-chat-access',
+      390,
       async (p, f) => {
-        await space(p);
-        await p.getByRole('tab', { name: 'Dubtes', exact: true }).click();
-        await p.getByRole('button', { name: /Pregunta amb respostes/ }).click();
-        await p.locator('.discussion-reply').first().waitFor();
-        assert.equal(await p.locator('.discussion-reply').count(), 50);
-        await p.getByRole('button', { name: 'Mostrar respostes anteriors', exact: true }).click();
-        await p.waitForFunction(() => document.querySelectorAll('.discussion-reply').length === 56);
-        await close(p);
-        await p.getByRole('tab', { name: 'Materials', exact: true }).click();
-        await p.getByRole('button', { name: 'Comparteix un apunt', exact: true }).click();
-        await p.getByRole('textbox', { name: 'Títol', exact: true }).fill('Exercicis del nou tema');
-        await p.getByRole('combobox', { name: 'Tema', exact: true }).fill('Integrals');
-        await choose(p, 'Trimestre del material', '2n trimestre');
+        await p.goto(f.base + '/#management');
+        await p.getByRole('tab', { name: 'Revisions', exact: true }).click();
         await p
-          .getByRole('textbox', { name: 'Text dels apunts', exact: true })
-          .fill('Material de prova per resoldre integrals.');
-        await p.getByRole('button', { name: 'Publicar apunts', exact: true }).click();
-        await p.getByRole('dialog').waitFor({ state: 'hidden' });
-        const n = f.db.prepare("SELECT * FROM notes WHERE title='Exercicis del nou tema'").get();
-        assert.equal(n.topic, 'Integrals');
-        assert.equal(n.term, 2);
-        assert.equal(n.subject_id, 'math');
-        await p.getByRole('button', { name: /Integrals 1/ }).click();
-        assert.equal(await p.locator('.note-card').count(), 1);
+          .getByRole('heading', { name: 'Revisar incidència arxivada', exact: true })
+          .waitFor();
+        assert.ok(
+          await p.getByRole('button', { name: 'Contingut arxivat', exact: true }).isDisabled(),
+        );
+        assert.equal(await p.getByRole('dialog').count(), 0);
+        await p.getByRole('button', { name: 'Marcar com resolt', exact: true }).click();
+        await p.waitForFunction(() => document.querySelectorAll('.report-card').length === 0);
+        assert.equal(
+          f.db.prepare("SELECT resolved FROM reports WHERE id='archived-report'").get().resolved,
+          1,
+        );
       },
       {
         setup: (f) => {
+          f.db.exec("UPDATE users SET role='admin' WHERE id='browser'");
           const room = f.db
-            .prepare(
-              "SELECT o.id FROM enrollments e JOIN offerings o ON o.id=e.offering_id WHERE e.user_id='browser' AND o.subject_id='math'",
-            )
+            .prepare("SELECT offering_id FROM enrollments WHERE user_id='browser' LIMIT 1")
             .get();
           f.db
             .prepare(
-              "INSERT INTO subject_threads(id,offering_id,author_id,title,body,request_hash) VALUES('paging',?,'browser','Pregunta amb respostes','Historial de prova','paging')",
+              "INSERT INTO subject_threads(id,offering_id,author_id,title,body,request_hash) VALUES('archived',?,'browser','Històric','Text conservat','archived')",
             )
-            .run(room.id);
-          for (let i = 0; i < 56; i++)
-            f.db
-              .prepare(
-                "INSERT INTO subject_replies(id,thread_id,author_id,body,request_hash) VALUES(?,'paging','browser',?,?)",
-              )
-              .run(randomUUID(), 'Resposta ' + i, 'paging' + i);
+            .run(room.offering_id);
+          f.db.exec(
+            "INSERT INTO reports(id,user_id,type,target_id,reason) VALUES('archived-report','browser','discussion','archived','Informe històric')",
+          );
         },
       },
     );

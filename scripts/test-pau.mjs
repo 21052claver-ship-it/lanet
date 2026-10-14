@@ -254,7 +254,7 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
         .fill('61080');
       await p
         .locator('[data-code="61080"]')
-        .getByRole('button', { name: 'Ponderacions', exact: true })
+        .getByRole('button', { name: 'Detall i evolució', exact: true })
         .click();
       await p
         .getByRole('dialog')

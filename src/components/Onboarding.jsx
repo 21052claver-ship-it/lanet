@@ -26,7 +26,7 @@ function Welcome() {
           [
             'notes',
             'Aprendre en companyia',
-            'Continguts per assignatura, formularis i dubtes del teu grup.',
+            'Materials compartits, formularis i eines per a cada assignatura.',
           ],
           [
             'study',

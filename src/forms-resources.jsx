@@ -424,7 +424,6 @@ export function Reader({ item }) {
       )}
       {n.status === 'published' && (
         <div className="reader-actions">
-          {n.status === 'published' && <Button onClick={()=>open('discussionNew',{subject_id:n.subject_id,note_id:n.id})}>Preguntar sobre aquest material</Button>}
           <LikeButton item={n} resource="notes" />
           <SaveButton item={n} resource="notes" />
           <span className="muted">Donar les gràcies és gratuït</span>

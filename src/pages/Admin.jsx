@@ -1,326 +1,368 @@
-import Select from '../components/Select';
-import { MAIN_ASSESSMENTS, assessmentType, activeAssessment } from '../../shared/assessments';
-import React, { useState, useEffect } from 'react';
-import { Plus, NotePencil, ShieldCheck, Check, Warning } from '@phosphor-icons/react';
+import React, { useEffect, useRef, useState } from 'react';
+import { ArrowClockwise, ShieldCheck, Users, ChartBar, Database } from '@phosphor-icons/react';
 import { useApp } from '../context';
 import { api } from '../api';
-import { PageTitle, Button, Tabs, Empty, SubjectChip, IconButton, FormError } from '../ui';
-import { DAYS_SHORT, TERM_LABELS } from '../../shared/domain';
+import { PageTitle, Button, Empty, FormError } from '../ui';
+import Select from '../components/Select';
+import { ACTIVITY_AREAS, isActivityAdmin, activityDayOffset } from '../../shared/activity';
+import './admin.css';
+
+const number = (value) => new Intl.NumberFormat('ca-ES').format(value || 0);
+const date = (value) =>
+  new Date(value).toLocaleString('ca-ES', {
+    timeZone: 'Europe/Madrid',
+    dateStyle: 'short',
+    timeStyle: 'short',
+  });
+const size = (bytes) => `${number(Math.round((bytes / 1048576) * 10) / 10)} MB`;
+
 export default function Admin() {
-  const { data, open, subject, mutate, notify } = useApp();
-  const [tab, setTab] = useState('course'),
-    [management, setManagement] = useState(null),
-    [error, setError] = useState(''),
-    [loading, setLoading] = useState(true),
-    [reload, setReload] = useState(0),
-    [group, setGroup] = useState(data.user.group_id),
-    [term, setTerm] = useState(1);
-  const admin = data.user.role === 'admin';
+  const { data } = useApp();
+  const allowed = isActivityAdmin(data.user);
+  const [result, setResult] = useState(null),
+    [error, setError] = useState('');
+  const [days, setDays] = useState(30),
+    [selected, setSelected] = useState('');
+  const [cursor, setCursor] = useState(''),
+    [attempt, setAttempt] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const requestId = useRef(0);
   useEffect(() => {
-    if (data.user.role === 'student') return;
-    let current = true;
-    setLoading(true);
-    api('/admin')
-      .then((result) => {
-        if (!current) return;
-        setManagement(result);
-        setError('');
-      })
-      .catch((e) => current && setError(e.message))
-      .finally(() => current && setLoading(false));
+    if (!allowed) return;
+    let current = true,
+      busy = false;
+    const load = async () => {
+      if (busy) return;
+      busy = true;
+      const id = ++requestId.current;
+      setLoading(true);
+      try {
+        const query = new URLSearchParams({ days: String(days) });
+        if (selected) query.set('day', selected);
+        if (cursor) query.set('after', cursor);
+        const value = await api('/admin/analytics?' + query);
+        if (current && id === requestId.current) {
+          setResult(value);
+          setError('');
+        }
+      } catch (e) {
+        if (current && id === requestId.current) setError(e.message);
+      } finally {
+        busy = false;
+        if (current && id === requestId.current) setLoading(false);
+      }
+    };
+    load();
+    const timer = setInterval(() => {
+      if (document.visibilityState === 'visible') load();
+    }, 60000);
     return () => {
       current = false;
+      clearInterval(timer);
     };
-  }, [data, tab, reload]);
-  if (data.user.role === 'student')
-    return <Empty title="Aquest espai és per als responsables del centre" />;
-  const offerings = data.offerings.filter((o) => o.group_id === group);
+  }, [allowed, days, selected, cursor, attempt]);
+  if (!allowed)
+    return (
+      <Empty
+        title="Dashboard privat"
+        body="Aquest espai només està disponible per al compte autoritzat."
+      />
+    );
+  const today = result?.daily.find((row) => row.day === result.today);
+  const chart = result
+    ? Array.from({ length: days }, (_, index) => {
+        const day = activityDayOffset(result.today, index + 1 - days);
+        return { day, users: result.daily.find((row) => row.day === day)?.users || 0 };
+      })
+    : [];
+  const maximum = Math.max(1, ...chart.map((row) => row.users));
   return (
     <>
-      <PageTitle
-        title="Gestió del centre"
-        subtitle="Dades comunes, preparades pels delegats i administradors."
-      >
-        {admin && <Button onClick={() => open('school')}>Configurar centre</Button>}
-      </PageTitle>
-      <Tabs
-        items={[
-          ['course', 'Curs i horaris'],
-          ['templates', 'Percentatges'],
-          ...(admin ? [['users', 'Comptes']] : []),
-          ['reports', 'Revisions'],
-        ]}
-        value={tab}
-        onChange={setTab}
-      />
-      <FormError error={error} />
-      {error && (
-        <Button busy={loading} onClick={() => setReload((attempt) => attempt + 1)}>
-          Tornar-ho a provar
+      <PageTitle title="Dashboard privat" subtitle="Activitat de La Net · Europe/Madrid">
+        <Button busy={loading} onClick={() => setAttempt((value) => value + 1)}>
+          <ArrowClockwise size={18} />
+          Actualitzar
         </Button>
+      </PageTitle>
+      <p className="admin-access">
+        <ShieldCheck size={18} /> Accés exclusiu de 21052.claver@fje.edu
+      </p>
+      <FormError error={error} />
+      {error && result && (
+        <p role="status">
+          Les dades de sota són de l’última lectura correcta: {date(result.generated_at)}.
+        </p>
       )}
-      {loading && !management && <p role="status">Carregant la gestió del centre…</p>}
-      {['course', 'templates'].includes(tab) && (
-        <div className="admin-toolbar">
-          <Select
-            aria-label="Grup gestionat"
-            value={group}
-            onChange={(e) => setGroup(e.target.value)}
-          >
-            {data.groups
-              .filter((g) => admin || g.id === data.user.group_id)
-              .map((g) => (
-                <option key={g.id} value={g.id}>
-                  {g.name}
-                </option>
-              ))}
-          </Select>
-          {tab === 'templates' && (
-            <Select
-              aria-label="Trimestre de la plantilla"
-              value={term}
-              onChange={(e) => setTerm(Number(e.target.value))}
-            >
-              {TERM_LABELS.map((t, i) => (
-                <option key={t} value={i + 1}>
-                  {t}
-                </option>
-              ))}
-            </Select>
-          )}
-          <Button
-            variant="primary"
-            onClick={() =>
-              open(
-                tab === 'course' ? 'offering' : 'template',
-                tab === 'course' ? { group_id: group } : { offering_id: offerings[0]?.id, term },
-              )
-            }
-          >
-            <Plus size={17} />
-            {tab === 'course' ? 'Afegir variant' : 'Editar plantilla'}
-          </Button>
-          {admin && tab === 'course' && (
-            <>
-              <Button onClick={() => open('subject')}>Nova assignatura</Button>
-              <Button onClick={() => open('group')}>Nou grup</Button>
-            </>
-          )}
-        </div>
-      )}
-      {tab === 'course' ? (
-        <>
-          <div className="panel admin-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Assignatura / variant</th>
-                  <th>Professor</th>
-                  <th>Franges</th>
-                  <th />
-                </tr>
-              </thead>
-              <tbody>
-                {offerings.map((o) => (
-                  <tr key={o.id}>
-                    <td>
-                      <SubjectChip subject={subject(o.subject_id)} />
-                      <small>{o.variant}</small>
-                    </td>
-                    <td>{o.teacher}</td>
-                    <td>
-                      {data.slots
-                        .filter((s) => s.offering_id === o.id)
-                        .map((s) => (
-                          <span className="slot-tag" key={s.id}>
-                            {DAYS_SHORT[s.day]} {s.start} · {s.room}
-                          </span>
-                        ))}
-                    </td>
-                    <td>
-                      <IconButton
-                        label={`Editar ${subject(o.subject_id)?.short}`}
-                        onClick={() => open('offering', o)}
-                      >
-                        <NotePencil size={20} />
-                      </IconButton>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      {loading && !result && <p role="status">Carregant les estadístiques…</p>}
+      {result && (
+        <div className="activity-dashboard">
+          <div className="activity-metrics">
+            <article className="panel">
+              <Users size={24} />
+              <strong>{number(result.active_total)}</strong>
+              <h2>Actius ara</h2>
+              <p>Activitat en els últims 5 minuts</p>
+            </article>
+            <article className="panel">
+              <ChartBar size={24} />
+              <strong>{number(today?.users)}</strong>
+              <h2>Persones avui</h2>
+              <p>Comptes únics amb activitat</p>
+            </article>
+            <article className="panel">
+              <ShieldCheck size={24} />
+              <strong>{number(result.inventory.users)}</strong>
+              <h2>Comptes</h2>
+              <p>
+                {number(result.inventory.enabled)} habilitats ·{' '}
+                {number(result.inventory.users - result.inventory.enabled)} desactivats
+              </p>
+            </article>
+            <article className="panel">
+              <Database size={24} />
+              <strong>{size(result.inventory.file_bytes)}</strong>
+              <h2>Fitxers registrats</h2>
+              <p>{number(result.inventory.files)} fitxers · mida de les versions servides</p>
+            </article>
           </div>
-          {admin && (
-            <div className="admin-subject-list">
-              <h3>Assignatures del catàleg</h3>
-              {data.subjects.map((s) => (
-                <button key={s.id} onClick={() => open('subject', s)}>
-                  <SubjectChip subject={s} />
-                  <NotePencil size={15} />
-                </button>
+          <section className="panel activity-section">
+            <div className="activity-heading">
+              <h2>Usuaris per dia</h2>
+              <Select
+                aria-label="Període d’activitat"
+                value={days}
+                onChange={(e) => setDays(Number(e.target.value))}
+              >
+                {[7, 30, 90, 365].map((value) => (
+                  <option key={value} value={value}>
+                    Últims {value} dies
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <div
+              className="activity-chart"
+              role="img"
+              aria-label={`Usuaris únics per dia durant ${days} dies. Detall a la taula següent.`}
+            >
+              {chart.map((row) => (
+                <span
+                  key={row.day}
+                  title={`${row.day}: ${row.users} persones`}
+                  style={{ height: `${Math.max(1, (row.users / maximum) * 100)}%` }}
+                />
               ))}
             </div>
-          )}
-        </>
-      ) : tab === 'templates' ? (
-        <div className="template-grid">
-          {offerings.map((o) => {
-            const ts = data.templates.filter((t) => t.offering_id === o.id && t.term === term);
-            return (
-              <section className="panel template-card" key={o.id}>
-                <SubjectChip subject={subject(o.subject_id)} />
-                <h2>{o.variant}</h2>
-                <p className="muted">{o.teacher}</p>
-                <div>
-                  {ts
-                    .filter(
-                      (t) => MAIN_ASSESSMENTS.includes(assessmentType(t)) || activeAssessment(t),
-                    )
-                    .map((t) => (
-                      <p key={t.id}>
-                        <span>{t.title}</span>
-                        <strong>{t.weight}%</strong>
-                      </p>
+            <div className="activity-chart-labels">
+              <span>{chart[0]?.day}</span>
+              <span>{result.today}</span>
+            </div>
+            <details>
+              <summary>Veure les xifres diàries</summary>
+              <div className="activity-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Dia</th>
+                      <th>Persones</th>
+                      <th>Presència</th>
+                      <th>Canvis</th>
+                      <th>Errors</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {chart
+                      .slice()
+                      .reverse()
+                      .map((row) => {
+                        const value = result.daily.find((item) => item.day === row.day);
+                        return (
+                          <tr key={row.day}>
+                            <td>{row.day}</td>
+                            <td>{number(row.users)}</td>
+                            <td>{number(value?.pulses)}</td>
+                            <td>{number(value?.actions)}</td>
+                            <td>{number(value?.errors)}</td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>
+            </details>
+          </section>
+          <section className="panel activity-section">
+            <h2>Actius ara</h2>
+            <p className="muted">
+              Actualització cada minut mentre aquesta pestanya és visible. La presència és
+              aproximada.
+            </p>
+            {result.active.length ? (
+              <div className="activity-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Persona</th>
+                      <th>Grup</th>
+                      <th>Última secció</th>
+                      <th>Última activitat</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {result.active.map((person) => (
+                      <tr key={person.user_id}>
+                        <td>
+                          <strong>{person.name}</strong>
+                          <small>{person.email}</small>
+                        </td>
+                        <td>{person.group_id || '—'}</td>
+                        <td>{ACTIVITY_AREAS[person.page]}</td>
+                        <td>{date(person.last_seen)}</td>
+                      </tr>
                     ))}
-                </div>
-                <small className="assessment-template-note">
-                  Activitats opcionals: redaccions, entregues i presentacions.
-                </small>
-                <Button
-                  variant="full"
-                  onClick={() => open('template', { offering_id: o.id, term })}
-                >
-                  <NotePencil size={17} />
-                  Editar plantilla
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p>Cap persona amb activitat recent.</p>
+            )}
+            {result.active_total > result.active.length && (
+              <p>
+                Es mostren les 50 persones amb activitat més recent de {number(result.active_total)}
+                .
+              </p>
+            )}
+          </section>
+          <section className="panel activity-section">
+            <h2>Ús de les seccions</h2>
+            <div className="activity-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Secció</th>
+                    <th>Mostres de presència</th>
+                    <th>Intervals amb canvis</th>
+                    <th>Intervals amb errors</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {result.areas.map((area) => (
+                    <tr key={area.area}>
+                      <td>{ACTIVITY_AREAS[area.area]}</td>
+                      <td>{number(area.pulses)}</td>
+                      <td>{number(area.actions)}</td>
+                      <td>{number(area.errors)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section className="panel activity-section">
+            <div className="activity-heading">
+              <h2>Activitat de les persones</h2>
+              <label>
+                Dia{' '}
+                <input
+                  type="date"
+                  aria-label="Dia del detall personal"
+                  value={selected || result.today}
+                  min={activityDayOffset(result.today, -34)}
+                  max={result.today}
+                  onChange={(e) => {
+                    setSelected(e.target.value);
+                    setCursor('');
+                  }}
+                />
+              </label>
+            </div>
+            <p className="muted">
+              {result.selected_day} · pàgines de 50 persones. Els comptadors són intervals
+              mostrejats, no clics ni minuts exactes.
+            </p>
+            {result.people.length ? (
+              <div className="activity-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Persona</th>
+                      <th>Primera activitat</th>
+                      <th>Última activitat</th>
+                      <th>Secció</th>
+                      <th>Presència</th>
+                      <th>Canvis</th>
+                      <th>Errors</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {result.people.map((person) => (
+                      <tr key={person.user_id}>
+                        <td>
+                          <strong>{person.name}</strong>
+                          <small>{person.email}</small>
+                        </td>
+                        <td>{date(person.first_seen)}</td>
+                        <td>{date(person.last_seen)}</td>
+                        <td>{ACTIVITY_AREAS[person.page]}</td>
+                        <td>{number(person.pulses)}</td>
+                        <td>{number(person.actions)}</td>
+                        <td>{number(person.errors)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <p>Encara no hi ha activitat registrada aquest dia.</p>
+            )}
+            <div className="row-actions">
+              {cursor && <Button onClick={() => setCursor('')}>Primera pàgina</Button>}
+              {result.next && (
+                <Button busy={loading} onClick={() => setCursor(result.next)}>
+                  Següents persones
                 </Button>
-              </section>
-            );
-          })}
+              )}
+            </div>
+          </section>
+          <section className="panel activity-section activity-policy">
+            <h2>Dades necessàries, conservació limitada</h2>
+            <p
+              role={
+                !result.maintenance ||
+                result.generated_at - result.maintenance.last_success > 600000
+                  ? 'status'
+                  : undefined
+              }
+            >
+              Últim manteniment completat:{' '}
+              {result.maintenance
+                ? date(result.maintenance.last_success)
+                : 'pendent de la primera passada'}
+              .
+              {result.maintenance && (
+                <> Retirades de fitxers pendents: {number(result.maintenance.pending_files)}.</>
+              )}
+              {result.maintenance &&
+                result.generated_at - result.maintenance.last_success > 600000 &&
+                ' Cal revisar el servei de manteniment: fa més de 10 minuts que no confirma una passada.'}
+            </p>
+            <p>
+              Mostreig cada 2 minuts per persona i tipus d’activitat, compartit entre pestanyes. La
+              presència s’atura si la pestanya queda oculta o passen 5 minuts sense interacció. Els
+              canvis i errors es resumeixen al servidor.
+            </p>
+            <p>
+              Detall personal durant 35 dies; resums diaris durant 400 dies. Sense IP, dispositiu,
+              URL, text, notes acadèmiques ni registre de clics. L’activitat no ocupa R2. La mida
+              indicada prové de metadades i no inclou originals privats ni còpies de seguretat; no
+              és la quota total del proveïdor.
+            </p>
+            <p>
+              Recollida iniciada el {result.started_at ? date(result.started_at) : '—'}. No hi ha
+              estadístiques anteriors inventades. Última lectura: {date(result.generated_at)}.
+            </p>
+          </section>
         </div>
-      ) : tab === 'users' ? (
-        <div className="panel admin-table">
-          <table>
-            <thead>
-              <tr>
-                <th>Estudiant</th>
-                <th>Grup</th>
-                <th>Rol</th>
-                <th>Estat</th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              {management?.users.map((u) => (
-                <tr key={u.id}>
-                  <td>
-                    <strong>{u.name}</strong>
-                    <small>{u.email}</small>
-                  </td>
-                  <td>{u.group_id}</td>
-                  <td>
-                    {u.role === 'admin'
-                      ? 'Administrador'
-                      : u.role === 'delegate'
-                        ? 'Delegat'
-                        : 'Estudiant'}
-                  </td>
-                  <td>{u.disabled ? 'Desactivat' : 'Actiu'}</td>
-                  <td>
-                    <Button disabled={u.id === data.user.id} onClick={() => open('manageUser', u)}>
-                      Gestionar
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <section className="report-list">
-          {management?.reports.length ? (
-            management.reports.map((r) => (
-              <article className="panel report-card" key={r.id}>
-                <span className="clay-icon peach">
-                  <Warning size={22} />
-                </span>
-                <div>
-                  <h2>
-                    Revisar{' '}
-                    {r.type === 'note'
-                      ? 'apunts'
-                      : r.type === 'discussion'
-                        ? 'dubte de l’assignatura'
-                      : r.type === 'plus'
-                        ? 'plus'
-                        : r.type === 'proposal'
-                          ? 'proposta'
-                          : 'missatge'}
-                  </h2>
-                  <p>{r.reason}</p>
-                  <small>{r.author}</small>
-                  <div className="row-actions">
-                    <Button
-                      onClick={() => {
-                        if (r.type === 'discussion') {
-                          open('discussion', {id:r.target_id});
-                          return;
-                        }
-                        const item = {
-                          note: data.notes,
-                          plus: data.pluses,
-                          proposal: data.proposals,
-                          banner: data.bannerSlots?.map((s) => s.banner) || [data.banner],
-                        }[r.type].find((p) => p?.id === r.target_id);
-                        if (item)
-                          open(
-                            r.type === 'note'
-                              ? 'reader'
-                              : r.type === 'plus'
-                                ? 'plusDetail'
-                                : r.type === 'proposal'
-                                  ? 'proposalResponse'
-                                  : 'banner',
-                            item,
-                          );
-                        else
-                          notify('Aquest contingut ja s’ha retirat o no està disponible.', 'error');
-                      }}
-                    >
-                      Veure contingut
-                    </Button>
-                    <Button
-                      onClick={() =>
-                        mutate('/admin/reports', { id: r.id }, 'Revisió resolta.').catch(() => {})
-                      }
-                    >
-                      <Check size={17} />
-                      Marcar com resolt
-                    </Button>
-                    {admin && ['note', 'plus'].includes(r.type) && (
-                      <Button
-                        variant="danger"
-                        onClick={() =>
-                          open('delete', {
-                            resource: r.type === 'note' ? 'notes' : 'pluses',
-                            id: r.target_id,
-                            title: 'Contingut notificat',
-                          })
-                        }
-                      >
-                        Retirar
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </article>
-            ))
-          ) : management ? (
-            <Empty
-              title="No hi ha revisions pendents"
-              body="Els avisos sobre continguts apareixeran aquí."
-            />
-          ) : null}
-        </section>
       )}
     </>
   );

@@ -51,6 +51,14 @@ jobs:
               npm run test:schedule-cards
               npm run test:workspace-recovery
               npm run test:mobile-navigation
+          - group: school
+            tests: |
+              npm run test:delegate-agenda
+              npm run test:activity-dashboard
+              npm run test:focus-mode
+              npm run test:pau-history
+              npm run test:pau
+              npm run test:pau-top5
           - group: academics
             tests: |
               npm run test:student-guide
@@ -109,6 +117,12 @@ jobs:
           retention-days: 7
           path: |
             output/onboarding/browser/
+            output/delegates/browser/
+            output/activity-dashboard/browser/
+            output/focus/browser/
+            output/pau-history/browser/
+            output/pau/
+            output/pau-top5/
             output/subject-workspaces/browser/
             output/contents/
             output/fast-uploads/

@@ -55,7 +55,11 @@
     "test:student-guide": "node scripts/test-student-guide.mjs",
     "test:reactions": "node scripts/test-reactions.mjs",
     "test:preferences": "node scripts/test-preferences.mjs",
-    "test:onboarding": "node scripts/test-onboarding.mjs"
+    "test:onboarding": "node scripts/test-onboarding.mjs",
+    "test:delegate-agenda": "node scripts/test-delegate-agenda.mjs",
+    "test:activity-dashboard": "node scripts/test-activity-dashboard.mjs",
+    "test:focus-mode": "node scripts/test-focus-mode.mjs",
+    "test:pau-history": "node scripts/test-pau-history.mjs"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.3.0",

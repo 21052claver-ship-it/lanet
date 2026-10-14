@@ -14,6 +14,7 @@ import { Button, FormError, SubjectChip, SubjectMark } from '../ui';
 import { useSubmit } from '../form-utils';
 import { DAYS, DAYS_SHORT, slotConflicts } from '../../shared/domain';
 import { onboardingKey, readOnboarding } from '../../shared/onboarding';
+import { userUnit } from '../../shared/delegation';
 import {
   SCHEDULE_VERSION,
   OFFICIAL_ROUTES,
@@ -214,6 +215,16 @@ export default function CourseSetup({ onboarding = false, welcome, onStepChange 
             schedule_version: SCHEDULE_VERSION,
           },
           enrollments: ids.map((offering_id) => ({ user_id: data.user.id, offering_id })),
+          delegation: current.delegation
+            ? {
+                ...current.delegation,
+                unit:
+                  userUnit(
+                    ids.map((offering_id) => ({ offering_id })),
+                    current.offerings,
+                  )?.id || null,
+              }
+            : current.delegation,
         }));
       },
     );

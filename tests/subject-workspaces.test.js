@@ -123,209 +123,75 @@ test('saved and own materials do not depend on preferred subjects; topics/search
   ]);
 });
 
-test('rooms, thread reads/writes and moderation enforce exact enrollment and delegate scope', async () => {
+test('retired chat endpoints cannot read or mutate historical conversations', async () => {
   const f = await fixture(),
     payload = f.create();
-  assert.equal((await f.call('/discussions', payload)).status, 201);
-  const rooms = await (await f.call('/discussions/rooms?subject=math')).json();
-  assert.equal(rooms.rooms.length, 1);
-  assert.equal(rooms.rooms[0].id, f.room.id);
-  for (const uid of ['outside']) {
-    for (const [path, body] of [
-      ['/discussions?room=' + f.room.id, undefined],
-      ['/discussions/' + payload.id, undefined],
-      ['/discussions/' + payload.id + '/reply', { id: randomUUID(), body: 'No accés' }],
-      ['/discussions/' + payload.id + '/resolve', { resolved: true }],
-      ['/discussions/' + payload.id + '/report', { reason: 'No accés' }],
-    ])
-      assert.equal((await f.call(path, body, uid)).status, 403);
-  }
-  assert.equal(
-    (await f.call('/discussions/' + payload.id + '/resolve', { resolved: true }, 'b')).status,
-    403,
-  );
-  assert.equal(
-    (await f.call('/discussions/' + payload.id + '/resolve', { resolved: true }, 'delegate'))
-      .status,
-    200,
-  );
-  assert.equal(
-    (
-      await f.call(
-        '/discussions/' + payload.id + '/reply',
-        { id: randomUUID(), body: 'Massa tard' },
-        'b',
-      )
-    ).status,
-    409,
-  );
-  assert.equal(
-    (await f.call('/discussions/' + payload.id + '/resolve', { resolved: false }, 'a')).status,
-    200,
-  );
-  f.db.prepare("DELETE FROM enrollments WHERE user_id='b'").run();
-  assert.equal((await f.call('/discussions/' + payload.id, undefined, 'b')).status, 403);
-  assert.equal((await f.call('/discussions/' + payload.id, undefined, 'admin')).status, 200);
-  assert.equal((await f.call('/discussions/' + payload.id, undefined, 'unknown')).status, 401);
-  f.db.close();
-});
-
-test('thread and reply sends are idempotent after lost responses; changing nonce cannot bypass duplicates', async () => {
-  const f = await fixture(),
-    payload = f.create();
-  const results = await Promise.all([
-    f.call('/discussions', payload),
-    f.call('/discussions', payload),
-  ]);
-  assert.ok(results.every((r) => [200, 201].includes(r.status)));
-  assert.equal(f.db.prepare('SELECT COUNT(*) n FROM subject_threads').get().n, 1);
-  assert.equal((await f.call('/discussions', { ...payload, body: 'Canviat' })).status, 409);
-  assert.equal(
-    (await f.call('/discussions', { ...payload, id: randomUUID(), nonce: 'bypass' })).status,
-    409,
-  );
-  const reply = { id: randomUUID(), body: 'Aplica la regla de la cadena.' };
-  assert.equal((await f.call('/discussions/' + payload.id + '/reply', reply, 'b')).status, 201);
-  assert.equal((await f.call('/discussions/' + payload.id + '/reply', reply, 'b')).status, 200);
-  assert.equal(
-    (await f.call('/discussions/' + payload.id + '/reply', { ...reply, id: randomUUID() }, 'b'))
-      .status,
-    409,
-  );
-  assert.equal((await f.call('/discussions/' + payload.id + '/reply', reply, 'a')).status, 409);
-  assert.equal(f.db.prepare('SELECT COUNT(*) n FROM subject_replies').get().n, 1);
-  f.db.close();
-});
-
-test('reply and thread paging has stable cursors and no duplicated or missing boundary rows', async () => {
-  const f = await fixture(),
-    payload = f.create();
-  await f.call('/discussions', payload);
-  for (let i = 0; i < 56; i++)
-    f.db
-      .prepare(
-        'INSERT INTO subject_replies(id,thread_id,author_id,body,request_hash) VALUES(?,?,?,?,?)',
-      )
-      .run(randomUUID(), payload.id, 'b', 'Resposta ' + i, 'hash' + i);
-  const first = await (await f.call('/discussions/' + payload.id)).json();
-  assert.equal(first.replies.length, 50);
-  assert.ok(first.next);
-  const second = await (
-    await f.call('/discussions/' + payload.id + '?before=' + first.next)
-  ).json();
-  assert.equal(second.replies.length, 6);
-  assert.equal(second.next, null);
-  assert.equal(new Set([...first.replies, ...second.replies].map((r) => r.id)).size, 56);
-  for (let i = 0; i < 33; i++)
-    f.db
-      .prepare(
-        'INSERT INTO subject_threads(id,offering_id,author_id,title,body,request_hash) VALUES(?,?,?,?,?,?)',
-      )
-      .run(randomUUID(), f.room.id, 'a', 'Dubte ' + i, 'Prova ' + i, 'thread' + i);
-  const list = await (await f.call('/discussions?room=' + f.room.id)).json();
-  assert.equal(list.items.length, 30);
-  const older = await (
-    await f.call('/discussions?room=' + f.room.id + '&before=' + list.next)
-  ).json();
-  assert.equal(older.items.length, 4);
-  assert.equal(new Set([...list.items, ...older.items].map((r) => r.id)).size, 34);
-  assert.equal((await f.call('/discussions/' + payload.id + '?before=-1')).status, 400);
-  f.db.close();
-});
-
-test('material links must be published and belong to room subject; only intended public data returned', async () => {
-  const f = await fixture();
+  f.db
+    .prepare(
+      "INSERT INTO subject_threads(id,offering_id,author_id,title,body,request_hash) VALUES('archived',?,'a','Històric','Text conservat','archived')",
+    )
+    .run(f.room.id);
   f.db.exec(
-    "INSERT INTO notes(id,author_id,subject_id,title,body,summary,status) VALUES('private','b','math','Secret','private-content','Secret','draft'); INSERT INTO notes(id,author_id,subject_id,title,body,summary) VALUES('other','b','phy','Física','Física','Física');",
+    "INSERT INTO subject_replies(id,thread_id,author_id,body,request_hash) VALUES('archived-reply','archived','b','Resposta conservada','archived-reply')",
   );
-  for (const note_id of ['private', 'other', 'missing'])
-    assert.equal((await f.call('/discussions', f.create({ note_id }))).status, 400);
-  const p = f.create();
-  assert.equal((await f.call('/discussions', p)).status, 201);
-  const detail = await (await f.call('/discussions/' + p.id)).json();
-  assert.equal(detail.thread.note_title, 'Derivades');
-  assert.ok(!JSON.stringify(detail).includes('@fje.edu'));
-  assert.ok(!Object.hasOwn(detail.thread, 'request_hash'));
+  const before = f.db.prepare('SELECT * FROM subject_threads').all();
+  const replies = f.db.prepare('SELECT * FROM subject_replies').all();
+  for (const uid of ['a', 'delegate', 'admin']) {
+    for (const [path, body, method] of [
+      ['/discussions/rooms?subject=math', undefined, 'GET'],
+      ['/discussions?room=' + f.room.id, undefined, 'GET'],
+      ['/discussions/archived', undefined, 'GET'],
+      ['/discussions', payload, 'POST'],
+      ['/discussions/archived/reply', { id: randomUUID(), body: 'No publicable' }, 'POST'],
+      ['/discussions/archived/resolve', { resolved: true }, 'POST'],
+      ['/discussions/archived', undefined, 'DELETE'],
+    ])
+      assert.equal((await f.call(path, body, uid, method)).status, 404, uid + ' ' + path);
+  }
+  assert.deepEqual(f.db.prepare('SELECT * FROM subject_threads').all(), before);
+  assert.deepEqual(f.db.prepare('SELECT * FROM subject_replies').all(), replies);
+  assert.equal(
+    f.db.prepare("SELECT title FROM notes WHERE id='material'").get().title,
+    'Derivades',
+  );
   f.db.close();
 });
 
-test('reports reach authorized moderators; users cannot delete another person reply; withdrawn text disappears', async () => {
-  const f = await fixture(),
-    p = f.create();
-  await f.call('/discussions', p);
-  const r = { id: randomUUID(), body: 'Una resposta' };
-  await f.call('/discussions/' + p.id + '/reply', r, 'b');
-  assert.equal(
-    (await f.call('/discussions/' + p.id + '/reply/' + r.id, undefined, 'a', 'DELETE')).status,
-    403,
-  );
-  assert.equal(
-    (await f.call('/discussions/' + p.id + '/reply/' + r.id, undefined, 'delegate', 'DELETE'))
-      .status,
-    200,
-  );
-  assert.equal(f.db.prepare('SELECT body FROM subject_replies WHERE id=?').get(r.id).body, '');
-  assert.equal(
-    (await f.call('/discussions/' + p.id + '/report', { reason: 'Revisar aquest fil' }, 'b'))
-      .status,
-    200,
-  );
-  assert.equal(
-    (await f.call('/discussions/' + p.id + '/report', { reason: 'Repetició' }, 'b')).status,
-    200,
-  );
-  assert.equal(f.db.prepare('SELECT COUNT(*) n FROM reports').get().n, 1);
-  for (const [uid, count] of [
-    ['delegate', 1],
-    ['outside', 0],
-    ['admin', 1],
-  ])
-    assert.equal((await (await f.call('/admin', undefined, uid)).json()).reports.length, count);
-  const report = f.db.prepare('SELECT id FROM reports').get();
-  assert.equal((await f.call('/admin/reports', { id: report.id }, 'outside')).status, 403);
-  assert.equal((await f.call('/discussions/' + p.id, undefined, 'b', 'DELETE')).status, 403);
-  assert.equal((await f.call('/discussions/' + p.id, undefined, 'a', 'DELETE')).status, 200);
-  assert.equal((await f.call('/discussions/' + p.id)).status, 404);
-  f.db.close();
-});
-
-test('discussion search finds older threads beyond first page, folds accents and treats SQL wildcards literally', async () => {
-  const f = await fixture(),
-    p = f.create({ title: 'Derivació de la funció', body: 'Com combinem les regles?' });
-  await f.call('/discussions', p);
-  for (let i = 0; i < 33; i++)
-    f.db
-      .prepare(
-        'INSERT INTO subject_threads(id,offering_id,author_id,title,body,request_hash) VALUES(?,?,?,?,?,?)',
-      )
-      .run(randomUUID(), f.room.id, 'a', 'Altre ' + i, 'Resposta ' + i, 'search' + i);
-  const list = await (await f.call('/discussions?room=' + f.room.id)).json();
-  assert.ok(!list.items.some((t) => t.id === p.id));
-  const found = await (
-    await f.call('/discussions?room=' + f.room.id + '&q=derivacio%20funcio')
-  ).json();
-  assert.deepEqual(
-    found.items.map((t) => t.id),
-    [p.id],
-  );
-  const literal = await (await f.call('/discussions?room=' + f.room.id + '&q=%25')).json();
-  assert.equal(literal.items.length, 0);
-  const resolved = await (
-    await f.call('/discussions?room=' + f.room.id + '&state=resolved')
-  ).json();
-  assert.equal(resolved.items.length, 0);
-  f.db.close();
-});
-
-test('per-account publication limits persist across changed request UUIDs', async () => {
+test('retired chat keeps authentication and never leaks data to anonymous clients', async () => {
   const f = await fixture();
-  for (let i = 0; i < 6; i++)
-    assert.equal(
-      (await f.call('/discussions', f.create({ title: 'Pregunta ' + i, body: 'Contingut ' + i })))
-        .status,
-      201,
-    );
-  assert.equal((await f.call('/discussions', f.create({ title: 'Setena' }))).status, 429);
+  for (const path of ['/discussions', '/discussions/rooms?subject=math', '/discussions/archived']) {
+    const response = await f.call(path, undefined, 'unknown');
+    assert.equal(response.status, 401);
+    assert.ok(!(await response.text()).includes('Contingut segur'));
+  }
+  f.db.close();
+});
+
+test('archived conversation reports retain moderator scope without reopening chat', async () => {
+  const f = await fixture();
+  f.db
+    .prepare(
+      "INSERT INTO subject_threads(id,offering_id,author_id,title,body,request_hash) VALUES('archived',?,'a','Històric','Text conservat','archived')",
+    )
+    .run(f.room.id);
+  f.db.exec(
+    "INSERT INTO reports(id,user_id,type,target_id,reason) VALUES('archived-report','a','discussion','archived','Informe històric')",
+  );
+  const own = await (await f.call('/admin', undefined, 'delegate')).json();
+  const outside = await (await f.call('/admin', undefined, 'outside')).json();
+  assert.ok(own.reports.some((r) => r.id === 'archived-report'));
+  assert.ok(!outside.reports.some((r) => r.id === 'archived-report'));
+  assert.equal((await f.call('/admin/reports', { id: 'archived-report' }, 'outside')).status, 403);
+  assert.equal((await f.call('/admin/reports', { id: 'archived-report' }, 'delegate')).status, 200);
+  assert.equal(
+    f.db.prepare("SELECT resolved FROM reports WHERE id='archived-report'").get().resolved,
+    1,
+  );
+  assert.equal(
+    f.db.prepare("SELECT body FROM subject_threads WHERE id='archived'").get().body,
+    'Text conservat',
+  );
+  assert.equal((await f.call('/discussions/archived', undefined, 'admin')).status, 404);
   f.db.close();
 });
 
@@ -363,7 +229,10 @@ test('material metadata round-trips, legacy updates preserve topic and term, inv
     date: boot.today,
     visibility: 'private',
   };
-  assert.equal((await f.call('/events', { ...event, visibility: 'shared' })).status, 403);
+  // A student may propose publicly, but must first confirm a class tutor.
+  const unconfiguredProposal = await f.call('/events', { ...event, visibility: 'shared' });
+  assert.equal(unconfiguredProposal.status, 400);
+  assert.match((await unconfiguredProposal.json()).error, /tutoria/);
   const er = await f.call('/events', event);
   assert.equal(er.status, 200);
   const eid = (await er.json()).id;

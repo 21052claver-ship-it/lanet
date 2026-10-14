@@ -7,6 +7,7 @@ import { PageTitle, Button, Tabs, Empty, RichText, IconButton, VoteButton } from
 import { dateLabel } from '../../shared/domain';
 import { ReferenceArt, Avatar } from '../art';
 import { matchesSearch } from '../../shared/search';
+import Delegates from '../components/Delegates';
 
 export default function Community() {
   const { data, communityTab: tab, setCommunityTab: setTab, open } = useApp();
@@ -65,6 +66,8 @@ export default function Community() {
           ['notices', 'Tauler'],
           ['events', 'Esdeveniments'],
           ['proposals', 'Propostes'],
+          ['delegates', 'Delegats'],
+          ['notifications', 'Notificacions'],
         ]}
         value={tab}
         onChange={(next) => {
@@ -72,7 +75,11 @@ export default function Community() {
           document.querySelector('.page-community .tabs')?.scrollIntoView({ block: 'nearest' });
         }}
       />
-      {tab === 'notices' ? (
+      {tab === 'delegates' ? (
+        <Delegates />
+      ) : tab === 'notifications' ? (
+        <Delegates notificationsOnly />
+      ) : tab === 'notices' ? (
         <div className="community-columns">
           <section className="panel notice-feed">
             <h2>{scope === 'group' ? 'Avisos del grup' : 'Avisos del centre'}</h2>
@@ -162,12 +169,12 @@ export default function Community() {
         <div className="panel community-events">
           <div className="section-heading">
             <h2>Activitats del centre</h2>
-            {manager && (
+            {
               <Button onClick={() => open('event', { kind: 'event', visibility: 'shared' })}>
                 <Plus size={17} />
                 Afegir activitat
               </Button>
-            )}
+            }
           </div>
           {events.map((e) => (
             <button className="community-event" key={e.id} onClick={() => open('eventDetail', e)}>

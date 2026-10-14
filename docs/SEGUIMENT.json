@@ -388,6 +388,30 @@
     {
       "id": "R96",
       "description": "Primera entrada professional a pantalla completa amb presentació de La Net, itinerari, assignatures i revisió, sense superposició."
+    },
+    {
+      "id": "R97",
+      "description": "Retirar el xat/dubtes dels continguts, accessos i API, mantenint els materials i l’històric sense migracions destructives."
+    },
+    {
+      "id": "R98",
+      "description": "Agenda contextual privada o pública amb revisió igualitària de delegats/subdelegats, prevenció de duplicats i solapaments, avisos persistents i contactes per tutoria i optativa."
+    },
+    {
+      "id": "R99",
+      "description": "Dashboard d’activitat privat del compte Google autoritzat, mostreig eficient, retenció limitada, inventari incremental i manteniment coordinat D1/R2."
+    },
+    {
+      "id": "R100",
+      "description": "Pomodoro amb continuïtat automàtica, alarma original i mode focus accessible a pantalla completa amb opcions."
+    },
+    {
+      "id": "R101",
+      "description": "Notes de tall oficials 2022–2026 amb rondes comparables, gràfic, mitjana/cobertura i comparació del top 5."
+    },
+    {
+      "id": "R102",
+      "description": "Logo complet de La Net a la capçalera mòbil amb controls visibles i proporcions correctes."
     }
   ],
   "phases": [
@@ -952,7 +976,7 @@
     },
     {
       "id": "F80",
-      "title": "Primera entrada a pantalla completa",
+      "title": "Primera entrada, Continguts, agenda i dades",
       "depends_on": [
         "F79"
       ]
@@ -7755,11 +7779,17 @@
     {
       "id": "T80-01",
       "phase": "F80",
-      "title": "Dissenyar, provar i publicar la primera entrada",
+      "title": "Experiència d’alumnes: benvinguda, continguts, agenda, estudi i PAU",
       "status": "review",
       "requirements": [
         "R96",
-        "R03"
+        "R03",
+        "R97",
+        "R98",
+        "R99",
+        "R100",
+        "R101",
+        "R102"
       ],
       "depends_on": [
         "T79-02"
@@ -7772,15 +7802,78 @@
         "shared/onboarding.js",
         "scripts/test-onboarding.mjs",
         "tests/onboarding.test.js",
-        "docs/PLA-ONBOARDING.md"
+        "docs/PLA-ONBOARDING.md",
+        "src/pages/Notes.jsx",
+        "src/forms.jsx",
+        "src/forms-resources.jsx",
+        "src/pages/Admin.jsx",
+        "src/context.jsx",
+        "src/workspace.css",
+        "worker/index.js",
+        "scripts/test-subject-workspaces.mjs",
+        "tests/subject-workspaces.test.js",
+        "shared/delegation.js",
+        "worker/agenda.js",
+        "migrations/0028_delegate_agenda.sql",
+        "src/components/Delegates.jsx",
+        "src/components/EventEditor.jsx",
+        "src/delegation.css",
+        "tests/delegate-agenda.test.js",
+        "scripts/test-delegate-agenda.mjs",
+        "scripts/prepare-delegates.mjs",
+        "docs/PLA-AGENDA-DELEGATS.md",
+        "src/pages/Management.jsx",
+        "shared/activity.js",
+        "shared/activity-reporter.js",
+        "worker/activity.js",
+        "worker/maintenance.js",
+        "worker/maintenance-entry.js",
+        "src/use-activity.js",
+        "src/pages/admin.css",
+        "tests/activity.test.js",
+        "scripts/test-activity-dashboard.mjs",
+        "migrations/0029_activity_dashboard.sql",
+        "docs/PLA-DADES-ACTIVITAT.md",
+        ".github/workflows/verify.yml",
+        "scripts/test-official-schedule-api.mjs",
+        "shared/timer.js",
+        "src/timer.jsx",
+        "src/focus-alarm.js",
+        "src/pages/Study.jsx",
+        "src/components/FocusMode.jsx",
+        "src/focus-mode.css",
+        "tests/timer.test.js",
+        "tests/focus-alarm.test.js",
+        "tests/focus-completion.test.js",
+        "scripts/test-focus-mode.mjs",
+        "docs/PLA-POMODORO-FOCUS.md",
+        "scripts/import-pau-history.py",
+        "scripts/test-pau-history.mjs",
+        "shared/pau-history.js",
+        "src/components/PauHistory.jsx",
+        "public/data/pau-history.json",
+        "tests/pau-history.test.js",
+        "tests/fixtures/pau/history-audit.json",
+        "tests/fixtures/pau/sources/history-2021-2025.pdf",
+        "src/pages/Pau.jsx",
+        "src/components/PauChoices.jsx",
+        "src/pau.css",
+        "public/_headers",
+        "scripts/test-pau.mjs",
+        "scripts/test-pau-top5.mjs"
       ],
-      "acceptance": "Els comptes nous veuen una pàgina pròpia i completen els tres itineraris amb optatives/professorat oficials. Progrés recuperable, errors sense pèrdua, entrada única després de desar, teclat/mòbil/moviment reduït provats. Els usuaris existents conserven l’edició del perfil. PR i CI exacta abans de publicar.",
+      "acceptance": "Els comptes nous veuen una pàgina pròpia i completen els tres itineraris amb optatives/professorat oficials. Progrés recuperable, errors sense pèrdua, entrada única després de desar, teclat/mòbil/moviment reduït provats. Els usuaris existents conserven l’edició del perfil. PR i CI exacta abans de publicar. Retirar Dubtes i les preguntes contextuals; enllaços antics tornen a Materials i l’API retirada no llegeix ni publica converses. Agenda des de la classe i data seleccionada; qualsevol membre pot triar privat/públic. Revisió limitada a tutoria/variant amb permisos iguals, cap exposició de dates privades, duplicats bloquejats, coincidències confirmades, notificacions persistents i contactes autenticats. Roster privat, migració additiva revisada i còpia D1 abans de publicar. Dashboard restringit al compte Google autoritzat, recompte mostrejat i consultes limitades; retenció 35/400 dies, inventari incremental i manteniment privat amb concessió compartida. Migracions 0028/0029 i roster privat revisats, còpia D1 restaurable i passos privats separats de Pages. Pomodoro automàtic amb descans llarg, alarma/volum/silenci, focus accessible amb sortida/Escape i opcions; cua offline idempotent que conserva el dia original i no inventa sessions. PAU històric oficial 2022–2026 amb absències i provisionalitat explícites, rondes separades i comparació sense canviar dades privades. Logo mòbil complet sense saturar ni tapar controls.",
       "checks": [
         "Definir recorregut, jerarquia i compatibilitat amb la configuració existent.",
         "Implementar pantalla completa, presentació, quatre passos i progrés per compte.",
         "Validar tres itineraris, errors, recuperació i entrada confirmada sense duplicar desats.",
         "Revisar captures, mòbil, teclat, moviment reduït i regressions oficials.",
-        "Tipus, unitàries, build, auditoria de font; PR/Validate i CI exacta; publicar amb rebut."
+        "Tipus, unitàries, build, auditoria de font; PR/Validate i CI exacta; publicar amb rebut.",
+        "Retirar el xat a petició de Marc; provar navegació, links antics, API tancada i conservació de materials/històric.",
+        "Provar propostes, revisions concurrents, duplicats, solapaments, privacitat, optatives mixtes, avisos i contactes amb fixtures locals; preparar roster privat i revisar migració 0028.",
+        "Verificar dashboard privat, concurrència/mostreig, polling inactiu, retenció/inventari i manteniment; aplicar només 0028/0029 i roster autoritzat després de còpia privada i CI exacta.",
+        "Provar continuïtat, pausa/recàrrega, alarma real on és compatible, fallback, fullscreen/teclat/mòbil i cua idempotent amb dia original.",
+        "Verificar fonts/hashes/reproducció PAU, rondes/codis/absències, lazy/cache/reintent i preservació de dades privades; revisar logo mòbil."
       ],
       "evidence": [
         "output/onboarding/verification.json",
@@ -7788,9 +7881,33 @@
         "output/onboarding/typecheck.log",
         "output/onboarding/build.log",
         "output/onboarding/browser/results.json",
-        "output/official-schedule/browser/results.json"
+        "output/official-schedule/browser/results.json",
+        "output/consolidated-0.6.16/verification.json",
+        "output/consolidated-0.6.16/snapshot.json",
+        "output/consolidated-0.6.16/unit.log",
+        "output/consolidated-0.6.16/typecheck.log",
+        "output/consolidated-0.6.16/build.log",
+        "output/consolidated-0.6.16/source-audit-preflight.log",
+        "output/consolidated-0.6.16/api/api-results.json",
+        "output/consolidated-0.6.16/maintenance-dry-run.log",
+        "output/consolidated-0.6.16/onboarding/results.json",
+        "output/consolidated-0.6.16/contents/results.json",
+        "output/consolidated-0.6.16/recovery/results.json",
+        "output/consolidated-0.6.16/official/results.json",
+        "output/consolidated-0.6.16/delegates/results.json",
+        "output/consolidated-0.6.16/activity/results.json",
+        "output/consolidated-0.6.16/focus/results.json",
+        "output/consolidated-0.6.16/pau-history/results.json",
+        "output/consolidated-0.6.16/pau/pau-browser-results.json",
+        "output/consolidated-0.6.16/pau-top5/top5-browser-results.json",
+        "output/delegates/verification.json",
+        "output/activity-dashboard/verification.json",
+        "output/focus/verification.json",
+        "output/focus/final-review.json",
+        "output/pau-history/verification.json",
+        "output/mobile-full-logo/verification.json"
       ],
-      "progress": "Implementació i revisió visual completades. 402 unitàries i 45 recorreguts locals (18 primera entrada, 27 horaris oficials) en Chromium/Firefox/WebKit: tres itineraris, mòbil 320/390px, tablet/escriptori, horitzontal, teclat, moviment reduït, recuperació, canvi de grup, errors de desat/lectura/sortida i storage denegat. Pendent PR/CI i publicació 0.6.16. Sense migracions ni dades reals.",
+      "progress": "Tanda congelada i validada conjuntament en worktree: 445 unitàries, 243 recorreguts locals en Chromium/Firefox/WebKit, API/migracions workerd-D1 locals, tipus/build/font correctes. Benvinguda completa, retirada del xat, agenda/delegats, analítica/retenció, Pomodoro/focus, històric PAU i logo mòbil integrats. Incidències de cua invàlida, dia original, silenci intencional i retirada amb revisió resoltes. Pendent única pujada PR38, Validate/CI exacta i passos privats/publicació 0.6.16.",
       "change_log_id": "H189"
     }
   ]

@@ -1205,3 +1205,31 @@ T80-01: benvinguda visual pròpia, tria d’itinerari oficial, optatives i profe
 H189 implementada i revisada visualment: 402 unitàries i 45 fluxos locals correctes (18 primera entrada, 27 horaris oficials), tres motors, pantalla estreta/horitzontal, teclat i moviment reduït. Progressos separats per compte, errors recuperables i transició després de desat confirmat fins i tot amb lectura fallida. Focus sincronitzat amb el muntatge del pas i accions sense superposar assignatures. Pendent PR, CI i publicació 0.6.16; sense migracions ni modificació de dades reals.
 
 H189 revisió final: contrast del text secundari reforçat i comprovat en la interfície local; la pantalla horitzontal amb poca alçada també mostra el progrés en fila compacta, sense una columna lateral més alta que la finestra. CI requerida amb aquest head actualitzat.
+
+### H190 · Retirar el xat de Continguts
+
+Indicació de Marc incorporada a T80-01 abans de publicar 0.6.16. S’elimina Dubtes, les preguntes des de materials, formularis, codi i API de converses. Continguts queda en Materials, Formularis i Eines i webs. Enllaços antics tornen a Materials. Es conserva l’històric de dades i informes sense cap migració destructiva; no es mostren accessos a contingut arxivat. Proves substituïdes per regressions de retirada, navegació i preservació; CI anterior no serveix per publicar aquest canvi nou.
+
+### H191 Agenda pública validada per delegats · en curs
+
+**14 oct. 2026 · T80-01.** Nova petició incorporada a la tasca activa: alta des de la classe, tria visual privat/públic, revisió delegada per tutoria o variant, duplicats/solapaments, dashboard, contactes i notificacions. Roster amb identitats reals exclusivament privat a D1/.cache; cap canvi de rols globals ni proves contra producció. Implementació en verificació; encara no publicada.
+
+### H192 · Dades i dashboard privat
+
+Analítica incorporada a T80-01: accés exclusiu del compte Google autoritzat, mostreig atòmic i limitat, resum diari, inventari incremental, retenció 35/400 dies, polling pausat en inactivitat i manteniment coordinat entre Pages i servei privat. Pla a PLA-DADES-ACTIVITAT.md. La publicació és conjunta amb H189/H190/H191, amb còpia privada i migracions 0028/0029 separades; cap identitat del roster al repositori.
+
+Coordinació autoritzada: cap xat fa pushs provisionals; l’integrador valida el conjunt abans d’una única pujada. S’ha conservat una worktree de referència durant les edicions concurrents; només el conjunt revisat del directori principal es publicarà. PR38 es reobre quan totes les comprovacions locals hagin passat. El rebut immutable de release registra la publicació; el tancament documental local s’incorporarà a la següent pujada consolidada per evitar una CI addicional només documental.
+
+### H193 · Pomodoro continu i mode focus
+
+Petició directa de Marc incorporada a T80-01 abans de publicar: continuïtat work/rest/long, alarma original amb volum independent, focus accessible amb ambients, opcions, música i pantalla activa opcional. Cua offline idempotent, dia original de la sessió conservat i recuperació sense sessions fantasma. Pla PLA-POMODORO-FOCUS.md; sense migració ni servei addicional.
+
+### H194 · Històric oficial de notes de tall
+
+Petició directa de Marc: sèries 2022–2026, primera/última separades, mitjana amb cobertura, variació, gràfic i comparació top 5. Codis exactes, dades absents explícites i codi antic només com sèrie separada; 2026 última publicada provisional. Catàleg petit diferit i revalidació HTTP, sense tocar notes personals ni el catàleg PAU actual. Fonts i reproducció a PLA-PAU-HISTORIC.md.
+
+### H195 · Logo complet al mòbil
+
+Últim ajust demanat per Marc abans de congelar la tanda: reutilitzar la marca completa a la capçalera mòbil i conservar proporcions/controls a 320 px i horitzontal. Validació visual local i regressions responsive existents.
+
+Tanda H189–H195 validada en una sola instantània: arbre 229b653c64be19bd63d3f0fd465114b01527143d,445 unitàries i 243 fluxos locals, workerd/D1 real local, tipus/build/font correctes. Revisió creuada dels tres xats, dades/roster privat fora del repo i cap pas de producció executat. La publicació continua pendent d’una única pujada a PR38 i CI exacta; no es presenta aquesta verificació com un desplegament.

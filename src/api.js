@@ -52,6 +52,27 @@ export async function api(path, options = {}) {
     if (deadline !== null) clearTimeout(deadline);
   }
 }
+export async function previewAgenda(payload, signal) {
+  const controller = new AbortController();
+  const cancel = () => controller.abort();
+  if (signal?.aborted) cancel();
+  signal?.addEventListener('abort', cancel, { once: true });
+  const deadline = setTimeout(cancel, 12000);
+  try {
+    return await api('/agenda/preview', {
+      method: 'POST',
+      body: payload,
+      signal: controller.signal,
+    });
+  } catch (error) {
+    if (controller.signal.aborted && !signal?.aborted)
+      throw new Error('La comprovació triga massa. Torna a comprovar els horaris.');
+    throw error;
+  } finally {
+    clearTimeout(deadline);
+    signal?.removeEventListener('abort', cancel);
+  }
+}
 export async function upload(file, purpose = 'content') {
   return api('/files', {
     method: 'POST',

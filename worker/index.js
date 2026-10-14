@@ -12,6 +12,7 @@ import {
   num,
   integer,
   choice,
+  day,
 } from './utils.js';
 import {
   edgeGuard,
@@ -19,7 +20,6 @@ import {
   reservePublication,
   releasePublication,
   recordAbuse,
-  cleanAbuseState,
 } from './abuse.js';
 import { authRoute, authenticate } from './auth.js';
 import { googleRoute } from './google.js';
@@ -27,7 +27,10 @@ import { allowedRequestOrigin } from './origin.js';
 import { withSecurityHeaders } from './security.js';
 import { bootstrap, catalog, configure } from './data.js';
 import { upload, fileResponse, ensureFileSafety, discardUpload } from './files.js';
-import { drainFileDeletions, queueUnusedFiles } from './file-lifecycle.js';
+import { drainFileDeletions } from './file-lifecycle.js';
+import { maintainData } from './maintenance.js';
+import { activityDashboard, recordActivity } from './activity.js';
+import { activityArea, ACTIVITY_AREAS } from '../shared/activity.js';
 import { resourceRoute } from './resources.js';
 import { gradeRoute } from './grades.js';
 import { adminRoute } from './admin.js';
@@ -38,7 +41,7 @@ import { libraryRoute } from './library.js';
 import { rouletteRoute } from './roulette.js';
 import { claimBakeryCake } from './bakery.js';
 import { predictionsRoute } from './predictions.js';
-import { discussionsRoute } from './discussions.js';
+import { agendaRoute } from './agenda.js';
 async function api(request, env, ctx, security) {
   const url = new URL(request.url),
     path = url.pathname;
@@ -64,12 +67,19 @@ async function api(request, env, ctx, security) {
   const user = await authenticate(request, env);
   security.user = user;
   await accountGuard(request, env, user);
+  if (path === '/api/admin/analytics') return json(await activityDashboard(request, env, user));
+  if (path === '/api/activity') {
+    if (request.method !== 'POST') fail(405, 'Mètode no vàlid.');
+    const value = await body(request);
+    if (Object.keys(value).some((key) => key !== 'page'))
+      fail(400, 'Dades d’activitat no vàlides.');
+    const page = choice(value.page, Object.keys(ACTIVITY_AREAS));
+    await recordActivity(env, user, page);
+    return json({ ok: true });
+  }
   security.publication = await reservePublication(request, env, user);
   if (path === '/api/bootstrap') {
-    const cleanup = cleanAbuseState(env)
-      .then(() => queueUnusedFiles(env))
-      .then(() => drainFileDeletions(env))
-      .catch(() => {});
+    const cleanup = maintainData(env).catch(() => {});
     if (ctx?.waitUntil) ctx.waitUntil(cleanup);
     else await cleanup;
   }
@@ -79,8 +89,6 @@ async function api(request, env, ctx, security) {
     if (path.startsWith('/api/files/')) return fileResponse(request, env, user, path.split('/')[3]);
   }
   if (path === '/api/pau') return pauRoute(request, env, user);
-  if (path === '/api/discussions' || path.startsWith('/api/discussions/'))
-    return discussionsRoute(request, env, user, path);
   if (path === '/api/roulette') return rouletteRoute(request, env, user);
   if (path === '/api/predictions' || path.startsWith('/api/predictions/'))
     return predictionsRoute(request, env, user, path);
@@ -112,6 +120,11 @@ async function api(request, env, ctx, security) {
   }
   if (path === '/api/configure' && request.method === 'POST')
     return json(await configure(env, user, await body(request)));
+  if (path.startsWith('/api/events') || path.startsWith('/api/agenda/')) {
+    const result = await agendaRoute(request, env, user, path);
+    if (result !== null) return json(result);
+    fail(404, 'No s’ha trobat aquesta data.');
+  }
   if (path === '/api/files' && request.method === 'POST') {
     return json(await upload(request, env, user, ctx), 201);
   }
@@ -186,6 +199,13 @@ async function api(request, env, ctx, security) {
   }
   if (path === '/api/focus/complete' && request.method === 'POST') {
     const b = await body(request);
+    const completedDay = b.day === undefined ? madridDay() : day(b.day);
+    if (completedDay > madridDay()) fail(400, 'Una sessió d’estudi no pot ser d’un dia futur.');
+    if (
+      b.subject_id &&
+      !(await one(env, 'SELECT id FROM subjects WHERE id=?', str(b.subject_id, 100, true)))
+    )
+      fail(400, 'L’assignatura d’aquesta sessió ja no està disponible.');
     await run(
       env,
       'INSERT OR IGNORE INTO focus_sessions(id,user_id,subject_id,task,minutes,day) VALUES(?,?,?,?,?,?)',
@@ -194,7 +214,7 @@ async function api(request, env, ctx, security) {
       b.subject_id || null,
       str(b.task, 200),
       integer(b.minutes, 1, 120),
-      madridDay(),
+      completedDay,
     );
     return json({ ok: true });
   }
@@ -226,7 +246,7 @@ async function api(request, env, ctx, security) {
   }
   fail(404, 'No s’ha trobat aquesta pàgina.');
 }
-async function applicationResponse(request, env, ctx) {
+async function applicationResponse(request, env, ctx, security) {
   const pathname = new URL(request.url).pathname;
   if (!pathname.startsWith('/api/')) {
     const response = await env.ASSETS.fetch(request);
@@ -246,7 +266,6 @@ async function applicationResponse(request, env, ctx) {
     }
     return response;
   }
-  const security = {};
   try {
     return await api(request, env, ctx, security);
   } catch (error) {
@@ -318,6 +337,27 @@ async function applicationResponse(request, env, ctx) {
 }
 export default {
   async fetch(request, env, ctx) {
-    return withSecurityHeaders(await applicationResponse(request, env, ctx), request);
+    const security = {};
+    const response = await applicationResponse(request, env, ctx, security);
+    const path = new URL(request.url).pathname;
+    const area = activityArea(path);
+    if (
+      security.user &&
+      request.method !== 'GET' &&
+      area &&
+      path !== '/api/admin/analytics' &&
+      (response.ok || [400, 409, 413, 422, 500].includes(response.status))
+    ) {
+      // Telemetry failure must never turn a committed user action into an error/retry.
+      const recorded = recordActivity(
+        env,
+        security.user,
+        area,
+        response.ok ? 'action' : 'error',
+      ).catch(() => {});
+      if (ctx?.waitUntil) ctx.waitUntil(recorded);
+      else await recorded;
+    }
+    return withSecurityHeaders(response, request);
   },
 };

@@ -1,0 +1,381 @@
+import React, { useEffect, useState } from 'react';
+import {
+  ShieldCheck,
+  Clock,
+  CheckCircle,
+  ArrowCounterClockwise,
+  EnvelopeSimple,
+  Warning,
+  Bell,
+  UsersThree,
+  NotePencil,
+} from '@phosphor-icons/react';
+import { useApp } from '../context';
+import { Button, Tabs, Empty, Field, FormError, FormFooter, SubjectChip, RichText } from '../ui';
+import { useSubmit } from '../form-utils';
+import { previewAgenda } from '../api';
+import { dateLabel } from '../../shared/domain';
+import { eventLabel } from '../../shared/agenda';
+import { canManageEvent } from '../../shared/delegation';
+import '../delegation.css';
+
+export function ConflictNotice({ conflicts }) {
+  if (!conflicts.length) return null;
+  return (
+    <div className="agenda-conflicts" role="status">
+      <h4>
+        <Warning size={19} />{' '}
+        {conflicts.some((c) => c.type === 'duplicate')
+          ? 'Possible duplicat'
+          : 'Coincidències d’horari'}
+      </h4>
+      {conflicts.map((c) => (
+        <p key={c.id}>
+          <strong>{c.title}</strong>
+          <span>
+            {c.start || 'Tot el dia'}
+            {c.end ? '–' + c.end : ''} ·{' '}
+            {c.type === 'duplicate'
+              ? 'Ja existeix o està pendent de validació'
+              : 'Coincideix amb aquesta data'}
+          </span>
+        </p>
+      ))}
+    </div>
+  );
+}
+export function AgendaReview({ item }) {
+  const { close, mutate } = useApp();
+  const [preview, setPreview] = useState(null),
+    [previewError, setPreviewError] = useState('');
+  const [note, setNote] = useState(''),
+    [confirmed, setConfirmed] = useState(false),
+    [ack, setAck] = useState(''),
+    [retry, setRetry] = useState(0);
+  const { busy, error, submit } = useSubmit(close);
+  useEffect(() => {
+    let live = true;
+    previewAgenda({ review_id: item.id })
+      .then((r) => {
+        if (live) {
+          setPreview(r);
+          setPreviewError('');
+        }
+      })
+      .catch((e) => {
+        if (live) setPreviewError(e.message);
+      });
+    return () => {
+      live = false;
+    };
+  }, [item.id, retry]);
+  const decision = async (action) => {
+    const result = await previewAgenda({ review_id: item.id });
+    setPreview(result);
+    if (
+      action === 'approve' &&
+      (result.conflicts.some((c) => c.type === 'duplicate') ||
+        (result.conflicts.length && ack !== result.conflicts_token))
+    )
+      throw new Error('Revisa els avisos actualitzats abans d’aprovar.');
+    return mutate(
+      '/events/' + item.id + '/review',
+      { revision: item.revision, decision: action, note, confirmed, conflicts_token: ack },
+      action === 'approve'
+        ? 'Data validada i publicada. Hem avisat l’autor.'
+        : 'Decisió desada. Hem avisat l’autor.',
+    );
+  };
+  return (
+    <form className="agenda-review-form" onSubmit={submit(() => decision('approve'))}>
+      <span className="agenda-state pending">
+        <Clock size={17} />{' '}
+        {item.review_status === 'approved' ? 'Publicada' : 'Pendent de validació'}
+      </span>
+      <h3>{item.title}</h3>
+      <p>
+        {eventLabel(item)} · {dateLabel(item.date)} · {item.start || 'Tot el dia'}
+        {item.end ? '–' + item.end : ''}
+      </p>
+      <p className="muted">Proposat per {item.author}</p>
+      <RichText text={item.body} />
+      <ConflictNotice conflicts={preview?.conflicts || []} />
+      {preview && !preview.conflicts.length && (
+        <p className="agenda-clear">Cap duplicat ni coincidència detectats.</p>
+      )}
+      {previewError && (
+        <div role="alert">
+          <p>{previewError}</p>
+          <Button type="button" onClick={() => setRetry((n) => n + 1)}>
+            Tornar a comprovar
+          </Button>
+        </div>
+      )}
+      {preview?.conflicts.some((c) => c.type === 'overlap') && (
+        <label className="checkbox-label">
+          <input
+            type="checkbox"
+            checked={ack === preview.conflicts_token}
+            onChange={(e) => setAck(e.target.checked ? preview.conflicts_token : '')}
+          />{' '}
+          He comprovat les coincidències
+        </label>
+      )}
+      <Field label="Missatge per a l’autor" hint="Obligatori si demanes canvis o retires la data.">
+        <textarea
+          maxLength={1000}
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="Què cal confirmar o corregir?"
+        />
+      </Field>
+      {item.review_status === 'pending' && (
+        <label className="checkbox-label agenda-truth">
+          <input
+            type="checkbox"
+            checked={confirmed}
+            onChange={(e) => setConfirmed(e.target.checked)}
+          />{' '}
+          Confirmo que la data i el contingut són correctes
+        </label>
+      )}
+      <FormError error={error} />
+      <FormFooter
+        busy={busy}
+        onCancel={close}
+        label="Validar i publicar"
+        disabled={
+          !confirmed ||
+          !preview ||
+          !!previewError ||
+          preview.conflicts.some((c) => c.type === 'duplicate') ||
+          (!!preview.conflicts.length && ack !== preview.conflicts_token) ||
+          item.review_status !== 'pending'
+        }
+      >
+        <Button
+          type="button"
+          disabled={busy || !note.trim()}
+          onClick={submit(() =>
+            decision(item.review_status === 'approved' ? 'withdraw' : 'return'),
+          )}
+        >
+          <ArrowCounterClockwise size={18} />
+          {item.review_status === 'approved' ? 'Retirar de l’agenda' : 'Demanar canvis'}
+        </Button>
+      </FormFooter>
+    </form>
+  );
+}
+export default function Delegates({ notificationsOnly = false }) {
+  const { data, open, mutate } = useApp();
+  const delegation = data.delegation || { units: [], members: [], managedUnits: [] };
+  const manager = delegation.managedUnits.length > 0;
+  const proposals = data.agendaProposals || [];
+  const queue = proposals.filter(
+    (e) => e.review_status === 'pending' && canManageEvent(data.user, e, delegation),
+  );
+  const mine = proposals.filter((e) => e.owner_id === data.user.id);
+  const notifications = data.agendaNotifications || [];
+  const [tab, setTab] = useState(manager ? 'pending' : 'mine'),
+    [busy, setBusy] = useState(false);
+  async function markRead() {
+    setBusy(true);
+    try {
+      await mutate(
+        '/agenda/notifications/read',
+        { ids: notifications.filter((n) => !n.read_at).map((n) => n.id) },
+        'Avisos marcats com a llegits.',
+      );
+    } catch {
+    } finally {
+      setBusy(false);
+    }
+  }
+  function card(e) {
+    const manage = canManageEvent(data.user, e, delegation);
+    return (
+      <article className="panel delegate-proposal" key={e.id}>
+        <div className="delegate-proposal-top">
+          <span className={'agenda-state ' + e.review_status}>
+            {e.review_status === 'pending'
+              ? 'Pendent'
+              : e.review_status === 'returned'
+                ? 'Cal corregir'
+                : 'Retirada'}
+          </span>
+          <span>{eventLabel(e)}</span>
+        </div>
+        <h3>{e.title}</h3>
+        <SubjectChip subject={data.subjects.find((s) => s.id === e.subject_id)} />
+        <p>
+          {dateLabel(e.date)} · {e.start || 'Tot el dia'}
+          {e.end ? '–' + e.end : ''}
+        </p>
+        <small>Proposat per {e.author}</small>
+        {e.review_note && <p className="delegate-feedback">{e.review_note}</p>}
+        <div className="row-actions">
+          {manage && e.review_status === 'pending' && (
+            <Button variant="primary" onClick={() => open('agendaReview', e)}>
+              <ShieldCheck size={18} /> Revisar proposta
+            </Button>
+          )}
+          {e.owner_id === data.user.id && (
+            <Button onClick={() => open('event', e)}>
+              <NotePencil size={18} />{' '}
+              {e.review_status === 'returned' ? 'Corregir i reenviar' : 'Editar proposta'}
+            </Button>
+          )}
+          {e.owner_id === data.user.id && e.review_status === 'pending' && (
+            <Button
+              onClick={() => open('delete', { resource: 'events', id: e.id, title: e.title })}
+            >
+              Cancel·lar proposta
+            </Button>
+          )}
+        </div>
+      </article>
+    );
+  }
+  if (notificationsOnly)
+    return (
+      <section className="delegate-notifications" aria-label="Notificacions de l’agenda">
+        <div className="delegate-section-heading">
+          <h2>
+            <Bell size={23} /> Notificacions
+          </h2>
+          <Button disabled={busy || !notifications.some((n) => !n.read_at)} onClick={markRead}>
+            Marcar com a llegides
+          </Button>
+        </div>
+        {queue.length > 0 && (
+          <div className="delegate-pending-notice">
+            <Clock size={23} />
+            <div>
+              <strong>{queue.length} propostes pendents de validar</strong>
+              <p>Obre Delegats per comprovar-les i publicar les dates correctes.</p>
+            </div>
+          </div>
+        )}
+        {notifications.length ? (
+          notifications.map((n) => (
+            <article
+              className={'panel agenda-notification ' + (n.read_at ? '' : 'unread')}
+              key={n.id}
+            >
+              <CheckCircle size={24} />
+              <div>
+                <h3>{n.title}</h3>
+                <p>{n.body}</p>
+                <small>{dateLabel(n.created_at.slice(0, 10))}</small>
+              </div>
+            </article>
+          ))
+        ) : (
+          <Empty
+            title="Encara no tens notificacions"
+            body="Aquí rebràs el resultat de les teves propostes públiques."
+          />
+        )}
+      </section>
+    );
+  return (
+    <section className="delegation-hub" aria-label="Delegats i agenda pública">
+      <div className="delegate-hero">
+        <ShieldCheck size={38} />
+        <div>
+          <h2>{manager ? 'El teu panell de delegats' : 'Delegats de la comunitat'}</h2>
+          <p>
+            {manager
+              ? 'Confirma les dates, revisa coincidències i ajuda la classe a tenir l’agenda al dia.'
+              : 'Proposa dates a l’agenda i contacta amb els representants de cada classe.'}
+          </p>
+        </div>
+      </div>
+      <div className="delegate-stats">
+        <span>
+          <b>{queue.length}</b>Pendents de validar
+        </span>
+        <span>
+          <b>{mine.length}</b>Les meves propostes
+        </span>
+        <span>
+          <b>{delegation.members.length}</b>Representants
+        </span>
+      </div>
+      <Tabs
+        label="Panell de delegats"
+        value={tab}
+        onChange={setTab}
+        items={[
+          ...(manager ? [['pending', 'Per validar', Clock]] : []),
+          ['mine', 'Les meves propostes', NotePencil],
+          ['contacts', 'Contactes', UsersThree],
+        ]}
+      />
+      {tab === 'contacts' ? (
+        <div className="delegate-contact-grid">
+          {delegation.units.map((unit) => (
+            <section
+              className={
+                'panel delegate-contact ' + (unit.id === delegation.unit ? 'my-class' : '')
+              }
+              key={unit.id}
+            >
+              <h3>
+                {unit.label}
+                {unit.id === delegation.unit && <small>La teva classe</small>}
+              </h3>
+              {delegation.members
+                .filter((m) => m.unit_id === unit.id)
+                .map((m) => (
+                  <article key={m.email}>
+                    <span className="delegate-initials" aria-hidden="true">
+                      {m.name
+                        .split(' ')
+                        .slice(0, 2)
+                        .map((s) => s[0])
+                        .join('')}
+                    </span>
+                    <div>
+                      <strong>{m.name}</strong>
+                      <small>
+                        {m.position === 'subdelegate' ? 'Subdelegat/ada' : 'Delegat/ada'} · mateixos
+                        permisos
+                      </small>
+                      <a href={'mailto:' + m.email}>
+                        <EnvelopeSimple size={16} />
+                        {m.email}
+                      </a>
+                    </div>
+                  </article>
+                ))}
+              {!delegation.members.some((m) => m.unit_id === unit.id) && (
+                <p>Representants pendents d’assignar.</p>
+              )}
+            </section>
+          ))}
+        </div>
+      ) : (
+        <div className="delegate-proposal-grid">
+          {(tab === 'pending' ? queue : mine).length ? (
+            (tab === 'pending' ? queue : mine).map(card)
+          ) : (
+            <Empty
+              title={tab === 'pending' ? 'Tot revisat!' : 'Cap proposta pendent'}
+              body={
+                tab === 'pending'
+                  ? 'Les propostes noves apareixeran aquí automàticament.'
+                  : 'Les dates aprovades ja apareixen a l’agenda.'
+              }
+            />
+          )}
+        </div>
+      )}
+      <p className="delegate-scope-note">
+        Delegats i subdelegats tenen els mateixos permisos de revisió dins del seu àmbit. Les dates
+        privades són personals.
+      </p>
+    </section>
+  );
+}

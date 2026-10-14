@@ -1,24 +1,43 @@
-import React from 'react';
-import { Play, Pause, ArrowCounterClockwise, Gear } from '@phosphor-icons/react';
+import React, { useState } from 'react';
+import {
+  Play,
+  Pause,
+  ArrowCounterClockwise,
+  Gear,
+  ArrowsOut,
+  SpeakerHigh,
+} from '@phosphor-icons/react';
 import { useApp } from '../context';
 import { useTimer } from '../timer';
 import { PageTitle, Button, SubjectChip, IconButton } from '../ui';
 import { ReferenceArt } from '../art';
 import MusicPlayer from '../components/MusicPlayer';
+import FocusMode, { FocusOptions } from '../components/FocusMode';
+import { download } from '../api';
 export default function Study() {
   const { data, subject, open } = useApp();
-  const { timer, remaining, toggle, reset } = useTimer();
+  const { timer, remaining, toggle, reset, options, pendingSessions, rejectedSessions } =
+    useTimer();
+  const [focusing, setFocusing] = useState(false);
   const duration =
-    (timer.phase === 'work'
-      ? data.focus.work
-      : timer.phase === 'long'
-        ? data.focus.long_rest
-        : data.focus.rest) * 60;
+    timer.phaseSeconds ||
+    (timer.phase === 'work' && timer.workMinutes
+      ? timer.workMinutes
+      : timer.phase === 'work'
+        ? data.focus.work
+        : timer.phase === 'long'
+          ? data.focus.long_rest
+          : data.focus.rest) * 60;
   const elapsed = Math.max(0, Math.min(1, 1 - remaining / duration));
   const today = data.study.filter((session) => session.day === data.today);
   return (
     <>
-      <PageTitle title="Estudi" subtitle="Un espai per concentrar-te" />
+      <PageTitle title="Estudi" subtitle="Un espai per concentrar-te">
+        <Button variant="primary" onClick={() => setFocusing(true)}>
+          <ArrowsOut size={19} /> Mode focus
+        </Button>
+      </PageTitle>
+      {focusing && <FocusMode onClose={() => setFocusing(false)} />}
       <div className="study-layout">
         <section className="panel focus-panel">
           <div className="focus-heading">
@@ -36,7 +55,7 @@ export default function Study() {
                   : 'Descans'}
             </span>
             <span>
-              Sessió {timer.round} de {data.focus.rounds}
+              Sessió {((timer.round - 1) % data.focus.rounds) + 1} de {data.focus.rounds}
             </span>
           </p>
           <div className="timer-face">
@@ -96,6 +115,38 @@ export default function Study() {
           <p className="focus-settings-summary">
             {data.focus.work} min de concentració · {data.focus.rest} min de descans
           </p>
+          <details className="study-continuity">
+            <summary>
+              <SpeakerHigh size={18} />{' '}
+              {options.automatic ? 'Continuïtat automàtica' : 'Continuïtat manual'} ·{' '}
+              {options.alarm ? 'amb alarma' : 'sense so'}
+            </summary>
+            <FocusOptions />
+          </details>
+          {pendingSessions > 0 && (
+            <p className="focus-queue-hint" role="status">
+              {pendingSessions} sessions pendents de sincronitzar. El temporitzador pot continuar.
+            </p>
+          )}
+          {rejectedSessions.length > 0 && (
+            <div className="focus-queue-hint" role="status">
+              <p>
+                {rejectedSessions.length} sessions no s’han pogut sincronitzar. Les dades es
+                conserven en aquest dispositiu.
+              </p>
+              <Button
+                onClick={() =>
+                  download(
+                    'sessions-estudi-pendents.json',
+                    JSON.stringify(rejectedSessions, null, 2),
+                    'application/json',
+                  )
+                }
+              >
+                Descarregar sessions
+              </Button>
+            </div>
+          )}
         </section>
         <aside className="study-aside">
           <MusicPlayer />

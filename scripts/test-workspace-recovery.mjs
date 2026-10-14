@@ -396,7 +396,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         try {
           // A hash-only navigation keeps the student bootstrap. Reload the
           // fixture identity immediately rather than waiting for the 30s sync.
-          await page.goto(fixture.base + '/?audit=admin#admin');
+          await page.goto(fixture.base + '/?audit=admin#management');
           await page.getByRole('alert').waitFor();
           mode = 'normal';
           await page.getByRole('button', { name: 'Tornar-ho a provar', exact: true }).click();

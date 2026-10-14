@@ -207,7 +207,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
         assert.equal(await p.locator('[data-choice="61080"] progress').count(), 0);
         await p
           .locator('[data-choice="61080"]')
-          .getByRole('button', { name: 'Ponderacions i detall', exact: true })
+          .getByRole('button', { name: 'Detall i evolució', exact: true })
           .click();
         await p
           .getByRole('dialog')

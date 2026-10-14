@@ -42,6 +42,7 @@ import { matchesSearch } from '../../shared/search';
 import { currentPauProfile, degreeOutlook } from '../../shared/pau-outlook';
 import PauChoices, { PauOutlook } from '../components/PauChoices';
 import SchoolCalendar from '../components/SchoolCalendar';
+import PauHistory, { PauHistoryComparison } from '../components/PauHistory';
 import '../pau.css';
 
 const number = (n) =>
@@ -513,13 +514,16 @@ export default function Pau() {
         </Button>
       )}
       {tab === 'top' ? (
-        <PauChoices
-          codes={topFive}
-          {...{ catalogue, profile, round, hideGrades, saving, patch }}
-          draft={value || draft}
-          explore={() => setTab('finder')}
-          detail={setDetail}
-        />
+        <>
+          <PauChoices
+            codes={topFive}
+            {...{ catalogue, profile, round, hideGrades, saving, patch }}
+            draft={value || draft}
+            explore={() => setTab('finder')}
+            detail={setDetail}
+          />
+          <PauHistoryComparison codes={topFive} catalogue={catalogue} />
+        </>
       ) : tab === 'calculator' ? (
         <div className="pau-calculator">
           <section className="panel pau-inputs" aria-label="Notes de la PAU">
@@ -897,7 +901,7 @@ export default function Pau() {
                       <h3>{degree.name}</h3>
                       <PauOutlook {...{ degree, profile, round, hideGrades }} draft={draft} />
                       <div className="pau-degree-actions">
-                        <Button onClick={() => setDetail(degree.code)}>Ponderacions</Button>
+                        <Button onClick={() => setDetail(degree.code)}>Detall i evolució</Button>
                         <Button
                           aria-pressed={topFive.includes(degree.code)}
                           disabled={
@@ -975,10 +979,13 @@ export default function Pau() {
         open={!!detail}
         onClose={() => setDetail(null)}
         title={catalogue?.degrees.find((d) => d.code === detail)?.name || 'Detall del grau'}
-        description="Nota d’admissió i ponderacions oficials del grau."
+        description="Evolució de les notes de tall, mitjanes històriques i ponderacions oficials del grau."
       >
         {catalogue?.degrees.find((d) => d.code === detail) && (
-          <WeightDetails degree={catalogue.degrees.find((d) => d.code === detail)} />
+          <>
+            <PauHistory degrees={[catalogue.degrees.find((d) => d.code === detail)]} />
+            <WeightDetails degree={catalogue.degrees.find((d) => d.code === detail)} />
+          </>
         )}
       </Modal>
     </div>

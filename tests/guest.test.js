@@ -147,7 +147,7 @@ test('Agenda: tasques privades i progrés personal amb control de visibilitat', 
           data: { done: true },
         })
       ).status,
-      403,
+      404,
     );
     assert.equal(
       (

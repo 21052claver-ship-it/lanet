@@ -161,6 +161,16 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
           null,
         );
         assert.equal(writes, width === 390 ? 2 : 1);
+        if (width === 1440) {
+          // A confirmed course save updates class context even if its read failed.
+          await page.goto(f.base + '/#community');
+          await page.getByRole('tab', { name: 'Delegats', exact: true }).click();
+          await page.getByRole('tab', { name: 'Contactes', exact: true }).click();
+          assert.match(
+            await page.locator('.delegate-contact.my-class h3').innerText(),
+            /Tecnològic 2/,
+          );
+        }
         await page.reload();
         await page.locator('.app-shell').waitFor();
         assert.equal(await page.locator('.onboarding').count(), 0);
