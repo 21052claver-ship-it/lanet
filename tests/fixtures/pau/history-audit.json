@@ -1,0 +1,135 @@
+{
+  "sourceRows": 561,
+  "allTextCodesMatched": true,
+  "totalCodes": 595,
+  "currentCodes": 560,
+  "matchedCurrentHistoricalCodes": 526,
+  "newCurrentCodes": [
+    "11119",
+    "11120",
+    "11121",
+    "11122",
+    "11123",
+    "11124",
+    "11125",
+    "21171",
+    "21172",
+    "21173",
+    "21174",
+    "21175",
+    "31138",
+    "41073",
+    "41074",
+    "41075",
+    "41076",
+    "61083",
+    "61084",
+    "71089",
+    "71090",
+    "81089",
+    "81090",
+    "81091",
+    "81092",
+    "81093",
+    "81095",
+    "81096",
+    "81097",
+    "81098",
+    "91065",
+    "91066",
+    "91923",
+    "91924"
+  ],
+  "historicalOnlyCodes": [
+    "11008",
+    "11016",
+    "11018",
+    "11020",
+    "11036",
+    "11041",
+    "11050",
+    "11052",
+    "11065",
+    "11066",
+    "11070",
+    "11088",
+    "21040",
+    "21058",
+    "21101",
+    "21102",
+    "21133",
+    "31095",
+    "41045",
+    "41049",
+    "41052",
+    "61026",
+    "71012",
+    "71020",
+    "81003",
+    "81011",
+    "81016",
+    "81041",
+    "81046",
+    "81052",
+    "81053",
+    "81067",
+    "81069",
+    "91918",
+    "91919"
+  ],
+  "coverage": {
+    "2022": {
+      "first": 510,
+      "latest": 510
+    },
+    "2023": {
+      "first": 522,
+      "latest": 522
+    },
+    "2024": {
+      "first": 550,
+      "latest": 550
+    },
+    "2025": {
+      "first": 555,
+      "latest": 555
+    },
+    "2026": {
+      "first": 560,
+      "latest": 558
+    }
+  },
+  "sources": {
+    "history-2021-2025": {
+      "url": "https://universitats.gencat.cat/web/.content/02_preinscripcio/enllac-documents/notes-de-tall/Notes-de-tall-via-PAU-CFGS_2021_2025.pdf",
+      "sha256": "3f33b2da35201954e8b978538b5c76966e89668a8f37703ae534e0a1f9d3f1f1",
+      "pages": 11,
+      "years": [
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "session": "juny",
+      "route": "PAU/CFGS",
+      "rounds": [
+        "first",
+        "final"
+      ]
+    },
+    "cutoffs-2026-first": {
+      "url": "https://universitats.gencat.cat/web/.content/02_preinscripcio/enllac-documents/notes-de-tall/Notes-tall-1a-assignacio_juny_2026.pdf",
+      "date": "2026-07-10",
+      "sha256": "56f8a797f34e7774018b64cf4cbbde621e382810a9aef62c031793a99667aa2a",
+      "pages": 8
+    },
+    "cutoffs-2026-latest": {
+      "url": "https://universitats.gencat.cat/web/.content/02_preinscripcio/enllac-documents/notes-de-tall/Notes-tall-6a-assignacio_juny_2026.pdf",
+      "date": "2026-10-07",
+      "sha256": "e203f0c1abd9580deb623a3ae20916d93ee267f053d6a5034ea5dfadf12713b9",
+      "pages": 8
+    }
+  },
+  "matching": "Exact official code only; no fuzzy names or inferred missing values."
+}

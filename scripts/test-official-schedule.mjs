@@ -236,7 +236,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         const managementRoundTrip = group === '2C' && [320, 390, 1440].includes(width);
         if (managementRoundTrip) {
           f.db.prepare("UPDATE users SET role='admin' WHERE id='browser'").run();
-          await page.goto(f.base + '/#admin');
+          await page.goto(f.base + '/#management');
           // The fixture changed the role outside the app. A hash navigation
           // keeps the old bootstrap; reload instead of waiting for the 30s poll.
           await page.reload();

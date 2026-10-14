@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -13,6 +13,8 @@ import { ReferenceArt } from '../art';
 import { Button, FormError, SubjectChip, SubjectMark } from '../ui';
 import { useSubmit } from '../form-utils';
 import { DAYS, DAYS_SHORT, slotConflicts } from '../../shared/domain';
+import { onboardingKey, readOnboarding } from '../../shared/onboarding';
+import { userUnit } from '../../shared/delegation';
 import {
   SCHEDULE_VERSION,
   OFFICIAL_ROUTES,
@@ -104,21 +106,36 @@ function WeekPreview({ catalog, ids, subject }) {
     </div>
   );
 }
-export default function CourseSetup() {
-  const { data, close, mutate, subject } = useApp();
-  const initialGroup = OFFICIAL_ROUTES.some((r) => r.id === data.user.group_id)
-    ? data.user.group_id
-    : '';
+export default function CourseSetup({ onboarding = false, welcome, onStepChange }) {
+  const { data, close, mutate, subject, setData, go } = useApp();
+  const [draft] = useState(() => {
+    if (!onboarding) return null;
+    try {
+      return readOnboarding(data, window.sessionStorage);
+    } catch {
+      return null;
+    }
+  });
+  const initialGroup =
+    draft?.group ||
+    ((!onboarding || data.user.role === 'delegate') &&
+    OFFICIAL_ROUTES.some((r) => r.id === data.user.group_id)
+      ? data.user.group_id
+      : '');
   const [group, setGroup] = useState(initialGroup);
-  const [choices, setChoices] = useState(() =>
-    curriculumChoices(
-      data,
-      initialGroup,
-      data.enrollments.map((e) => e.offering_id),
-      data.user.schedule_version === SCHEDULE_VERSION,
-    ),
+  const [choices, setChoices] = useState(
+    () =>
+      draft?.choices ||
+      curriculumChoices(
+        data,
+        initialGroup,
+        data.enrollments.map((e) => e.offering_id),
+        data.user.schedule_version === SCHEDULE_VERSION,
+      ),
   );
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(draft?.step ?? (onboarding ? -1 : 0));
+  const committed = useRef(false);
+  const form = useRef(null);
   const heading = useRef(null);
   const { busy, error, setError, submit } = useSubmit(close);
   const route = OFFICIAL_ROUTES.find((r) => r.id === group);
@@ -127,12 +144,31 @@ export default function CourseSetup() {
   const issues = curriculumIssues(data, group, ids);
   const conflicts = slotConflicts(ids, data.slots);
   const missing = route?.blocks.filter((b) => !choices[b.id]?.offering_id) || [];
+  const Heading = onboarding ? 'h1' : 'h3';
+  useEffect(() => {
+    onStepChange?.(step);
+  }, [step, onStepChange]);
+  useLayoutEffect(() => {
+    if (!onboarding) return;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    form.current?.querySelector('h1')?.focus({ preventScroll: true });
+  }, [onboarding, step]);
+  useEffect(() => {
+    if (!onboarding || committed.current || !group) return;
+    try {
+      sessionStorage.setItem(onboardingKey(data.user.id), JSON.stringify({ group, choices, step }));
+    } catch {
+      /* Storage may be disabled; the form still works. */
+    }
+  }, [onboarding, data.user.id, group, choices, step]);
   function move(next) {
     setError('');
     setStep(next);
     requestAnimationFrame(() => {
-      heading.current?.closest('.dialog')?.scrollTo({ top: 0 });
-      heading.current?.focus({ preventScroll: true });
+      if (!onboarding) {
+        heading.current?.closest('.dialog')?.scrollTo({ top: 0 });
+        heading.current?.focus({ preventScroll: true });
+      }
     });
   }
   function changeRoute(id) {
@@ -158,43 +194,87 @@ export default function CourseSetup() {
       '/configure',
       { group_id: group, path: route.path, offerings: ids },
       'El curs i l’horari ja estan configurats.',
+      () => {
+        committed.current = true;
+        if (onboarding) {
+          try {
+            sessionStorage.removeItem(onboardingKey(data.user.id));
+          } catch {
+            /* Optional local progress. */
+          }
+          go('schedule');
+        }
+        // Confirmed writes must also leave onboarding when a subsequent read fails.
+        setData((current) => ({
+          ...current,
+          user: {
+            ...current.user,
+            group_id: group,
+            path: route.path,
+            configured: 1,
+            schedule_version: SCHEDULE_VERSION,
+          },
+          enrollments: ids.map((offering_id) => ({ user_id: data.user.id, offering_id })),
+          delegation: current.delegation
+            ? {
+                ...current.delegation,
+                unit:
+                  userUnit(
+                    ids.map((offering_id) => ({ offering_id })),
+                    current.offerings,
+                  )?.id || null,
+              }
+            : current.delegation,
+        }));
+      },
     );
   });
   return (
     <form
+      ref={form}
       className="course-setup"
       onSubmit={(e) => {
         if (step === 2) return save(e);
         e.preventDefault();
-        if ((step === 0 && route) || (step === 1 && !issues.length && !conflicts.length))
+        if (
+          step === -1 ||
+          (step === 0 && route) ||
+          (step === 1 && !issues.length && !conflicts.length)
+        )
           move(step + 1);
       }}
       aria-label="Configurar l’horari oficial"
     >
-      <fieldset disabled={busy} className="course-setup-body">
-        <ol className="course-steps" aria-label="Passos de configuració">
-          {['Itinerari', 'Assignatures', 'Revisió'].map((label, i) => (
-            <li key={label} aria-current={step === i ? 'step' : undefined} data-done={i < step}>
-              <span aria-hidden="true">{i < step ? <Check size={16} /> : i + 1}</span>
-              {label}
-            </li>
-          ))}
-        </ol>
-        <div className="course-step-heading">
-          <small>2n de batxillerat · 2026–2027</small>
-          <h3 tabIndex={-1} ref={heading}>
-            {['Quin itinerari fas?', 'Fes-lo teu', 'El teu horari, a punt'][step]}
-          </h3>
-          <p>
-            {
-              [
-                'Tria el teu grup. Després escolliràs les optatives i, quan calgui, el professorat.',
-                'Tria una opció de cada bloc. Les comunes ja estan incloses.',
-                'Revisa les assignatures, el professorat i les aules abans de desar.',
-              ][step]
-            }
-          </p>
-        </div>
+      <fieldset disabled={busy} className="course-setup-body" key={onboarding ? step : undefined}>
+        {!onboarding && (
+          <ol className="course-steps" aria-label="Passos de configuració">
+            {['Itinerari', 'Assignatures', 'Revisió'].map((label, i) => (
+              <li key={label} aria-current={step === i ? 'step' : undefined} data-done={i < step}>
+                <span aria-hidden="true">{i < step ? <Check size={16} /> : i + 1}</span>
+                {label}
+              </li>
+            ))}
+          </ol>
+        )}
+        {step === -1 ? (
+          welcome
+        ) : (
+          <div className="course-step-heading">
+            <small>2n de batxillerat · 2026–2027</small>
+            <Heading tabIndex={-1} ref={heading}>
+              {['Quin itinerari fas?', 'Fes-lo teu', 'El teu horari, a punt'][step]}
+            </Heading>
+            <p>
+              {
+                [
+                  'Tria el teu grup. Després escolliràs les optatives i, quan calgui, el professorat.',
+                  'Tria una opció de cada bloc. Les comunes ja estan incloses.',
+                  'Revisa les assignatures, el professorat i les aules abans de desar.',
+                ][step]
+              }
+            </p>
+          </div>
+        )}
         {step === 0 && (
           <fieldset className="course-route-options">
             <legend className="sr-only">Itinerari oficial</legend>
@@ -345,23 +425,33 @@ export default function CourseSetup() {
       </fieldset>
       <FormError error={error} />
       <div className="form-footer course-setup-footer">
-        {step > 0 ? (
+        {step > (onboarding ? -1 : 0) ? (
           <Button type="button" variant="ghost" onClick={() => move(step - 1)} disabled={busy}>
             <ArrowLeft size={17} />
             Enrere
           </Button>
-        ) : (
+        ) : !onboarding ? (
           <Button type="button" variant="ghost" onClick={close}>
             Cancel·lar
           </Button>
+        ) : (
+          <span className="onboarding-time">Àgil de preparar. Fàcil de canviar.</span>
         )}
         <Button
           type="submit"
           variant="primary"
           busy={busy}
-          disabled={step === 0 ? !route : issues.length > 0 || conflicts.length > 0}
+          disabled={
+            step === -1 ? false : step === 0 ? !route : issues.length > 0 || conflicts.length > 0
+          }
         >
-          {step === 2 ? 'Desar el meu horari' : 'Continuar'}
+          {step === -1
+            ? 'Personalitzar el meu curs'
+            : step === 2
+              ? onboarding
+                ? 'Entrar a La Net'
+                : 'Desar el meu horari'
+              : 'Continuar'}
           {step < 2 && <ArrowRight size={17} />}
         </Button>
       </div>

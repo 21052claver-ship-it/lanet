@@ -6,6 +6,7 @@ import { googleAvailable } from './google-config.js';
 import { bakeryRewardPolicy } from '../shared/bakery-reward.js';
 import { bakeryStatus } from './bakery.js';
 import { expirePredictions } from './predictions.js';
+import { agendaBootstrap } from './agenda.js';
 import {
   SCHEDULE_VERSION,
   SCHEDULE_SOURCE,
@@ -71,7 +72,6 @@ export async function bootstrap(env, user) {
   const cat = await catalog(env);
   const [
     enrollments,
-    events,
     notes,
     pluses,
     grades,
@@ -90,14 +90,6 @@ export async function bootstrap(env, user) {
     pau,
   ] = await Promise.all([
     rows(env, 'SELECT * FROM enrollments WHERE user_id=?', user.id),
-    rows(
-      env,
-      `SELECT e.*,u.name AS author,COALESCE(ep.done,0) AS done FROM events e JOIN users u ON u.id=e.owner_id LEFT JOIN event_progress ep ON ep.event_id=e.id AND ep.user_id=? WHERE (e.visibility='private' AND e.owner_id=?) OR (e.visibility='shared' AND (e.group_id IS NULL OR e.group_id=?) AND (e.offering_id IS NULL OR e.offering_id IN(SELECT offering_id FROM enrollments WHERE user_id=?))) ORDER BY e.date,e.start`,
-      user.id,
-      user.id,
-      user.group_id,
-      user.id,
-    ),
     rows(
       env,
       `SELECT n.id,n.author_id,n.subject_id,n.title,n.summary,n.price,n.status,n.created_at,n.topic,n.term,(length(trim(n.body))>0) AS has_text,u.name AS author,(SELECT COUNT(*) FROM likes WHERE type='note' AND target_id=n.id AND active=1) AS likes,COALESCE((SELECT active FROM likes WHERE user_id=? AND type='note' AND target_id=n.id),0) AS liked,EXISTS(SELECT 1 FROM saves WHERE user_id=? AND type='note' AND target_id=n.id) AS saved,EXISTS(SELECT 1 FROM unlocks WHERE user_id=? AND note_id=n.id) AS purchased FROM notes n JOIN users u ON u.id=n.author_id WHERE n.status='published' OR n.author_id=? OR EXISTS(SELECT 1 FROM unlocks WHERE user_id=? AND note_id=n.id) ORDER BY n.created_at DESC`,
@@ -153,6 +145,7 @@ export async function bootstrap(env, user) {
     rows(env, 'SELECT id,proposal_id FROM files WHERE proposal_id IS NOT NULL'),
   ]);
   const settingsObject = Object.fromEntries(settings.map((s) => [s.key, s.value]));
+  const agenda = await agendaBootstrap(env, user, cat, enrollments);
   const bakeryReward = await bakeryStatus(
     env,
     user,
@@ -173,7 +166,7 @@ export async function bootstrap(env, user) {
     ),
     ...cat,
     enrollments,
-    events,
+    ...agenda,
     notes: notes.map((n) => {
       const unlocked =
         n.price === 0 || n.author_id === user.id || !!n.purchased || user.role === 'admin';

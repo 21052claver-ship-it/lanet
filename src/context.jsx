@@ -5,6 +5,9 @@ import { useGradeWrites } from './grade-writes';
 import { emptyPau } from '../shared/pau';
 import { useReactionWrites } from './reaction-writes';
 import { createPreferenceWriter } from '../shared/preference-writer';
+import { useActivity } from './use-activity';
+import { ACTIVITY_INTERVAL, ACTIVE_WINDOW } from '../shared/activity';
+const currentRoute = () => location.hash.slice(1) || (location.pathname.replace(/\/$/, '') === '/admin' ? 'admin' : 'schedule');
 // Preserve the provider identity across Vite module refreshes during development.
 const AppContext = import.meta.hot?.data.appContext ?? createContext();
 if (import.meta.hot) import.meta.hot.data.appContext = AppContext;
@@ -13,13 +16,14 @@ export function AppProvider({ initial, children }) {
   const [data, setData] = useState(initial),
     [modal, setModal] = useState(null),
     [toast, setToast] = useState(null),
-    [page, setPage] = useState(() => location.hash.slice(1) || 'schedule'),
+    [page, setPage] = useState(currentRoute),
     [communityTab, setCommunityTab] = useState('notices'),
     [subjectFilter, updateSubjectFilter] = useState(() => {
       const id = new URL(location.href).searchParams.get('subject');
       return initial.subjects.some(s => s.id === id) ? id : 'all';
     });
   const [agendaSubject, setAgendaSubject] = useState(null);
+  const lastInteraction = useActivity(initial.user.id, page);
   const setSubjectFilter = useCallback((id) => {
     updateSubjectFilter(id);
     const url = new URL(location.href);
@@ -75,16 +79,22 @@ export function AppProvider({ initial, children }) {
     sync.current = createDataSync({ read: () => api('/bootstrap'), apply: setData });
   const refresh = useCallback(() => sync.current.refresh(), []);
   useEffect(() => {
+    let lastRead = Date.now(), pending = false;
     const update = () => {
-      if (document.visibilityState === 'visible') refresh().catch(() => {});
+      const now = Date.now();
+      if (pending || document.visibilityState !== 'visible' ||
+        now-lastInteraction.current >= ACTIVE_WINDOW || now-lastRead < ACTIVITY_INTERVAL) return;
+      lastRead = now;
+      pending = true;
+      refresh().catch(() => {}).finally(() => { pending = false; });
     };
-    const interval = setInterval(update, 30000);
+    const interval = setInterval(update, ACTIVITY_INTERVAL);
     window.addEventListener('focus', update);
     return () => {
       clearInterval(interval);
       window.removeEventListener('focus', update);
     };
-  }, [refresh]);
+  }, [refresh, lastInteraction]);
   const mutate = useCallback(
     (path, body, success, onCommitted, method = 'POST', requestOptions = {}) =>
       runMutation({
@@ -127,13 +137,21 @@ export function AppProvider({ initial, children }) {
   const reactions = useReactionWrites(data, setData, sync.current, notify);
   const go = useCallback((p) => {
     setPage(p);
-    location.hash = p;
+    if (p === 'admin') history.pushState(null, '', '/admin');
+    else {
+      if (location.pathname === '/admin') history.pushState(null, '', '/');
+      location.hash = p;
+    }
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, []);
   useEffect(() => {
-    const f = () => setPage(location.hash.slice(1) || 'schedule');
+    const f = () => setPage(currentRoute());
     window.addEventListener('hashchange', f);
-    return () => window.removeEventListener('hashchange', f);
+    window.addEventListener('popstate', f);
+    return () => {
+      window.removeEventListener('hashchange', f);
+      window.removeEventListener('popstate', f);
+    };
   }, []);
   const subject = (id) => data.subjects.find((s) => s.id === id);
   const enrolled = data.subjects.filter((s) =>
@@ -155,7 +173,6 @@ export function AppProvider({ initial, children }) {
         notify,
         modal,
         open: (type, item = {}) => setModal({ type, item }),
-        replaceModal: (type, item = {}) => setModal(current => current === modal ? {type,item} : current),
         // A delayed response from a dismissed form must not close a newer dialog.
         close: () => setModal((current) => (current === modal ? null : current)),
         page,

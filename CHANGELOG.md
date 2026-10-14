@@ -1,6 +1,19 @@
 # Historial de versions
 
-Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
+Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production.
+
+## [0.6.16] - 2026-10-14
+
+- Primera entrada a pantalla completa amb presentació visual, itinerari, optatives/professorat i revisió de l’horari oficial. Progrés recuperable per compte, focus per pas, mòbil/horitzontal i moviment reduït.
+- Retirat el xat/Dubtes, les preguntes des de materials i l’API de converses. Continguts queda centrat en materials, formularis i eines; enllaços antics restauren Materials i l’històric es conserva.
+- Alta de tasques i exàmens des de la classe, audiència privat/públic, propostes revisades per delegats del mateix àmbit, duplicats/solapaments, contactes i notificacions persistents.
+- Dashboard privat d’activitat del compte Google autoritzat: presència aproximada, resums diaris, mostreig limitat, detall paginat i inventari incremental sense enumerar R2.
+- Polling pausat en inactivitat, retenció limitada de l’analítica i manteniment D1/R2 coordinat amb concessió compartida, estat d’últim èxit i cua de retirades. La gestió acadèmica conserva els permisos a #management.
+- Pomodoro amb continuïtat automàtica, alarma original i mode focus amb opcions, cua offline idempotent i dia original conservat.
+- Històric oficial de notes de tall 2022–2026, gràfic/mitjana/cobertura, rondes separades i comparació top 5 amb dades absents explícites; càrrega diferida sense alterar notes personals.
+- Logo complet a la capçalera mòbil amb proporcions i controls preservats.
+- Mostreig d’activitat compatible amb navegadors sense `Object.hasOwn`; regressions de focus/reaccions adaptades a l’interval de sincronització sense alterar la resposta visual immediata.
+- Esquemes additius 0028/0029 i roster privat; la publicació requereix còpia privada revisada i aplicació separada. Cap rol global, regal, reinici o contingut acadèmic modificat per les migracions.
 
 ## [0.6.15] - 2026-10-14
 

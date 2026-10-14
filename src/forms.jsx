@@ -1,12 +1,12 @@
 import React from 'react';
-import { Clock, MapPin, BookOpen, ArrowRight } from '@phosphor-icons/react';
+import { Clock, MapPin, BookOpen, ArrowRight, Plus } from '@phosphor-icons/react';
 import { useApp } from './context';
 import { Modal, SubjectChip, RichText, Button } from './ui';
 import { dateLabel, DAYS } from '../shared/domain';
 import { slotTeacher } from '../shared/official-schedule';
 import { BoardDetail } from './components/WoodBoard';
 import { CourseSubject } from './components/CourseGrades';
-import { DiscussionNew, DiscussionDetail } from './components/Discussions';
+import { AgendaReview } from './components/Delegates';
 import {
   ConfigureForm,
   EventForm,
@@ -37,10 +37,9 @@ import {
   ManageUserForm,
 } from './forms-admin';
 const forms = {
-  discussionNew: DiscussionNew,
-  discussion: DiscussionDetail,
   configure: ConfigureForm,
   event: EventForm,
+  agendaReview: AgendaReview,
   proposal: ProposalForm,
   proposalResponse: ResponseForm,
   announcement: AnnouncementForm,
@@ -66,10 +65,9 @@ const forms = {
   manageUser: ManageUserForm,
 };
 const titles = {
-  discussionNew: 'Nou dubte de l’assignatura',
-  discussion: 'Dubte i respostes',
   configure: 'Configurar el meu curs',
   event: 'Una data al calendari',
+  agendaReview: 'Validar una proposta de l’agenda',
   proposal: 'Proposa una idea',
   proposalResponse: 'Gestionar la proposta',
   announcement: 'Avís al centre',
@@ -93,7 +91,7 @@ const titles = {
   manageUser: 'Gestionar compte',
 };
 export default function Forms({ onLogout, logoutBusy = false, logoutError = '' }) {
-  const { modal, close, subject, go, setSubjectFilter } = useApp();
+  const { modal, close, open, subject, go, setSubjectFilter } = useApp();
   if (!modal) return null;
   const { type, item } = modal;
   const Form = forms[type];
@@ -137,6 +135,29 @@ export default function Forms({ onLogout, logoutBusy = false, logoutError = '' }
               {item.slot.room ? `Aula ${item.slot.room}` : 'Aula per confirmar'}
             </li>
           </ul>
+          <div className="class-agenda-actions">
+            <p>
+              {item.date &&
+                dateLabel(item.date, { weekday: 'long', day: 'numeric', month: 'long' })}
+            </p>
+            <Button
+              variant="primary"
+              onClick={() =>
+                open('event', {
+                  subject_id: item.subject.id,
+                  offering_id: item.offering.id,
+                  date: item.date,
+                  start: item.slot.start,
+                  end: item.slot.end,
+                  room: item.slot.room || '',
+                  kind: 'task',
+                  contextual: true,
+                })
+              }
+            >
+              <Plus size={18} /> Afegir tasca o examen
+            </Button>
+          </div>
           <Button
             variant="primary"
             onClick={() => {
@@ -158,7 +179,17 @@ export default function Forms({ onLogout, logoutBusy = false, logoutError = '' }
           </p>
           <p>{item.room}</p>
           <RichText text={item.body} />
-          {item.subject_id && <Button onClick={()=>{setSubjectFilter(item.subject_id);go('notes');close();}}>Materials per preparar-ho <ArrowRight size={18}/></Button>}
+          {item.subject_id && (
+            <Button
+              onClick={() => {
+                setSubjectFilter(item.subject_id);
+                go('notes');
+                close();
+              }}
+            >
+              Materials per preparar-ho <ArrowRight size={18} />
+            </Button>
+          )}
         </div>
       ) : null}
     </Modal>

@@ -246,6 +246,7 @@ export function ProfileForm({ item = {}, onLogout, logoutBusy = false, logoutErr
               </span>
             </p>
             <p>S’actualitzen quan tornes a iniciar sessió.</p>
+            <p className="muted">Per mantenir La Net, el responsable pot consultar resums d’ús i activitat recent del compte. Detall durant 35 dies i resums diaris durant 400 dies, sense copiar les teves notes, textos ni fitxers.</p>
           </div>
           <div className="profile-course">
             <strong>

@@ -4,6 +4,7 @@ import AgendaList from '../components/AgendaList';
 import SchoolCalendar from '../components/SchoolCalendar';
 import OptionsMenu from '../components/OptionsMenu';
 import { EVENT_KINDS, eventKind, eventLabel, eventOrigin } from '../../shared/agenda';
+import { canManageEvent } from '../../shared/delegation';
 import {
   CaretLeft,
   CaretRight,
@@ -112,7 +113,19 @@ function exportEvents(events) {
   );
 }
 export default function Schedule() {
-  const { data, subject, enrolled, go, open, setSubjectFilter, mutate, notify, agendaSubject, setAgendaSubject } = useApp();
+  const {
+    data,
+    subject,
+    enrolled,
+    go,
+    open,
+    setSubjectFilter,
+    mutate,
+    notify,
+    agendaSubject,
+    setAgendaSubject,
+    setCommunityTab,
+  } = useApp();
   const compact = useCompactLayout();
   const [monthDay, setMonthDay] = useState(data.today);
   const prefKey = `lanet.calendar.${data.user.id}`;
@@ -324,6 +337,22 @@ export default function Schedule() {
         </div>
       </div>
       {view === 'calendar' && <SchoolCalendar />}
+      {(data.agendaProposals || []).some((e) => e.review_status === 'pending') && (
+        <div className="agenda-pending-banner">
+          <div>
+            <strong>Hi ha propostes pendents de validació</strong>
+            <p>Les dates públiques apareixen a l’agenda quan un delegat les confirma.</p>
+          </div>
+          <Button
+            onClick={() => {
+              setCommunityTab('delegates');
+              go('community');
+            }}
+          >
+            Veure propostes
+          </Button>
+        </div>
+      )}
       {view === 'calendar' && (
         <div className="agenda-filters">
           <Select
@@ -501,6 +530,22 @@ export default function Schedule() {
                 />
                 <h3 className="selected-event-title">{selectedEvent.title}</h3>
                 <p className="muted">{eventOrigin(selectedEvent)}</p>
+                <Button
+                  onClick={() =>
+                    openEventForm('event', {
+                      subject_id: selectedEvent.subject_id,
+                      offering_id: selectedEvent.offering_id || '',
+                      date: selectedEvent.date,
+                      start: selectedEvent.start || '',
+                      end: selectedEvent.end || '',
+                      room: selectedEvent.room || '',
+                      kind: 'task',
+                      contextual: true,
+                    })
+                  }
+                >
+                  <Plus size={18} /> Afegir una altra tasca o examen
+                </Button>
                 {eventKind(selectedEvent) === 'task' && (
                   <Button
                     onClick={() =>
@@ -575,8 +620,7 @@ export default function Schedule() {
                     Veure continguts
                   </Button>
                 )}
-                {(selectedEvent.owner_id === data.user.id ||
-                  (data.user.role !== 'student' && selectedEvent.visibility === 'shared')) && (
+                {selectedEvent.owner_id === data.user.id && (
                   <div className="row-actions">
                     <Button onClick={() => openEventForm('event', selectedEvent)}>
                       <NotePencil size={17} />
@@ -596,6 +640,12 @@ export default function Schedule() {
                     </IconButton>
                   </div>
                 )}
+                {selectedEvent.visibility === 'shared' &&
+                  canManageEvent(data.user, selectedEvent, data.delegation) && (
+                    <Button onClick={() => openEventForm('agendaReview', selectedEvent)}>
+                      Revisar o retirar la data
+                    </Button>
+                  )}
                 <button className="text-button" onClick={() => setSelected(null)}>
                   Tornar a les properes dates
                 </button>

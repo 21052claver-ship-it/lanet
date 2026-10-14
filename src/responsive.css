@@ -140,7 +140,7 @@
   position: relative;
   top: auto;
   display: grid;
-  grid-template-columns: 44px minmax(0, 1fr);
+  grid-template-columns: 90px minmax(0, 1fr);
   gap: 6px 8px;
   height: auto;
   min-height: 0;
@@ -155,13 +155,17 @@
 .app-shell[data-compact='true'] .mobile-brand {
   display: grid;
   place-items: center;
-  width: 44px;
+  width: 90px;
   height: 44px;
-  flex: 0 0 44px;
+  flex: 0 0 90px;
+  margin: 0;
   border-radius: 12px;
 }
-.app-shell[data-compact='true'] .mobile-brand img {
+.app-shell[data-compact='true'] .mobile-brand .reference-art {
   display: block;
+  width: 90px;
+  height: auto;
+  max-width: 100%;
 }
 .app-shell[data-compact='true'] .topbar-context > .menu-button,
 .app-shell[data-compact='true'] .workspace-course,
@@ -737,7 +741,7 @@
 }
 @media (min-width: 640px) and (max-height: 500px) and (pointer: coarse) {
   .app-shell[data-compact='true'] .topbar {
-    grid-template-columns: 44px minmax(0, 1fr) auto;
+    grid-template-columns: 90px minmax(0, 1fr) auto;
   }
   .app-shell[data-compact='true'] .topbar .global-board {
     grid-column: 2;

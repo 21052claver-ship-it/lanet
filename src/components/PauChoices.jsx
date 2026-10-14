@@ -132,9 +132,7 @@ export default function PauChoices({
                     <h3>{degree?.name || `Opció ${code}`}</h3>
                     {degree && <PauOutlook {...{ degree, draft, profile, round, hideGrades }} />}
                     <div className="pau-choice-actions">
-                      {degree && (
-                        <Button onClick={() => detail(code)}>Ponderacions i detall</Button>
-                      )}
+                      {degree && <Button onClick={() => detail(code)}>Detall i evolució</Button>}
                       <div>
                         <IconButton
                           label={`Pujar opció ${index + 1}`}

@@ -12,7 +12,6 @@ import {
   day,
   time,
   author,
-  privileged,
   requireManager,
   body,
 } from './utils.js';
@@ -23,14 +22,13 @@ import { bonusMaximum, bonusLabel } from '../shared/course-grades.js';
 import { materialTopic } from '../shared/content-workspace.js';
 export async function resourceRoute(request, env, user, path) {
   const match = path.match(
-    /^\/api\/(notes|pluses|events|proposals|announcements)(?:\/([^/]+))?(?:\/(like|save|consult|unlock|vote|calendar|progress))?$/,
+    /^\/api\/(notes|pluses|proposals|announcements)(?:\/([^/]+))?(?:\/(like|save|consult|unlock|vote|calendar|progress))?$/,
   );
   if (!match) return null;
   const [, resource, rid, action] = match;
   const table = {
     notes: 'notes',
     pluses: 'pluses',
-    events: 'events',
     proposals: 'proposals',
     announcements: 'announcements',
   }[resource];
@@ -38,32 +36,6 @@ export async function resourceRoute(request, env, user, path) {
   if (rid && !record) fail(404, 'Aquest contingut ja no està disponible.');
   if (action) {
     if (request.method !== 'POST') fail(405, 'Mètode no vàlid.');
-    if (action === 'progress' && resource === 'events') {
-      const visible =
-        record.visibility === 'private'
-          ? record.owner_id === user.id
-          : (!record.group_id || record.group_id === user.group_id) &&
-            (!record.offering_id ||
-              !!(await one(
-                env,
-                'SELECT user_id FROM enrollments WHERE user_id=? AND offering_id=?',
-                user.id,
-                record.offering_id,
-              )));
-      if (!visible) fail(403, 'Aquesta tasca no et correspon.');
-      if ((record.display_kind || record.kind) !== 'task')
-        fail(400, 'Només es poden completar tasques.');
-      const b = await body(request);
-      if (typeof b.done !== 'boolean') fail(400, 'Indica si la tasca està feta.');
-      await run(
-        env,
-        'INSERT INTO event_progress(user_id,event_id,done) VALUES(?,?,?) ON CONFLICT(user_id,event_id) DO UPDATE SET done=excluded.done',
-        user.id,
-        rid,
-        b.done,
-      );
-      return { ok: true };
-    }
     if (resource === 'notes' && record.status === 'draft' && record.author_id !== user.id)
       fail(403, 'Aquest esborrany és privat.');
     if (['like', 'save'].includes(action)) {
@@ -239,17 +211,7 @@ export async function resourceRoute(request, env, user, path) {
     fail(404, 'Consulta aquesta informació des de la plataforma.');
   }
   if (request.method === 'DELETE') {
-    if (resource === 'events') {
-      if (
-        record.owner_id !== user.id &&
-        !(
-          privileged(user) &&
-          record.visibility === 'shared' &&
-          (user.role === 'admin' || record.group_id === user.group_id)
-        )
-      )
-        fail(403, 'No pots eliminar aquest esdeveniment.');
-    } else if (resource === 'announcements') {
+    if (resource === 'announcements') {
       requireManager(user);
       if (user.role !== 'admin' && record.group_id && record.group_id !== user.group_id)
         fail(403, 'Aquest avís és d’un altre grup.');
@@ -289,7 +251,12 @@ export async function resourceRoute(request, env, user, path) {
       );
     const files = await fileStatements(env, user, b.files || [], 'note_id', key);
     const topic = str(materialTopic(b.topic ?? record?.topic), 80);
-    const term = b.term === '' || b.term === null ? null : b.term === undefined ? record?.term ?? null : integer(b.term, 1, 3);
+    const term =
+      b.term === '' || b.term === null
+        ? null
+        : b.term === undefined
+          ? (record?.term ?? null)
+          : integer(b.term, 1, 3);
     const statement = record
       ? sql(
           env,
@@ -370,69 +337,6 @@ export async function resourceRoute(request, env, user, path) {
       ),
     ];
     await env.DB.batch(batch);
-    return { id: key };
-  }
-  if (resource === 'events') {
-    const visibility = choice(b.visibility || 'private', ['private', 'shared']);
-    if (visibility === 'shared') {
-      requireManager(user);
-      if (user.role !== 'admin' && b.group_id && b.group_id !== user.group_id)
-        fail(403, 'Només pots publicar per al teu grup.');
-    }
-    if (
-      record &&
-      record.owner_id !== user.id &&
-      !(
-        privileged(user) &&
-        record.visibility === 'shared' &&
-        (user.role === 'admin' || record.group_id === user.group_id)
-      )
-    )
-      fail(403, 'No pots editar aquest esdeveniment.');
-    if (record && record.visibility === 'private' && record.owner_id !== user.id)
-      fail(403, 'Aquest esdeveniment és privat.');
-    const start = time(b.start),
-      end = time(b.end);
-    if (end && start && end <= start) fail(400, 'L’hora final ha de ser posterior a l’inici.');
-    const displayKind = choice(b.kind, ['exam', 'test', 'task', 'deadline', 'reminder', 'event']);
-    const values = [
-      str(b.title, 150, true),
-      { test: 'exam', task: 'reminder' }[displayKind] || displayKind,
-      day(b.date),
-      start,
-      end,
-      b.subject_id || null,
-      b.offering_id || null,
-      visibility === 'shared' ? b.group_id || user.group_id : null,
-      str(b.room, 120),
-      str(b.body, 6000),
-      visibility,
-      displayKind,
-    ];
-    if (b.offering_id) {
-      const o = await one(env, 'SELECT * FROM offerings WHERE id=?', b.offering_id);
-      if (
-        !o ||
-        o.subject_id !== b.subject_id ||
-        (visibility === 'shared' && o.group_id !== (b.group_id || user.group_id))
-      )
-        fail(400, 'La variant no correspon a l’assignatura o grup.');
-    }
-    if (record)
-      await run(
-        env,
-        'UPDATE events SET title=?,kind=?,date=?,start=?,end=?,subject_id=?,offering_id=?,group_id=?,room=?,body=?,visibility=?,display_kind=? WHERE id=?',
-        ...values,
-        key,
-      );
-    else
-      await run(
-        env,
-        'INSERT INTO events(id,owner_id,title,kind,date,start,end,subject_id,offering_id,group_id,room,body,visibility,display_kind) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-        key,
-        user.id,
-        ...values,
-      );
     return { id: key };
   }
   if (resource === 'proposals') {

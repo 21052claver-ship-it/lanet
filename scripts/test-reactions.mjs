@@ -3,6 +3,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { chromium, firefox, webkit } from 'playwright';
 import { browserFixture } from '../tests/helpers/browser-fixture.mjs';
 import { addDays, madridDay } from '../shared/domain.js';
+import { ACTIVITY_INTERVAL } from '../shared/activity.js';
 const out = process.env.LANET_TEST_OUTPUT || 'output/reactions/browser';
 mkdirSync(out, { recursive: true });
 const results = [];
@@ -50,6 +51,7 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         await context.addCookies([{ name: 'lanet_session', value: f.token, url: f.base }]);
         const page = await context.newPage(),
           errors = [];
+        if (name === 'instant-shared-canonical') await page.clock.install({ time: Date.now() });
         page.on('pageerror', (error) => errors.push(error.message));
         const hold = () => {
           const value = gate();
@@ -114,6 +116,11 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
           await finishRead.promise;
           await route.fulfill({ response });
         });
+        // Focus polling now has a two-minute minimum. Move wall time only so the
+        // held POST's 15-second deadline does not fire before the stale read.
+        await page.clock.setSystemTime(
+          (await page.evaluate(() => Date.now())) + ACTIVITY_INTERVAL + 1,
+        );
         await page.evaluate(() => window.dispatchEvent(new Event('focus')));
         await readStarted.promise;
         await page.getByRole('button', { name: 'Obrir PDF de prova local', exact: true }).click();

@@ -164,7 +164,7 @@ export default function WeekTimeline({ dates, slots, events, context, eventCard 
                       '--subject': s?.color,
                     }}
                     aria-label={`${s?.name || s?.short}, ${slot.start} a ${slot.end}, ${slotTeacher(slot, offering) || slot.note || ''}, aula ${slot.room || 'sense especificar'}`}
-                    onClick={() => open('class', { subject: s, offering, slot })}
+                    onClick={() => open('class', { subject: s, offering, slot, date: d })}
                   >
                     <strong>{s?.short || s?.name}</strong>
                     <small>
@@ -205,7 +205,9 @@ export default function WeekTimeline({ dates, slots, events, context, eventCard 
                 <button
                   className="button"
                   key={slot.id}
-                  onClick={() => open('class', { subject: s, offering, slot })}
+                  onClick={() =>
+                    open('class', { subject: s, offering, slot, date: dates[slot.day] })
+                  }
                 >
                   {DAYS[slot.day]} · {slot.start}–{slot.end} · {s?.short}
                 </button>

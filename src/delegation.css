@@ -1,0 +1,439 @@
+.agenda-sequence {
+  display: flex;
+  gap: 12px;
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  color: #63584f;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+.agenda-sequence li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.agenda-sequence b {
+  display: grid;
+  place-items: center;
+  background: #eee7db;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  color: #443e36;
+}
+.audience-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 12px 0 18px;
+}
+.audience-cards button {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 3px 8px;
+  text-align: left;
+  padding: 16px;
+  border: 2px solid #e5ded3;
+  background: #faf8f4;
+  border-radius: 16px;
+  color: #4c443d;
+  cursor: pointer;
+}
+.audience-cards button svg {
+  grid-row: 1;
+}
+.audience-cards button span {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.agenda-context {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f3efe7;
+  font-size: 12px;
+  color: #594e42;
+  margin: 0 0 15px;
+  flex-wrap: wrap;
+}
+.audience-cards button[aria-pressed='true'] {
+  border-color: #657b60;
+  background: #eaf0e4;
+  box-shadow: 0 0 0 2px #657b601a;
+}
+.audience-cards button:focus-visible {
+  outline: 3px solid #7a588f;
+  outline-offset: 3px;
+}
+.agenda-review-summary,
+.agenda-final-check {
+  padding: 16px;
+  border: 1px solid #e0dacf;
+  border-radius: 15px;
+  margin: 15px 0;
+  background: #f8f6f0;
+}
+.agenda-review-summary h3 {
+  margin: 0 0 10px;
+}
+.agenda-review-summary p,
+.agenda-final-check p {
+  font-size: 13px;
+  line-height: 1.5;
+}
+.reviewer-pill {
+  display: block;
+  padding: 8px 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+.reviewer-pill small {
+  display: block;
+  font-weight: 400;
+  font-size: 12px;
+  color: #62594f;
+}
+.agenda-final-check > strong,
+.agenda-final-check > span {
+  display: block;
+  overflow-wrap: anywhere;
+}
+.agenda-final-check > span {
+  font-size: 13px;
+  margin-top: 5px;
+}
+.agenda-clear {
+  color: #486544;
+}
+.agenda-conflicts {
+  background: #fff0d9;
+  border: 1px solid #d8b67f;
+  border-radius: 12px;
+  padding: 12px;
+  margin: 12px 0;
+  color: #634715;
+}
+.agenda-conflicts h4 {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 0;
+}
+.agenda-conflicts p {
+  margin: 10px 0 0;
+}
+.agenda-conflicts span {
+  display: block;
+  font-size: 12px;
+}
+.class-agenda-actions {
+  padding: 12px 0 20px;
+}
+.delegate-hero {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  padding: 24px;
+  background: #eaf0e4;
+  border-radius: 20px;
+  margin-top: 20px;
+}
+.delegate-hero svg {
+  flex-shrink: 0;
+  color: #56704f;
+}
+.delegate-hero h2 {
+  margin: 0 0 8px;
+}
+.delegate-hero p {
+  margin: 0;
+  color: #5b6254;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.delegate-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 16px 0 22px;
+}
+.delegate-stats span {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 17px;
+  border: 1px solid #e4ddd2;
+  border-radius: 15px;
+  font-size: 13px;
+}
+.delegate-stats b {
+  font-size: 27px;
+  color: #4f6548;
+}
+.delegate-proposal-grid,
+.delegate-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+.delegate-proposal,
+.delegate-contact {
+  padding: 22px;
+  min-width: 0;
+}
+.delegate-proposal h3 {
+  margin: 16px 0 10px;
+  overflow-wrap: anywhere;
+}
+.delegate-proposal-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+}
+.agenda-state {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 12px;
+  border-radius: 20px;
+  padding: 5px 10px;
+  background: #e8e7e3;
+  color: #58554e;
+}
+.agenda-state.pending {
+  background: #fff0d2;
+  color: #765014;
+}
+.agenda-state.returned {
+  background: #f6e0d9;
+  color: #843f2e;
+}
+.delegate-proposal .row-actions {
+  flex-wrap: wrap;
+  margin-top: 16px;
+  gap: 8px;
+}
+.delegate-feedback {
+  padding: 12px;
+  border-left: 3px solid #b88b62;
+  background: #fbf3e8;
+  border-radius: 0 10px 10px 0;
+  font-size: 14px;
+}
+.delegate-contact h3 {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 0 0 20px;
+}
+.delegate-contact h3 small {
+  font-size: 12px;
+  color: #486544;
+}
+.delegate-contact.my-class {
+  border-color: #829576;
+}
+.delegate-contact article {
+  display: flex;
+  gap: 12px;
+  margin: 18px 0;
+  align-items: flex-start;
+}
+.delegate-contact article > div {
+  min-width: 0;
+}
+.delegate-contact article strong,
+.delegate-contact article small {
+  display: block;
+}
+.delegate-contact article small {
+  font-size: 12px;
+  color: #655d53;
+  margin: 6px 0;
+}
+.delegate-contact a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #4e6849;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.delegate-contact a svg {
+  flex-shrink: 0;
+}
+.delegate-initials {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #eee5d8;
+  font-size: 14px;
+  font-weight: 700;
+}
+.delegate-scope-note {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #655d53;
+  margin-top: 22px;
+}
+.delegate-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 24px 0 18px;
+  flex-wrap: wrap;
+}
+.delegate-section-heading h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.agenda-notification {
+  display: flex;
+  gap: 16px;
+  padding: 18px;
+  margin: 12px 0;
+  border-left: 4px solid transparent;
+}
+.agenda-notification.unread {
+  border-left-color: #6f8863;
+  background: #f3f7ed;
+}
+.agenda-notification > svg {
+  flex-shrink: 0;
+  color: #57714e;
+}
+.agenda-notification h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+.agenda-notification p {
+  margin: 0 0 8px;
+  overflow-wrap: anywhere;
+}
+.agenda-notification small {
+  font-size: 12px;
+  color: #665e53;
+}
+.delegate-pending-notice {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 18px;
+  border-radius: 14px;
+  background: #fff0d9;
+  margin-bottom: 20px;
+}
+.delegate-pending-notice p {
+  margin: 7px 0 0;
+  font-size: 13px;
+}
+.agenda-truth {
+  margin: 18px 0;
+  padding: 14px;
+  border-radius: 12px;
+  background: #eaf0e4;
+}
+.agenda-review-form .checkbox-label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.agenda-review-form input[type='checkbox'] {
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+.agenda-bell {
+  position: relative;
+}
+.agenda-bell-count {
+  position: absolute;
+  top: -4px;
+  right: -5px;
+  font-size: 10px;
+  min-width: 17px;
+  height: 17px;
+  padding: 1px 4px;
+  border-radius: 10px;
+  background: #a24435;
+  color: white;
+  font-weight: 800;
+  border: 2px solid #faf7f1;
+  display: grid;
+  place-items: center;
+}
+.agenda-pending-banner {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 16px 20px;
+  background: #fff2db;
+  border-radius: 15px;
+  margin-bottom: 18px;
+}
+.agenda-pending-banner p {
+  margin: 5px 0 0;
+  font-size: 13px;
+}
+@media (max-width: 540px) {
+  .audience-cards button {
+    padding: 12px;
+    grid-template-columns: 24px 1fr;
+  }
+  .audience-cards button svg {
+    width: 22px;
+  }
+  .audience-cards button span {
+    font-size: 11px;
+  }
+  .delegate-hero {
+    padding: 18px;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .delegate-hero h2 {
+    font-size: 20px;
+  }
+  .delegate-hero > svg {
+    width: 28px;
+  }
+  .delegate-stats {
+    gap: 8px;
+  }
+  .delegate-stats span {
+    font-size: 11px;
+    padding: 12px;
+  }
+  .delegate-stats b {
+    font-size: 23px;
+  }
+  .delegate-contact,
+  .delegate-proposal {
+    padding: 18px;
+  }
+  .agenda-sequence {
+    gap: 8px;
+    font-size: 11px;
+  }
+  .agenda-sequence b {
+    width: 20px;
+    height: 20px;
+  }
+  .delegate-contact a {
+    font-size: 12px;
+  }
+}

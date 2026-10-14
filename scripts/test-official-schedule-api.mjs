@@ -55,6 +55,9 @@ const fixtures = Object.entries(tokens).map(([g, token]) => {
   INSERT INTO enrollments VALUES('${g}','2A-math');
   INSERT INTO grade_entries(id,user_id,subject_id,term,category,title,grade,weight,position) VALUES('kept-${g}','${g}','math',1,'exam','Nota existent',8.6,37,0);`;
 });
+fixtures.push(
+  "INSERT INTO delegation_members(email,unit_id,name,position) VALUES('timetable-delegate@fje.edu','science','Delegat local de prova','delegate');",
+);
 writeFileSync(state + '/fixtures.sql', fixtures.join('\n'));
 cli(['d1', 'execute', 'DB', '--local', '--file', state + '/fixtures.sql']);
 const server = spawn(
@@ -147,6 +150,58 @@ try {
     403,
   );
   console.log('Delegate group restriction preserved.');
+  const proposal = {
+    title: 'Examen API local',
+    kind: 'exam',
+    date: '2026-11-03',
+    start: '09:10',
+    end: '10:10',
+    subject_id: 'math',
+    visibility: 'shared',
+    audience_kind: 'class',
+  };
+  const preview = await request('2A', '/agenda/preview', proposal);
+  assert.equal(preview.reviewers.length, 1);
+  const submitted = await request('2A', '/events', proposal);
+  assert.equal(submitted.status, 'pending');
+  const pending = await request('delegate', '/bootstrap');
+  assert.ok(pending.agendaProposals.some((e) => e.id === submitted.id));
+  assert.ok(
+    !(await request('2B', '/bootstrap')).agendaProposals.some((e) => e.id === submitted.id),
+  );
+  await request('2A', '/events', { ...proposal, title: 'Títol duplicat' }, 409);
+  await request('delegate', '/events/' + submitted.id + '/review', {
+    revision: 1,
+    decision: 'approve',
+    confirmed: true,
+  });
+  const published = await request('2A', '/bootstrap');
+  assert.ok(published.events.some((e) => e.id === submitted.id));
+  assert.equal(published.agendaNotifications.length, 1);
+  await request(
+    'delegate',
+    '/events/' + submitted.id + '/review',
+    { revision: 1, decision: 'approve', confirmed: true },
+    409,
+  );
+  const privateDate = await request('2A', '/events', {
+    ...proposal,
+    title: 'Data privada API',
+    date: '2026-11-04',
+    visibility: 'private',
+  });
+  assert.ok(!(await request('delegate', '/bootstrap')).events.some((e) => e.id === privateDate.id));
+  results.push({
+    agenda: true,
+    proposals: true,
+    duplicateBlocked: true,
+    scopedReview: true,
+    privateDatesProtected: true,
+    persistentNotifications: true,
+  });
+  console.log(
+    'Agenda: proposals, scoped review, duplicates, privacy and notifications on real local D1 OK.',
+  );
   const cat = await request('admin', '/catalog');
   for (const id of ['2A-phil', '2C-lit', '2C-latin']) {
     const offering = cat.offerings.find((o) => o.id === id);

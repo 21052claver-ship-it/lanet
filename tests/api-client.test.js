@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { api } from '../src/api.js';
+import { api, previewAgenda } from '../src/api.js';
 
 test('An unresponsive startup read aborts with a useful connection error', async (t) => {
   let aborted = false;
@@ -67,4 +67,49 @@ test('Caller cancellation keeps its abort reason', async (t) => {
     throw reason;
   });
   await assert.rejects(api('/library', { signal: controller.signal }), (error) => error === reason);
+});
+test('A stalled agenda preview aborts with a retry message and never retries the request', async (t) => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  let calls = 0;
+  t.mock.method(
+    globalThis,
+    'fetch',
+    async (_url, options) =>
+      new Promise((_resolve, reject) => {
+        calls++;
+        options.signal.addEventListener(
+          'abort',
+          () => reject(new DOMException('Aborted', 'AbortError')),
+          { once: true },
+        );
+      }),
+  );
+  const pending = assert.rejects(
+    previewAgenda({ title: 'Local preview' }),
+    /comprovació triga massa/,
+  );
+  t.mock.timers.tick(12001);
+  await pending;
+  assert.equal(calls, 1);
+});
+test('Changing an agenda form can cancel its obsolete preview without changing the error into a deadline', async (t) => {
+  const controller = new AbortController();
+  t.mock.method(
+    globalThis,
+    'fetch',
+    async (_url, options) =>
+      new Promise((_resolve, reject) =>
+        options.signal.addEventListener(
+          'abort',
+          () => reject(new DOMException('Cancelled', 'AbortError')),
+          { once: true },
+        ),
+      ),
+  );
+  const pending = assert.rejects(
+    previewAgenda({ title: 'Old input' }, controller.signal),
+    (e) => e.name === 'AbortError',
+  );
+  controller.abort();
+  await pending;
 });

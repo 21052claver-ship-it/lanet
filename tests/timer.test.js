@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { secondsRemaining, restoreTimer } from '../shared/timer.js';
+import { secondsRemaining, restoreTimer, advanceTimer, focusOptions } from '../shared/timer.js';
+import { madridDay } from '../shared/domain.js';
 
 test('starting or resuming never displays an extra second from a stale render clock', () => {
   assert.equal(secondsRemaining({ running: true, remaining: 1500, end: 1501800 }, 1000), 1500);
@@ -67,4 +68,90 @@ test('a restored break cannot retain a work session or its reward', () => {
   assert.equal(timer.sessionId, null);
   assert.equal(timer.workMinutes, null);
   assert.equal(secondsRemaining(timer, 1000000), 0);
+});
+const settings = { work: 25, rest: 5, long_rest: 15, rounds: 4 };
+const working = {
+  phase: 'work',
+  round: 1,
+  running: true,
+  end: 1000000,
+  remaining: 1500,
+  sessionId: 'real-session',
+  workMinutes: 25,
+};
+test('automatic cycles follow exact deadlines, record only work and use long breaks every four sessions', () => {
+  let next = advanceTimer(working, settings, 1000600, true, () => 'next-session');
+  assert.equal(next.completed.id, 'real-session');
+  assert.equal(next.completed.minutes, 25);
+  assert.equal(next.completed.day, madridDay(working.end));
+  assert.equal(next.timer.phase, 'rest');
+  assert.equal(next.timer.running, true);
+  assert.equal(next.timer.end, 1300000);
+  assert.equal(secondsRemaining(next.timer, 1000600), 300);
+  assert.equal(next.timer.sessionId, null);
+  next = advanceTimer(next.timer, settings, 1300100, true, () => 'next-session');
+  assert.equal(next.completed, null);
+  assert.equal(next.timer.phase, 'work');
+  assert.equal(next.timer.round, 2);
+  assert.equal(next.timer.sessionId, 'next-session');
+  assert.equal(next.timer.end, 2800000);
+  next = advanceTimer({ ...working, round: 4 }, settings, 1000000, true, () => 'unused');
+  assert.equal(next.timer.phase, 'long');
+  assert.equal(next.timer.remaining, 900);
+  assert.equal(
+    advanceTimer({ ...working, round: 5 }, settings, 1000000, true, () => 'unused').timer.phase,
+    'rest',
+  );
+});
+test('manual continuation stops on the next phase; paused and unfinished timers do not advance', () => {
+  const next = advanceTimer(working, settings, 1000000, false, () => 'unused');
+  assert.equal(next.timer.running, false);
+  assert.equal(next.timer.phase, 'rest');
+  assert.equal(next.timer.end, null);
+  assert.equal(
+    advanceTimer({ ...working, running: false }, settings, 9999999, true, () => 'unused'),
+    null,
+  );
+  assert.equal(
+    advanceTimer(working, settings, 999000, true, () => 'unused'),
+    null,
+  );
+});
+test('suspension never invents additional completed work or cascades alarms for unseen cycles', () => {
+  const next = advanceTimer(working, settings, 1000000 + 86400000, true, () => 'fresh');
+  assert.equal(next.completed.id, 'real-session');
+  assert.equal(next.timer.phase, 'work');
+  assert.equal(next.timer.round, 2);
+  assert.equal(next.timer.sessionId, 'fresh');
+  assert.equal(next.timer.remaining, 1500);
+  assert.equal(next.timer.end, 1000000 + 86400000 + 1500000);
+  const resumedBreak = advanceTimer(
+    { ...working, phase: 'long', sessionId: null },
+    settings,
+    1000000 + 86400000,
+    true,
+    () => 'fresh',
+  );
+  assert.equal(resumedBreak.completed, null);
+  assert.equal(resumedBreak.timer.phase, 'work');
+  assert.equal(resumedBreak.timer.remaining, 1500);
+});
+test('changing future settings preserves the duration of the completed work session', () => {
+  const next = advanceTimer(
+    working,
+    { ...settings, work: 50, rest: 10 },
+    1000000,
+    true,
+    () => 'fresh',
+  );
+  assert.equal(next.completed.minutes, 25);
+  assert.equal(next.timer.remaining, 600);
+});
+test('focus options are bounded and malformed preferences cannot disable required defaults', () => {
+  assert.equal(focusOptions(null).automatic, true);
+  assert.equal(focusOptions({ alarm: 'no' }).alarm, true);
+  assert.equal(focusOptions({ tone: 'unknown' }).tone, 'bell');
+  assert.equal(focusOptions({ alarmVolume: 99 }).alarmVolume, 1);
+  assert.equal(focusOptions({ alarmVolume: NaN }).alarmVolume, 0.5);
+  assert.equal(focusOptions({ automatic: false, theme: 'night' }).automatic, false);
 });

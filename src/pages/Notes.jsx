@@ -1,7 +1,7 @@
 import VerifiedImage from '../components/VerifiedImage';
 import Select from '../components/Select';
 import SubjectFilter from '../components/SubjectFilter';
-import React, { lazy, Suspense, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Plus,
   MagnifyingGlass,
@@ -18,7 +18,6 @@ import {
   Toolbox,
   ArrowLeft,
   Folder,
-  ChatCircle,
   CalendarPlus,
 } from '@phosphor-icons/react';
 import { useApp } from '../context';
@@ -39,17 +38,15 @@ import SchoolGuide from '../components/SchoolGuide';
 import { filterMaterials, materialTopics } from '../../shared/content-workspace';
 import { eventLabel, eventKind } from '../../shared/agenda';
 import { dateLabel } from '../../shared/domain';
-const Discussions = lazy(() => import('../components/Discussions'));
 import '../contents.css';
 import '../workspace.css';
+const CONTENT_SECTIONS = ['materials', 'formula', 'tool', 'guide'];
 export default function Notes() {
   const { open, data, subject, subjectFilter, setSubjectFilter, setAgendaSubject, go } = useApp();
   const current = subject(subjectFilter);
   const readSection = () => {
     const value = new URL(location.href).searchParams.get('contents');
-    return ['materials', 'formula', 'tool', 'guide', 'discussions'].includes(value)
-      ? value
-      : 'materials';
+    return CONTENT_SECTIONS.includes(value) ? value : 'materials';
   };
   const [section, updateSection] = useState(readSection);
   function setSection(value) {
@@ -60,7 +57,16 @@ export default function Notes() {
     history.replaceState(null, '', url);
   }
   useEffect(() => {
-    const restore = () => updateSection(readSection());
+    const restore = () => {
+      updateSection(readSection());
+      const url = new URL(location.href);
+      const value = url.searchParams.get('contents');
+      if (value && !CONTENT_SECTIONS.includes(value)) {
+        url.searchParams.delete('contents');
+        history.replaceState(null, '', url);
+      }
+    };
+    restore();
     window.addEventListener('popstate', restore);
     return () => window.removeEventListener('popstate', restore);
   }, []);
@@ -152,7 +158,6 @@ export default function Notes() {
           ['materials', 'Materials', Books],
           ['formula', 'Formularis', FunctionIcon],
           ['tool', 'Eines i webs', Toolbox],
-          ...(current ? [['discussions', 'Dubtes', ChatCircle]] : []),
           ...(!current ? [['guide', 'Guia del curs', Books]] : []),
         ]}
         value={section}
@@ -172,17 +177,6 @@ export default function Notes() {
       >
         {section === 'materials' ? (
           <Materials key={subjectFilter} />
-        ) : section === 'discussions' ? (
-          current ? (
-            <Suspense fallback={<p role="status">Carregant dubtes…</p>}>
-              <Discussions key={current.id} subjectId={current.id} />
-            </Suspense>
-          ) : (
-            <Empty
-              title="Tria una assignatura"
-              body="Els dubtes es comparteixen dins del teu grup i variant."
-            />
-          )
         ) : section === 'guide' ? (
           <SchoolGuide />
         ) : (

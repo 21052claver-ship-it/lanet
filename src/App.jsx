@@ -26,9 +26,11 @@ import Forms from './forms';
 import WoodBoard from './components/WoodBoard';
 import RecordArt from './components/RecordArt';
 import OfficialNetLink from './components/OfficialNetLink';
+import Onboarding from './components/Onboarding';
 import { LOFI_TRACKS } from './audio';
 import { googleResult } from '../shared/google-auth';
 import { useCompactLayout } from './responsive';
+import { isActivityAdmin } from '../shared/activity';
 const Pau = lazy(() => import('./pages/Pau'));
 const Schedule = lazy(() => import('./pages/Schedule'));
 const Notes = lazy(() => import('./pages/Notes'));
@@ -38,6 +40,7 @@ const Study = lazy(() => import('./pages/Study'));
 const Community = lazy(() => import('./pages/Community'));
 const Bakery = lazy(() => import('./pages/Bakery'));
 const Admin = lazy(() => import('./pages/Admin'));
+const Management = lazy(() => import('./pages/Management'));
 export class Boundary extends React.Component {
   state = { error: false };
   static getDerivedStateFromError() {
@@ -61,6 +64,13 @@ export class Boundary extends React.Component {
 function Workspace({ onLogout }) {
   const { data, walletBalance, page, go, open, setCommunityTab, savePreferences, notify } =
     useApp();
+  const agendaNoticeCount =
+    (data.agendaNotifications || []).filter((n) => !n.read_at).length +
+    (data.agendaProposals || []).filter(
+      (e) =>
+        e.review_status === 'pending' &&
+        e.review_units?.some((u) => data.delegation?.managedUnits.includes(u)),
+    ).length;
   const { timer, remaining, toggle, audioType, audioState, playing, loading, toggleMusic } =
     useTimer();
   const musicTrack = LOFI_TRACKS.find((track) => track.id === audioType) || LOFI_TRACKS[0];
@@ -165,9 +175,6 @@ function Workspace({ onLogout }) {
   useEffect(() => {
     setMobile(false);
   }, [smallScreen, page]);
-  useEffect(() => {
-    if (!data.user.configured) open('configure');
-  }, []);
   const pages = {
     schedule: Schedule,
     notes: Notes,
@@ -178,6 +185,7 @@ function Workspace({ onLogout }) {
     community: Community,
     bakery: Bakery,
     admin: Admin,
+    management: Management,
   };
   const Page = pages[page] || Schedule;
   const navigate = (p) => {
@@ -287,13 +295,24 @@ function Workspace({ onLogout }) {
           </button>
           {data.user.role !== 'student' && (
             <button
-              className={`nav-item subtle ${page === 'admin' ? 'active' : ''}`}
+              className={`nav-item subtle ${page === 'management' ? 'active' : ''}`}
               aria-label="Gestió del centre"
               title="Gestió del centre"
-              onClick={() => navigate('admin')}
+              onClick={() => navigate('management')}
             >
               <ShieldCheck size={20} />
               <span>Gestió del centre</span>
+            </button>
+          )}
+          {isActivityAdmin(data.user) && (
+            <button
+              className={`nav-item subtle ${page === 'admin' ? 'active' : ''}`}
+              onClick={() => navigate('admin')}
+              aria-label="Dashboard privat"
+              title="Dashboard privat"
+            >
+              <ShieldCheck size={20} />
+              <span>Dashboard privat</span>
             </button>
           )}
         </div>
@@ -302,14 +321,12 @@ function Workspace({ onLogout }) {
         <header className="topbar" inert={smallScreen && mobile}>
           <div className="topbar-context">
             {smallScreen && (
-              <a
+              <Brand
                 className="mobile-brand"
                 href="#schedule"
                 aria-label="La Net · Anar a l’horari i l’agenda"
                 onClick={() => navigate('schedule')}
-              >
-                <img src="/lanet-mark.svg" alt="" width="36" height="36" />
-              </a>
+              />
             )}
             <IconButton
               label="Obrir menú"
@@ -366,13 +383,20 @@ function Workspace({ onLogout }) {
               <strong>{walletBalance}</strong>
             </button>
             <IconButton
-              label="Veure avisos"
+              label={`Veure avisos${agendaNoticeCount ? ` · ${agendaNoticeCount} notificacions pendents` : ''}`}
               onClick={() => {
-                setCommunityTab('notices');
+                setCommunityTab('notifications');
                 navigate('community');
               }}
             >
-              <ReferenceArt name="bell" size={27} />
+              <span className="agenda-bell">
+                <ReferenceArt name="bell" size={27} />
+                {agendaNoticeCount > 0 && (
+                  <span className="agenda-bell-count" aria-hidden="true">
+                    {agendaNoticeCount}
+                  </span>
+                )}
+              </span>
             </IconButton>
             <button
               className="profile-button"
@@ -458,11 +482,20 @@ function Workspace({ onLogout }) {
                 </button>
                 {data.user.role !== 'student' && (
                   <button
+                    onClick={() => navigate('management')}
+                    aria-current={page === 'management' ? 'page' : undefined}
+                  >
+                    <ShieldCheck size={23} />
+                    <span>Gestió del centre</span>
+                  </button>
+                )}
+                {isActivityAdmin(data.user) && (
+                  <button
                     onClick={() => navigate('admin')}
                     aria-current={page === 'admin' ? 'page' : undefined}
                   >
                     <ShieldCheck size={23} />
-                    <span>Gestió del centre</span>
+                    <span>Dashboard privat</span>
                   </button>
                 )}
               </div>
@@ -490,7 +523,8 @@ function Workspace({ onLogout }) {
               aria-expanded={mobile}
               aria-controls="main-menu"
               className={
-                mobile || ['pluses', 'pau', 'community', 'bakery', 'admin'].includes(page)
+                mobile ||
+                ['pluses', 'pau', 'community', 'bakery', 'admin', 'management'].includes(page)
                   ? 'active'
                   : ''
               }
@@ -507,6 +541,14 @@ function Workspace({ onLogout }) {
       </div>
       <Forms onLogout={leave} logoutBusy={logoutBusy} logoutError={logoutError} />
     </div>
+  );
+}
+function Entry({ onLogout }) {
+  const { data } = useApp();
+  return data.user.configured ? (
+    <Workspace onLogout={onLogout} />
+  ) : (
+    <Onboarding onLogout={onLogout} />
   );
 }
 export default function App() {
@@ -577,7 +619,7 @@ export default function App() {
           >
             Saltar al contingut
           </a>
-          <Workspace onLogout={logout} />
+          <Entry onLogout={logout} />
         </TimerProvider>
       </AppProvider>
     </Boundary>
