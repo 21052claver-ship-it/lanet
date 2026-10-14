@@ -1,6 +1,6 @@
 .onboarding {
   --onboarding-ink: #333d35;
-  --onboarding-muted: #657065;
+  --onboarding-muted: #626d60;
   color: var(--onboarding-ink);
   background: #fffdf9;
   min-height: 100vh;
@@ -101,7 +101,7 @@
   align-items: center;
   gap: 12px;
   font-weight: 700;
-  color: #6c756b;
+  color: #626d60;
   font-size: 14px;
 }
 .onboarding-progress li > span {
@@ -223,6 +223,15 @@
 }
 .onboarding .course-route-copy > strong {
   font-size: 17px;
+}
+.onboarding .course-route-copy > small,
+.onboarding .course-route-copy > span,
+.onboarding .course-step-heading > small,
+.onboarding .course-offering-info > small,
+.onboarding .course-fixed-subject > small,
+.onboarding .course-pending,
+.onboarding .course-source {
+  color: var(--onboarding-muted);
 }
 .onboarding .course-route-art {
   background: transparent !important;
