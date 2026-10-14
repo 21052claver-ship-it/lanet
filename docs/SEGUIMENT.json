@@ -7611,7 +7611,8 @@
       "files": [
         "src/forms-general.jsx",
         "scripts/test-workspace-recovery.mjs",
-        "docs/PLA-DEPURACIO.md"
+        "docs/PLA-DEPURACIO.md",
+        "scripts/test-official-schedule.mjs"
       ],
       "acceptance": "Publicar el formulari antic conserva el text no publicat d’una altra pestanya, també en recarregar; proves i publicació per PR/CI amb versió immutable.",
       "checks": [
@@ -7626,9 +7627,11 @@
         "output/proposal-draft-cross-tab/unit.log",
         "output/proposal-draft-cross-tab/typecheck.log",
         "output/proposal-draft-cross-tab/build.log",
-        "output/proposal-draft-cross-tab/browser/results.json"
+        "output/proposal-draft-cross-tab/browser/results.json",
+        "output/proposal-draft-cross-tab/official-schedule/results.json",
+        "output/proposal-draft-cross-tab/ci-pr-navigation.log"
       ],
-      "progress": "388 unitàries i 36 fluxos de recuperació correctes en tres motors, inclòs el cas de dues pestanyes amb reload. Tipus/lint, build i font correctes. 0.6.14 preparada, pendent de PR, CI exacta de main i publicació amb rebut; 0.6.13 immutable conservada.",
+      "progress": "388 unitàries, 36 fluxos de recuperació i 27 d’horaris oficials correctes en tres motors. Cas de dues pestanyes amb reload verificat; fixture d’admin recarrega el bootstrap i deixa de dependre del polling de 30s. Tipus/lint, build i font correctes. 0.6.14 preparada, pendent de CI actualitzada, CI exacta de main i publicació amb rebut; 0.6.13 immutable conservada.",
       "change_log_id": "H186"
     }
   ]

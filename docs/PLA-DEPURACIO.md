@@ -37,6 +37,8 @@ Publicada **0.6.13**: [release](https://github.com/21052claver-ship-it/lanet/rel
 
 La revisió final amb dues pestanyes reprodueix que el formulari antic capturava l’esborrany compartit actual, que podia ser el d’una altra pestanya. La neteja ha de comparar el contingut que realment s’envia. Això complementa els casos de resposta tardana ja corregits a 0.6.13.
 
+La CI també identifica que la fixture d’horaris canviava el rol en D1 però navegava només pel hash; podia esperar 30s fins a refrescar el bootstrap. Recarrega explícitament després del canvi fictici de rol, amb les mateixes assertions i sense tocar permisos del producte.
+
 - [x] Reproducció amb dues pestanyes locals i només una proposta publicada.
 - [x] Comparació amb el payload del formulari enviat.
 - [x] Regressió de dues pestanyes i resta de recuperació en tres motors.

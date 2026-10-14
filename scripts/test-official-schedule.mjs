@@ -237,6 +237,9 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         if (managementRoundTrip) {
           f.db.prepare("UPDATE users SET role='admin' WHERE id='browser'").run();
           await page.goto(f.base + '/#admin');
+          // The fixture changed the role outside the app. A hash navigation
+          // keeps the old bootstrap; reload instead of waiting for the 30s poll.
+          await page.reload();
           for (const [id, label] of [
             ['2C-lit', 'Literatura catalana'],
             ['2C-latin', 'Llatí'],
