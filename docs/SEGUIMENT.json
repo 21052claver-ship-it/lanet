@@ -7593,6 +7593,43 @@
       ],
       "progress": "Publicada 0.6.13 a lanet.es via PR33 i CI exacta de main. Preferències ordenades, perfil amb patch de camps editats, esborranys de propostes preservats i confirmacions damunt la navegació mòbil. 388 unitàries i 294 fluxos locals; CI completa correcta, inclosos 24 de preferències, 33 de recuperació i 21 d’àudio natiu sense salts. Auditoria de dependències sense vulnerabilitats conegudes. Domini, commit, tag/release i digest del rebut verificats via proveïdor; sense migracions ni dades reals modificades.",
       "change_log_id": "H185"
+    },
+    {
+      "id": "T78-02",
+      "phase": "F78",
+      "title": "Conservar esborranys compartits entre pestanyes",
+      "status": "review",
+      "requirements": [
+        "R22",
+        "R23",
+        "R25",
+        "R94"
+      ],
+      "depends_on": [
+        "T78-01"
+      ],
+      "files": [
+        "src/forms-general.jsx",
+        "scripts/test-workspace-recovery.mjs",
+        "docs/PLA-DEPURACIO.md"
+      ],
+      "acceptance": "Publicar el formulari antic conserva el text no publicat d’una altra pestanya, també en recarregar; proves i publicació per PR/CI amb versió immutable.",
+      "checks": [
+        "Reproduir el cas amb dues pestanyes locals.",
+        "Comparar la neteja amb el payload enviat.",
+        "Passar recuperació en tres motors, unitàries, tipus/build/font i CI.",
+        "Publicar 0.6.14 i verificar domini/commit/rebut via proveïdor."
+      ],
+      "evidence": [
+        "output/platform-polish/cross-tab-before.json",
+        "output/proposal-draft-cross-tab/verification.json",
+        "output/proposal-draft-cross-tab/unit.log",
+        "output/proposal-draft-cross-tab/typecheck.log",
+        "output/proposal-draft-cross-tab/build.log",
+        "output/proposal-draft-cross-tab/browser/results.json"
+      ],
+      "progress": "388 unitàries i 36 fluxos de recuperació correctes en tres motors, inclòs el cas de dues pestanyes amb reload. Tipus/lint, build i font correctes. 0.6.14 preparada, pendent de PR, CI exacta de main i publicació amb rebut; 0.6.13 immutable conservada.",
+      "change_log_id": "H186"
     }
   ]
 }

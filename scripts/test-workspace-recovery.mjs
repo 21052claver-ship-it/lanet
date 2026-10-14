@@ -234,6 +234,55 @@ for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) 
         );
       },
     );
+    await check('proposal-cross-tab-draft', { width: 1440, height: 900 }, async (page, fixture) => {
+      const other = await page.context().newPage();
+      const openIdea = async (target) => {
+        await target.goto(fixture.base + '/#community');
+        await target.getByRole('button', { name: 'Proposa una idea', exact: true }).first().click();
+      };
+      try {
+        await openIdea(page);
+        await page
+          .getByRole('textbox', { name: 'La teva idea', exact: true })
+          .fill('Idea de la primera pestanya');
+        await page
+          .getByRole('textbox', { name: 'Com ajudaria?', exact: true })
+          .fill('Aquesta idea es publica des de la primera pestanya.');
+        await openIdea(other);
+        await other
+          .getByRole('textbox', { name: 'La teva idea', exact: true })
+          .fill('Esborrany de la segona pestanya');
+        await other
+          .getByRole('textbox', { name: 'Com ajudaria?', exact: true })
+          .fill('Aquest text encara no esta publicat.');
+        await page.getByRole('button', { name: 'Publicar la idea', exact: true }).click();
+        await page.getByRole('dialog').waitFor({ state: 'hidden' });
+        assert.equal(
+          fixture.db
+            .prepare(
+              "SELECT COUNT(*) AS n FROM proposals WHERE title='Idea de la primera pestanya'",
+            )
+            .get().n,
+          1,
+        );
+        const draft = await other.evaluate(() =>
+          JSON.parse(localStorage.getItem('lanet.proposalDraft.browser')),
+        );
+        assert.equal(draft?.title, 'Esborrany de la segona pestanya');
+        await other.reload();
+        await openIdea(other);
+        assert.equal(
+          await other.getByRole('textbox', { name: 'La teva idea', exact: true }).inputValue(),
+          draft.title,
+        );
+        assert.equal(
+          await other.getByRole('textbox', { name: 'Com ajudaria?', exact: true }).inputValue(),
+          draft.body,
+        );
+      } finally {
+        await other.close();
+      }
+    });
     await check('editor-loading-recovery', { width: 320, height: 640 }, async (page) => {
       const started = gate(),
         finish = gate();

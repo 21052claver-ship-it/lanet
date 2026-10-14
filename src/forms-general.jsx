@@ -198,7 +198,7 @@ export function ProposalForm({ item }) {
     <form
       onSubmit={submit(() => {
         if (uploading) throw new Error('Espera que acabin de pujar les imatges.');
-        const submittedDraft = readLocalJSON(key, null);
+        const submittedDraft = { ...f, files };
         return mutate(
           '/proposals' + (item.id ? '/' + item.id : ''),
           { ...f, files },
