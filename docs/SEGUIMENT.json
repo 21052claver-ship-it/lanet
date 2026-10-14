@@ -7533,7 +7533,7 @@
       "id": "T78-01",
       "phase": "F78",
       "title": "Auditar i corregir fluxos, concurrència i compatibilitat",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R22",
         "R23",
@@ -7583,9 +7583,15 @@
         "output/platform-polish/audits/music.json",
         "output/platform-polish/audits/reactions.json",
         "output/platform-polish/audits/workspace.json",
-        "output/platform-polish/audits/roulette-sound.json"
+        "output/platform-polish/audits/roulette-sound.json",
+        "docs/releases/0.6.13.json",
+        "output/platform-polish/provider-verification.json",
+        "output/releases/0.6.13/receipt.json",
+        "output/platform-polish/ci-main/audio/preferences/browser/results.json",
+        "output/platform-polish/ci-main/navigation/workspace-recovery/results.json",
+        "output/platform-polish/ci-main/audio/roulette-sound/results.json"
       ],
-      "progress": "388 unitàries, tipus/lint, build i auditoria de font correctes. 294 escenaris locals correctes; 6 casos d’àudio WebKit sense suport natiu en aquest Windows, pendents de Linux CI. Concurrència de volum/discos, patch del perfil, mode discret preservat, esborranys de propostes i toast sense tapar navegació verificats. 0.6.13 pendent de PR/Validate i publicació amb rebut.",
+      "progress": "Publicada 0.6.13 a lanet.es via PR33 i CI exacta de main. Preferències ordenades, perfil amb patch de camps editats, esborranys de propostes preservats i confirmacions damunt la navegació mòbil. 388 unitàries i 294 fluxos locals; CI completa correcta, inclosos 24 de preferències, 33 de recuperació i 21 d’àudio natiu sense salts. Auditoria de dependències sense vulnerabilitats conegudes. Domini, commit, tag/release i digest del rebut verificats via proveïdor; sense migracions ni dades reals modificades.",
       "change_log_id": "H185"
     }
   ]
