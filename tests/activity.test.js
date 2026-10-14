@@ -237,6 +237,34 @@ test('Reporter: throttles, ignores hidden/idle pages and bounds network retries'
   assert.equal(calls, 3);
 });
 
+test('Reporter: works without Object.hasOwn, rejects inherited names and keeps throttling', async () => {
+  const original = Object.hasOwn;
+  let time = now,
+    area = 'toString';
+  const sent = [];
+  const reporter = createActivityReporter({
+    send: async (body) => sent.push(body),
+    visible: () => true,
+    page: () => area,
+    now: () => time,
+  });
+  try {
+    Object.hasOwn = undefined;
+    await reporter.tick();
+    assert.deepEqual(sent, []);
+    area = 'notes';
+    await reporter.tick();
+    await reporter.tick();
+    assert.deepEqual(sent, [{ page: 'notes' }]);
+    time += ACTIVITY_INTERVAL;
+    await reporter.tick();
+    assert.deepEqual(sent, [{ page: 'notes' }, { page: 'notes' }]);
+  } finally {
+    Object.hasOwn = original;
+    reporter.stop();
+  }
+});
+
 test('Maintenance: dashboard exposes last completed pass and failures preserve the previous status', async (t) => {
   const { db, env } = fixture(t);
   await maintainData(env, now);

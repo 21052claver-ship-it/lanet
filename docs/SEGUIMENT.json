@@ -7905,9 +7905,15 @@
         "output/focus/verification.json",
         "output/focus/final-review.json",
         "output/pau-history/verification.json",
-        "output/mobile-full-logo/verification.json"
+        "output/mobile-full-logo/verification.json",
+        "output/consolidated-0.6.16/ci-fix-unit.log",
+        "output/consolidated-0.6.16/ci-fix-typecheck.log",
+        "output/consolidated-0.6.16/ci-fix-build.log",
+        "output/consolidated-0.6.16/ci-fix-reactions/results.json",
+        "output/consolidated-0.6.16/ci-fix-secret-room/secret-room-browser-results.json",
+        "output/consolidated-0.6.16/ci-fix-activity-browser/results.json"
       ],
-      "progress": "Tanda congelada i validada conjuntament en worktree: 445 unitàries, 243 recorreguts locals en Chromium/Firefox/WebKit, API/migracions workerd-D1 locals, tipus/build/font correctes. Benvinguda completa, retirada del xat, agenda/delegats, analítica/retenció, Pomodoro/focus, històric PAU i logo mòbil integrats. Incidències de cua invàlida, dia original, silenci intencional i retirada amb revisió resoltes. Pendent única pujada PR38, Validate/CI exacta i passos privats/publicació 0.6.16.",
+      "progress": "Tanda conjunta validada amb 243 fluxos locals del snapshot i correcció CI verificada amb 75 regressions addicionals en tres motors (reaccions30, APIs legacy/escenari36, dashboard9). 446 unitàries finals, tipus/lint i build correctes. Corregit Object.hasOwn al reporter per navegadors antics; prova de focus/reaccions adaptada als120s amb rellotge de paret sense activar el timeout del POST. Totes les assertions conservades. Pendent Validate de la mateixa PR38 amb el head corregit, CI exacta de main, còpia/migracions0028/0029/roster/worker i release0.6.16.",
       "change_log_id": "H189"
     }
   ]

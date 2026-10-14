@@ -12,6 +12,7 @@ Cada publicació nova té una versió SemVer, un tag Git immutable, una release 
 - Pomodoro amb continuïtat automàtica, alarma original i mode focus amb opcions, cua offline idempotent i dia original conservat.
 - Històric oficial de notes de tall 2022–2026, gràfic/mitjana/cobertura, rondes separades i comparació top 5 amb dades absents explícites; càrrega diferida sense alterar notes personals.
 - Logo complet a la capçalera mòbil amb proporcions i controls preservats.
+- Mostreig d’activitat compatible amb navegadors sense `Object.hasOwn`; regressions de focus/reaccions adaptades a l’interval de sincronització sense alterar la resposta visual immediata.
 - Esquemes additius 0028/0029 i roster privat; la publicació requereix còpia privada revisada i aplicació separada. Cap rol global, regal, reinici o contingut acadèmic modificat per les migracions.
 
 ## [0.6.15] - 2026-10-14

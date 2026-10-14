@@ -21,7 +21,7 @@ export function createActivityReporter({ send, visible, page, now = Date.now }) 
         !visible() ||
         time - interactedAt >= ACTIVE_WINDOW ||
         time - sentAt < ACTIVITY_INTERVAL ||
-        !Object.hasOwn(ACTIVITY_AREAS, page())
+        !Object.prototype.hasOwnProperty.call(ACTIVITY_AREAS, page())
       )
         return;
       // Also bound retries after network errors. Never build a queue in browser storage.
