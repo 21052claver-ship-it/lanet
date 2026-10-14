@@ -4,6 +4,6 @@
 
 383 unitàries, tipus/lint, build i auditoria de font correctes. Reaccions immediates, comptador canònic, respostes antigues, reversió independent i premis idempotents comprovats.
 
-30 fluxos locals i 30 a CI en Chromium, Firefox i WebKit a 390/1440px: POST retingut, doble clic, targeta/detall, persistència, hover/focus, desats amb error, save/like paral·lels i resposta perduda. Captures revisades; tots els grups de regressió de CI correctes. La suite API històrica general conserva la limitació registrada a 0.6.9 i no es presenta com a passada; la prova específica D1 d’horaris sí que passa a CI.
+30 fluxos locals i 30 a CI en Chromium, Firefox i WebKit a 390/1440px: POST retingut, doble clic, targeta/detall, persistència, hover/focus, desats amb error, save/like paral·lels, resposta perduda i publicació d’un apunt amb una reacció pendent. Captures revisades; tots els grups de regressió de CI correctes. La suite API històrica general conserva la limitació registrada a 0.6.9 i no es presenta com a passada; la prova específica D1 d’horaris sí que passa a CI.
 
 Domini, commit canònic, tag/release immutable i digest del rebut verificats via proveïdor. Sense migracions, proves contra la web pública ni dispositius físics. [Registre](releases/0.6.12.json).

@@ -11,7 +11,7 @@ T77-01 · 0.6.12. M’agrada, desats i vots han de respondre al clic abans de la
 
 Sense migracions, regals, canvis de credencials ni proves sobre la web pública. Els controls antiabús i els permisos del servidor es conserven.
 
-Validació local: 383 unitàries, tipus/lint, build i 30 escenaris en Chromium, Firefox i WebKit, 390/1440px. Reacció comprovada mentre el POST està retingut; no és un benchmark de la web pública. Captures revisades de m’agrada, desats i vot. Publicació pendent de CI.
+Validació local: 383 unitàries, tipus/lint, build i 30 escenaris en Chromium, Firefox i WebKit, 390/1440px. Reacció comprovada mentre el POST està retingut; no és un benchmark de la web pública. Captures revisades de m’agrada, desats i vot.
 
 Concurrència amb altres accions: les lectures invalidades es tornen a demanar després de l’última escriptura, sense esperar-les al botó. Proves d’un apunt publicat mentre el m’agrada continua pendent i de lectures iniciades abans/durant l’escriptura.
 
