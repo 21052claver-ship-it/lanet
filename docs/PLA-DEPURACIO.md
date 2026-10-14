@@ -32,3 +32,14 @@ Evidències privades a output/platform-polish/ i resultats de les suites locals.
 Resultat local: 388 unitàries i 294 escenaris de navegador correctes, tipus/lint, build i auditoria de font sense troballes; auditoria npm sense vulnerabilitats conegudes. Les sis comprovacions de Web Audio sense suport natiu a Windows es validen a Linux CI. Una recàrrega prematura de la prova de discos cancel·lava el bootstrap a WebKit: la fixture ara espera acabar la sincronització abans de recarregar; conserva totes les assertions.
 
 Publicada **0.6.13**: [release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.13) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38493830734) · [registre](releases/0.6.13.json). Web Audio natiu verificat en els tres motors de Linux CI, sense casos omesos. Comprovació de publicació via proveïdor, sense visitar la web pública.
+
+## Comprovació addicional de dues pestanyes · T78-02
+
+La revisió final amb dues pestanyes reprodueix que el formulari antic capturava l’esborrany compartit actual, que podia ser el d’una altra pestanya. La neteja ha de comparar el contingut que realment s’envia. Això complementa els casos de resposta tardana ja corregits a 0.6.13.
+
+La CI també identifica que la fixture d’horaris canviava el rol en D1 però navegava només pel hash; podia esperar 30s fins a refrescar el bootstrap. Recarrega explícitament després del canvi fictici de rol, amb les mateixes assertions i sense tocar permisos del producte.
+
+- [x] Reproducció amb dues pestanyes locals i només una proposta publicada.
+- [x] Comparació amb el payload del formulari enviat.
+- [x] Regressió de dues pestanyes i resta de recuperació en tres motors.
+- [ ] CI, nova versió 0.6.14, release i rebut; conservar 0.6.13 immutable.

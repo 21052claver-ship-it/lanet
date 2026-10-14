@@ -1171,3 +1171,11 @@ H185 · Revisió visual: les confirmacions tapaven la navegació inferior. Posic
 H185 · Revisió de formularis: reproduïda la pèrdua d’una segona idea pendent quan acabava la publicació de la primera. La confirmació neteja només l’esborrany enviat si continua igual; editar una proposta existent conserva qualsevol idea pendent. Regressions amb petició retinguda, diàleg nou, reload i edició, en mòbil/escriptori i tres motors. 388 unitàries i 294 fluxos locals, publicació pendent de la CI actualitzada.
 
 Publicació H185 confirmada: [0.6.13](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.13), commit 6a00486a0534f5305071beece77e66e118fc5540, [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38493830734). 388 unitàries i 294 fluxos locals correctes; CI completa inclou 24 casos de preferències, 33 de recuperació i 21 d’àudio natiu en tres motors sense salts. Preferències ràpides, privadesa, esborranys i navegació mòbil comprovats. Domini, desplegament i rebut immutable verificats via proveïdor. Sense migracions, proves contra la web pública ni dades reals modificades.
+
+### H186 Conservar esborranys en dues pestanyes
+
+**14 octubre 2026 · T78-02.** La revisió final amb dues pestanyes reprodueix una variant: publicar el formulari antic capturava el valor compartit actual de localStorage i podia esborrar l’esborrany aliè ja existent. La neteja compara ara amb el payload real enviat. Una regressió amb dues pestanyes obertes comprova que només es publica la primera idea i que la segona sobreviu a reload, en tres motors.
+
+388 unitàries i 36 fluxos de recuperació locals, tipus/lint, build i font correctes. Versió 0.6.14 preparada, pendent de PR/CI i publicació; 0.6.13 es conserva immutable. Evidències: output/platform-polish/cross-tab-before.json i output/proposal-draft-cross-tab/. Cap migració ni dades de producció modificades.
+
+H186 · CI identifica una carrera a la fixture d’horaris oficials: després de promocionar l’usuari fictici a admin, navegar només pel hash conservava el bootstrap amb rol d’alumne. La prova esperava accidentalment el polling de 30s i podia expirar. Ara recarrega explícitament abans d’editar; conserva les assertions de professorat, franges i persistència. Cap canvi de permisos del producte. Log i captura a output/proposal-draft-cross-tab/ci-pr/ i ci-pr-navigation.log.

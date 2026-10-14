@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**187/188 tasques verificades · 94 requisits · 79 fases · límit d’una tasca activa.**
+**187/189 tasques verificades · 94 requisits · 79 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **cap**.
+Tasca activa: **T78-02 — Conservar esborranys compartits entre pestanyes**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -434,5 +434,6 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 ## F78 Depuració de fiabilitat i experiència d’ús
 
 - [x] **T78-01** Auditar i corregir fluxos, concurrència i compatibilitat — Verificat.
+- [ ] **T78-02** Conservar esborranys compartits entre pestanyes — En revisió.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

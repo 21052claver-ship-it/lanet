@@ -2,6 +2,10 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
+## [0.6.14] - 2026-10-14
+
+- Publicar una proposta des d’una pestanya antiga conserva l’esborrany d’una altra pestanya, encara que ja existís abans de prémer Publicar. La neteja compara el contingut enviat, amb regressió real de dues pestanyes en tres motors.
+
 ## [0.6.13] - 2026-10-14
 
 - Els canvis ràpids de volum i disc es desen en ordre; els canvis pendents s’agrupen i conserven l’últim valor de cada preferència.
