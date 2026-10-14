@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select from '../components/Select';
 import AgendaList from '../components/AgendaList';
 import SchoolCalendar from '../components/SchoolCalendar';
@@ -112,7 +112,7 @@ function exportEvents(events) {
   );
 }
 export default function Schedule() {
-  const { data, subject, enrolled, go, open, setSubjectFilter, mutate, notify } = useApp();
+  const { data, subject, enrolled, go, open, setSubjectFilter, mutate, notify, agendaSubject, setAgendaSubject } = useApp();
   const compact = useCompactLayout();
   const [monthDay, setMonthDay] = useState(data.today);
   const prefKey = `lanet.calendar.${data.user.id}`;
@@ -150,6 +150,15 @@ export default function Schedule() {
       filterSubject: setFilterSubject,
     })[k](v);
   }
+  useEffect(() => {
+    if (!agendaSubject) return;
+    setView('calendar');
+    setScale('list');
+    setFilterKind('all');
+    setFilterSubject(agendaSubject);
+    setDate(data.today);
+    setAgendaSubject(null);
+  }, [agendaSubject, setAgendaSubject, data.today]);
   const dates = weekDates(date),
     chosenIds = data.enrollments.map((e) => e.offering_id);
   const slots = data.slots.filter((s) => chosenIds.includes(s.offering_id));

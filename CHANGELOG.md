@@ -2,7 +2,17 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production. No es creen versions retroactives fictícies.
 
-## [0.6.14] - 2026-10-14
+## [0.6.15] - 2026-10-14
+
+- Continguts s’organitza en espais visuals per assignatura, amb temes d’un sol nivell, filtre de trimestre i alta de materials contextual.
+- Formularis revisats i eines dins de l’assignatura; accés directe a l’agenda, pròximes dates i alta d’examen o tasca amb assignatura seleccionada.
+- Dubtes per grup i variant matriculada: fils amb material relacionat, respostes, resolució, informes i retirada; permisos al servidor, paginació, límits i reintents idempotents.
+- Esborranys de dates, preguntes i respostes en aquest dispositiu; errors recuperables i protecció contra enviaments duplicats.
+- Desats i Els meus continuen accessibles independentment de les assignatures preferides; cerca global de materials i càrrega progressiva.
+- Alta de dates amb tipus visual, audiència explícita i opcions secundàries desplegables. Navegació per assignatura restaurable després de recarregar.
+- El validador de releases accepta una única correcció documentada i continua rebutjant entrades buides.
+
+Inclou la correcció preparada com a 0.6.14, que no es va arribar a publicar:
 
 - Publicar una proposta des d’una pestanya antiga conserva l’esborrany d’una altra pestanya, encara que ja existís abans de prémer Publicar. La neteja compara el contingut enviat, amb regressió real de dues pestanyes en tres motors.
 

@@ -39,6 +39,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - group: contents
+            tests: |
+              npm run test:subject-workspaces
+              npm run test:contents
+              npm run test:fast-uploads
           - group: navigation
             tests: |
               npm run test:official-schedule
@@ -102,6 +107,9 @@ jobs:
           name: local-browser-evidence-${{ matrix.group }}
           retention-days: 7
           path: |
+            output/subject-workspaces/browser/
+            output/contents/
+            output/fast-uploads/
             output/course-grades/
             output/student-guide/browser/
             output/reactions/browser/

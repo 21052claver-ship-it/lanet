@@ -6,6 +6,7 @@ import { dateLabel, DAYS } from '../shared/domain';
 import { slotTeacher } from '../shared/official-schedule';
 import { BoardDetail } from './components/WoodBoard';
 import { CourseSubject } from './components/CourseGrades';
+import { DiscussionNew, DiscussionDetail } from './components/Discussions';
 import {
   ConfigureForm,
   EventForm,
@@ -36,6 +37,8 @@ import {
   ManageUserForm,
 } from './forms-admin';
 const forms = {
+  discussionNew: DiscussionNew,
+  discussion: DiscussionDetail,
   configure: ConfigureForm,
   event: EventForm,
   proposal: ProposalForm,
@@ -63,6 +66,8 @@ const forms = {
   manageUser: ManageUserForm,
 };
 const titles = {
+  discussionNew: 'Nou dubte de l’assignatura',
+  discussion: 'Dubte i respostes',
   configure: 'Configurar el meu curs',
   event: 'Una data al calendari',
   proposal: 'Proposa una idea',
@@ -153,6 +158,7 @@ export default function Forms({ onLogout, logoutBusy = false, logoutError = '' }
           </p>
           <p>{item.room}</p>
           <RichText text={item.body} />
+          {item.subject_id && <Button onClick={()=>{setSubjectFilter(item.subject_id);go('notes');close();}}>Materials per preparar-ho <ArrowRight size={18}/></Button>}
         </div>
       ) : null}
     </Modal>

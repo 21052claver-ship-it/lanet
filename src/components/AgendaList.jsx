@@ -5,19 +5,31 @@ import { SubjectChip, Empty } from '../ui';
 import { eventKind, eventLabel, eventOrigin } from '../../shared/agenda';
 import { dateLabel } from '../../shared/domain';
 export default function AgendaList({ events, onSelect }) {
-  const { data, subject, mutate } = useApp();
+  const { data, subject, mutate, setData } = useApp();
   const pending = useRef(new Set()),
-    [busy, setBusy] = useState([]);
+    [busy, setBusy] = useState([]),
+    [optimistic, setOptimistic] = useState({});
   async function complete(event, done) {
     if (pending.current.has(event.id)) return;
     pending.current.add(event.id);
     setBusy([...pending.current]);
+    setOptimistic((current) => ({ ...current, [event.id]: done }));
     try {
-      await mutate('/events/' + event.id + '/progress', { done });
+      await mutate('/events/' + event.id + '/progress', { done }, undefined, () =>
+        setData((current) => ({
+          ...current,
+          events: current.events.map((e) => (e.id === event.id ? { ...e, done: Number(done) } : e)),
+        })),
+      );
     } catch {
     } finally {
       pending.current.delete(event.id);
       setBusy([...pending.current]);
+      setOptimistic((current) => {
+        const next = { ...current };
+        delete next[event.id];
+        return next;
+      });
     }
   }
   const dates = [...new Set(events.map((e) => e.date))].sort();
@@ -44,7 +56,7 @@ export default function AgendaList({ events, onSelect }) {
                 {eventKind(event) === 'task' ? (
                   <input
                     type="checkbox"
-                    checked={!!event.done}
+                    checked={optimistic[event.id] ?? !!event.done}
                     disabled={busy.includes(event.id)}
                     aria-label={'Marcar com a feta: ' + event.title}
                     onChange={(e) => complete(event, e.target.checked)}

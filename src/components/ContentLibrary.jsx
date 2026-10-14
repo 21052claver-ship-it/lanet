@@ -32,7 +32,7 @@ const stamp = (value) =>
     new Date(value),
   );
 
-export default function ContentLibrary({ kind }) {
+export default function ContentLibrary({ kind, subjectId }) {
   const { data, subject, notify, enrolled } = useApp();
   const [library, setLibrary] = useState(null),
     [error, setError] = useState(''),
@@ -84,9 +84,9 @@ export default function ContentLibrary({ kind }) {
     (enrolled.length ? enrolled : data.subjects).map((s) => s.id);
   const bySubject = source.filter(
     (e) =>
-      selected === 'all' ||
+      (subjectId ? e.subject_ids.includes(subjectId) || !e.subject_ids.length : selected === 'all' ||
       !e.subject_ids.length ||
-      e.subject_ids.some((s) => (selected === 'mine' ? mine.includes(s) : s === selected)),
+      e.subject_ids.some((s) => (selected === 'mine' ? mine.includes(s) : s === selected))),
   );
   const topics = [...new Set(bySubject.map((e) => e.topic))].sort((a, b) =>
     a.localeCompare(b, 'ca'),
@@ -146,7 +146,7 @@ export default function ContentLibrary({ kind }) {
                 variant="primary"
                 onClick={() =>
                   setEditor({
-                    value: emptyLibrary(kind, kind === 'formula' ? data.subjects[0]?.id : ''),
+                    value: emptyLibrary(kind, subjectId || (kind === 'formula' ? data.subjects[0]?.id : '')),
                   })
                 }
               >
@@ -167,7 +167,7 @@ export default function ContentLibrary({ kind }) {
             onChange={(e) => filter(() => setQuery(e.target.value))}
           />
         </label>
-        <Select
+        {!subjectId && <Select
           aria-label="Assignatura de la biblioteca"
           value={selected}
           onChange={(e) =>
@@ -184,7 +184,7 @@ export default function ContentLibrary({ kind }) {
               {s.name}
             </option>
           ))}
-        </Select>
+        </Select>}
         <Select
           aria-label="Tema de la biblioteca"
           value={topic}

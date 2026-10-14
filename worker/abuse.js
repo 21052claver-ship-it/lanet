@@ -65,7 +65,7 @@ function canonical(value) {
 }
 
 const publicationFields = {
-  notes: ['title', 'body', 'summary', 'subject_id', 'price', 'status', 'files'],
+  notes: ['title', 'body', 'summary', 'subject_id', 'topic', 'term', 'price', 'status', 'files'],
   pluses: ['title', 'body', 'date', 'start', 'end', 'place', 'conditions', 'url', 'subjects'],
   events: [
     'title',

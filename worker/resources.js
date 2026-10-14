@@ -20,6 +20,7 @@ import { madridDay, safeLink } from '../shared/domain.js';
 import { canReadNote, noteFiles } from './data.js';
 import { fileStatements } from './files.js';
 import { bonusMaximum, bonusLabel } from '../shared/course-grades.js';
+import { materialTopic } from '../shared/content-workspace.js';
 export async function resourceRoute(request, env, user, path) {
   const match = path.match(
     /^\/api\/(notes|pluses|events|proposals|announcements)(?:\/([^/]+))?(?:\/(like|save|consult|unlock|vote|calendar|progress))?$/,
@@ -287,21 +288,25 @@ export async function resourceRoute(request, env, user, path) {
         'Aquests apunts ja tenen compradors. Pots retirar-los, però no convertir-los en esborrany.',
       );
     const files = await fileStatements(env, user, b.files || [], 'note_id', key);
+    const topic = str(materialTopic(b.topic ?? record?.topic), 80);
+    const term = b.term === '' || b.term === null ? null : b.term === undefined ? record?.term ?? null : integer(b.term, 1, 3);
     const statement = record
       ? sql(
           env,
-          'UPDATE notes SET title=?,subject_id=?,body=?,summary=?,price=?,status=? WHERE id=?',
+          'UPDATE notes SET title=?,subject_id=?,body=?,summary=?,price=?,status=?,topic=?,term=? WHERE id=?',
           title,
           b.subject_id,
           content,
           summary,
           price,
           status,
+          topic,
+          term,
           key,
         )
       : sql(
           env,
-          'INSERT INTO notes(id,author_id,subject_id,title,body,summary,price,status) VALUES(?,?,?,?,?,?,?,?)',
+          'INSERT INTO notes(id,author_id,subject_id,title,body,summary,price,status,topic,term) VALUES(?,?,?,?,?,?,?,?,?,?)',
           key,
           user.id,
           b.subject_id,
@@ -310,6 +315,8 @@ export async function resourceRoute(request, env, user, path) {
           summary,
           price,
           status,
+          topic,
+          term,
         );
     await env.DB.batch([statement, ...files]);
     return { id: key };

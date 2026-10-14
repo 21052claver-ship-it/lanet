@@ -38,6 +38,7 @@ import { libraryRoute } from './library.js';
 import { rouletteRoute } from './roulette.js';
 import { claimBakeryCake } from './bakery.js';
 import { predictionsRoute } from './predictions.js';
+import { discussionsRoute } from './discussions.js';
 async function api(request, env, ctx, security) {
   const url = new URL(request.url),
     path = url.pathname;
@@ -78,6 +79,8 @@ async function api(request, env, ctx, security) {
     if (path.startsWith('/api/files/')) return fileResponse(request, env, user, path.split('/')[3]);
   }
   if (path === '/api/pau') return pauRoute(request, env, user);
+  if (path === '/api/discussions' || path.startsWith('/api/discussions/'))
+    return discussionsRoute(request, env, user, path);
   if (path === '/api/roulette') return rouletteRoute(request, env, user);
   if (path === '/api/predictions' || path.startsWith('/api/predictions/'))
     return predictionsRoute(request, env, user, path);

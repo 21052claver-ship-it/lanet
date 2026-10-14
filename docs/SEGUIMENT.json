@@ -380,6 +380,10 @@
     {
       "id": "R94",
       "description": "Depuració global amb fixtures locals, correcció de regressions reproduïdes i publicació verificada"
+    },
+    {
+      "id": "R95",
+      "description": "Espais per assignatura, temes plans, biblioteca i agenda vinculades; dubtes contextuals segurs i alta ràpida de tasques i exàmens."
     }
   ],
   "phases": [
@@ -933,6 +937,13 @@
       "title": "Depuració de fiabilitat i experiència d’ús",
       "depends_on": [
         "F77"
+      ]
+    },
+    {
+      "id": "F79",
+      "title": "Experiència d’estudi per assignatura",
+      "depends_on": [
+        "F78"
       ]
     }
   ],
@@ -7598,7 +7609,7 @@
       "id": "T78-02",
       "phase": "F78",
       "title": "Conservar esborranys compartits entre pestanyes",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R22",
         "R23",
@@ -7614,12 +7625,12 @@
         "docs/PLA-DEPURACIO.md",
         "scripts/test-official-schedule.mjs"
       ],
-      "acceptance": "Publicar el formulari antic conserva el text no publicat d’una altra pestanya, també en recarregar; proves i publicació per PR/CI amb versió immutable.",
+      "acceptance": "Correcció de dues pestanyes incorporada per PR i CI exacta de main correcta; conservar esborrany després de reload. La publicació es trasllada explícitament a T79-01 i es comprovarà amb rebut immutable de la versió que inclou aquesta correcció.",
       "checks": [
         "Reproduir el cas amb dues pestanyes locals.",
         "Comparar la neteja amb el payload enviat.",
         "Passar recuperació en tres motors, unitàries, tipus/build/font i CI.",
-        "Publicar 0.6.14 i verificar domini/commit/rebut via proveïdor."
+        "Transferir publicació pendent a T79-01, sense declarar 0.6.14 publicada."
       ],
       "evidence": [
         "output/platform-polish/cross-tab-before.json",
@@ -7629,10 +7640,68 @@
         "output/proposal-draft-cross-tab/build.log",
         "output/proposal-draft-cross-tab/browser/results.json",
         "output/proposal-draft-cross-tab/official-schedule/results.json",
-        "output/proposal-draft-cross-tab/ci-pr-navigation.log"
+        "output/proposal-draft-cross-tab/ci-pr-navigation.log",
+        "output/proposal-draft-cross-tab/ci-final.json",
+        "output/proposal-draft-cross-tab/bonus-stress.json",
+        "output/proposal-draft-cross-tab/release.log"
       ],
-      "progress": "388 unitàries, 36 fluxos de recuperació i 27 d’horaris oficials correctes en tres motors. Cas de dues pestanyes amb reload verificat; fixture d’admin recarrega el bootstrap i deixa de dependre del polling de 30s. Tipus/lint, build i font correctes. 0.6.14 preparada, pendent de CI actualitzada, CI exacta de main i publicació amb rebut; 0.6.13 immutable conservada.",
+      "progress": "Codi incorporat per PR35 i CI exacta de main correcta (run 38498922783, intent 2). 388 unitàries, 36 casos de recuperació i 27 d’horaris locals. Fallada puntual WebKit de notes no reproduïda en 10 repeticions locals; mateix codi i assertions passen a CI. Release 0.6.14 avortada abans de qualsevol mutació externa: el validador exigeix 4 línies per una entrada amb un únic punt. No existeix publicació 0.6.14. Publicació agrupada i correcció del validador a T79-01/0.6.15.",
       "change_log_id": "H186"
+    },
+    {
+      "id": "T79-01",
+      "phase": "F79",
+      "title": "Implementar espais, dubtes i agenda contextual",
+      "status": "review",
+      "requirements": [
+        "R95",
+        "R01",
+        "R02",
+        "R03",
+        "R04"
+      ],
+      "depends_on": [
+        "T78-02"
+      ],
+      "files": [
+        "docs/PLA-ESPAIS-ASSIGNATURA.md",
+        "src/pages/Notes.jsx",
+        "src/forms-general.jsx",
+        "src/forms-resources.jsx",
+        "worker/discussions.js",
+        "migrations/0027_subject_workspaces.sql",
+        "src/components/Discussions.jsx",
+        "src/components/EventEditor.jsx",
+        "src/components/AgendaList.jsx",
+        "src/components/ContentLibrary.jsx",
+        "src/context.jsx",
+        "src/workspace.css",
+        "scripts/test-subject-workspaces.mjs",
+        "tests/subject-workspaces.test.js",
+        ".github/workflows/verify.yml",
+        "scripts/release-utils.mjs"
+      ],
+      "acceptance": "Trobar materials per assignatura i tema, preguntar i respondre en fils del grup autoritzat i crear una tasca o examen amb context preseleccionat. Cap pèrdua de dades anteriors, mobile i teclat verificats; PR, CI, còpia privada de D1 i migració revisada abans de publicar.",
+      "checks": [
+        "Comparar alternatives i definir recorreguts i criteris verificables.",
+        "Implementar navegació per assignatura i temes, formularis/eines contextuals i agenda.",
+        "Implementar dubtes per matrícula amb reintents idempotents, esborranys, permisos, moderació i límits.",
+        "Provar preservació de dades, seguretat, errors, teclat i responsive en tres motors.",
+        "Passar tipus/unitàries/build/font i Validate; còpia privada i migració additiva revisada; publicar i verificar rebut via proveïdor."
+      ],
+      "evidence": [
+        "output/subject-workspaces/verification.json",
+        "output/subject-workspaces/unit.log",
+        "output/subject-workspaces/typecheck.log",
+        "output/subject-workspaces/build.log",
+        "output/subject-workspaces/visual/geometry.json",
+        "output/subject-workspaces/browser/results.json",
+        "output/subject-workspaces/library/contents-browser-results.json",
+        "output/subject-workspaces/fast-uploads/fast-browser-results.json",
+        "output/subject-workspaces/recovery/results.json"
+      ],
+      "progress": "Implementació completa amb espais, temes, context, biblioteca, dubtes segurs i agenda. 398 unitàries i 108 recorreguts locals en tres motors correctes; captures revisades. Pendent PR/CI, còpia privada i migració revisada, publicació 0.6.15 amb rebut. Inclou la correcció de T78-02; 0.6.14 no publicada.",
+      "change_log_id": "H187"
     }
   ]
 }

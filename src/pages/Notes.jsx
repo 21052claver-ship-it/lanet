@@ -1,7 +1,7 @@
 import VerifiedImage from '../components/VerifiedImage';
 import Select from '../components/Select';
 import SubjectFilter from '../components/SubjectFilter';
-import React, { useState } from 'react';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
 import {
   Plus,
   MagnifyingGlass,
@@ -16,27 +16,135 @@ import {
   Books,
   Function as FunctionIcon,
   Toolbox,
+  ArrowLeft,
+  Folder,
+  ChatCircle,
+  CalendarPlus,
 } from '@phosphor-icons/react';
 import { useApp } from '../context';
-import { PageTitle, Button, Tabs, SubjectChip, LikeButton, SaveButton, Empty } from '../ui';
+import {
+  PageTitle,
+  Button,
+  Tabs,
+  SubjectChip,
+  SubjectMark,
+  LikeButton,
+  SaveButton,
+  Empty,
+} from '../ui';
 import { Avatar, ReferenceArt } from '../art';
 import { matchesSearch } from '../../shared/search';
 import ContentLibrary from '../components/ContentLibrary';
 import SchoolGuide from '../components/SchoolGuide';
+import { filterMaterials, materialTopics } from '../../shared/content-workspace';
+import { eventLabel, eventKind } from '../../shared/agenda';
+import { dateLabel } from '../../shared/domain';
+const Discussions = lazy(() => import('../components/Discussions'));
 import '../contents.css';
+import '../workspace.css';
 export default function Notes() {
-  const { open } = useApp();
-  const [section, setSection] = useState('materials');
+  const { open, data, subject, subjectFilter, setSubjectFilter, setAgendaSubject, go } = useApp();
+  const current = subject(subjectFilter);
+  const readSection = () => {
+    const value = new URL(location.href).searchParams.get('contents');
+    return ['materials', 'formula', 'tool', 'guide', 'discussions'].includes(value)
+      ? value
+      : 'materials';
+  };
+  const [section, updateSection] = useState(readSection);
+  function setSection(value) {
+    updateSection(value);
+    const url = new URL(location.href);
+    if (value === 'materials') url.searchParams.delete('contents');
+    else url.searchParams.set('contents', value);
+    history.replaceState(null, '', url);
+  }
+  useEffect(() => {
+    const restore = () => updateSection(readSection());
+    window.addEventListener('popstate', restore);
+    return () => window.removeEventListener('popstate', restore);
+  }, []);
+  useEffect(() => {
+    if (current && section === 'guide') setSection('materials');
+  }, [subjectFilter, section]);
+  const upcoming = current
+    ? data.events
+        .filter(
+          (e) =>
+            e.subject_id === current.id &&
+            !e.done &&
+            (e.date >= data.today || eventKind(e) === 'task'),
+        )
+        .slice()
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .slice(0, 3)
+    : [];
   return (
     <div className="contents-page">
       <PageTitle title="Continguts" subtitle="Materials, fórmules i eines per estudiar">
         {section === 'materials' && (
-          <Button variant="primary" onClick={() => open('note')}>
+          <Button
+            variant="primary"
+            onClick={() => open('note', current ? { subject_id: current.id } : {})}
+          >
             <Plus size={18} />
             Comparteix un apunt
           </Button>
         )}
       </PageTitle>
+      {current && (
+        <section
+          className="subject-workspace panel"
+          aria-label={`Espai de ${current.name}`}
+          style={{ '--subject-color': current.color }}
+        >
+          <button
+            className="text-button workspace-back"
+            onClick={() => {
+              setSubjectFilter('all');
+              setSection('materials');
+            }}
+          >
+            <ArrowLeft size={17} /> Totes les assignatures
+          </button>
+          <div className="workspace-heading">
+            <SubjectMark subject={current} />
+            <div>
+              <h2>{current.name}</h2>
+              <p>El teu espai d’estudi</p>
+            </div>
+          </div>
+          <div className="workspace-actions">
+            <Button onClick={() => open('event', { subject_id: current.id, kind: 'exam' })}>
+              <CalendarPlus size={18} /> Afegir examen
+            </Button>
+            <Button onClick={() => open('event', { subject_id: current.id, kind: 'task' })}>
+              <Plus size={18} /> Afegir tasca
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setAgendaSubject(current.id);
+                go('schedule');
+              }}
+            >
+              Agenda de l’assignatura <ArrowRight size={16} />
+            </Button>
+          </div>
+          {!!upcoming.length && (
+            <div className="workspace-dates" aria-label="Pròximes dates">
+              {upcoming.map((e) => (
+                <button key={e.id} onClick={() => open('eventDetail', e)}>
+                  <span className={'workspace-date-kind ' + (e.date < data.today ? 'overdue' : '')}>
+                    {eventLabel(e)} · {dateLabel(e.date, { day: 'numeric', month: 'short' })}
+                  </span>
+                  <strong>{e.title}</strong>
+                </button>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
       <Tabs
         className="contents-sections"
         label="Apartats de Continguts"
@@ -44,7 +152,8 @@ export default function Notes() {
           ['materials', 'Materials', Books],
           ['formula', 'Formularis', FunctionIcon],
           ['tool', 'Eines i webs', Toolbox],
-          ['guide', 'Guia del curs', Books],
+          ...(current ? [['discussions', 'Dubtes', ChatCircle]] : []),
+          ...(!current ? [['guide', 'Guia del curs', Books]] : []),
         ]}
         value={section}
         onChange={setSection}
@@ -62,11 +171,26 @@ export default function Notes() {
         }
       >
         {section === 'materials' ? (
-          <Materials />
+          <Materials key={subjectFilter} />
+        ) : section === 'discussions' ? (
+          current ? (
+            <Suspense fallback={<p role="status">Carregant dubtes…</p>}>
+              <Discussions key={current.id} subjectId={current.id} />
+            </Suspense>
+          ) : (
+            <Empty
+              title="Tria una assignatura"
+              body="Els dubtes es comparteixen dins del teu grup i variant."
+            />
+          )
         ) : section === 'guide' ? (
           <SchoolGuide />
         ) : (
-          <ContentLibrary key={section} kind={section} />
+          <ContentLibrary
+            key={`${section}-${subjectFilter}`}
+            kind={section}
+            subjectId={current?.id}
+          />
         )}
       </section>
     </div>
@@ -82,17 +206,21 @@ function Materials() {
   const [tab, setTab] = useState('explore'),
     [query, setQuery] = useState(''),
     [order, setOrder] = useState('recent'),
-    [filtersOpen, setFiltersOpen] = useState(false);
-  const items = data.notes.filter(
-    (n) =>
-      selectedSubjects.includes(n.subject_id) &&
-      (tab === 'saved'
-        ? n.saved
-        : tab === 'mine'
-          ? n.author_id === data.user.id
-          : n.status === 'published') &&
-      matchesSearch(query, n.title, n.summary, n.author, subject(n.subject_id)?.name),
-  );
+    [filtersOpen, setFiltersOpen] = useState(false),
+    [topic, setTopic] = useState(null),
+    [term, setTerm] = useState('all'),
+    [limit, setLimit] = useState(12);
+  const scoped = subjectFilter !== 'all';
+  const baseItems = filterMaterials(data.notes, {
+    subjects: !scoped && (tab !== 'explore' || query.trim()) ? null : selectedSubjects,
+    tab,
+    userId: data.user.id,
+    query,
+    term,
+    subjectName: (id) => subject(id)?.name,
+  });
+  const topics = materialTopics(baseItems);
+  const items = baseItems.filter((n) => topic === null || (n.topic || '') === topic);
   if (order === 'likes') items.sort((a, b) => b.likes - a.likes);
   if (order === 'title') items.sort((a, b) => a.title.localeCompare(b.title, 'ca'));
   if (order === 'recent') items.sort((a, b) => b.created_at.localeCompare(a.created_at));
@@ -107,7 +235,11 @@ function Materials() {
             ['mine', 'Els meus'],
           ]}
           value={tab}
-          onChange={setTab}
+          onChange={(value) => {
+            setTab(value);
+            setTopic(null);
+            setLimit(12);
+          }}
         />
       </div>
       <div className="resource-filters notes-filters">
@@ -117,7 +249,11 @@ function Materials() {
             aria-label="Cercar apunts"
             placeholder="Cerca apunts, temes o autors"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setTopic(null);
+              setLimit(12);
+            }}
           />
         </label>
         <Select
@@ -129,20 +265,137 @@ function Materials() {
           <option value="likes">Més agradats</option>
           <option value="title">Títol</option>
         </Select>
-        <SubjectFilter
-          kind="notes"
-          value={selectedSubjects}
-          expanded={filtersOpen}
-          onExpandedChange={setFiltersOpen}
-          onApplied={() => setSubjectFilter('all')}
-        />
+        {!scoped && (
+          <SubjectFilter
+            kind="notes"
+            value={selectedSubjects}
+            expanded={filtersOpen}
+            onExpandedChange={setFiltersOpen}
+            onApplied={() => setSubjectFilter('all')}
+          />
+        )}
       </div>
+      {!scoped && tab === 'explore' && !query.trim() && (
+        <section className="subject-spaces" aria-label="Espais per assignatura">
+          <div className="workspace-list-heading">
+            <h2>Les teves assignatures</h2>
+            <Select
+              aria-label="Obrir una altra assignatura"
+              value="all"
+              onChange={(e) => setSubjectFilter(e.target.value)}
+            >
+              <option value="all">Altres assignatures…</option>
+              {data.subjects.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </Select>
+          </div>
+          <div className="subject-spaces-grid">
+            {data.subjects
+              .filter((s) => selectedSubjects.includes(s.id))
+              .map((s) => {
+                const count = data.notes.filter(
+                  (n) => n.subject_id === s.id && n.status === 'published',
+                ).length;
+                const next = data.events
+                  .filter((e) => e.subject_id === s.id && e.date >= data.today && !e.done)
+                  .sort((a, b) => a.date.localeCompare(b.date))[0];
+                return (
+                  <button
+                    className="subject-space"
+                    key={s.id}
+                    onClick={() => setSubjectFilter(s.id)}
+                    aria-label={`Obrir l’espai de ${s.name}`}
+                    style={{ '--subject-color': s.color }}
+                  >
+                    <SubjectMark subject={s} />
+                    <strong>{s.name}</strong>
+                    <span>
+                      {count} {count === 1 ? 'material' : 'materials'}
+                    </span>
+                    {next && (
+                      <small>
+                        {eventLabel(next)} ·{' '}
+                        {dateLabel(next.date, { day: 'numeric', month: 'short' })}
+                      </small>
+                    )}
+                    <ArrowRight size={17} />
+                  </button>
+                );
+              })}
+          </div>
+          {!selectedSubjects.length && (
+            <p>
+              No has triat assignatures. Pots obrir-ne una des del selector o ajustar les
+              preferències.
+            </p>
+          )}
+          <h2 className="workspace-recents">Materials recents</h2>
+        </section>
+      )}
+      {scoped && (
+        <div className="material-organization">
+          <div className="topic-folders" role="group" aria-label="Temes dels materials">
+            <button
+              aria-pressed={topic === null}
+              onClick={() => {
+                setTopic(null);
+                setLimit(12);
+              }}
+            >
+              <Books size={18} /> Tots <span>{baseItems.length}</span>
+            </button>
+            {topics.map(([name, count]) => (
+              <button
+                key={name}
+                aria-pressed={topic === name}
+                onClick={() => {
+                  setTopic(name);
+                  setLimit(12);
+                }}
+              >
+                <Folder size={19} weight="duotone" /> {name || 'Sense tema'} <span>{count}</span>
+              </button>
+            ))}
+          </div>
+          <Select
+            aria-label="Trimestre dels materials"
+            value={term}
+            onChange={(e) => {
+              setTerm(e.target.value);
+              setTopic(null);
+              setLimit(12);
+            }}
+          >
+            <option value="all">Tot el curs</option>
+            <option value="1">1r trimestre</option>
+            <option value="2">2n trimestre</option>
+            <option value="3">3r trimestre</option>
+            <option value="none">Sense trimestre</option>
+          </Select>
+          {topic !== null && (
+            <Button
+              onClick={() =>
+                open('note', {
+                  subject_id: subjectFilter,
+                  topic,
+                  term: ['1', '2', '3'].includes(term) ? term : '',
+                })
+              }
+            >
+              <Plus size={17} /> Material en aquest tema
+            </Button>
+          )}
+        </div>
+      )}
       <p className="results-label" aria-live="polite">
         {items.length} {items.length === 1 ? 'publicació' : 'publicacions'}{' '}
       </p>
       {items.length ? (
         <div className="notes-grid">
-          {items.map((n) => {
+          {items.slice(0, limit).map((n) => {
             const photos = n.files.filter((f) => f.mime.startsWith('image/'));
             const first = photos.find((f) => f.accessible);
             const pdf = n.files.find((f) => f.mime === 'application/pdf' && f.accessible);
@@ -220,6 +473,16 @@ function Materials() {
                 <div className="note-body">
                   <div className="card-tags">
                     <SubjectChip subject={subject(n.subject_id)} />
+                    {n.topic && (
+                      <span className="material-topic">
+                        <Folder size={13} /> {n.topic}
+                      </span>
+                    )}
+                    {n.term && (
+                      <span className="material-topic">
+                        {n.term === 2 ? '2n' : n.term + 'r'} trimestre
+                      </span>
+                    )}
                     {n.status === 'draft' && <span className="badge">Esborrany</span>}
                   </div>
                   <button
@@ -309,6 +572,13 @@ function Materials() {
             Compartir apunts
           </Button>
         </Empty>
+      )}
+      {items.length > limit && (
+        <div className="workspace-load-more">
+          <Button onClick={() => setLimit((n) => n + 12)}>
+            Mostrar més materials ({items.length - limit})
+          </Button>
+        </div>
       )}
     </>
   );

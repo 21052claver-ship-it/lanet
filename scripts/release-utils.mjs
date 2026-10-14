@@ -6,7 +6,7 @@ export function releaseNotes(changelog, version) {
   assert.ok(start >= 0, 'Falta entrada de la versió a CHANGELOG.md.');
   const end = changelog.indexOf('\n## ', start + 4);
   const notes = changelog.slice(start, end < 0 ? undefined : end).trim();
-  assert.ok(notes.split('\n').length >= 4, 'Cal descriure els canvis.');
+  assert.match(notes, /\n- \S/, 'Cal descriure els canvis.');
   return notes;
 }
 export function validateRelease({
