@@ -6,8 +6,8 @@ Una sola tasca activa, T78-01. Treball seqüencial amb fixtures locals; cap acc�
 - [x] Reproduir incidències i registrar causa i efecte abans de corregir-les.
 - [x] Corregir concurrència, recuperació i controls afectats amb regressions significatives.
 - [x] Revisar captures de mòbil/escriptori, focus i absència de desbordaments.
-- [ ] Passar tipus/lint, unitàries, build, auditoria de font i CI completa.
-- [ ] Incorporar per PR, publicar una versió immutable i verificar el proveïdor.
+- [x] Passar tipus/lint, unitàries, build, auditoria de font i CI completa.
+- [x] Incorporar per PR, publicar una versió immutable i verificar el proveïdor.
 
 La revisió no implica reexecutar regals, reinicis, migracions o configuració OAuth. La publicació conserva els serveis i el domini existents.
 
@@ -27,6 +27,8 @@ La revisió no implica reexecutar regals, reinicis, migracions o configuració O
 
 Fixtures amb D1 en memòria i mitjans ficticis: continguts, revisió de delegats, esborranys i conflictes; Top 5 PAU, estimació i privadesa; pujades paral·leles i filtre segur; responsive a diverses amplades, vertical i horitzontal; música, reaccions i escenaris de CI. Les comprovacions del navegador no equivalen a proves amb dispositius físics. Web Audio natiu de WebKit no està disponible en aquest Windows; la CI Linux comprova aquest motor amb sortida d’àudio.
 
-Evidències privades a output/platform-polish/ i resultats de les suites locals. La versió 0.6.13 resta pendent d’incorporació per PR, Validate de main i publicació amb rebut.
+Evidències privades a output/platform-polish/ i resultats de les suites locals. La versió 0.6.13 s’ha incorporat via PR33, amb Validate de main i publicació amb rebut verificats.
 
 Resultat local: 388 unitàries i 294 escenaris de navegador correctes, tipus/lint, build i auditoria de font sense troballes; auditoria npm sense vulnerabilitats conegudes. Les sis comprovacions de Web Audio sense suport natiu a Windows es validen a Linux CI. Una recàrrega prematura de la prova de discos cancel·lava el bootstrap a WebKit: la fixture ara espera acabar la sincronització abans de recarregar; conserva totes les assertions.
+
+Publicada **0.6.13**: [release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.13) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38493830734) · [registre](releases/0.6.13.json). Web Audio natiu verificat en els tres motors de Linux CI, sense casos omesos. Comprovació de publicació via proveïdor, sense visitar la web pública.

@@ -1,9 +1,9 @@
-# Verificació · La Net 0.6.12
+# Verificació · La Net 0.6.13
 
-[CI completa](https://github.com/21052claver-ship-it/lanet/actions/runs/38486363324) correcta per a main cded3be07b67694b1618afad92fbe09b6c6556f9, després de PR30/31.
+[CI completa](https://github.com/21052claver-ship-it/lanet/actions/runs/38493830734) correcta per a main 6a00486a0534f5305071beece77e66e118fc5540, després de PR33.
 
-383 unitàries, tipus/lint, build i auditoria de font correctes. Reaccions immediates, comptador canònic, respostes antigues, reversió independent i premis idempotents comprovats.
+388 unitàries, tipus/lint, build, auditoria de font i npm audit correctes. 294 fluxos locals correctes en Chromium/Firefox/WebKit: preferències, continguts, PAU, pujades ràpides, responsive, seguretat de pujades, música, reaccions, recuperació i àudio. Captures revisades; no equival a proves amb dispositius físics.
 
-30 fluxos locals i 30 a CI en Chromium, Firefox i WebKit a 390/1440px: POST retingut, doble clic, targeta/detall, persistència, hover/focus, desats amb error, save/like paral·lels, resposta perduda i publicació d’un apunt amb una reacció pendent. Captures revisades; tots els grups de regressió de CI correctes. La suite API històrica general conserva la limitació registrada a 0.6.9 i no es presenta com a passada; la prova específica D1 d’horaris sí que passa a CI.
+CI verifica 24 casos de preferències, 33 de recuperació i 21 d’àudio natiu sense salts, i tots els grups de regressió habituals. Confirmacions separades de la navegació vertical/horitzontal; última selecció conservada amb xarxa lenta i errors; perfil sense sobreescriure privadesa o música; resposta antiga sense esborrar idees noves. La suite API històrica general conserva la limitació registrada a 0.6.9 i no es presenta com a passada; la prova específica D1 d’horaris sí que passa a CI.
 
-Domini, commit canònic, tag/release immutable i digest del rebut verificats via proveïdor. Sense migracions, proves contra la web pública ni dispositius físics. [Registre](releases/0.6.12.json).
+Domini, commit canònic, tag/release immutable i digest del rebut verificats via proveïdor. Sense migracions, proves contra la web pública ni dades reals modificades. [Registre](releases/0.6.13.json).
