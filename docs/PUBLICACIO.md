@@ -1,9 +1,7 @@
-# Publicació · La Net 0.6.16
+# Publicació · La Net 0.6.17
 
-[Informe complet en Markdown](releases/0.6.16.md) · [Estat i decisions vigents](ESTAT-PROJECTE.md) · [Índex documental](README.md).
+[Informe complet](releases/0.6.17.md) · [Estat](ESTAT-PROJECTE.md) · [Índex](README.md).
 
-https://lanet.es · Commit 7f267bb342ecf6dc27040fbe104cb556db86ad51. Pages dd70d5a2-ae13-445d-83a4-121014cc8fce.
+Publicada a https://lanet.es, commit 36631c5d37896318f3b38cb27fd2858322cd73a4, Pages 9eeaa255-18dc-46f7-81c3-9720643f3051. [Release immutable](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.17) · [PR39](https://github.com/21052claver-ship-it/lanet/pull/39) · [CI exacta](https://github.com/21052claver-ship-it/lanet/actions/runs/38652576530) · [Registre](releases/0.6.17.json).
 
-Primera entrada a pantalla completa amb itinerari, assignatures i professorat oficials. Continguts simplificat a Materials, Formularis i Eines i webs: xat/API retirats i històric conservat. Agenda contextual amb propostes públiques/revisió delegada, avisos i contactes; dashboard privat i retenció limitada. Pomodoro continu, alarma i focus accessible amb cua offline; històric PAU oficial 2022–2026 i comparació top 5. Logo complet al mòbil.
-
-[Release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.16) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38638160574) · [Registre](releases/0.6.16.json). 446 unitàries, 243 fluxos locals del snapshot més 75 regressions posteriors i CI completa correctes. Còpia privada D1 restaurable, només 0028/0029 i roster autoritzat aplicats; manteniment privat verificat separadament. Domini, commit, callback i rebut immutable confirmats via proveïdor. Sense proves contra la web pública ni regals/reinicis/canvis de notes, saldos o rols globals.
+Objectius de nota zero conservats, represa musical WebKit/Linux corregida i auditoria funcional completa: 449 unitàries, 62 fluxos API locals i 179 recorreguts addicionals. Una pujada inicial i una correcció de branca i una publicació. Domini/callback/bindings/commit i rebut verificats via proveïdor; cap prova pública, migració, regal o reinici.

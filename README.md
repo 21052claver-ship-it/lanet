@@ -6,11 +6,11 @@ Plataforma per a estudiants de segon de batxillerat, en català, amb horaris ofi
 
 ## Versió publicada
 
-**0.6.16 · 14 d’octubre de 2026.** Primera entrada a pantalla completa, Continguts sense xat/Dubtes, agenda contextual amb revisió delegada, dashboard privat, Pomodoro/focus, històric PAU i logo complet al mòbil.
+**0.6.17 · 15 d’octubre de 2026.** Auditoria de controls i formularis, objectius de nota zero conservats i represa musical WebKit/Linux corregida, amb 449 unitàries, 62 fluxos API locals i 179 recorreguts addicionals.
 
-[Informe Markdown](docs/releases/0.6.16.md) · [Release immutable](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.16) · [CI del commit publicat](https://github.com/21052claver-ship-it/lanet/actions/runs/38638160574) · [CHANGELOG](CHANGELOG.md)
+[Informe Markdown](docs/releases/0.6.17.md) · [Release immutable](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.17) · [CI del commit publicat](https://github.com/21052claver-ship-it/lanet/actions/runs/38652576530) · [CHANGELOG](CHANGELOG.md)
 
-La versió publicada correspon al commit `7f267bb342ecf6dc27040fbe104cb556db86ad51`. El tancament documental posterior no és un nou desplegament. Els resultats i limitacions de les proves són a [VERIFICATION.md](docs/VERIFICATION.md); els pendents reals són al [registre](docs/SEGUIMENT.json).
+La versió publicada correspon al commit `36631c5d37896318f3b38cb27fd2858322cd73a4`. El tancament documental posterior no és un nou desplegament. Els resultats i limitacions de les proves són a [VERIFICATION.md](docs/VERIFICATION.md); els pendents reals són al [registre](docs/SEGUIMENT.json).
 
 ## Què inclou
 

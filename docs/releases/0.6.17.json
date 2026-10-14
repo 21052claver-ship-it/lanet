@@ -1,0 +1,87 @@
+{
+  "recordedAt": "2026-10-14T23:32:12.439Z",
+  "version": "0.6.17",
+  "sourceCommit": "36631c5d37896318f3b38cb27fd2858322cd73a4",
+  "origin": "https://lanet.es",
+  "pullRequest": "https://github.com/21052claver-ship-it/lanet/pull/39",
+  "ci": "https://github.com/21052claver-ship-it/lanet/actions/runs/38652576530",
+  "allCiJobsSuccess": true,
+  "ciJobs": [
+    {
+      "name": "Core checks",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (academics)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (audio)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (navigation)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (contents)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (school)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (compatibility)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (board)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (casino)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (functional)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Validate",
+      "conclusion": "success"
+    }
+  ],
+  "releaseUrl": "https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.17",
+  "immutable": true,
+  "tagCommitMatches": true,
+  "receiptDigestMatches": true,
+  "cloudflareDeployment": "9eeaa255-18dc-46f7-81c3-9720643f3051",
+  "githubDeployment": 7079797207,
+  "providerConfirmed": true,
+  "productionCommitMatches": true,
+  "domainActive": true,
+  "pagesDomainPreserved": true,
+  "googleCallbackPreserved": true,
+  "d1R2BindingsPreserved": true,
+  "workerAndMigrationsUnchanged": true,
+  "privateMaintenanceRedeployed": false,
+  "tests": {
+    "unit": 449,
+    "apiLocalD1R2": 62,
+    "additionalLocalBrowser": 179,
+    "newFunctionalBrowser": 39,
+    "buttonDefinitions": 324,
+    "forms": 29,
+    "interactiveSourceFiles": 51
+  },
+  "publicAppVisited": false,
+  "productionDataUsed": false,
+  "physicalDevicesTested": false,
+  "branchPushes": 2,
+  "productPublications": 1,
+  "pullRequestCi": "https://github.com/21052claver-ship-it/lanet/actions/runs/38650464938",
+  "pullRequestCiAttempt": 2,
+  "mainCiAttempt": 2,
+  "linuxWebKitBrowser": 13
+}

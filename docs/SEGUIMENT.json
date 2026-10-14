@@ -8003,7 +8003,7 @@
       "id": "T82-01",
       "phase": "F82",
       "title": "Verificar tots els controls i fluxos de la plataforma",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R104"
       ],
@@ -8032,9 +8032,14 @@
         "output/functional-audit-0.6.16/api-seventh.log",
         "output/functional-audit-0.6.16/unit-final.log",
         "output/functional-audit-0.6.16/linux-music-before.log",
-        "output/functional-audit-0.6.16/linux-music-fixed.log"
+        "output/functional-audit-0.6.16/linux-music-fixed.log",
+        "docs/releases/0.6.17.json",
+        "docs/releases/0.6.17.md",
+        "output/functional-audit-0.6.16/provider-verification.json",
+        "output/functional-audit-0.6.16/local-verification.json",
+        "output/releases/0.6.17/receipt.json"
       ],
-      "progress": "Auditoria local: 324 definicions de botó/29 formularis/51 fitxers, 166 recorreguts addicionals més 13 WebKit/Linux, 62 API locals i 449 unitàries. Objectiu zero corregit. CI ha descobert un segon error de represa musical WebKit/Linux, reproduït en Ubuntu local i corregit reconeixent avanç real, amb cancel·lació i neteja sense timers/peticions. Prova de navegador original conservada, tres regressions unitàries noves. Una pujada correctiva a la mateixa PR39 i un únic desplegament 0.6.17 pendent de Validate/CI actualitzada.",
+      "progress": "Auditoria funcional i 0.6.17 publicades via PR39: 36631c5d37896318f3b38cb27fd2858322cd73a4. 324 definicions de botó/29 formularis/51 fitxers, 179 recorreguts addicionals, 62 API D1/R2 locals i 449 unitàries correctes. Objectiu zero i represa musical WebKit/Linux corregits amb regressions, cancel·lació i neteja comprovades. Tots els jobs i Validate correctes; release immutable, digest del rebut, commit/domini/callback i bindings verificats via proveïdor. Una pujada inicial i una correcció de branca i una publicació; reexecució acotada de l’àudio sobre el mateix commit. Cap prova pública, dada real, migració o desplegament privat. Tancament documental conservat localment per agrupar-lo amb una futura tanda.",
       "change_log_id": "H197"
     }
   ]
