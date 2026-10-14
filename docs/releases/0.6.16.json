@@ -1,0 +1,112 @@
+{
+  "recordedAt": "2026-10-14T21:29:48.540Z",
+  "version": "0.6.16",
+  "sourceCommit": "7f267bb342ecf6dc27040fbe104cb556db86ad51",
+  "origin": "https://lanet.es",
+  "pullRequest": "https://github.com/21052claver-ship-it/lanet/pull/38",
+  "ci": "https://github.com/21052claver-ship-it/lanet/actions/runs/38638160574",
+  "ciSuccess": true,
+  "allCiJobsSuccess": true,
+  "releaseUrl": "https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.16",
+  "immutable": true,
+  "tagCommitMatches": true,
+  "receiptDigestMatches": true,
+  "cloudflareDeployment": "dd70d5a2-ae13-445d-83a4-121014cc8fce",
+  "githubDeployment": 7077708077,
+  "providerConfirmed": true,
+  "productionCommitMatches": true,
+  "domainActive": true,
+  "googleCallbackPreserved": true,
+  "tests": {
+    "unit": 446,
+    "localBrowser": 318,
+    "baselineLocalBrowser": 243,
+    "finalSourceRegression": 75,
+    "realLocalD1": true,
+    "ciBrowserGroups": [
+      {
+        "group": "navigation",
+        "file": "onboarding/browser/results.json",
+        "count": 18
+      },
+      {
+        "group": "contents",
+        "file": "subject-workspaces/browser/results.json",
+        "count": 33
+      },
+      {
+        "group": "school",
+        "file": "delegates/browser/results.json",
+        "count": 15
+      },
+      {
+        "group": "school",
+        "file": "activity-dashboard/browser/results.json",
+        "count": 9
+      },
+      {
+        "group": "school",
+        "file": "focus/browser/results.json",
+        "count": 30
+      },
+      {
+        "group": "school",
+        "file": "pau-history/browser/results.json",
+        "count": 12
+      },
+      {
+        "group": "school",
+        "file": "pau/pau-browser-results.json",
+        "count": 39
+      },
+      {
+        "group": "school",
+        "file": "pau-top5/top5-browser-results.json",
+        "count": 24
+      }
+    ]
+  },
+  "chatRemoved": true,
+  "conversationApiRetired": true,
+  "historicalDataPreserved": true,
+  "migrations": {
+    "reviewed": [
+      {
+        "name": "0028_delegate_agenda.sql",
+        "sha256": "ef96cf401cd57806c63fe49b05c3693935ec9a7eb72392e63d3a6a3565c39b5e"
+      },
+      {
+        "name": "0029_activity_dashboard.sql",
+        "sha256": "61dc107f181f621877d2dfdf07572d37a72ea86751aa1796f06e4bf54b5170aa"
+      }
+    ],
+    "privateBackupRestored": true,
+    "onlyReviewedApplied": true,
+    "schemaVerified": true,
+    "inventoryVerified": true,
+    "oldMigrationsRerun": false,
+    "globalUserRolesChanged": false,
+    "executionMethod": "Cloudflare D1 SQL file import",
+    "sourceSqlUnchanged": true,
+    "queryAttemptsAppliedNothing": true
+  },
+  "delegation": {
+    "authorizedRosterApplied": true,
+    "scopesVerified": true,
+    "identitiesExcludedFromSource": true
+  },
+  "privateMaintenance": {
+    "service": "lanet-file-maintenance",
+    "versionId": "32e80460-a170-4ff3-9e4f-3876b8373759",
+    "providerConfirmed": true,
+    "publicUrlDisabled": true,
+    "bindingsPreserved": true,
+    "cronPreserved": true
+  },
+  "previousPublishedVersion": "0.6.15",
+  "publicAppVisited": false,
+  "realDevicesTested": false,
+  "pullRequestCi": "https://github.com/21052claver-ship-it/lanet/actions/runs/38635879523",
+  "pullRequestCiAttempt": 2,
+  "mainCiAttempt": 1
+}

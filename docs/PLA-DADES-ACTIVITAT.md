@@ -38,3 +38,5 @@ Abans de publicar: còpia privada de D1, revisió/aplicació separada de `0029_a
 - `tests/activity.test.js`: permisos al servidor, CSRF, fallades de telemetria sense afectar el desat, mostreig/concurrència, escriptures, límits, índexs, canvi de dia, paginació, retenció, inventari i migració additiva.
 - `scripts/test-activity-dashboard.mjs`: dashboard local en tres motors, accés privat, navegació directa, errors recuperables, paginació i geometria mòbil.
 - Evidències privades a `output/activity-dashboard/`; no s’inclouen al repositori públic.
+
+Publicació conjunta confirmada: [0.6.16](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.16) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38638160574) · [registre](releases/0.6.16.json). Validació final de la tanda: 446 unitàries, 318 fluxos locals i tots els jobs CI correctes.

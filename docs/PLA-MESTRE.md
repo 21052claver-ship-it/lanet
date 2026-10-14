@@ -1,5 +1,7 @@
 # Pla mestre de revisió de La Net
 
+> **Context històric del pla inicial.** L’estat vigent del 14 d’octubre és a [ESTAT-PROJECTE.md](ESTAT-PROJECTE.md) i la [publicació 0.6.16](releases/0.6.16.md). L’origen principal és `lanet.es`; Google és l’únic accés, la benvinguda és a pantalla completa i el xat/Dubtes està retirat. Les propostes i recomptes datats següents es conserven com a historial. [Índex documental](README.md).
+
 9 d’octubre de 2026. Revisió basada en les observacions de Marc després de provar la plataforma i en el cartell de fusta adjunt. **La configuració sol·licitada és la del perfil**, amb les assignatures i preferències personals; aclarit per Marc en aquest mateix xat.
 
 Aquest és el pla actiu per a la següent revisió. Les imatges v1/v2 continuen definint la identitat de La Net, però les indicacions noves prevalen en els elements que Marc ha demanat canviar. La marca, els colors càlids i l’art de fang es conserven. Els plans anteriors descriuen revisions ja fetes.

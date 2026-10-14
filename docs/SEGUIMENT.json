@@ -412,6 +412,10 @@
     {
       "id": "R102",
       "description": "Logo complet de La Net a la capçalera mòbil amb controls visibles i proporcions correctes."
+    },
+    {
+      "id": "R103",
+      "description": "Desar en Markdown la memòria del projecte, decisions vigents, publicació 0.6.16, verificacions i pendents amb un índex clar i sense exposar dades privades."
     }
   ],
   "phases": [
@@ -979,6 +983,13 @@
       "title": "Primera entrada, Continguts, agenda i dades",
       "depends_on": [
         "F79"
+      ]
+    },
+    {
+      "id": "F81",
+      "title": "Documentació central i continuïtat del projecte",
+      "depends_on": [
+        "F80"
       ]
     }
   ],
@@ -7780,7 +7791,7 @@
       "id": "T80-01",
       "phase": "F80",
       "title": "Experiència d’alumnes: benvinguda, continguts, agenda, estudi i PAU",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R96",
         "R03",
@@ -7911,10 +7922,71 @@
         "output/consolidated-0.6.16/ci-fix-build.log",
         "output/consolidated-0.6.16/ci-fix-reactions/results.json",
         "output/consolidated-0.6.16/ci-fix-secret-room/secret-room-browser-results.json",
-        "output/consolidated-0.6.16/ci-fix-activity-browser/results.json"
+        "output/consolidated-0.6.16/ci-fix-activity-browser/results.json",
+        "docs/releases/0.6.16.json",
+        "output/consolidated-0.6.16/provider-verification.json",
+        "output/releases/0.6.16/receipt.json",
+        "output/consolidated-0.6.16/pr-verification.json",
+        "output/consolidated-0.6.16/migration-verification.json",
+        "output/consolidated-0.6.16/maintenance-deployment.json",
+        "output/consolidated-0.6.16/ci-main/navigation/onboarding/browser/results.json",
+        "output/consolidated-0.6.16/ci-main/contents/subject-workspaces/browser/results.json",
+        "output/consolidated-0.6.16/ci-main/school/delegates/browser/results.json",
+        "output/consolidated-0.6.16/ci-main/school/activity-dashboard/browser/results.json",
+        "output/consolidated-0.6.16/ci-main/school/focus/browser/results.json",
+        "output/consolidated-0.6.16/ci-main/school/pau-history/browser/results.json",
+        "output/consolidated-0.6.16/ci-main/school/pau/pau-browser-results.json",
+        "output/consolidated-0.6.16/ci-main/school/pau-top5/top5-browser-results.json"
       ],
-      "progress": "Tanda conjunta validada amb 243 fluxos locals del snapshot i correcció CI verificada amb 75 regressions addicionals en tres motors (reaccions30, APIs legacy/escenari36, dashboard9). 446 unitàries finals, tipus/lint i build correctes. Corregit Object.hasOwn al reporter per navegadors antics; prova de focus/reaccions adaptada als120s amb rellotge de paret sense activar el timeout del POST. Totes les assertions conservades. Pendent Validate de la mateixa PR38 amb el head corregit, CI exacta de main, còpia/migracions0028/0029/roster/worker i release0.6.16.",
+      "progress": "Publicada 0.6.16 a lanet.es via PR38 i CI exacta de main (7f267bb342ecf6dc27040fbe104cb556db86ad51). Benvinguda completa, retirada del xat/API, agenda/delegats, dashboard privat, Pomodoro/focus, històric PAU i logo mòbil. 446 unitàries, 318 fluxos locals en tres motors i workerd/D1 local correctes; tots els jobs de CI correctes. Còpia privada restaurada/verificada, només 0028/0029 i roster autoritzat aplicats, inventari/àmbits verificats. Manteniment privat desplegat i confirmat, bindings/cron conservats i URL pública desactivada. Domini, commit, callback, tag/release immutable i digest del rebut verificats via proveïdor. Sense visites a la web pública, regals, reinicis ni canvis de notes/saldos/rols globals. Registre documental conservat localment per a la pròxima tanda, sense pujada documental immediata.",
       "change_log_id": "H189"
+    },
+    {
+      "id": "T81-01",
+      "phase": "F81",
+      "title": "Ordenar i desar la memòria del projecte en Markdown",
+      "status": "verified",
+      "requirements": [
+        "R103"
+      ],
+      "depends_on": [
+        "T80-01"
+      ],
+      "files": [
+        "docs/README.md",
+        "docs/ESTAT-PROJECTE.md",
+        "docs/releases/0.6.16.md",
+        "docs/PUBLICACIO.md",
+        "docs/VERIFICATION.md",
+        "docs/PLA-MESTRE.md",
+        "docs/PLA-ESPAIS-ASSIGNATURA.md",
+        "docs/PROPOSTES-XATS-CONTINGUTS.md",
+        "docs/VERSIONS.md",
+        "README.md",
+        "docs/SEGUIMENT.json",
+        "docs/CHECKLIST.md",
+        "docs/HISTORIAL-CANVIS.md",
+        "docs/historic/README-2026-10-14-HISTORIC.md",
+        "docs/releases/0.6.16.json"
+      ],
+      "acceptance": "Índex navegable dels documents, decisions vigents diferenciades de propostes retirades, informe Markdown de la release amb dades contrastades amb el rebut JSON, mètriques i limitacions precises. Conservar plans/històric i evidències privades; cap secret ni identitat del roster als documents. Enllaços locals vàlids, seguiment coherent i auditoria de font correcta. Canvi exclusivament documental desat al projecte i en una branca local, sense nova publicació ni push documental immediat.",
+      "checks": [
+        "Inventariar documentació existent i contrastar estat/release/pendents amb els registres.",
+        "Crear índex, memòria vigent i informe Markdown 0.6.16; enllaçar des del README i informes.",
+        "Marcar propostes de xat i plans antics com a històrics; unificar adreça principal i flux de publicació actual.",
+        "Validar enllaços, metadades, privadesa, pla/checklist i format; conservar amb autoria correcta en commit local."
+      ],
+      "evidence": [
+        "docs/README.md",
+        "docs/ESTAT-PROJECTE.md",
+        "docs/releases/0.6.16.md",
+        "docs/historic/README-2026-10-14-HISTORIC.md",
+        "docs/releases/0.6.16.json",
+        "output/documentation-0.6.16/verification.json",
+        "output/documentation-0.6.16/source-audit.json"
+      ],
+      "progress": "Documentació desada i ordenada: índex de 83 Markdown principals, memòria vigent, informe complet de la 0.6.16 i README renovat amb còpia històrica conservada. Propostes de xat marcades com a retirades, origen i flux de publicació actualitzats, proves 243 + 75 i limitacions explícites, pendents reals diferenciats. 1.563 enllaços locals comprovats sense errors, metadades contrastades amb el registre JSON i auditoria de font correcta. Canvi només documental conservat en branca local; sense pujada, nova release, proves públiques ni canvis de producte o dades.",
+      "change_log_id": "H196"
     }
   ]
 }

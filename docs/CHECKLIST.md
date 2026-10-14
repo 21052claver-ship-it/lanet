@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**190/192 tasques verificades · 102 requisits · 81 fases · límit d’una tasca activa.**
+**192/193 tasques verificades · 103 requisits · 82 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **T80-01 — Experiència d’alumnes: benvinguda, continguts, agenda, estudi i PAU**.
+Tasca activa: **cap**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -443,6 +443,10 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 
 ## F80 Primera entrada, Continguts, agenda i dades
 
-- [ ] **T80-01** Experiència d’alumnes: benvinguda, continguts, agenda, estudi i PAU — En revisió.
+- [x] **T80-01** Experiència d’alumnes: benvinguda, continguts, agenda, estudi i PAU — Verificat.
+
+## F81 Documentació central i continuïtat del projecte
+
+- [x] **T81-01** Ordenar i desar la memòria del projecte en Markdown — Verificat.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.
