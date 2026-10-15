@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**193/195 tasques verificades · 105 requisits · 84 fases · límit d’una tasca activa.**
+**194/195 tasques verificades · 105 requisits · 84 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **T83-01 — Corregir i verificar les notificacions**.
+Tasca activa: **cap**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -455,6 +455,6 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 
 ## F83 Fiabilitat de les notificacions
 
-- [ ] **T83-01** Corregir i verificar les notificacions — En revisió.
+- [x] **T83-01** Corregir i verificar les notificacions — Verificat.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

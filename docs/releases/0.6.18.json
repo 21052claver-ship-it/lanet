@@ -1,0 +1,102 @@
+{
+  "recordedAt": "2026-10-15T00:31:06.612Z",
+  "version": "0.6.18",
+  "sourceCommit": "d2cadcc35a98e94da812b49503d4ef58a7489424",
+  "origin": "https://lanet.es",
+  "pullRequest": "https://github.com/21052claver-ship-it/lanet/pull/40",
+  "ci": "https://github.com/21052claver-ship-it/lanet/actions/runs/38659165728",
+  "allCiJobsSuccess": true,
+  "ciJobs": [
+    {
+      "name": "Core checks",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (navigation)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (school)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (casino)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (audio)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (board)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (contents)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (academics)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (compatibility)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (functional)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Validate",
+      "conclusion": "success"
+    }
+  ],
+  "pullRequestCi": "https://github.com/21052claver-ship-it/lanet/actions/runs/38657934344",
+  "pullRequestCiAttempt": 1,
+  "mainCiAttempt": 1,
+  "releaseUrl": "https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.18",
+  "immutable": true,
+  "tagCommitMatches": true,
+  "receiptDigestMatches": true,
+  "cloudflareDeployment": "c740d7c1-9f6a-4f05-a86a-711e3c07c463",
+  "githubDeployment": 7080635547,
+  "providerConfirmed": true,
+  "productionCommitMatches": true,
+  "domainActive": true,
+  "pagesDomainPreserved": true,
+  "googleCallbackPreserved": true,
+  "d1R2BindingsPreserved": true,
+  "migrationsUnchanged": false,
+  "privateMaintenanceUnchanged": true,
+  "privateMaintenanceRedeployed": false,
+  "tests": {
+    "unit": 454,
+    "notificationBrowser": 30,
+    "delegateBrowser": 15,
+    "localD1Passed": true
+  },
+  "publicAppVisited": false,
+  "productionDataUsed": false,
+  "physicalDevicesTested": false,
+  "branchPushes": 2,
+  "productPublications": 1,
+  "notificationIndex": {
+    "name": "0030_notification_unread_index.sql",
+    "sha256": "4aceafa8acf5fbeb9a608a97941803cbf8eb8849520ace619957af53afddab4e",
+    "applied": true,
+    "privateBackupRestored": true,
+    "indexVerified": true,
+    "onlyReviewedMigrationApplied": true,
+    "existingDataUnchanged": true
+  },
+  "localEfficiency": {
+    "readHistory": 10000,
+    "unread": 1,
+    "returned": 100,
+    "sameResults": true,
+    "unreadIndex": "agenda_notifications_unread",
+    "resultLimit": 100,
+    "unreadCteLimit": 101
+  }
+}

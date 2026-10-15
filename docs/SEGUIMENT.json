@@ -8057,7 +8057,7 @@
       "id": "T83-01",
       "phase": "F83",
       "title": "Corregir i verificar les notificacions",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R105"
       ],
@@ -8096,9 +8096,18 @@
         "output/notifications-build-final.log",
         "output/notifications-index-unit.log",
         "output/notifications/api-index/api-results.json",
-        "output/notifications-api-index.log"
+        "output/notifications-api-index.log",
+        "output/notifications/local-cost-verification.json",
+        "output/notifications/migration-verification.json",
+        "output/notifications/local-verification.json",
+        "output/notifications/source-audit.log",
+        "output/notifications/provider-verification.json",
+        "output/notifications/pr-verification.json",
+        "output/releases/0.6.18/receipt.json",
+        "docs/releases/0.6.18.json",
+        "docs/releases/0.6.18.md"
       ],
-      "progress": "454 unitàries correctes. Les 30 proves de notificacions i 15 regressions de delegats cobreixen el frontend final; D1/workerd local confirma l’SQL i migració. Afegit índex parcial 0030 perquè la cerca de no llegits no recorri l’històric, verificat amb 10.000 llegits i igualtat de totes les files abans/després. La branca de llegits ordena pel timestamp indexat i desempata només el lot acotat. Necessària una correcció de la mateixa PR40; pendent CI exacta, còpia privada/restauració, aplicació només 0030 i publicació única.",
+      "progress": "Notificacions corregides i 0.6.18 publicada via PR40: d2cadcc35a98e94da812b49503d4ef58a7489424. 454 unitàries, 30 escenaris de notificacions en tres motors, 15 regressions de delegats i D1/workerd local correctes. Font/tipus/lint/build/enllaços correctes; tots els jobs/Validate de PR i main correctes. Bústia acotada en una consulta consistent, una escriptura idempotent per lot, confirmació preservada, arribades concurrents, excés, errors/reintents, destinacions i pestanya mòbil provats. Una pujada inicial i una correcció de branca, una PR i una publicació. Proveïdor, domini/callback/bindings, tag/release immutable i digest del rebut verificats. Cap prova pública, només índex additiu 0030, sense polling/R2 nou ni desplegament privat. Tancament documental local sense push addicional.",
       "change_log_id": "H198"
     }
   ]
