@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**194/196 tasques verificades · 106 requisits · 85 fases · límit d’una tasca activa.**
+**195/196 tasques verificades · 106 requisits · 85 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **T84-01 — Publicar directament exàmens i tasques com a delegat**.
+Tasca activa: **cap**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -459,6 +459,6 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 
 ## F84 Publicació directa dels representants
 
-- [ ] **T84-01** Publicar directament exàmens i tasques com a delegat — En revisió.
+- [x] **T84-01** Publicar directament exàmens i tasques com a delegat — Verificat.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

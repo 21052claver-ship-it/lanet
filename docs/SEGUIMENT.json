@@ -8125,7 +8125,7 @@
       "id": "T84-01",
       "phase": "F84",
       "title": "Publicar directament exàmens i tasques com a delegat",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R106"
       ],
@@ -8158,9 +8158,20 @@
         "output/delegate-publishing-unit.log",
         "output/delegate-publishing-unit-targeted.log",
         "output/delegate-publishing-typecheck.log",
-        "output/delegate-publishing-build.log"
+        "output/delegate-publishing-build.log",
+        "output/delegate-publishing/local-verification.json",
+        "output/delegate-publishing/source-audit.log",
+        "output/delegate-publishing/provider-verification.json",
+        "output/delegate-publishing/pr-verification.json",
+        "output/releases/0.6.19/receipt.json",
+        "docs/releases/0.6.19.json",
+        "docs/releases/0.6.19.md",
+        "output/delegate-publishing/ci-retry.json",
+        "output/delegate-publishing/ci-main-navigation.log",
+        "output/delegate-publishing/linux-webkit-schedule/results.json",
+        "output/delegate-publishing/linux-webkit-schedule.log"
       ],
-      "progress": "458 unitàries i 33 fluxos locals en Chromium/Firefox/WebKit correctes, incloent 18 execucions noves de publicació directa/edició, subdelegat/tasca/privat, àmbit, permisos canviats, error/reintent i duplicat. D1/workerd confirma publicació/edició directa i tasca completable per companys. Tipus/lint/build correctes. Servidor decideix autoritat amb el context existent, historial atòmic i sense avisos propis. Cap migració, consulta/polling/R2 nou o desplegament privat. Pendent font de l’índex, PR/CI exactes i publicació única 0.6.19 amb tancament documental anterior agrupat.",
+      "progress": "Publicació directa de delegats/subdelegats dins d’àmbit, edicions pròpies i administradors corregides; 0.6.19 publicada via PR41: 6f2e9ab41cb1abd35569d3db69ad01cb3d57be25. 458 unitàries, 33 escenaris en tres motors i D1/workerd real local correctes. Permisos canònics i canviats, missatge d’estat real, duplicats/coincidències, concurrència, privacitat i errors/reintents comprovats. Font/tipus/lint/build/enllaços correctes; 11 jobs i Validate de PR/main verds. Proveïdor, domini/callback/bindings, tag/release immutable i digest verificats. Una pujada, una PR i una publicació; sense migracions, consultes/polling/R2 addicionals, desplegament privat o prova pública. Tancament documental local sense push addicional. Un únic reintent de CI per error intern de WebKit, contrastat amb nou casos WebKit/Linux locals correctes; mateix commit i només comprovacions fallides.",
       "change_log_id": "H199"
     }
   ]

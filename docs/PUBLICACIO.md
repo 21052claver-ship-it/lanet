@@ -1,7 +1,7 @@
-# Publicació · La Net 0.6.18
+# Publicació · La Net 0.6.19
 
-[Informe complet](releases/0.6.18.md) · [Estat](ESTAT-PROJECTE.md) · [Índex](README.md).
+[Informe complet](releases/0.6.19.md) · [Estat](ESTAT-PROJECTE.md) · [Índex](README.md).
 
-Publicada a https://lanet.es, commit d2cadcc35a98e94da812b49503d4ef58a7489424, Pages c740d7c1-9f6a-4f05-a86a-711e3c07c463. [Release immutable](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.18) · [PR40](https://github.com/21052claver-ship-it/lanet/pull/40) · [CI exacta](https://github.com/21052claver-ship-it/lanet/actions/runs/38659165728) · [Registre](releases/0.6.18.json).
+Publicada a https://lanet.es, commit 6f2e9ab41cb1abd35569d3db69ad01cb3d57be25, Pages 28ea408c-8d2c-44be-b2f9-105849a1e7bb. [Release immutable](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.19) · [PR #41](https://github.com/21052claver-ship-it/lanet/pull/41) · [CI exacta](https://github.com/21052claver-ship-it/lanet/actions/runs/38664111249) · [Registre](releases/0.6.19.json).
 
-Notificacions fiables: no llegits accessibles, lectura individual/agrupada idempotent en una sola escriptura, confirmacions persistents, comptador, destinacions, reintent i pestanya mòbil visible. 454 unitàries, 30 escenaris de notificacions i 15 de delegats, D1/workerd local i CI completa correctes. Una pujada inicial i una correcció, una PR i una publicació. Domini/callback/bindings/commit i rebut verificats via proveïdor. Índex additiu 0030 verificat després de còpia privada restaurada; sense polling/R2 nous ni desplegament privat.
+Delegats i subdelegats publiquen directament les dates del seu àmbit, també en editar-les. Membres i representants fora d’àmbit continuen enviant a revisió. Permisos revalidats, estat real visible, duplicats/coincidències i historial preservats. 458 unitàries, 33 escenaris de delegats, D1/workerd local i CI completa correctes. Una pujada, una PR i una publicació. Domini/callback/bindings/commit i rebut verificats via proveïdor; sense migracions, consultes/polling/R2 addicionals ni desplegament privat.

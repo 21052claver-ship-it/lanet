@@ -1,0 +1,91 @@
+{
+  "recordedAt": "2026-10-15T01:32:38.460Z",
+  "version": "0.6.19",
+  "sourceCommit": "6f2e9ab41cb1abd35569d3db69ad01cb3d57be25",
+  "origin": "https://lanet.es",
+  "pullRequest": "https://github.com/21052claver-ship-it/lanet/pull/41",
+  "ci": "https://github.com/21052claver-ship-it/lanet/actions/runs/38664111249",
+  "allCiJobsSuccess": true,
+  "ciJobs": [
+    {
+      "name": "Browser checks (compatibility)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (board)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (academics)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (navigation)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (school)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Core checks",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (functional)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (contents)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (casino)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (audio)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Validate",
+      "conclusion": "success"
+    }
+  ],
+  "pullRequestCi": "https://github.com/21052claver-ship-it/lanet/actions/runs/38662845698",
+  "pullRequestCiAttempt": 1,
+  "mainCiAttempt": 2,
+  "releaseUrl": "https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.19",
+  "immutable": true,
+  "tagCommitMatches": true,
+  "receiptDigestMatches": true,
+  "cloudflareDeployment": "28ea408c-8d2c-44be-b2f9-105849a1e7bb",
+  "githubDeployment": 7081505146,
+  "providerConfirmed": true,
+  "productionCommitMatches": true,
+  "domainActive": true,
+  "pagesDomainPreserved": true,
+  "googleCallbackPreserved": true,
+  "d1R2BindingsPreserved": true,
+  "migrationsUnchanged": true,
+  "privateMaintenanceUnchanged": true,
+  "privateMaintenanceRedeployed": false,
+  "tests": {
+    "unit": 458,
+    "delegateBrowser": 33,
+    "localD1Passed": true
+  },
+  "publicAppVisited": false,
+  "productionDataUsed": false,
+  "physicalDevicesTested": false,
+  "branchPushes": 1,
+  "productPublications": 1,
+  "ciRetry": {
+    "reason": "WebKit internal page.reload error in unchanged official-schedule fixture; exact source passed PR CI and all nine WebKit/Linux local cases.",
+    "retries": 1,
+    "unchangedCommit": true,
+    "failedChecksOnly": true,
+    "linuxWebKitScheduleScenarios": 9,
+    "linuxWebKitSchedulePassed": true
+  }
+}
