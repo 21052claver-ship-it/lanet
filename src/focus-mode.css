@@ -163,6 +163,7 @@
   color: var(--focus-accent);
 }
 .focus-free-space h1 {
+  color: var(--focus-fg);
   font-size: clamp(28px, 5vw, 48px);
   margin: 22px 0 12px;
 }

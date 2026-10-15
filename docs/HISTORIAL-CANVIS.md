@@ -1294,3 +1294,5 @@ H200 completada: [0.6.20](https://github.com/21052claver-ship-it/lanet/releases/
 Marc demana concentració amb o sense Pomodoro, només un fons si es vol, i sons activats per defecte. T86-01 és l’única tasca activa: selector visible, pausa conservadora i preferències locals; alarma i ruleta mantenen el valor inicial actiu i respecten el silenci explícit. Proves exclusivament locals i una publicació consolidada després de CI exacta.
 
 H201 en revisió: Estudi lliure i Pomodoro separats, pausa conservadora i preferències locals. 460 unitàries, 60 fluxos focus en tres motors i 15 regressions de sons correctes; 6 casos natius WebKit/Windows no disponibles, fallback provat. Tipus/lint/build correctes. Corregit cercle que cobria Comença amb opcions obertes i disposició lliure en paisatge. Pendent font de l’índex, CI exacta i una publicació consolidada.
+
+H201: revisió local durant CI detecta color fosc del títol en Nit i etiqueta accessible incorrecta del primer selector. Corregits amb primer pla del tema i camps neutres; tres regressions addicionals, total 63 fluxos. Una correcció consolidada de PR43; pendent CI exacta i publicació única.

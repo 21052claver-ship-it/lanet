@@ -360,7 +360,8 @@ export default function FocusMode({ onClose }) {
             <Gear size={18} /> Personalitza el teu espai
           </summary>
           <div className="focus-mode-settings-content">
-            <Field label="Ambient">
+            <div className="field">
+              <span>Ambient</span>
               <Tabs
                 label="Ambient del mode focus"
                 value={options.theme}
@@ -371,10 +372,11 @@ export default function FocusMode({ onClose }) {
                   ['night', 'Nit', Moon],
                 ]}
               />
-            </Field>
+            </div>
             {options.mode === 'pomodoro' && (
               <>
-                <Field label="Rellotge">
+                <div className="field">
+                  <span>Rellotge</span>
                   <Tabs
                     label="Estil del rellotge"
                     value={options.visual}
@@ -384,7 +386,7 @@ export default function FocusMode({ onClose }) {
                       ['digital', 'Digital'],
                     ]}
                   />
-                </Field>
+                </div>
                 <FocusOptions />
               </>
             )}

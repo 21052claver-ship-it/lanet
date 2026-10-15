@@ -8293,9 +8293,16 @@
         "output/free-focus/roulette-sound/results.json",
         "output/free-focus/unit.log",
         "output/free-focus/typecheck-final.log",
-        "output/free-focus/build-final.log"
+        "output/free-focus/build-final.log",
+        "output/free-focus/theme-chromium/results.json",
+        "output/free-focus/theme-firefox/results.json",
+        "output/free-focus/theme-webkit/results.json",
+        "output/free-focus/theme-before/results.json",
+        "output/free-focus/ci-correction.json",
+        "output/free-focus/build-theme-corrected.log",
+        "output/free-focus/lint-theme.log"
       ],
-      "progress": "Estudi lliure i Pomodoro separats, pausa conservadora i preferències locals. 460 unitàries, 60 fluxos focus en tres motors i 15 regressions de sons correctes; 6 casos natius WebKit/Windows no disponibles, fallback provat. Tipus/lint/build correctes. Corregit cercle que cobria Comença amb opcions obertes i disposició lliure en paisatge. Pendent font de l’índex, CI exacta i una publicació consolidada.",
+      "progress": "Estudi lliure i Pomodoro separats, pausa conservadora i preferències locals. 460 unitàries, 63 fluxos focus en tres motors i 15 regressions de sons correctes; 6 casos natius WebKit/Windows no disponibles, fallback provat. Tipus/lint/build correctes. Corregit cercle que cobria Comença amb opcions obertes i disposició lliure en paisatge. Pendent font de l’índex, CI exacta i una publicació consolidada. Revisió local durant CI: títol Nit i noms accessibles dels primers selectors corregits; tres regressions addicionals correctes. Una correcció consolidada de la mateixa PR43, pendent CI del nou head.",
       "change_log_id": "H201"
     }
   ]

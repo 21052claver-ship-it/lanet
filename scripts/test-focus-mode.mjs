@@ -148,6 +148,30 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
     }
   }
   try {
+    await run('free-study-theme-colours', 390, async (p) => {
+      await p.getByRole('button', { name: 'Mode focus', exact: true }).click();
+      const dialog = p.getByRole('dialog', { name: 'Mode focus', exact: true });
+      await dialog.locator('summary').click();
+      await dialog.getByRole('tab', { name: 'Digital', exact: true }).click();
+      await dialog.getByRole('tab', { name: 'Anell', exact: true }).click();
+      assert.equal(await dialog.locator('svg.timer-ring').count(), 1);
+      await dialog.getByRole('tab', { name: 'Estudi lliure', exact: true }).click();
+      for (const theme of ['Nit', 'Clar', 'Bosc']) {
+        await dialog.getByRole('tab', { name: theme, exact: true }).click();
+        const colours = await dialog.evaluate((el) => ({
+          foreground: getComputedStyle(el).color,
+          title: getComputedStyle(el.querySelector('h1')).color,
+        }));
+        assert.equal(
+          colours.title,
+          colours.foreground,
+          `Free study title follows the ${theme} foreground`,
+        );
+      }
+      await dialog.getByRole('tab', { name: 'Nit', exact: true }).click();
+      await dialog.locator('summary').click();
+      await p.screenshot({ path: `${out}/${engine}-free-night-390.png` });
+    });
     await run(
       'native-fullscreen-entry-exit',
       1440,
