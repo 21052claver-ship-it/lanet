@@ -2,6 +2,13 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production.
 
+## [0.6.19] - 2026-10-15
+
+- Els delegats i subdelegats publiquen directament exàmens, tasques i altres dates públiques dins del seu àmbit. Les edicions pròpies també es publiquen directament, sense tornar a la cua de revisió.
+- El formulari mostra «Publicar ara» i els destinataris segons els permisos comprovats pel servidor. Si canvien els permisos, es revisen abans de desar i el missatge reflecteix l’estat real.
+- Administradors coherents amb la seva autoritat; els membres i representants fora d’àmbit continuen enviant propostes. Es conserven privacitat, duplicats, coincidències, control de revisions i auditoria atòmica, sense avisos propis redundants.
+- Mateixes taules i consultes: cap migració, polling, operació R2 ni desplegament privat nous.
+
 ## [0.6.18] - 2026-10-15
 
 - Les notificacions prioritzen els avisos sense llegir: l’històric recent ja no n’amaga d’antics. Bústia de fins a 100 avisos, amb excés explícit i lots successius sense perdre noves arribades.

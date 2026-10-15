@@ -374,7 +374,7 @@ export default function Delegates({ notificationsOnly = false }) {
           <h2>{manager ? 'El teu panell de delegats' : 'Delegats de la comunitat'}</h2>
           <p>
             {manager
-              ? 'Confirma les dates, revisa coincidències i ajuda la classe a tenir l’agenda al dia.'
+              ? 'Publica les dates del teu àmbit directament i revisa les propostes de la classe.'
               : 'Proposa dates a l’agenda i contacta amb els representants de cada classe.'}
           </p>
         </div>
@@ -460,8 +460,8 @@ export default function Delegates({ notificationsOnly = false }) {
         </div>
       )}
       <p className="delegate-scope-note">
-        Delegats i subdelegats tenen els mateixos permisos de revisió dins del seu àmbit. Les dates
-        privades són personals.
+        Delegats i subdelegats tenen els mateixos permisos de publicació i revisió dins del seu
+        àmbit. Les dates privades són personals.
       </p>
     </section>
   );

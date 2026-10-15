@@ -23,9 +23,10 @@ import '../workspace.css';
 import { previewAgenda } from '../api';
 import { dateLabel } from '../../shared/domain';
 import { ConflictNotice } from './Delegates';
+import { agendaPublication } from '../../shared/delegation';
 
 export default function EventEditor({ item }) {
-  const { data, enrolled, close, mutate, open } = useApp();
+  const { data, enrolled, close, mutate, open, notify } = useApp();
   const key = `lanet.eventDraft.${data.user.id}.${item.subject_id || 'all'}.${item.kind || 'exam'}${item.contextual ? '.' + item.date + '.' + item.offering_id : ''}`;
   const [cached] = useState(() => (!item.id ? readLocalJSON(key, null) : null));
   const [f, setF] = useState(() => ({
@@ -91,12 +92,27 @@ export default function EventEditor({ item }) {
     setF((x) => ({ ...x, subject_id: id, offering_id: '', audience_kind: 'class' }));
   const duplicate = preview?.conflicts.some((c) => c.type === 'duplicate');
   const overlap = preview?.conflicts.some((c) => c.type === 'overlap');
+  const publication = preview?.signature === signature ? preview.publication : null;
+  const direct = publication === 'direct';
+  const directClass =
+    agendaPublication(
+      data.user,
+      {
+        visibility: 'shared',
+        review_units: [data.delegation?.unit],
+      },
+      data.delegation,
+    ) === 'direct';
   return (
     <form
       className="event-editor"
       onSubmit={submit(async () => {
         const checked = await previewAgenda(f);
         setPreview({ ...checked, signature });
+        if (f.visibility === 'shared' && checked.publication !== publication)
+          throw new Error(
+            'Han canviat els permisos de publicació. Revisa la indicació actualitzada i torna a confirmar.',
+          );
         if (checked.conflicts.some((c) => c.type === 'duplicate'))
           throw new Error('Revisa el duplicat abans de continuar.');
         if (checked.conflicts.length && confirmed !== checked.conflicts_token)
@@ -104,11 +120,16 @@ export default function EventEditor({ item }) {
         return mutate(
           '/events' + (item.id ? '/' + item.id : ''),
           { ...f, conflicts_token: confirmed },
-          f.visibility === 'shared'
-            ? 'Proposta enviada als delegats. T’avisarem quan la revisin.'
-            : 'Data privada desada al calendari.',
-          () => {
+          undefined,
+          (result) => {
             if (!item.id) removeLocalJSONIfUnchanged(key, f);
+            notify(
+              f.visibility !== 'shared'
+                ? 'Data privada desada al calendari.'
+                : result.status === 'approved'
+                  ? 'Data publicada a l’agenda. No cal cap altra aprovació.'
+                  : 'Proposta enviada als delegats. T’avisarem quan la revisin.',
+            );
           },
         );
       })}
@@ -122,7 +143,12 @@ export default function EventEditor({ item }) {
           <b>2</b> Qui ho veu
         </li>
         <li>
-          <b>3</b> Revisar i enviar
+          <b>3</b>{' '}
+          {direct
+            ? 'Revisar i publicar'
+            : f.visibility === 'shared'
+              ? 'Revisar i enviar'
+              : 'Revisar i desar'}
         </li>
       </ol>
       {item.contextual && (
@@ -203,11 +229,15 @@ export default function EventEditor({ item }) {
         >
           <UsersThree size={25} />
           <strong>Públic</strong>
-          <span>Per a la classe · validació de delegats</span>
+          <span>
+            {direct || (!publication && f.audience_kind === 'class' && directClass)
+              ? 'Per a la classe · publicació directa'
+              : 'Per a la classe · validació de delegats'}
+          </span>
         </button>
       </div>
       {f.visibility === 'shared' && (
-        <Field label="Destinataris de la proposta">
+        <Field label="Destinataris de la data">
           <Select value={f.audience_kind} onChange={(e) => change('audience_kind', e.target.value)}>
             <option value="class">
               La meva classe ·{' '}
@@ -296,9 +326,23 @@ export default function EventEditor({ item }) {
         </Field>
       </details>
       {f.visibility === 'shared' && (
-        <section className="agenda-review-summary" aria-label="Qui ha d’autoritzar la proposta">
-          <h3>Ho validaran</h3>
-          {preview?.reviewers.length ? (
+        <section
+          className="agenda-review-summary"
+          aria-label={direct ? 'Publicació directa' : 'Qui ha d’autoritzar la proposta'}
+        >
+          <h3>
+            {direct
+              ? 'Pots publicar directament'
+              : publication
+                ? 'Ho validaran'
+                : 'Comprovant la publicació…'}
+          </h3>
+          {direct ? (
+            <p>
+              Tens permisos de publicació per als destinataris seleccionats. En prémer Publicar ara,
+              confirmes la data i el contingut i apareixerà a l’agenda compartida.
+            </p>
+          ) : preview?.reviewers.length ? (
             preview.reviewers.map((m) => (
               <span className="reviewer-pill" key={m.email + m.unit_id}>
                 {m.name}
@@ -313,10 +357,12 @@ export default function EventEditor({ item }) {
               {previewError || 'Tria l’assignatura i escriu el títol per veure els responsables.'}
             </p>
           )}
-          <p>
-            Encara no apareixerà a l’agenda de la classe. Rebràs un avís quan s’aprovi o calgui
-            corregir-la.
-          </p>
+          {publication === 'review' && (
+            <p>
+              Encara no apareixerà a l’agenda de la classe. Rebràs un avís quan s’aprovi o calgui
+              corregir-la.
+            </p>
+          )}
         </section>
       )}
       {!!f.title.trim() && (
@@ -325,7 +371,13 @@ export default function EventEditor({ item }) {
           <span>
             {f.date ? dateLabel(f.date) : 'Tria la data'} · {f.start || 'Tot el dia'}
             {f.end ? '–' + f.end : ''} ·{' '}
-            {f.visibility === 'private' ? 'Privat' : 'Pendent de validació'}
+            {f.visibility === 'private'
+              ? 'Privat'
+              : !publication
+                ? 'Comprovant la publicació…'
+                : direct
+                  ? 'Publicació directa'
+                  : 'Pendent de validació'}
           </span>
           {!preview && !previewError && <p role="status">Comprovant duplicats i horaris…</p>}
           <ConflictNotice conflicts={preview?.conflicts || []} />
@@ -368,7 +420,15 @@ export default function EventEditor({ item }) {
           (f.visibility === 'shared' && (!preview || preview.signature !== signature)) ||
           (!!overlap && confirmed !== preview?.conflicts_token)
         }
-        label={f.visibility === 'shared' ? 'Enviar a validació' : 'Desar'}
+        label={
+          f.visibility === 'shared'
+            ? !publication
+              ? 'Comprovant…'
+              : direct
+                ? 'Publicar ara'
+                : 'Enviar a validació'
+            : 'Desar'
+        }
       >
         {item.id && (
           <Button

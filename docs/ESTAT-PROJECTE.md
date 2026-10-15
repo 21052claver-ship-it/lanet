@@ -7,18 +7,20 @@ Actualitzat el 15 d’octubre de 2026. Aquest document és la memòria de contin
 | Element | Estat registrat |
 | --- | --- |
 | Aplicació principal | [lanet.es](https://lanet.es) |
-| Darrera versió de producte publicada | **0.6.17** |
-| Informe complet de la versió | [Publicació 0.6.17](releases/0.6.17.md) |
-| Codi publicat | `36631c5d37896318f3b38cb27fd2858322cd73a4` |
+| Darrera versió de producte publicada | **0.6.18** |
+| Informe complet de la versió | [Publicació 0.6.18](releases/0.6.18.md) |
+| Codi publicat | `d2cadcc35a98e94da812b49503d4ef58a7489424` |
 | GitHub | [21052claver-ship-it/lanet](https://github.com/21052claver-ship-it/lanet) |
-| Incorporació del codi | [PR #39](https://github.com/21052claver-ship-it/lanet/pull/39), fusionada amb tots els controls correctes |
-| CI del commit exacte de main | [Verify La Net](https://github.com/21052claver-ship-it/lanet/actions/runs/38652576530), correcta |
-| Publicació | [Tag i release immutable v0.6.17](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.17), rebut i Deployment verificats |
+| Incorporació del codi | [PR #40](https://github.com/21052claver-ship-it/lanet/pull/40), fusionada amb tots els controls correctes |
+| CI del commit exacte de main | [Verify La Net](https://github.com/21052claver-ship-it/lanet/actions/runs/38659165728), correcta |
+| Publicació | [Tag i release immutable v0.6.18](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.18), rebut i Deployment verificats |
 | Documentació de tancament | Desada al projecte; es conserva en branca local per a la pròxima tanda, sense push documental immediat |
 
 Els rebuts descriuen el producte publicat. Una actualització d’aquests Markdown no implica un nou desplegament ni un canvi de versió de l’aplicació.
 
 Auditoria funcional 0.6.17 completada: objectiu zero i represa musical WebKit/Linux corregits, 179 recorreguts addicionals, 62 API locals i 449 unitàries; CI completa verda. [Mapa i límits](PLA-AUDITORIA-FUNCIONAL.md). La limitació de l’API general històrica queda resolta en aquesta tanda.
+
+Notificacions 0.6.18 corregides: bústia limitada amb no llegits prioritzats, lectures confirmades, una consulta/escriptura, destinacions i reintent. [Pla i evidències](PLA-NOTIFICACIONS.md).
 
 ## Decisions de producte que continuen vigents
 
@@ -73,7 +75,7 @@ Les propostes visuals anteriors de xats es conserven com a exploració de dissen
 
 ## Verificació i límits
 
-La tanda publicada té **446 proves unitàries correctes**, tipus/lint, build i auditoria de font correctes. Es van executar **243 fluxos locals del snapshot conjunt i 75 regressions addicionals** després de la correcció de CI: 318 execucions documentades en Chromium, Firefox i WebKit. S’hi afegeixen les proves d’API/migracions amb workerd i D1 reals en local, i la CI completa del commit publicat.
+La 0.6.18 té **454 proves unitàries correctes**, 30 escenaris locals de notificacions i 15 regressions de delegats en Chromium, Firefox i WebKit; D1/workerd real local, tipus/lint/build/font i CI completa correctes. Les tandes anteriors conserven les seves mètriques als informes de versió.
 
 La verificació funcional utilitza fixtures locals. El desplegament, domini, callback, tag, release i rebuts es van verificar via APIs/CLI del proveïdor. No es van fer proves contra l’aplicació pública ni visites a la seva API. Els navegadors emulats no equivalen a proves en mòbils físics. El WebKit de Windows no exposa AudioContext: s’hi va comprovar el fallback; Chromium/Firefox van mesurar àudio real.
 
@@ -104,4 +106,4 @@ El [registre](SEGUIMENT.json) és l’origen dels estats de tasca; la [checklist
 
 La destinació de Cloudflare es fixa a [cloudflare-target.json](../cloudflare-target.json); les credencials no s’inclouen als exemples ni a la CI. Els helpers puntuals de treball no són un procediment de restauració general ni s’han de tornar a executar automàticament.
 
-**Lectura següent:** [índex documental](README.md) · [informe 0.6.17](releases/0.6.17.md) · [historial](HISTORIAL-CANVIS.md).
+**Lectura següent:** [índex documental](README.md) · [informe 0.6.18](releases/0.6.18.md) · [historial](HISTORIAL-CANVIS.md).
