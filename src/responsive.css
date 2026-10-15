@@ -31,6 +31,19 @@
 .dialog .button > svg {
   flex-shrink: 0;
 }
+.casino-header {
+  flex-wrap: wrap;
+}
+.casino-header > div:first-child {
+  min-width: 0;
+  max-width: 100%;
+}
+.casino-header-actions {
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  max-width: 100%;
+  margin-left: auto;
+}
 .app-shell .page-heading h1 {
   overflow-wrap: anywhere;
 }

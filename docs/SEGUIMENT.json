@@ -8200,7 +8200,8 @@
         "src/responsive.css",
         "scripts/test-responsive.mjs",
         "src/pages/Management.jsx",
-        "docs/PLA-RESPONSIVE-2026-10.md"
+        "docs/PLA-RESPONSIVE-2026-10.md",
+        "scripts/test-roulette-panorama.mjs"
       ],
       "acceptance": "Auditoria local de les vistes principals i formularis en amplades mòbils, tauleta, escriptori i paisatge. Corregir desbordaments, text retallat accidentalment, solapaments i controls inaccessibles, amb contingut llarg i zoom quan sigui rellevant. Conservar marca/logo complet, navegació, permisos i funcions. CSS/mesures del navegador sense consultes, polling, D1/R2 o migracions noves. Fixtures fictícies; cap prova pública. Tipus/unitàries/build/font, proves responsive i regressions afectades correctes; una PR/publicació amb CI exacta.",
       "checks": [
@@ -8223,9 +8224,15 @@
         "output/responsive-polish/official-schedule/results.json",
         "output/responsive-polish-unit.log",
         "output/responsive-polish-typecheck.log",
-        "output/responsive-polish-build-final.log"
+        "output/responsive-polish-build-final.log",
+        "output/responsive-polish/roulette-panorama/results.json",
+        "output/responsive-polish/ci-pr-casino.log",
+        "output/responsive-polish/ci-correction.json",
+        "output/responsive-polish-panorama.log",
+        "output/responsive-polish-build-corrected.log",
+        "output/responsive-polish-lint-corrected.log"
       ],
-      "progress": "458 unitàries, 66 escenaris responsive en Chromium/Firefox/WebKit, 10 regressions de notificacions, 11 de delegats i 9 d’horari en Chromium correctes. Tipus/lint/build correctes. Auditoria de nou seccions a set amplades i captures revisades: Comunitat amb contingut llarg passa de 1.265 a 320 px i de 1.453 a 820 px; totes les pestanyes mòbils visibles, targetes de gestió amb accions accessibles, catàleg 44 px, formularis curts i escriptori conservat. Només presentació/etiquetes, sense consultes, polling, D1/R2, migracions o permisos nous. Pendent auditoria indexada, PR/CI exactes i publicació única 0.6.20.",
+      "progress": "458 unitàries, 66 escenaris responsive en Chromium/Firefox/WebKit, 10 regressions de notificacions, 11 de delegats i 9 d’horari en Chromium correctes. Tipus/lint/build correctes. Auditoria de nou seccions a set amplades i captures revisades: Comunitat amb contingut llarg passa de 1.265 a 320 px i de 1.453 a 820 px; totes les pestanyes mòbils visibles, targetes de gestió amb accions accessibles, catàleg 44 px, formularis curts i escriptori conservat. Només presentació/etiquetes, sense consultes, polling, D1/R2, migracions o permisos nous. Pendent auditoria indexada, PR/CI exactes i publicació única 0.6.20. Primera CI identifica una regressió real de capçalera de sala a 320 px. Correcció local acotada a flex/wrapping contrastada amb les 15 combinacions panoràmiques de tres motors, totes correctes. Una única correcció a la mateixa PR42; cal esperar la CI del head corregit abans de fusionar. Total 66 responsive i 45 regressions locals, 458 unitàries.",
       "change_log_id": "H200"
     }
   ]

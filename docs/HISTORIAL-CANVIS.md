@@ -1283,3 +1283,5 @@ H199 completada: [0.6.19](https://github.com/21052claver-ship-it/lanet/releases/
 Marc demana millorar el responsive. T85-01 és l’única tasca activa: auditoria amb fixtures locals, correccions de disposició i controls en mòbil/tauleta/escriptori, comprovació en tres motors i una publicació consolidada amb CI exacta. Es preserven el logo complet, permisos, dades i domini; cap visita pública o càrrega D1/R2 nova.
 
 H200 en revisió: desbordament de Comunitat reproduït (1.265 px en mòbil de 320 px) i corregit; pestanyes compactes en files, gestió en targetes i controls del catàleg de 44 px. 458 unitàries, 66 escenaris responsive i 30 regressions locals correctes, tipus/lint/build correctes. Sense migracions o càrrega D1/R2 nova; pendent font indexada, CI exacta i publicació 0.6.20.
+
+H200: la CI inicial de PR42 detecta un control de sala fora d’espai a 320 px. Correcció de flex/wrapping local provada amb 15 combinacions panoràmiques en tres motors, totes correctes. Una pujada inicial i una única correcció a la mateixa branca/PR; una publicació de producte, pendent CI del nou head. Total: 66 responsive i 45 regressions locals, 458 unitàries.
