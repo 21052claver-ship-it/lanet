@@ -79,3 +79,10 @@ export const canManageEvent = (user, event, delegation) =>
   user.role === 'admin' ||
   (event.visibility === 'shared' &&
     event.review_units?.some((u) => delegation?.managedUnits?.includes(u)));
+
+export const agendaPublication = (user, event, delegation) =>
+  event.visibility !== 'shared'
+    ? 'private'
+    : canManageEvent(user, event, delegation)
+      ? 'direct'
+      : 'review';

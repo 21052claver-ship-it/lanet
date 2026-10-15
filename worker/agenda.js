@@ -5,6 +5,8 @@ import {
   equivalentOfferings,
   eventConflicts,
   duplicateIdentity,
+  agendaPublication,
+  canManageEvent,
 } from '../shared/delegation.js';
 import { NOTIFICATION_LIMIT } from '../shared/notifications.js';
 
@@ -125,9 +127,7 @@ export async function agendaBootstrap(env, user, cat, enrollments) {
   };
 }
 function manageable(user, e, ctx) {
-  return (
-    user.role === 'admin' || e.review_units?.some((u) => ctx.delegation.managedUnits.includes(u))
-  );
+  return canManageEvent(user, e, ctx.delegation);
 }
 async function candidate(env, user, b, ctx, record) {
   const visibility = choice(b.visibility || 'private', ['private', 'shared']);
@@ -194,7 +194,11 @@ async function candidate(env, user, b, ctx, record) {
                 offering.subject_id === 'bio' &&
                 offering.block === 'elective'),
           ).map((u) => u.id);
-  if (visibility === 'shared' && !ctx.delegation.members.some((m) => units.includes(m.unit_id)))
+  if (
+    visibility === 'shared' &&
+    agendaPublication(user, { visibility, review_units: units }, ctx.delegation) !== 'direct' &&
+    !ctx.delegation.members.some((m) => units.includes(m.unit_id))
+  )
     fail(409, 'Encara no hi ha delegats assignats a aquest àmbit. Pots desar-ho com a privat.');
   return {
     id: record?.id || null,
@@ -335,6 +339,7 @@ async function handleAgenda(request, env, user, path) {
       reviewers: ctx.delegation.members.filter((m) => e.review_units.includes(m.unit_id)),
       targets: e.targets,
       review_units: e.review_units,
+      publication: agendaPublication(user, e, ctx.delegation),
     };
   }
   const [, rid, action] = path.match(/^\/api\/events(?:\/([^/]+)(?:\/(review|progress))?)?$/);
@@ -439,9 +444,10 @@ async function handleAgenda(request, env, user, path) {
   const e = await candidate(env, user, b, ctx, record),
     check = await conflicts(env, user, e);
   checkConflicts(check, b);
+  const publication = agendaPublication(user, e, ctx.delegation);
   const key = rid || id(),
     operation = id(),
-    status = e.visibility === 'shared' ? 'pending' : 'approved';
+    status = publication === 'review' ? 'pending' : 'approved';
   const dedupeScope =
     e.visibility === 'shared'
       ? await hash(JSON.stringify([e.audience_kind, e.unit_id, e.targets.slice().sort()]))
@@ -483,18 +489,20 @@ async function handleAgenda(request, env, user, path) {
     dedupe,
     dedupeScope,
     identity,
+    publication === 'direct' ? user.id : null,
+    publication === 'direct' ? new Date().toISOString() : null,
   ];
   const change = record
     ? sql(
         env,
-        `UPDATE events SET title=?,kind=?,date=?,start=?,end=?,subject_id=?,offering_id=?,group_id=?,room=?,body=?,visibility=?,display_kind=?,review_status=?,audience_kind=?,unit_id=?,last_operation=?,dedupe_key=?,dedupe_scope=?,dedupe_identity=?,revision=revision+1,reviewed_by=NULL,reviewed_at=NULL,review_note='' WHERE id=? AND revision=?`,
+        `UPDATE events SET title=?,kind=?,date=?,start=?,end=?,subject_id=?,offering_id=?,group_id=?,room=?,body=?,visibility=?,display_kind=?,review_status=?,audience_kind=?,unit_id=?,last_operation=?,dedupe_key=?,dedupe_scope=?,dedupe_identity=?,reviewed_by=?,reviewed_at=?,revision=revision+1,review_note='' WHERE id=? AND revision=?`,
         ...values,
         key,
         b.revision,
       )
     : sql(
         env,
-        'INSERT INTO events(title,kind,date,start,end,subject_id,offering_id,group_id,room,body,visibility,display_kind,review_status,audience_kind,unit_id,last_operation,dedupe_key,dedupe_scope,dedupe_identity,id,owner_id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+        'INSERT INTO events(title,kind,date,start,end,subject_id,offering_id,group_id,room,body,visibility,display_kind,review_status,audience_kind,unit_id,last_operation,dedupe_key,dedupe_scope,dedupe_identity,reviewed_by,reviewed_at,id,owner_id) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
         ...values,
         key,
         user.id,
@@ -534,7 +542,13 @@ async function handleAgenda(request, env, user, path) {
           operation,
         ),
       ),
-      history(env, key, user.id, status === 'pending' ? 'submit' : 'save', operation),
+      history(
+        env,
+        key,
+        user.id,
+        publication === 'direct' ? 'publish' : status === 'pending' ? 'submit' : 'save',
+        operation,
+      ),
     ]);
     if (!result[0].meta.changes) fail(409, 'La data ha canviat. Torna a obrir-la.');
   } catch (error) {

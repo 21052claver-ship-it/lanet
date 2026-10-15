@@ -200,6 +200,35 @@ try {
     visibility: 'private',
   });
   assert.ok(!(await request('delegate', '/bootstrap')).events.some((e) => e.id === privateDate.id));
+  const directDraft = {
+    ...proposal,
+    title: 'Tasca directa API',
+    kind: 'task',
+    date: '2026-11-05',
+    audience_kind: 'offering',
+    offering_id: '2A-math',
+    confirmed: true,
+  };
+  assert.equal((await request('delegate', '/agenda/preview', directDraft)).publication, 'direct');
+  const direct = await request('delegate', '/events', directDraft);
+  assert.equal(direct.status, 'approved');
+  const directEvent = (await request('2A', '/bootstrap')).events.find((e) => e.id === direct.id);
+  assert.ok(directEvent);
+  assert.equal(directEvent.reviewed_by, 'delegate');
+  await request('2A', '/events/' + direct.id + '/progress', { done: true });
+  assert.equal((await request('2A', '/bootstrap')).events.find((e) => e.id === direct.id).done, 1);
+  assert.equal(
+    (
+      await request('delegate', '/events/' + direct.id, {
+        ...directDraft,
+        date: '2026-11-06',
+        revision: 1,
+      })
+    ).status,
+    'approved',
+  );
+  await request('delegate', '/events/' + direct.id, { ...directDraft, revision: 1 }, 409);
+  assert.equal((await request('delegate', '/bootstrap')).agendaNotifications.length, 0);
   results.push({
     agenda: true,
     proposals: true,
@@ -208,6 +237,8 @@ try {
     privateDatesProtected: true,
     persistentNotifications: true,
     scopedIdempotentNotificationReads: true,
+    scopedDirectPublicationAndEdit: true,
+    directTaskCompletableByPeers: true,
   });
   console.log(
     'Agenda: proposals, scoped review, duplicates, privacy and notifications on real local D1 OK.',

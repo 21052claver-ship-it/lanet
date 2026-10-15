@@ -424,6 +424,10 @@
     {
       "id": "R105",
       "description": "Fer fiables les notificacions: avisos no llegits accessibles, comptador coherent, lectura persistent, accions relacionades, actualització i reintent amb consultes limitades."
+    },
+    {
+      "id": "R106",
+      "description": "Els delegats i subdelegats publiquen directament dates públiques dins del seu àmbit; revisar textos, edicions, permisos i avisos per evitar validacions redundants."
     }
   ],
   "phases": [
@@ -1012,6 +1016,13 @@
       "title": "Fiabilitat de les notificacions",
       "depends_on": [
         "F82"
+      ]
+    },
+    {
+      "id": "F84",
+      "title": "Publicació directa dels representants",
+      "depends_on": [
+        "F83"
       ]
     }
   ],
@@ -8109,6 +8120,48 @@
       ],
       "progress": "Notificacions corregides i 0.6.18 publicada via PR40: d2cadcc35a98e94da812b49503d4ef58a7489424. 454 unitàries, 30 escenaris de notificacions en tres motors, 15 regressions de delegats i D1/workerd local correctes. Font/tipus/lint/build/enllaços correctes; tots els jobs/Validate de PR i main correctes. Bústia acotada en una consulta consistent, una escriptura idempotent per lot, confirmació preservada, arribades concurrents, excés, errors/reintents, destinacions i pestanya mòbil provats. Una pujada inicial i una correcció de branca, una PR i una publicació. Proveïdor, domini/callback/bindings, tag/release immutable i digest del rebut verificats. Cap prova pública, només índex additiu 0030, sense polling/R2 nou ni desplegament privat. Tancament documental local sense push addicional.",
       "change_log_id": "H198"
+    },
+    {
+      "id": "T84-01",
+      "phase": "F84",
+      "title": "Publicar directament exàmens i tasques com a delegat",
+      "status": "review",
+      "requirements": [
+        "R106"
+      ],
+      "depends_on": [
+        "T83-01"
+      ],
+      "files": [
+        "worker/agenda.js",
+        "shared/delegation.js",
+        "src/components/EventEditor.jsx",
+        "tests/delegate-agenda.test.js",
+        "scripts/test-delegate-agenda.mjs",
+        "src/components/Delegates.jsx",
+        "docs/PLA-PUBLICACIO-DIRECTA.md",
+        "docs/PLA-AGENDA-DELEGATS.md"
+      ],
+      "acceptance": "Delegat/subdelegat autoritzat i admin publiquen directament les dates públiques del seu àmbit, també en editar; membres i representants fora d’àmbit mantenen revisió. El servidor decideix l’autoritat i registra autor/revisor/revisió en la mateixa transacció. Publicar ara confirma l’acció, sense una segona aprovació ni avisos propis redundants. Textos i estat coherents amb permisos actuals; duplicats, solapaments i privacitat conservats. Errors/reintents, canvi de permisos i persistència provats localment. Cap migració, polling/R2 nou o visita pública. Una PR/publicació consolidada després de CI exacta.",
+      "checks": [
+        "Definir autoritat de publicació coherent amb la revisió existent i revisar casos de classe/variant i edició.",
+        "Implementar publicació i auditoria atòmiques al servidor amb formulari i missatges coherents.",
+        "Provar membres/delegats/subdelegats/admin, àmbits, permisos obsolets, duplicats, concurrència i persistència amb fixtures.",
+        "Executar tipus/unitàries/build/font i regressions locals, agrupar una PR, esperar CI exacta i publicar una vegada."
+      ],
+      "evidence": [
+        "docs/PLA-PUBLICACIO-DIRECTA.md",
+        "output/delegate-publishing/final-chromium/results.json",
+        "output/delegate-publishing/final-firefox/results.json",
+        "output/delegate-publishing/final-webkit/results.json",
+        "output/delegate-publishing/api-final/api-results.json",
+        "output/delegate-publishing-unit.log",
+        "output/delegate-publishing-unit-targeted.log",
+        "output/delegate-publishing-typecheck.log",
+        "output/delegate-publishing-build.log"
+      ],
+      "progress": "458 unitàries i 33 fluxos locals en Chromium/Firefox/WebKit correctes, incloent 18 execucions noves de publicació directa/edició, subdelegat/tasca/privat, àmbit, permisos canviats, error/reintent i duplicat. D1/workerd confirma publicació/edició directa i tasca completable per companys. Tipus/lint/build correctes. Servidor decideix autoritat amb el context existent, historial atòmic i sense avisos propis. Cap migració, consulta/polling/R2 nou o desplegament privat. Pendent font de l’índex, PR/CI exactes i publicació única 0.6.19 amb tancament documental anterior agrupat.",
+      "change_log_id": "H199"
     }
   ]
 }

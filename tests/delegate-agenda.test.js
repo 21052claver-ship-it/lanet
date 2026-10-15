@@ -157,6 +157,143 @@ test('private dates never reach representatives or other students, including pre
   f.db.close();
 });
 
+test('delegates, subdelegates and admins publish and edit their own scoped dates directly without self notifications', async () => {
+  for (const uid of ['del', 'sub', 'admin']) {
+    const f = await fixture();
+    if (uid === 'sub')
+      f.db.exec(
+        "DELETE FROM enrollments WHERE user_id='sub' AND offering_id='2B-tutor-ocana'; INSERT INTO enrollments VALUES('sub','2B-tutor-comellas');",
+      );
+    const draft = f.payload({ kind: uid === 'sub' ? 'task' : 'exam', confirmed: true });
+    assert.equal((await f.call('/agenda/preview', draft, uid)).value.publication, 'direct');
+    const sent = await f.call('/events', draft, uid);
+    assert.equal(sent.status, 200);
+    assert.equal(sent.value.status, 'approved');
+    const row = f.db.prepare('SELECT * FROM events WHERE id=?').get(sent.value.id);
+    assert.equal(row.reviewed_by, uid);
+    assert.ok(Number.isFinite(Date.parse(row.reviewed_at)));
+    const peer = (await f.call('/bootstrap', undefined, 'peer')).value;
+    assert.ok(peer.events.some((e) => e.id === row.id));
+    assert.ok(!peer.agendaProposals.some((e) => e.id === row.id));
+    const edited = await f.call(
+      '/events/' + row.id,
+      { ...draft, title: 'Data actualitzada', revision: row.revision },
+      uid,
+    );
+    assert.equal(edited.status, 200);
+    assert.equal(edited.value.status, 'approved');
+    const history = f.db
+      .prepare(
+        'SELECT action,actor_id,revision FROM event_review_history WHERE event_id=? ORDER BY revision',
+      )
+      .all(row.id);
+    assert.deepEqual(
+      history.map((h) => [h.action, h.actor_id, h.revision]),
+      [
+        ['publish', uid, 1],
+        ['publish', uid, 2],
+      ],
+    );
+    assert.equal(f.db.prepare('SELECT COUNT(*) n FROM agenda_notifications').get().n, 0);
+    assert.equal((await f.call('/events/' + row.id, { ...draft, revision: 1 }, uid)).status, 409);
+    assert.equal(f.db.prepare('SELECT revision FROM events WHERE id=?').get(row.id).revision, 2);
+    f.db.close();
+  }
+});
+
+test('publication authority follows current scopes, never forged fields or a legacy global delegate role', async () => {
+  const f = await fixture();
+  f.db.exec(
+    "DELETE FROM enrollments WHERE user_id='del' AND offering_id='2A-tutor-comellas'; INSERT INTO enrollments VALUES('del','2A-tutor-ocana'); INSERT INTO delegation_members VALUES('scope-fixture@fje.edu','tech2','Representant fictici','delegate',1);",
+  );
+  const draft = f.payload({
+    confirmed: true,
+    review_status: 'approved',
+    review_units: ['tech1'],
+    unit_id: 'tech1',
+    role: 'admin',
+  });
+  assert.equal((await f.call('/agenda/preview', draft, 'del')).value.publication, 'review');
+  const sent = await f.call('/events', draft, 'del');
+  assert.equal(sent.value.status, 'pending');
+  const row = f.db.prepare('SELECT * FROM events WHERE id=?').get(sent.value.id);
+  assert.equal(row.unit_id, 'tech2');
+  assert.equal(row.reviewed_by, null);
+  f.db.exec("UPDATE users SET role='delegate' WHERE id='a';");
+  assert.equal(
+    (await f.call('/agenda/preview', f.payload({ date: '2026-10-24' }), 'a')).value.publication,
+    'review',
+  );
+  assert.equal(
+    (await f.call('/events', f.payload({ date: '2026-10-24', confirmed: true }), 'a')).value.status,
+    'pending',
+  );
+  f.db.close();
+});
+
+test('permission changes between preview and save are enforced without a redundant approval flag', async () => {
+  const f = await fixture(),
+    draft = f.payload();
+  assert.equal((await f.call('/agenda/preview', draft, 'del')).value.publication, 'direct');
+  assert.equal((await f.call('/events', draft, 'del')).value.status, 'approved');
+  assert.equal(f.db.prepare('SELECT COUNT(*) n FROM events').get().n, 1);
+  f.db.exec("UPDATE delegation_members SET active=0 WHERE email='del@fje.edu';");
+  const sent = await f.call('/events', { ...draft, date: '2026-10-24', confirmed: true }, 'del');
+  assert.equal(sent.value.status, 'pending');
+  assert.equal(
+    f.db.prepare('SELECT reviewed_by FROM events WHERE id=?').get(sent.value.id).reviewed_by,
+    null,
+  );
+  f.db.exec(
+    "INSERT INTO delegation_members VALUES('a@fje.edu','tech1','Nou representant fictici','subdelegate',1);",
+  );
+  assert.equal(
+    (await f.call('/events', f.payload({ date: '2026-10-25' }))).value.status,
+    'approved',
+  );
+  f.db.close();
+});
+
+test('direct publication preserves conflict checks, shared optative audiences and admin publication without a roster', async () => {
+  const f = await fixture(),
+    draft = f.payload({ confirmed: true });
+  const sent = await f.call('/events', draft, 'del');
+  assert.equal(sent.value.status, 'approved');
+  assert.equal((await f.call('/events', { ...draft, title: 'Un altre títol' }, 'del')).status, 409);
+  const overlap = { ...draft, subject_id: 'phy', title: 'Física' };
+  assert.equal((await f.call('/events', overlap, 'del')).status, 409);
+  const preview = (await f.call('/agenda/preview', overlap, 'del')).value;
+  assert.equal(
+    (await f.call('/events', { ...overlap, conflicts_token: preview.conflicts_token }, 'del')).value
+      .status,
+    'approved',
+  );
+  const mixed = f.payload({
+    date: '2026-10-25',
+    kind: 'task',
+    subject_id: 'art',
+    offering_id: '2A-art',
+    audience_kind: 'offering',
+    confirmed: true,
+  });
+  const published = await f.call('/events', mixed, 'del');
+  assert.equal(published.value.status, 'approved');
+  assert.ok(
+    (await f.call('/bootstrap', undefined, 'other')).value.events.some(
+      (e) => e.id === published.value.id,
+    ),
+  );
+  f.db.exec('DELETE FROM delegation_members');
+  assert.equal(
+    (await f.call('/events', f.payload({ date: '2026-10-26', confirmed: true }), 'admin')).value
+      .status,
+    'approved',
+  );
+  assert.equal((await f.call('/events', f.payload({ date: '2026-10-27' }))).status, 409);
+  assert.equal(f.db.prepare('SELECT COUNT(*) n FROM agenda_notifications').get().n, 0);
+  f.db.close();
+});
+
 test('old unread notices remain accessible behind over 100 newer read notices; inbox is bounded and private', async () => {
   const f = await fixture();
   const insert = f.db.prepare(
