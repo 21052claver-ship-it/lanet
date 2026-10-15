@@ -2,6 +2,14 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production.
 
+## [0.6.20] - 2026-10-15
+
+- Pestanyes de Comunitat i Gestió visibles en files en mòbil i paisatge tàctil; Delegats, Notificacions i Revisions accessibles sense desplaçar-les lateralment.
+- Títols, noms i propostes llargs de Comunitat s’adapten a la columna; data i edició conserven espai propi. Botons amb text adaptable i icones estables.
+- Capçalera de la sala de joc amb controls que passen de fila quan falta espai, també a 320 px.
+- Variants i comptes de Gestió en targetes llegibles fins a 1100 px, amb etiquetes i accions visibles; taula conservada a escriptori. Edició del catàleg amb objectius tàctils de 44 px i noms accessibles.
+- Auditoria local de nou seccions i regressions de redimensionat, paisatge, contingut llarg, formularis i controls curts en tres motors. Cap consulta, polling, operació D1/R2, migració o canvi de permisos nou.
+
 ## [0.6.19] - 2026-10-15
 
 - Els delegats i subdelegats publiquen directament exàmens, tasques i altres dates públiques dins del seu àmbit. Les edicions pròpies també es publiquen directament, sense tornar a la cua de revisió.

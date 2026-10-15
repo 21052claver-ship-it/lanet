@@ -453,6 +453,146 @@ for (const name of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,webki
           await p.screenshot({ path: `${out}/${name}-active-header-${width}.png` });
       }
     });
+    await run('secondary-tabs-mobile-and-landscape', { width: 320, height: 844 }, async (p) => {
+      await goto(p, 'community');
+      const tabs = p.locator('.page-community > .tabs');
+      for (const size of [
+        { width: 320, height: 844 },
+        { width: 390, height: 844 },
+        { width: 640, height: 900 },
+        { width: 844, height: 390 },
+      ]) {
+        await p.setViewportSize(size);
+        for (const label of ['Tauler', 'Esdeveniments', 'Propostes', 'Delegats', 'Notificacions']) {
+          const tab = tabs.getByRole('tab', { name: label, exact: true });
+          await tab.click();
+          assert.equal(await tab.getAttribute('aria-selected'), 'true');
+          const bounds = await tabs.boundingBox(),
+            item = await tab.boundingBox();
+          assert.ok(
+            item.x >= bounds.x - 1 && item.x + item.width <= bounds.x + bounds.width + 1,
+            'Every secondary destination is visible without horizontal scrolling',
+          );
+        }
+        assert.ok(await tabs.evaluate((el) => el.scrollWidth <= el.clientWidth + 1));
+      }
+      await p.setViewportSize({ width: 320, height: 844 });
+      await tabs.getByRole('tab', { name: 'Tauler', exact: true }).click();
+      await p.screenshot({ path: `${out}/${name}-community-tabs-320.png` });
+    });
+    for (const width of [320, 820])
+      await run(`long-community-content-${width}`, { width, height: 900 }, async (p) => {
+        const title = 'ContingutDeProva'.repeat(8);
+        await p.route('**/api/bootstrap', async (route) => {
+          const response = await route.fetch(),
+            data = await response.json();
+          data.user.role = 'admin';
+          data.announcements = [
+            {
+              id: 'responsive-announcement',
+              title,
+              body: 'https://example.invalid/' + title,
+              author: 'NomDeProva'.repeat(8),
+              author_id: data.user.id,
+              group_id: '2B',
+              created_at: data.today + 'T10:00:00',
+            },
+          ];
+          data.proposals[0].title = title;
+          await route.fulfill({ response, json: data });
+        });
+        await goto(p, 'community');
+        const heading = p.locator('.announcement-heading');
+        await heading.waitFor();
+        assert.equal(await heading.locator('h2').innerText(), title);
+        for (const selector of [
+          '.announcement-heading',
+          '.announcement-heading h2',
+          '.announcement .card-meta',
+          '.proposal-title',
+        ]) {
+          const bounds = await p.locator(selector).first().boundingBox();
+          assert.ok(
+            bounds.x >= 0 && bounds.x + bounds.width <= width + 1,
+            selector + ' fits with unbroken text',
+          );
+        }
+        assert.ok(
+          await p.locator('.announcement').evaluate((el) => el.scrollWidth <= el.clientWidth + 1),
+        );
+        const edit = heading.getByRole('button', { name: 'Editar avís', exact: true });
+        const bounds = await edit.boundingBox();
+        assert.ok(
+          bounds.width >= 44 && bounds.height >= 44,
+          'Announcement edit remains touch-sized',
+        );
+        await edit.click();
+        await p.getByRole('dialog').waitFor();
+        await inViewport(p, p.getByRole('dialog'));
+        await p.getByRole('button', { name: 'Tancar', exact: true }).click();
+        await p.screenshot({ path: `${out}/${name}-long-community-${width}.png` });
+      });
+    fixture.db.prepare("UPDATE users SET role='admin' WHERE id='browser'").run();
+    fixture.db
+      .prepare(
+        "INSERT INTO users(id,email,name,password_hash,salt,role,group_id,configured) VALUES('responsive-peer',?,?,'unusable','fixture','student','2B',1)",
+      )
+      .run('responsive.' + 'prova'.repeat(18) + '@example.invalid', 'NomDeProva'.repeat(8));
+    for (const width of [320, 820, 1440])
+      await run(`management-records-and-actions-${width}`, { width, height: 900 }, async (p) => {
+        await goto(p, 'management');
+        const table = p.getByRole('table', { name: 'Variants i horaris' });
+        const row = table.locator('tbody tr').first();
+        await row.waitFor();
+        assert.equal(
+          await row.evaluate((el) => getComputedStyle(el).display),
+          width <= 1100 ? 'grid' : 'table-row',
+        );
+        assert.ok(
+          await table.evaluate((el) => el.scrollWidth <= el.clientWidth + 1),
+          'No sideways scroll to reach an edit action',
+        );
+        const edit = row.getByRole('button');
+        await edit.click();
+        await p.getByRole('dialog').waitFor();
+        await inViewport(p, p.getByRole('dialog'));
+        assert.ok(
+          await p.getByRole('dialog').evaluate((el) => el.scrollWidth <= el.clientWidth + 1),
+        );
+        await p.getByRole('button', { name: 'Tancar', exact: true }).click();
+        const subject = p.locator('.admin-subject-list > button').first();
+        const target = await subject.boundingBox();
+        assert.ok(target.height >= 44, 'Catalogue edits have a usable touch target');
+        await subject.click();
+        await p.getByRole('dialog').waitFor();
+        await p.getByRole('textbox', { name: 'Nom complet', exact: true }).waitFor();
+        if (width === 320) {
+          await p.setViewportSize({ width, height: 360 });
+          const cancel = p.getByRole('button', { name: 'Cancel·lar', exact: true });
+          await cancel.scrollIntoViewIfNeeded();
+          await inViewport(p, cancel);
+          await inViewport(p, p.getByRole('button', { name: 'Tancar', exact: true }));
+          await cancel.click();
+          await p.setViewportSize({ width, height: 900 });
+        } else await p.getByRole('button', { name: 'Tancar', exact: true }).click();
+        await p.getByRole('tab', { name: 'Comptes', exact: true }).click();
+        const accounts = p.getByRole('table', { name: 'Comptes del centre' });
+        const peer = accounts.locator('tbody tr').filter({ hasText: 'NomDeProva'.repeat(8) });
+        await peer.waitFor();
+        if (width <= 1100) {
+          assert.ok(await accounts.evaluate((el) => el.scrollWidth <= el.clientWidth + 1));
+          const email = await peer.locator('td:first-child small').boundingBox();
+          assert.ok(
+            email.x >= 0 && email.x + email.width <= width + 1,
+            'Long account names and emails wrap inside their card',
+          );
+        }
+        await peer.getByRole('button', { name: 'Gestionar', exact: true }).click();
+        await p.getByRole('dialog').waitFor();
+        await inViewport(p, p.getByRole('dialog'));
+        await p.getByRole('button', { name: 'Tancar', exact: true }).click();
+        await p.screenshot({ path: `${out}/${name}-management-${width}.png` });
+      });
     await run(
       'welcome-small-and-landscape',
       { width: 320, height: 480 },

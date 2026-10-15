@@ -19,6 +19,34 @@
 .app-shell .title-actions {
   flex-wrap: wrap;
 }
+.app-shell .button,
+.dialog .button {
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.4;
+}
+.app-shell .button > svg,
+.dialog .button > svg {
+  flex-shrink: 0;
+}
+.casino-header {
+  flex-wrap: wrap;
+}
+.casino-header > div:first-child {
+  min-width: 0;
+  max-width: 100%;
+}
+.casino-header-actions {
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  max-width: 100%;
+  margin-left: auto;
+}
+.app-shell .page-heading h1 {
+  overflow-wrap: anywhere;
+}
 .app-shell .app-footer {
   flex-wrap: wrap;
 }
@@ -302,6 +330,20 @@
 .app-shell[data-compact='true'] .title-actions {
   gap: 8px;
 }
+/* Secondary destinations remain visible instead of disappearing off the right edge. */
+.app-shell[data-compact='true'] .page-community > .tabs.view-tabs,
+.app-shell[data-compact='true'] .page-management > .tabs.view-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  overflow: visible;
+}
+.app-shell[data-compact='true'] .page-community > .tabs.view-tabs > button,
+.app-shell[data-compact='true'] .page-management > .tabs.view-tabs > button {
+  flex: 1 1 auto;
+  max-width: 100%;
+  white-space: normal;
+}
 .app-shell[data-compact='true'] .resource-filters,
 .app-shell[data-compact='true'] .resource-filters.notes-filters {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -328,6 +370,43 @@
 .app-shell[data-compact='true'] .schedule-layout,
 .app-shell[data-compact='true'] .community-columns {
   grid-template-columns: minmax(0, 1fr);
+}
+.app-shell .community-columns > *,
+.app-shell .announcement-heading > div {
+  min-width: 0;
+}
+.app-shell .announcement-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 4px 8px;
+}
+.app-shell .announcement-heading > div {
+  grid-column: 1;
+  grid-row: 1;
+}
+.app-shell .announcement-date {
+  grid-column: 1;
+  grid-row: 2;
+}
+.app-shell .announcement-heading > .icon-button {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  width: 44px;
+  height: 44px;
+}
+.app-shell .announcement-heading h2,
+.app-shell .card-meta,
+.app-shell .proposal-title,
+.app-shell .proposal-heading h2 {
+  overflow-wrap: anywhere;
+}
+.app-shell .proposal-title {
+  max-width: 100%;
+  text-align: left;
+}
+.app-shell .proposal-heading {
+  flex-wrap: wrap;
 }
 .app-shell[data-compact='true'] .focus-panel,
 .app-shell[data-compact='true'] .sound-panel {
@@ -987,5 +1066,108 @@
   .timeline-event .event-card strong {
     font-size: 12px;
     line-height: 18px;
+  }
+}
+
+/* Management uses the same records and actions as readable cards on narrow pages. */
+.app-shell .admin-subject-list > button {
+  min-height: 44px;
+  max-width: 100%;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+@media (max-width: 1100px) {
+  .app-shell .management-records {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow: visible;
+  }
+  .app-shell .management-records table {
+    display: block;
+    min-width: 0;
+    width: 100%;
+  }
+  .management-records thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .management-records tbody {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 12px;
+  }
+  .management-records tr {
+    display: grid;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--panel);
+  }
+  .app-shell .management-records td {
+    display: block;
+    min-width: 0;
+    width: auto;
+    max-width: none;
+    padding: 0;
+    border: 0;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+  }
+  .management-records td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 5px;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .app-shell .management-records td > small {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .app-shell .management-records .slot-tag {
+    font-size: 12px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+  .management-course-table tr {
+    grid-template-columns: minmax(0, 1fr) 44px;
+  }
+  .management-course-table td:first-child {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .management-course-table td:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .management-course-table td:nth-child(3) {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+  .management-course-table td:last-child {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+  .management-course-table .icon-button {
+    width: 44px;
+    height: 44px;
+  }
+  .management-users-table tr {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+  .management-users-table td:first-child {
+    grid-column: 1 / -1;
+  }
+  .management-users-table td:last-child {
+    justify-self: end;
+    align-self: end;
   }
 }

@@ -6,17 +6,17 @@ Plataforma per a estudiants de segon de batxillerat, en català, amb horaris ofi
 
 ## Versió publicada
 
-**0.6.18 · 15 d’octubre de 2026.** Notificacions fiables: no llegits accessibles, lectura persistent en una escriptura, comptador, destinacions, reintent i pestanya mòbil visible. 454 unitàries, 30 escenaris de notificacions, 15 de delegats i D1/workerd local correctes.
+**0.6.19 · 15 d’octubre de 2026.** Delegats i subdelegats publiquen i editen dates del seu àmbit directament. Permisos, duplicats/coincidències i auditoria preservats. 458 unitàries, 33 escenaris de delegats i D1/workerd local correctes.
 
-[Informe Markdown](docs/releases/0.6.18.md) · [Release immutable](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.18) · [CI del commit publicat](https://github.com/21052claver-ship-it/lanet/actions/runs/38659165728) · [CHANGELOG](CHANGELOG.md)
+[Informe Markdown](docs/releases/0.6.19.md) · [Release immutable](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.19) · [CI del commit publicat](https://github.com/21052claver-ship-it/lanet/actions/runs/38664111249) · [CHANGELOG](CHANGELOG.md)
 
-La versió publicada correspon al commit `d2cadcc35a98e94da812b49503d4ef58a7489424`. El tancament documental posterior no és un nou desplegament. Els resultats i limitacions de les proves són a [VERIFICATION.md](docs/VERIFICATION.md); els pendents reals són al [registre](docs/SEGUIMENT.json).
+La versió publicada correspon al commit `6f2e9ab41cb1abd35569d3db69ad01cb3d57be25`. El tancament documental posterior no és un nou desplegament. Els resultats i limitacions de les proves són a [VERIFICATION.md](docs/VERIFICATION.md); els pendents reals són al [registre](docs/SEGUIMENT.json).
 
 ## Què inclou
 
 - **Google i perfil:** única entrada amb compte educatiu del centre, identitat sincronitzada i protegida, preferències i tancament de sessió.
 - **Benvinguda:** pàgina pròpia per al primer accés, itinerari, optatives/professorat i revisió de l’horari.
-- **Horari i Agenda:** catàleg oficial, alta contextual de tasques/exàmens i propostes públiques revisades per delegats del mateix àmbit.
+- **Horari i Agenda:** catàleg oficial, alta contextual de tasques/exàmens i publicació directa dels representants autoritzats o propostes públiques revisades pels delegats del mateix àmbit.
 - **Continguts:** Materials, Formularis i Eines i webs per assignatura/tema, cerca i desats. Xat/Dubtes i preguntes des de materials retirats; històric conservat.
 - **Notes i Plusos:** proves/activitats i pesos configurables, mode discret, desat recuperable i plusos corregits sobre la nota final del curs.
 - **Estudi:** Pomodoro continu, alarma, mode focus accessible, música compartida i cua offline idempotent.

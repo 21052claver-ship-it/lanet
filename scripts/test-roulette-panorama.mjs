@@ -3,7 +3,7 @@ import { browserFixture } from '../tests/helpers/browser-fixture.mjs';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { BETS_BY_ID, roulettePayout, ticketStake } from '../shared/roulette.js';
-const out = 'output/roulette-panorama';
+const out = process.env.LANET_TEST_OUTPUT || 'output/roulette-panorama';
 mkdirSync(out, { recursive: true });
 const results = [];
 for (const [engine, launcher] of Object.entries({ chromium, firefox, webkit })) {

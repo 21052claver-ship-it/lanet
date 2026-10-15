@@ -7,13 +7,13 @@ Actualitzat el 15 d’octubre de 2026. Aquest document és la memòria de contin
 | Element | Estat registrat |
 | --- | --- |
 | Aplicació principal | [lanet.es](https://lanet.es) |
-| Darrera versió de producte publicada | **0.6.18** |
-| Informe complet de la versió | [Publicació 0.6.18](releases/0.6.18.md) |
-| Codi publicat | `d2cadcc35a98e94da812b49503d4ef58a7489424` |
+| Darrera versió de producte publicada | **0.6.19** |
+| Informe complet de la versió | [Publicació 0.6.19](releases/0.6.19.md) |
+| Codi publicat | `6f2e9ab41cb1abd35569d3db69ad01cb3d57be25` |
 | GitHub | [21052claver-ship-it/lanet](https://github.com/21052claver-ship-it/lanet) |
-| Incorporació del codi | [PR #40](https://github.com/21052claver-ship-it/lanet/pull/40), fusionada amb tots els controls correctes |
-| CI del commit exacte de main | [Verify La Net](https://github.com/21052claver-ship-it/lanet/actions/runs/38659165728), correcta |
-| Publicació | [Tag i release immutable v0.6.18](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.18), rebut i Deployment verificats |
+| Incorporació del codi | [PR #41](https://github.com/21052claver-ship-it/lanet/pull/41), fusionada amb tots els controls correctes |
+| CI del commit exacte de main | [Verify La Net](https://github.com/21052claver-ship-it/lanet/actions/runs/38664111249), correcta |
+| Publicació | [Tag i release immutable v0.6.19](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.19), rebut i Deployment verificats |
 | Documentació de tancament | Desada al projecte; es conserva en branca local per a la pròxima tanda, sense push documental immediat |
 
 Els rebuts descriuen el producte publicat. Una actualització d’aquests Markdown no implica un nou desplegament ni un canvi de versió de l’aplicació.
@@ -21,6 +21,8 @@ Els rebuts descriuen el producte publicat. Una actualització d’aquests Markdo
 Auditoria funcional 0.6.17 completada: objectiu zero i represa musical WebKit/Linux corregits, 179 recorreguts addicionals, 62 API locals i 449 unitàries; CI completa verda. [Mapa i límits](PLA-AUDITORIA-FUNCIONAL.md). La limitació de l’API general històrica queda resolta en aquesta tanda.
 
 Notificacions 0.6.18 corregides: bústia limitada amb no llegits prioritzats, lectures confirmades, una consulta/escriptura, destinacions i reintent. [Pla i evidències](PLA-NOTIFICACIONS.md).
+
+Publicació directa 0.6.19: delegats/subdelegats autoritzats publiquen i editen dates pròpies dins d’àmbit sense segon pas; permisos, estat real i auditoria comprovats. [Pla i evidències](PLA-PUBLICACIO-DIRECTA.md).
 
 ## Decisions de producte que continuen vigents
 
@@ -37,7 +39,7 @@ Notificacions 0.6.18 corregides: bústia limitada amb no llegits prioritzats, le
 - Horari i Agenda són dues vistes diferenciades. La configuració reutilitza el catàleg oficial, els tres itineraris, optatives i variants de professorat.
 - Continguts s’organitza en **Materials, Formularis i Eines i webs**, amb espais d’assignatura, temes d’un nivell, cerca i desats.
 - **El xat/Dubtes acadèmic està retirat**, igual que «Preguntar» des dels materials i l’API de converses. Els enllaços antics tornen a Materials; l’històric de dades es conserva.
-- Es manté l’alta contextual d’exàmens i tasques des de la classe. Les dates privades es desen directament; les públiques passen per la revisió dels delegats autoritzats per tutoria o variant.
+- Es manté l’alta contextual d’exàmens i tasques des de la classe. Les dates privades es desen directament; les públiques es publiquen directament quan les crea un representant autoritzat per tutoria o variant, o passen per revisió si no té aquests permisos.
 - Delegat i subdelegat tenen els mateixos poders dins del seu àmbit. No es concedeixen rols globals per configurar aquests permisos.
 - Notes manté el mode discret i les activitats configurables. Els plusos corregits se sumen a la nota final del curs, amb els límits i pesos per assignatura definits als plans acadèmics.
 
@@ -75,7 +77,7 @@ Les propostes visuals anteriors de xats es conserven com a exploració de dissen
 
 ## Verificació i límits
 
-La 0.6.18 té **454 proves unitàries correctes**, 30 escenaris locals de notificacions i 15 regressions de delegats en Chromium, Firefox i WebKit; D1/workerd real local, tipus/lint/build/font i CI completa correctes. Les tandes anteriors conserven les seves mètriques als informes de versió.
+La 0.6.19 té **458 proves unitàries correctes**, 33 escenaris locals de delegats en Chromium, Firefox i WebKit; D1/workerd real local, tipus/lint/build/font i CI completa correctes. Les tandes anteriors conserven les seves mètriques als informes de versió.
 
 La verificació funcional utilitza fixtures locals. El desplegament, domini, callback, tag, release i rebuts es van verificar via APIs/CLI del proveïdor. No es van fer proves contra l’aplicació pública ni visites a la seva API. Els navegadors emulats no equivalen a proves en mòbils físics. El WebKit de Windows no exposa AudioContext: s’hi va comprovar el fallback; Chromium/Firefox van mesurar àudio real.
 

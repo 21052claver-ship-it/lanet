@@ -428,6 +428,10 @@
     {
       "id": "R106",
       "description": "Els delegats i subdelegats publiquen directament dates públiques dins del seu àmbit; revisar textos, edicions, permisos i avisos per evitar validacions redundants."
+    },
+    {
+      "id": "R107",
+      "description": "Millorar el responsive de La Net en mòbil, tauleta i escriptori: contingut llegible, controls accessibles i cap desbordament o solapament accidental."
     }
   ],
   "phases": [
@@ -1023,6 +1027,13 @@
       "title": "Publicació directa dels representants",
       "depends_on": [
         "F83"
+      ]
+    },
+    {
+      "id": "F85",
+      "title": "Responsive i ús en pantalles estretes",
+      "depends_on": [
+        "F84"
       ]
     }
   ],
@@ -8125,7 +8136,7 @@
       "id": "T84-01",
       "phase": "F84",
       "title": "Publicar directament exàmens i tasques com a delegat",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R106"
       ],
@@ -8158,10 +8169,71 @@
         "output/delegate-publishing-unit.log",
         "output/delegate-publishing-unit-targeted.log",
         "output/delegate-publishing-typecheck.log",
-        "output/delegate-publishing-build.log"
+        "output/delegate-publishing-build.log",
+        "output/delegate-publishing/local-verification.json",
+        "output/delegate-publishing/source-audit.log",
+        "output/delegate-publishing/provider-verification.json",
+        "output/delegate-publishing/pr-verification.json",
+        "output/releases/0.6.19/receipt.json",
+        "docs/releases/0.6.19.json",
+        "docs/releases/0.6.19.md",
+        "output/delegate-publishing/ci-retry.json",
+        "output/delegate-publishing/ci-main-navigation.log",
+        "output/delegate-publishing/linux-webkit-schedule/results.json",
+        "output/delegate-publishing/linux-webkit-schedule.log"
       ],
-      "progress": "458 unitàries i 33 fluxos locals en Chromium/Firefox/WebKit correctes, incloent 18 execucions noves de publicació directa/edició, subdelegat/tasca/privat, àmbit, permisos canviats, error/reintent i duplicat. D1/workerd confirma publicació/edició directa i tasca completable per companys. Tipus/lint/build correctes. Servidor decideix autoritat amb el context existent, historial atòmic i sense avisos propis. Cap migració, consulta/polling/R2 nou o desplegament privat. Pendent font de l’índex, PR/CI exactes i publicació única 0.6.19 amb tancament documental anterior agrupat.",
+      "progress": "Publicació directa de delegats/subdelegats dins d’àmbit, edicions pròpies i administradors corregides; 0.6.19 publicada via PR41: 6f2e9ab41cb1abd35569d3db69ad01cb3d57be25. 458 unitàries, 33 escenaris en tres motors i D1/workerd real local correctes. Permisos canònics i canviats, missatge d’estat real, duplicats/coincidències, concurrència, privacitat i errors/reintents comprovats. Font/tipus/lint/build/enllaços correctes; 11 jobs i Validate de PR/main verds. Proveïdor, domini/callback/bindings, tag/release immutable i digest verificats. Una pujada, una PR i una publicació; sense migracions, consultes/polling/R2 addicionals, desplegament privat o prova pública. Tancament documental local sense push addicional. Un únic reintent de CI per error intern de WebKit, contrastat amb nou casos WebKit/Linux locals correctes; mateix commit i només comprovacions fallides.",
       "change_log_id": "H199"
+    },
+    {
+      "id": "T85-01",
+      "phase": "F85",
+      "title": "Millorar la disposició responsive i els controls",
+      "status": "review",
+      "requirements": [
+        "R107"
+      ],
+      "depends_on": [
+        "T84-01"
+      ],
+      "files": [
+        "src/responsive.css",
+        "scripts/test-responsive.mjs",
+        "src/pages/Management.jsx",
+        "docs/PLA-RESPONSIVE-2026-10.md",
+        "scripts/test-roulette-panorama.mjs"
+      ],
+      "acceptance": "Auditoria local de les vistes principals i formularis en amplades mòbils, tauleta, escriptori i paisatge. Corregir desbordaments, text retallat accidentalment, solapaments i controls inaccessibles, amb contingut llarg i zoom quan sigui rellevant. Conservar marca/logo complet, navegació, permisos i funcions. CSS/mesures del navegador sense consultes, polling, D1/R2 o migracions noves. Fixtures fictícies; cap prova pública. Tipus/unitàries/build/font, proves responsive i regressions afectades correctes; una PR/publicació amb CI exacta.",
+      "checks": [
+        "Inspeccionar la disposició real amb captures i mesures locals per prioritzar incidències reproduïbles.",
+        "Corregir les regles i components responsables amb canvis acotats.",
+        "Comprovar controls, lectura, scroll i redimensionat en Chromium/Firefox/WebKit amb fixtures locals.",
+        "Agrupar versió i documentació, auditar la font, esperar CI de PR/main i publicar una sola vegada."
+      ],
+      "evidence": [
+        "docs/PLA-RESPONSIVE-2026-10.md",
+        "output/responsive-polish/baseline/audit.json",
+        "output/responsive-polish/after/audit.json",
+        "output/responsive-polish/long-baseline/audit.json",
+        "output/responsive-polish/long-after/audit.json",
+        "output/responsive-polish/chromium/responsive-results.json",
+        "output/responsive-polish/firefox/responsive-results.json",
+        "output/responsive-polish/webkit/responsive-results.json",
+        "output/responsive-polish/notifications/results.json",
+        "output/responsive-polish/delegates/results.json",
+        "output/responsive-polish/official-schedule/results.json",
+        "output/responsive-polish-unit.log",
+        "output/responsive-polish-typecheck.log",
+        "output/responsive-polish-build-final.log",
+        "output/responsive-polish/roulette-panorama/results.json",
+        "output/responsive-polish/ci-pr-casino.log",
+        "output/responsive-polish/ci-correction.json",
+        "output/responsive-polish-panorama.log",
+        "output/responsive-polish-build-corrected.log",
+        "output/responsive-polish-lint-corrected.log"
+      ],
+      "progress": "458 unitàries, 66 escenaris responsive en Chromium/Firefox/WebKit, 10 regressions de notificacions, 11 de delegats i 9 d’horari en Chromium correctes. Tipus/lint/build correctes. Auditoria de nou seccions a set amplades i captures revisades: Comunitat amb contingut llarg passa de 1.265 a 320 px i de 1.453 a 820 px; totes les pestanyes mòbils visibles, targetes de gestió amb accions accessibles, catàleg 44 px, formularis curts i escriptori conservat. Només presentació/etiquetes, sense consultes, polling, D1/R2, migracions o permisos nous. Pendent auditoria indexada, PR/CI exactes i publicació única 0.6.20. Primera CI identifica una regressió real de capçalera de sala a 320 px. Correcció local acotada a flex/wrapping contrastada amb les 15 combinacions panoràmiques de tres motors, totes correctes. Una única correcció a la mateixa PR42; cal esperar la CI del head corregit abans de fusionar. Total 66 responsive i 45 regressions locals, 458 unitàries.",
+      "change_log_id": "H200"
     }
   ]
 }
