@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**196/198 tasques verificades · 108 requisits · 87 fases · límit d’una tasca activa.**
+**197/198 tasques verificades · 108 requisits · 87 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **T86-01 — Separar estudi lliure i Pomodoro al mode focus**.
+Tasca activa: **cap**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -467,6 +467,6 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 
 ## F86 Estudi lliure i sons del mode focus
 
-- [ ] **T86-01** Separar estudi lliure i Pomodoro al mode focus — En revisió.
+- [x] **T86-01** Separar estudi lliure i Pomodoro al mode focus — Verificat.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

@@ -8260,7 +8260,7 @@
       "id": "T86-01",
       "phase": "F86",
       "title": "Separar estudi lliure i Pomodoro al mode focus",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R108"
       ],
@@ -8300,9 +8300,19 @@
         "output/free-focus/theme-before/results.json",
         "output/free-focus/ci-correction.json",
         "output/free-focus/build-theme-corrected.log",
-        "output/free-focus/lint-theme.log"
+        "output/free-focus/lint-theme.log",
+        "output/free-focus/local-verification.json",
+        "output/free-focus/source-audit.log",
+        "output/free-focus/provider-verification.json",
+        "output/free-focus/pr-verification.json",
+        "output/releases/0.6.21/receipt.json",
+        "docs/releases/0.6.21.json",
+        "docs/releases/0.6.21.md",
+        "output/free-focus/ci-audio-proof.json",
+        "output/free-focus/ci-pr-school.log",
+        "output/free-focus/ci-pr-audio.log"
       ],
-      "progress": "Estudi lliure i Pomodoro separats, pausa conservadora i preferències locals. 460 unitàries, 63 fluxos focus en tres motors i 15 regressions de sons correctes; 6 casos natius WebKit/Windows no disponibles, fallback provat. Tipus/lint/build correctes. Corregit cercle que cobria Comença amb opcions obertes i disposició lliure en paisatge. Pendent font de l’índex, CI exacta i una publicació consolidada. Revisió local durant CI: títol Nit i noms accessibles dels primers selectors corregits; tres regressions addicionals correctes. Una correcció consolidada de la mateixa PR43, pendent CI del nou head.",
+      "progress": "0.6.21 publicada via PR43: 8d2c1aa51c7ac5fc336f15a8dd57c8fc56dcd680. Mode focus amb selector visible Amb Pomodoro / Estudi lliure. El mode lliure conserva el fons Clar/Bosc/Nit i la música opcional; pausa el temporitzador i en conserva fase, temps i sessió. Tornar a Pomodoro no el reprèn fins a una acció explícita. Preferències locals per usuari, controls musicals visibles inicialment i reproductor compartit. Alarma i sons de ruleta actius per defecte, amb silenci i volum zero desats respectats. 460 unitàries, 63 fluxos focus en Chromium/Firefox/WebKit i 15 regressions locals de so de ruleta correctes. Tipus/lint/build/font/enllaços correctes; tots els 11 jobs i Validate de PR/main verds. Proveïdor, domini/callback/bindings, tag/release immutable i digest verificats. Una pujada inicial i una correcció, una PR i una publicació; sense migracions, consultes/polling/R2 nous o prova pública. Tancament documental local sense push addicional.",
       "change_log_id": "H201"
     }
   ]

@@ -6,11 +6,11 @@ Plataforma per a estudiants de segon de batxillerat, en català, amb horaris ofi
 
 ## Versió publicada
 
-**0.6.20 · 15 d’octubre de 2026.** Responsive millorat: pestanyes visibles, textos llargs dins de la columna i gestió en targetes amb accions accessibles. 458 unitàries, 66 escenaris responsive i 45 regressions locals correctes.
+**0.6.21 · 15 d’octubre de 2026.** Mode focus amb Pomodoro o estudi lliure, fons i música opcional. Pausa conservadora, silenci respectat i controls accessibles. 460 unitàries, 63 fluxos focus i 15 regressions locals de so correctes.
 
-[Informe Markdown](docs/releases/0.6.20.md) · [Release immutable](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.20) · [CI del commit publicat](https://github.com/21052claver-ship-it/lanet/actions/runs/38670864115) · [CHANGELOG](CHANGELOG.md)
+[Informe Markdown](docs/releases/0.6.21.md) · [Release immutable](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.21) · [CI del commit publicat](https://github.com/21052claver-ship-it/lanet/actions/runs/38676381817) · [CHANGELOG](CHANGELOG.md)
 
-La versió publicada correspon al commit `eeeb5211b4f251da3413aab26f508f99c15099d6`. El tancament documental posterior no és un nou desplegament. Els resultats i limitacions de les proves són a [VERIFICATION.md](docs/VERIFICATION.md); els pendents reals són al [registre](docs/SEGUIMENT.json).
+La versió publicada correspon al commit `8d2c1aa51c7ac5fc336f15a8dd57c8fc56dcd680`. El tancament documental posterior no és un nou desplegament. Els resultats i limitacions de les proves són a [VERIFICATION.md](docs/VERIFICATION.md); els pendents reals són al [registre](docs/SEGUIMENT.json).
 
 ## Què inclou
 
@@ -19,7 +19,7 @@ La versió publicada correspon al commit `eeeb5211b4f251da3413aab26f508f99c15099
 - **Horari i Agenda:** catàleg oficial, alta contextual de tasques/exàmens i publicació directa dels representants autoritzats o propostes públiques revisades pels delegats del mateix àmbit.
 - **Continguts:** Materials, Formularis i Eines i webs per assignatura/tema, cerca i desats. Xat/Dubtes i preguntes des de materials retirats; històric conservat.
 - **Notes i Plusos:** proves/activitats i pesos configurables, mode discret, desat recuperable i plusos corregits sobre la nota final del curs.
-- **Estudi:** Pomodoro continu, alarma, mode focus accessible, música compartida i cua offline idempotent.
+- **Estudi:** Pomodoro continu amb alarma o estudi lliure amb fons, mode focus accessible, música compartida i cua offline idempotent.
 - **PAU i universitat:** top 5, ponderacions, calculadora i històric oficial amb rondes, cobertura i provisionalitat explícites.
 - **Comunitat i anuncis:** avisos, propostes, delegats/notificacions i cartells visuals amb identitat opcional i retall d’imatge.
 - **Pastisseria i sales de joc:** recursos visuals, recollida, ruleta i prediccions amb pastissos virtuals; regles i actuacions històriques als plans corresponents.
