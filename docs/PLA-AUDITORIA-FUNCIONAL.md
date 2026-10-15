@@ -2,7 +2,7 @@
 
 La petició de Marc és comprovar tots els botons i totes les funcions de La Net. El punt de partida és la versió 0.6.16 publicada, amb la CI completa verda del commit `7f267bb342ecf6dc27040fbe104cb556db86ad51`.
 
-Tasca activa: T82-01 · requisit R104 · historial H197.
+Tasca verificada: T82-01 · requisit R104 · historial H197.
 
 ## Abast
 
@@ -22,7 +22,7 @@ Els resultats, incidències i límits de cobertura s’incorporaran en completar
 
 Inventari: **614 definicions de controls, 324 definicions de botó i 29 formularis en 51 fitxers**. Les dues aparents absències de handler són adaptadors vàlids de ui.jsx: el tancament gestionat per Radix Dialog.Close i el botó submit de FormFooter. Els destins literals de diàleg tenen una implementació registrada.
 
-S’han executat 39 escenaris nous en Chromium/Firefox/WebKit, més 127 comprovacions addicionals de música, activitats, pujades, retenció, pastisseria i compatibilitat: **166 recorreguts addicionals**, més 13 de WebKit/Linux sobre la correcció d’àudio, i 449 proves unitàries i 62 fluxos sobre D1/R2 locals reals. Chrome i Edge s’han executat amb els navegadors instal·lats; iPhone 13 i Pixel 7 són simulacions. La resta de recorreguts parteix de la CI completa del commit publicat i es tornarà a comprovar amb la CI de la branca actualitzada.
+S’han executat 39 escenaris nous en Chromium/Firefox/WebKit, més 127 comprovacions addicionals de música, activitats, pujades, retenció, pastisseria i compatibilitat: **166 recorreguts addicionals**, més 13 de WebKit/Linux sobre la correcció d’àudio, i 449 proves unitàries i 62 fluxos sobre D1/R2 locals reals. Chrome i Edge s’han executat amb els navegadors instal·lats; iPhone 13 i Pixel 7 són simulacions. La resta de recorreguts s’ha contrastat amb la CI completa de la branca actualitzada i del commit de main.
 
 Incidència de producte corregida: GoalForm utilitzava target || 8 i substituïa un zero vàlid per 8 en reobrir. Ara utilitza target ?? 8. La regressió va fallar abans de la correcció i passa en els tres motors després de desar, recarregar i reobrir.
 
@@ -114,6 +114,8 @@ Aquesta correspondència associa controls amb recorreguts provats; no és una me
 
 No s’ha visitat la web pública ni la seva API. Les identitats, fitxers, sessió Google i servei d’inspecció són fixtures; no s’ha fet un inici de sessió real a Google ni una prova en dispositius físics. Les destinacions externes es revisen com a enllaços i contractes, sense executar accions en serveis externs.
 
-La 0.6.17 consolida la correcció i aquestes regressions en una sola branca/PR. La publicació queda condicionada a Validate verd amb el commit actualitzat, CI de main i rebut del proveïdor. No requereix migracions, canvis D1/R2, reconfigurar serveis privats, regals o reinicis. Les captures i dades fictícies de proves continuen ignorades per Git.
+La 0.6.17 consolida la correcció i aquestes regressions en una sola branca/PR. Publicació completada amb Validate verd al commit actualitzat, CI de main i rebut del proveïdor. No requereix migracions, canvis D1/R2, reconfigurar serveis privats, regals o reinicis. Les captures i dades fictícies de proves continuen ignorades per Git.
 
-Evidències privades: output/functional-audit-0.6.16/action-inventory.json, coverage.json, unit.log, api-seventh.log i resultats de navegador; output/ad-retention/browser/results.json. Els registres de release s’afegiran quan s’hagi completat la publicació.
+Evidències privades: output/functional-audit-0.6.16/action-inventory.json, coverage.json, unit-final.log, api-seventh.log i resultats de navegador; output/ad-retention/browser/results.json. Publicació i rebut contrastats a docs/releases/0.6.17.json i output/functional-audit-0.6.16/provider-verification.json.
+
+Publicació completada: [0.6.17](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.17) · [PR39](https://github.com/21052claver-ship-it/lanet/pull/39) · [CI de main](https://github.com/21052claver-ship-it/lanet/actions/runs/38652576530) · [Informe](releases/0.6.17.md). Commit 36631c5d37896318f3b38cb27fd2858322cd73a4; proveïdor i rebut immutable verificats. La CI de PR ha requerit una reexecució acotada del grup d’àudio després d’un error reproduït i corregit a WebKit/Linux; 13 escenaris Linux correctes. Una pujada inicial i una correcció de branca i una publicació, sense segon push documental.

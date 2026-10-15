@@ -315,6 +315,14 @@
   flex-shrink: 0;
   color: #57714e;
 }
+.agenda-notification-content {
+  min-width: 0;
+  flex: 1;
+}
+.agenda-notification .row-actions {
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
 .agenda-notification h3 {
   margin: 0 0 8px;
   font-size: 15px;

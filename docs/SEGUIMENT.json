@@ -420,6 +420,10 @@
     {
       "id": "R104",
       "description": "Auditar totes les accions i funcions de La Net amb inventari de controls, cobertura de fluxos, permisos, persistència i recuperació; corregir errors reproduïbles amb fixtures locals."
+    },
+    {
+      "id": "R105",
+      "description": "Fer fiables les notificacions: avisos no llegits accessibles, comptador coherent, lectura persistent, accions relacionades, actualització i reintent amb consultes limitades."
     }
   ],
   "phases": [
@@ -1001,6 +1005,13 @@
       "title": "Auditoria funcional integral",
       "depends_on": [
         "F81"
+      ]
+    },
+    {
+      "id": "F83",
+      "title": "Fiabilitat de les notificacions",
+      "depends_on": [
+        "F82"
       ]
     }
   ],
@@ -8003,7 +8014,7 @@
       "id": "T82-01",
       "phase": "F82",
       "title": "Verificar tots els controls i fluxos de la plataforma",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R104"
       ],
@@ -8032,10 +8043,63 @@
         "output/functional-audit-0.6.16/api-seventh.log",
         "output/functional-audit-0.6.16/unit-final.log",
         "output/functional-audit-0.6.16/linux-music-before.log",
-        "output/functional-audit-0.6.16/linux-music-fixed.log"
+        "output/functional-audit-0.6.16/linux-music-fixed.log",
+        "docs/releases/0.6.17.json",
+        "docs/releases/0.6.17.md",
+        "output/functional-audit-0.6.16/provider-verification.json",
+        "output/functional-audit-0.6.16/local-verification.json",
+        "output/releases/0.6.17/receipt.json"
       ],
-      "progress": "Auditoria local: 324 definicions de botó/29 formularis/51 fitxers, 166 recorreguts addicionals més 13 WebKit/Linux, 62 API locals i 449 unitàries. Objectiu zero corregit. CI ha descobert un segon error de represa musical WebKit/Linux, reproduït en Ubuntu local i corregit reconeixent avanç real, amb cancel·lació i neteja sense timers/peticions. Prova de navegador original conservada, tres regressions unitàries noves. Una pujada correctiva a la mateixa PR39 i un únic desplegament 0.6.17 pendent de Validate/CI actualitzada.",
+      "progress": "Auditoria funcional i 0.6.17 publicades via PR39: 36631c5d37896318f3b38cb27fd2858322cd73a4. 324 definicions de botó/29 formularis/51 fitxers, 179 recorreguts addicionals, 62 API D1/R2 locals i 449 unitàries correctes. Objectiu zero i represa musical WebKit/Linux corregits amb regressions, cancel·lació i neteja comprovades. Tots els jobs i Validate correctes; release immutable, digest del rebut, commit/domini/callback i bindings verificats via proveïdor. Una pujada inicial i una correcció de branca i una publicació; reexecució acotada de l’àudio sobre el mateix commit. Cap prova pública, dada real, migració o desplegament privat. Tancament documental conservat localment per agrupar-lo amb una futura tanda.",
       "change_log_id": "H197"
+    },
+    {
+      "id": "T83-01",
+      "phase": "F83",
+      "title": "Corregir i verificar les notificacions",
+      "status": "review",
+      "requirements": [
+        "R105"
+      ],
+      "depends_on": [
+        "T82-01"
+      ],
+      "files": [
+        "src/components/Delegates.jsx",
+        "src/App.jsx",
+        "worker/agenda.js",
+        "tests/delegate-agenda.test.js",
+        "scripts/test-notifications.mjs",
+        "src/pages/Community.jsx",
+        "shared/notifications.js",
+        "tests/notifications.test.js",
+        "docs/PLA-NOTIFICACIONS.md",
+        "migrations/0030_notification_unread_index.sql"
+      ],
+      "acceptance": "Cap avís no llegit amagat darrere d’històric llegit. Bústia limitada amb excés explícit, comptador coherent amb propostes pendents, lectura individual i agrupada idempotent i privada. Obrir dates/propostes relacionades i cua de revisió. Recuperar errors sense perdre confirmacions; actualitzar en entrar a la bústia sense nou polling. Proves locals en tres motors, font/CI exactes i una publicació consolidada. Índex parcial additiu 0030 revisat i provat amb històric llarg; CI exacta, còpia privada íntegra/restaurada i aplicació separada de l’única migració pendent abans de publicar.",
+      "checks": [
+        "Reproduir incidències i definir lectures limitades amb dades fictícies.",
+        "Corregir bústia, comptador, accions, persistència i recuperació.",
+        "Provar límits, privacitat, concurrència, errors i mòbil en fixtures locals.",
+        "Validar tipus/unitàries/build/font, PR/CI i publicació única amb rebut."
+      ],
+      "evidence": [
+        "docs/PLA-NOTIFICACIONS.md",
+        "output/notifications/final-chromium/results.json",
+        "output/notifications/final-firefox/results.json",
+        "output/notifications/final-webkit/results.json",
+        "output/notifications/delegates/results.json",
+        "output/notifications/api-final/api-results.json",
+        "output/notifications-unit-final.log",
+        "output/notifications-typecheck-final.log",
+        "output/notifications-lint-final.log",
+        "output/notifications-build-final.log",
+        "output/notifications-index-unit.log",
+        "output/notifications/api-index/api-results.json",
+        "output/notifications-api-index.log"
+      ],
+      "progress": "454 unitàries correctes. Les 30 proves de notificacions i 15 regressions de delegats cobreixen el frontend final; D1/workerd local confirma l’SQL i migració. Afegit índex parcial 0030 perquè la cerca de no llegits no recorri l’històric, verificat amb 10.000 llegits i igualtat de totes les files abans/després. La branca de llegits ordena pel timestamp indexat i desempata només el lot acotat. Necessària una correcció de la mateixa PR40; pendent CI exacta, còpia privada/restauració, aplicació només 0030 i publicació única.",
+      "change_log_id": "H198"
     }
   ]
 }

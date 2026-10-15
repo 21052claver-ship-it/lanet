@@ -1,6 +1,6 @@
 import VerifiedImage from '../components/VerifiedImage';
 import Select from '../components/Select';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Plus, ArrowRight, NotePencil, ChatCircle, Flag, UsersThree } from '@phosphor-icons/react';
 import { useApp } from '../context';
 import { PageTitle, Button, Tabs, Empty, RichText, IconButton, VoteButton } from '../ui';
@@ -11,6 +11,27 @@ import Delegates from '../components/Delegates';
 
 export default function Community() {
   const { data, communityTab: tab, setCommunityTab: setTab, open } = useApp();
+  useEffect(() => {
+    const selected = document.querySelector('.page-community .tabs [aria-selected="true"]');
+    const list = selected?.parentElement;
+    if (!list) return;
+    const reveal = () => {
+      const itemBounds = selected.getBoundingClientRect(),
+        listBounds = list.getBoundingClientRect();
+      const delta =
+        itemBounds.left < listBounds.left
+          ? itemBounds.left - listBounds.left
+          : itemBounds.right > listBounds.right
+            ? itemBounds.right - listBounds.right
+            : 0;
+      if (delta) list.scrollLeft += delta;
+    };
+    reveal();
+    // Loading a long inbox can introduce a classic scrollbar and narrow the tab list.
+    const observer = new ResizeObserver(reveal);
+    observer.observe(list);
+    return () => observer.disconnect();
+  }, [tab]);
   const [status, setStatus] = useState('all');
   const [order, setOrder] = useState('votes');
   const [query, setQuery] = useState('');

@@ -6,6 +6,20 @@ import {
   eventConflicts,
   duplicateIdentity,
 } from '../shared/delegation.js';
+import { NOTIFICATION_LIMIT } from '../shared/notifications.js';
+
+export const NOTIFICATION_QUERY = `WITH unread AS MATERIALIZED (
+  SELECT * FROM agenda_notifications WHERE user_id=? AND read_at IS NULL
+  ORDER BY created_at DESC,id LIMIT ?
+)
+SELECT * FROM (
+  SELECT * FROM unread
+  UNION ALL
+  SELECT * FROM (
+    SELECT * FROM agenda_notifications WHERE user_id=? AND read_at IS NOT NULL
+    ORDER BY created_at DESC LIMIT MAX(0,?-(SELECT COUNT(*) FROM unread))
+  )
+) ORDER BY (read_at IS NOT NULL),created_at DESC,id`;
 
 export async function delegationData(env, user, cat, enrollments) {
   const members = await rows(
@@ -89,17 +103,25 @@ export async function agendaRecords(env, user, ctx, eventId = null) {
 export async function agendaBootstrap(env, user, cat, enrollments) {
   const delegation = await delegationData(env, user, cat, enrollments);
   const records = await agendaRecords(env, user, { enrollments, delegation });
+  // Read unseen notices first: a newer read history must never hide an old unread notice.
+  // One SQL snapshot prevents a concurrent read acknowledgment from duplicating rows.
+  // The CTE and its count are bounded; both branches use the existing user/date index.
+  const notifications = await rows(
+    env,
+    NOTIFICATION_QUERY,
+    user.id,
+    NOTIFICATION_LIMIT + 1,
+    user.id,
+    NOTIFICATION_LIMIT,
+  );
   return {
     delegation,
     events: records.filter((e) => e.review_status === 'approved'),
     agendaProposals: records.filter(
       (e) => e.visibility === 'shared' && e.review_status !== 'approved',
     ),
-    agendaNotifications: await rows(
-      env,
-      'SELECT * FROM agenda_notifications WHERE user_id=? ORDER BY created_at DESC,id LIMIT 100',
-      user.id,
-    ),
+    agendaNotifications: notifications.slice(0, NOTIFICATION_LIMIT),
+    agendaNotificationsMoreUnread: notifications.length > NOTIFICATION_LIMIT,
   };
 }
 function manageable(user, e, ctx) {
@@ -270,19 +292,23 @@ function history(env, eid, actor, action, operation, note = '') {
 async function handleAgenda(request, env, user, path) {
   if (path === '/api/agenda/notifications/read' && request.method === 'POST') {
     const b = await body(request);
-    if (!Array.isArray(b.ids) || b.ids.length > 100 || b.ids.some((v) => typeof v !== 'string'))
+    if (
+      !Array.isArray(b.ids) ||
+      b.ids.length > NOTIFICATION_LIMIT ||
+      b.ids.some((v) => typeof v !== 'string' || !v.length || v.length > 128)
+    )
       fail(400, 'Tria els avisos que has llegit.');
-    await env.DB.batch(
-      b.ids.map((n) =>
-        sql(
-          env,
-          "UPDATE agenda_notifications SET read_at=COALESCE(read_at,strftime('%Y-%m-%dT%H:%M:%fZ','now')) WHERE id=? AND user_id=?",
-          n,
-          user.id,
-        ),
-      ),
-    );
-    return { ok: true };
+    const ids = [...new Set(b.ids)],
+      read_at = new Date().toISOString();
+    if (ids.length)
+      await run(
+        env,
+        'UPDATE agenda_notifications SET read_at=? WHERE user_id=? AND read_at IS NULL AND id IN(SELECT value FROM json_each(?))',
+        read_at,
+        user.id,
+        JSON.stringify(ids),
+      );
+    return { ok: true, ids, read_at };
   }
   if (
     path !== '/api/agenda/preview' &&

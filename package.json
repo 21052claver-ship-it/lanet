@@ -1,6 +1,6 @@
 {
   "name": "la-net",
-  "version": "0.6.17",
+  "version": "0.6.18",
   "private": true,
   "type": "module",
   "scripts": {
@@ -61,7 +61,8 @@
     "test:focus-mode": "node scripts/test-focus-mode.mjs",
     "test:pau-history": "node scripts/test-pau-history.mjs",
     "test:functional-controls": "node scripts/test-functional-controls.mjs",
-    "test:ad-retention": "node scripts/test-ad-retention.mjs"
+    "test:ad-retention": "node scripts/test-ad-retention.mjs",
+    "test:notifications": "node scripts/test-notifications.mjs"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.3.0",

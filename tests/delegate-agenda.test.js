@@ -6,6 +6,7 @@ import { hash } from '../worker/utils.js';
 import { testEnvironment } from './helpers/d1.js';
 import { eventConflicts, equivalentOfferings, userUnit } from '../shared/delegation.js';
 import { OFFICIAL_OFFERINGS, OFFICIAL_SLOTS } from '../shared/official-schedule.js';
+import { NOTIFICATION_QUERY } from '../worker/agenda.js';
 
 async function fixture() {
   const { db, env } = testEnvironment();
@@ -153,6 +154,125 @@ test('private dates never reach representatives or other students, including pre
     (await f.call('/events/' + result.value.id, undefined, 'del', 'DELETE')).status,
     404,
   );
+  f.db.close();
+});
+
+test('old unread notices remain accessible behind over 100 newer read notices; inbox is bounded and private', async () => {
+  const f = await fixture();
+  const insert = f.db.prepare(
+    'INSERT INTO agenda_notifications(id,user_id,title,body,read_at,created_at) VALUES(?,?,?,?,?,?)',
+  );
+  insert.run('old-unread', 'a', 'Antic pendent', 'Pendent', null, '2026-09-01T10:00:00.000Z');
+  insert.run('peer-private', 'peer', 'Privat', 'Només peer', null, '2026-10-15T12:00:00.000Z');
+  for (let n = 0; n < 110; n++)
+    insert.run(
+      `history-${n}`,
+      'a',
+      'Històric',
+      'Ja llegit',
+      '2026-10-15T12:00:00.000Z',
+      '2026-10-15T10:00:00.000Z',
+    );
+  const data = (await f.call('/bootstrap')).value;
+  assert.equal(data.agendaNotifications.length, 100);
+  assert.equal(data.agendaNotifications[0].id, 'old-unread');
+  assert.equal(data.agendaNotificationsMoreUnread, false);
+  assert.ok(data.agendaNotifications.every((n) => n.user_id === 'a'));
+  const plan = f.db.prepare('EXPLAIN QUERY PLAN ' + NOTIFICATION_QUERY).all('a', 101, 'a', 100);
+  assert.ok(plan.some((p) => p.detail.includes('agenda_notifications_user')));
+  assert.ok(plan.some((p) => p.detail.includes('agenda_notifications_unread')));
+  f.db.close();
+});
+
+test('unread index preserves notification history and seeks past 10,000 read notices', () => {
+  const { db } = testEnvironment({ through: '0029_activity_dashboard.sql' });
+  db.exec(
+    "INSERT INTO users(id,email,name,password_hash,salt) VALUES('index-user','index-fixture@fje.edu','Fixture','x','x');",
+  );
+  const insert = db.prepare(
+    'INSERT INTO agenda_notifications(id,user_id,title,body,read_at,created_at) VALUES(?,?,?,?,?,?)',
+  );
+  db.exec('BEGIN');
+  for (let n = 0; n < 10000; n++)
+    insert.run(
+      `read-${n}`,
+      'index-user',
+      'Històric',
+      'Cos',
+      '2026-10-15T12:00:00Z',
+      '2026-10-15T10:00:00Z',
+    );
+  insert.run(
+    'old-unread-index',
+    'index-user',
+    'Pendent antic',
+    'Cos',
+    null,
+    '2026-09-01T10:00:00Z',
+  );
+  db.exec('COMMIT');
+  const before = db.prepare('SELECT * FROM agenda_notifications ORDER BY id').all();
+  db.exec(readFileSync('migrations/0030_notification_unread_index.sql', 'utf8'));
+  assert.deepEqual(db.prepare('SELECT * FROM agenda_notifications ORDER BY id').all(), before);
+  const plan = db
+    .prepare('EXPLAIN QUERY PLAN ' + NOTIFICATION_QUERY)
+    .all('index-user', 101, 'index-user', 100);
+  assert.ok(plan.some((p) => p.detail.includes('agenda_notifications_unread')));
+  const records = db.prepare(NOTIFICATION_QUERY).all('index-user', 101, 'index-user', 100);
+  assert.equal(records.length, 100);
+  assert.equal(records[0].id, 'old-unread-index');
+  assert.equal(db.prepare('PRAGMA integrity_check').get().integrity_check, 'ok');
+  db.close();
+});
+
+test('bounded unread batches drain without losing concurrent arrivals; a read is one idempotent scoped update', async () => {
+  const f = await fixture();
+  const insert = f.db.prepare(
+    'INSERT INTO agenda_notifications(id,user_id,title,body,created_at) VALUES(?,?,?,?,?)',
+  );
+  for (let n = 0; n < 102; n++)
+    insert.run(`unread-${n}`, 'a', 'Pendent', 'Cos', '2026-10-15T10:00:00.000Z');
+  insert.run('peer-private', 'peer', 'Privat', 'Cos privat', '2026-10-15T11:00:00.000Z');
+  const first = (await f.call('/bootstrap')).value;
+  assert.equal(first.agendaNotifications.length, 100);
+  assert.equal(first.agendaNotificationsMoreUnread, true);
+  insert.run('new-arrival', 'a', 'Nova', 'Després de veure la llista', '2026-10-15T12:00:00.000Z');
+  let updates = 0;
+  const prepare = f.env.DB.prepare;
+  f.env.DB.prepare = (query) => {
+    if (query.startsWith('UPDATE agenda_notifications')) updates++;
+    return prepare(query);
+  };
+  const ids = first.agendaNotifications.map((n) => n.id);
+  const read = await f.call('/agenda/notifications/read', { ids });
+  assert.equal(read.status, 200);
+  assert.equal(updates, 1);
+  assert.equal(read.value.ids.length, 100);
+  assert.ok(Number.isFinite(Date.parse(read.value.read_at)));
+  assert.equal(
+    f.db
+      .prepare("SELECT COUNT(*) n FROM agenda_notifications WHERE user_id='a' AND read_at IS NULL")
+      .get().n,
+    3,
+  );
+  const next = (await f.call('/bootstrap')).value;
+  assert.equal(next.agendaNotificationsMoreUnread, false);
+  assert.equal(next.agendaNotifications.filter((n) => !n.read_at).length, 3);
+  assert.equal(next.agendaNotifications[0].id, 'new-arrival');
+  await f.call('/agenda/notifications/read', { ids: [ids[0], ids[0], 'peer-private'] });
+  assert.equal(
+    f.db.prepare('SELECT read_at FROM agenda_notifications WHERE id=?').get(ids[0]).read_at,
+    read.value.read_at,
+  );
+  assert.equal(
+    f.db.prepare("SELECT read_at FROM agenda_notifications WHERE id='peer-private'").get().read_at,
+    null,
+  );
+  const before = updates;
+  assert.equal((await f.call('/agenda/notifications/read', { ids: [] })).status, 200);
+  assert.equal(updates, before);
+  for (const bad of [null, [1], [''], ['x'.repeat(129)], Array(101).fill('x')])
+    assert.equal((await f.call('/agenda/notifications/read', { ids: bad })).status, 400);
   f.db.close();
 });
 test('return requires explanation; changes invalidate revision, approval and prior review', async () => {

@@ -1,22 +1,24 @@
 # La Net · estat actual i decisions vigents
 
-Actualitzat el 14 d’octubre de 2026. Aquest document és la memòria de continuïtat del projecte; els plans datats conserven les decisions i comprovacions de cada revisió.
+Actualitzat el 15 d’octubre de 2026. Aquest document és la memòria de continuïtat del projecte; els plans datats conserven les decisions i comprovacions de cada revisió.
 
 ## On som
 
 | Element | Estat registrat |
 | --- | --- |
 | Aplicació principal | [lanet.es](https://lanet.es) |
-| Darrera versió de producte publicada | **0.6.16** |
-| Informe complet de la versió | [Publicació 0.6.16](releases/0.6.16.md) |
-| Codi publicat | `7f267bb342ecf6dc27040fbe104cb556db86ad51` |
+| Darrera versió de producte publicada | **0.6.17** |
+| Informe complet de la versió | [Publicació 0.6.17](releases/0.6.17.md) |
+| Codi publicat | `36631c5d37896318f3b38cb27fd2858322cd73a4` |
 | GitHub | [21052claver-ship-it/lanet](https://github.com/21052claver-ship-it/lanet) |
-| Incorporació del codi | [PR #38](https://github.com/21052claver-ship-it/lanet/pull/38), fusionada amb tots els controls correctes |
-| CI del commit exacte de main | [Verify La Net](https://github.com/21052claver-ship-it/lanet/actions/runs/38638160574), correcta |
-| Publicació | [Tag i release immutable v0.6.16](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.16), rebut i Deployment verificats |
+| Incorporació del codi | [PR #39](https://github.com/21052claver-ship-it/lanet/pull/39), fusionada amb tots els controls correctes |
+| CI del commit exacte de main | [Verify La Net](https://github.com/21052claver-ship-it/lanet/actions/runs/38652576530), correcta |
+| Publicació | [Tag i release immutable v0.6.17](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.17), rebut i Deployment verificats |
 | Documentació de tancament | Desada al projecte; es conserva en branca local per a la pròxima tanda, sense push documental immediat |
 
 Els rebuts descriuen el producte publicat. Una actualització d’aquests Markdown no implica un nou desplegament ni un canvi de versió de l’aplicació.
+
+Auditoria funcional 0.6.17 completada: objectiu zero i represa musical WebKit/Linux corregits, 179 recorreguts addicionals, 62 API locals i 449 unitàries; CI completa verda. [Mapa i límits](PLA-AUDITORIA-FUNCIONAL.md). La limitació de l’API general històrica queda resolta en aquesta tanda.
 
 ## Decisions de producte que continuen vigents
 
@@ -102,4 +104,4 @@ El [registre](SEGUIMENT.json) és l’origen dels estats de tasca; la [checklist
 
 La destinació de Cloudflare es fixa a [cloudflare-target.json](../cloudflare-target.json); les credencials no s’inclouen als exemples ni a la CI. Els helpers puntuals de treball no són un procediment de restauració general ni s’han de tornar a executar automàticament.
 
-**Lectura següent:** [índex documental](README.md) · [informe 0.6.16](releases/0.6.16.md) · [historial](HISTORIAL-CANVIS.md).
+**Lectura següent:** [índex documental](README.md) · [informe 0.6.17](releases/0.6.17.md) · [historial](HISTORIAL-CANVIS.md).

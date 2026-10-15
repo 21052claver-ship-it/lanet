@@ -31,6 +31,7 @@ import { LOFI_TRACKS } from './audio';
 import { googleResult } from '../shared/google-auth';
 import { useCompactLayout } from './responsive';
 import { isActivityAdmin } from '../shared/activity';
+import { notificationSummary } from '../shared/notifications';
 const Pau = lazy(() => import('./pages/Pau'));
 const Schedule = lazy(() => import('./pages/Schedule'));
 const Notes = lazy(() => import('./pages/Notes'));
@@ -64,13 +65,7 @@ export class Boundary extends React.Component {
 function Workspace({ onLogout }) {
   const { data, walletBalance, page, go, open, setCommunityTab, savePreferences, notify } =
     useApp();
-  const agendaNoticeCount =
-    (data.agendaNotifications || []).filter((n) => !n.read_at).length +
-    (data.agendaProposals || []).filter(
-      (e) =>
-        e.review_status === 'pending' &&
-        e.review_units?.some((u) => data.delegation?.managedUnits.includes(u)),
-    ).length;
+  const notices = notificationSummary(data);
   const { timer, remaining, toggle, audioType, audioState, playing, loading, toggleMusic } =
     useTimer();
   const musicTrack = LOFI_TRACKS.find((track) => track.id === audioType) || LOFI_TRACKS[0];
@@ -383,7 +378,7 @@ function Workspace({ onLogout }) {
               <strong>{walletBalance}</strong>
             </button>
             <IconButton
-              label={`Veure avisos${agendaNoticeCount ? ` · ${agendaNoticeCount} notificacions pendents` : ''}`}
+              label={`Veure avisos · ${notices.label}`}
               onClick={() => {
                 setCommunityTab('notifications');
                 navigate('community');
@@ -391,9 +386,9 @@ function Workspace({ onLogout }) {
             >
               <span className="agenda-bell">
                 <ReferenceArt name="bell" size={27} />
-                {agendaNoticeCount > 0 && (
+                {notices.hasNotices && (
                   <span className="agenda-bell-count" aria-hidden="true">
-                    {agendaNoticeCount}
+                    {notices.badge}
                   </span>
                 )}
               </span>
