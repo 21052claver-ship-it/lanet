@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**195/196 tasques verificades · 106 requisits · 85 fases · límit d’una tasca activa.**
+**195/197 tasques verificades · 107 requisits · 86 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **cap**.
+Tasca activa: **T85-01 — Millorar la disposició responsive i els controls**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -460,5 +460,9 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 ## F84 Publicació directa dels representants
 
 - [x] **T84-01** Publicar directament exàmens i tasques com a delegat — Verificat.
+
+## F85 Responsive i ús en pantalles estretes
+
+- [ ] **T85-01** Millorar la disposició responsive i els controls — En revisió.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

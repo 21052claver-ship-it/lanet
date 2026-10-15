@@ -110,8 +110,8 @@ export default function Admin() {
       )}
       {tab === 'course' ? (
         <>
-          <div className="panel admin-table">
-            <table>
+          <div className="panel admin-table management-records management-course-table">
+            <table role="table" aria-label="Variants i horaris">
               <thead>
                 <tr>
                   <th>Assignatura / variant</th>
@@ -123,12 +123,12 @@ export default function Admin() {
               <tbody>
                 {offerings.map((o) => (
                   <tr key={o.id}>
-                    <td>
+                    <td data-label="Assignatura / variant">
                       <SubjectChip subject={subject(o.subject_id)} />
                       <small>{o.variant}</small>
                     </td>
-                    <td>{o.teacher}</td>
-                    <td>
+                    <td data-label="Professor">{o.teacher}</td>
+                    <td data-label="Franges">
                       {data.slots
                         .filter((s) => s.offering_id === o.id)
                         .map((s) => (
@@ -154,7 +154,11 @@ export default function Admin() {
             <div className="admin-subject-list">
               <h3>Assignatures del catàleg</h3>
               {data.subjects.map((s) => (
-                <button key={s.id} onClick={() => open('subject', s)}>
+                <button
+                  key={s.id}
+                  aria-label={`Editar assignatura ${s.name}`}
+                  onClick={() => open('subject', s)}
+                >
                   <SubjectChip subject={s} />
                   <NotePencil size={15} />
                 </button>
@@ -198,8 +202,8 @@ export default function Admin() {
           })}
         </div>
       ) : tab === 'users' ? (
-        <div className="panel admin-table">
-          <table>
+        <div className="panel admin-table management-records management-users-table">
+          <table role="table" aria-label="Comptes del centre">
             <thead>
               <tr>
                 <th>Estudiant</th>
@@ -212,19 +216,19 @@ export default function Admin() {
             <tbody>
               {management?.users.map((u) => (
                 <tr key={u.id}>
-                  <td>
+                  <td data-label="Estudiant">
                     <strong>{u.name}</strong>
                     <small>{u.email}</small>
                   </td>
-                  <td>{u.group_id}</td>
-                  <td>
+                  <td data-label="Grup">{u.group_id}</td>
+                  <td data-label="Rol">
                     {u.role === 'admin'
                       ? 'Administrador'
                       : u.role === 'delegate'
                         ? 'Delegat'
                         : 'Estudiant'}
                   </td>
-                  <td>{u.disabled ? 'Desactivat' : 'Actiu'}</td>
+                  <td data-label="Estat">{u.disabled ? 'Desactivat' : 'Actiu'}</td>
                   <td>
                     <Button disabled={u.id === data.user.id} onClick={() => open('manageUser', u)}>
                       Gestionar
