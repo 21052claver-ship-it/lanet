@@ -16,8 +16,16 @@ import FocusMode, { FocusOptions } from '../components/FocusMode';
 import { download } from '../api';
 export default function Study() {
   const { data, subject, open } = useApp();
-  const { timer, remaining, toggle, reset, options, pendingSessions, rejectedSessions } =
-    useTimer();
+  const {
+    timer,
+    remaining,
+    toggle,
+    reset,
+    options,
+    setFocusMode,
+    pendingSessions,
+    rejectedSessions,
+  } = useTimer();
   const [focusing, setFocusing] = useState(false);
   const duration =
     timer.phaseSeconds ||
@@ -33,7 +41,13 @@ export default function Study() {
   return (
     <>
       <PageTitle title="Estudi" subtitle="Un espai per concentrar-te">
-        <Button variant="primary" onClick={() => setFocusing(true)}>
+        <Button
+          variant="primary"
+          onClick={() => {
+            setFocusMode(options.mode);
+            setFocusing(true);
+          }}
+        >
           <ArrowsOut size={19} /> Mode focus
         </Button>
       </PageTitle>

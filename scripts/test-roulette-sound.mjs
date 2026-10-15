@@ -6,7 +6,7 @@ import { browserFixture } from '../tests/helpers/browser-fixture.mjs';
 import { roulettePayout, ticketStake } from '../shared/roulette.js';
 import { installAudioProbeMeter } from '../tests/helpers/audio-probe.js';
 
-const out = 'output/roulette-sound';
+const out = process.env.LANET_TEST_OUTPUT || 'output/roulette-sound';
 mkdirSync(out, { recursive: true });
 const results = [];
 const skipped = [];

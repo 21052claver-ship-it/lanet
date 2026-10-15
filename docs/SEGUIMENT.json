@@ -432,6 +432,10 @@
     {
       "id": "R107",
       "description": "Millorar el responsive de La Net en mòbil, tauleta i escriptori: contingut llegible, controls accessibles i cap desbordament o solapament accidental."
+    },
+    {
+      "id": "R108",
+      "description": "Mode focus amb Pomodoro o estudi lliure només amb fons, sons activats per defecte i silenci explícit respectat."
     }
   ],
   "phases": [
@@ -1034,6 +1038,13 @@
       "title": "Responsive i ús en pantalles estretes",
       "depends_on": [
         "F84"
+      ]
+    },
+    {
+      "id": "F86",
+      "title": "Estudi lliure i sons del mode focus",
+      "depends_on": [
+        "F85"
       ]
     }
   ],
@@ -8244,6 +8255,48 @@
       ],
       "progress": "Responsive corregit i 0.6.20 publicada via PR42: eeeb5211b4f251da3413aab26f508f99c15099d6. Pestanyes de Comunitat i Gestió visibles en files en mòbil i paisatge tàctil; títols, noms i propostes llargs dins de la columna. Gestió en targetes amb etiquetes i accions visibles fins a 1100 px, taula conservada a escriptori. Catàleg amb objectius de 44 px i noms accessibles; botons que adapten el text sense encongir icones. 458 unitàries, 66 escenaris responsive en Chromium/Firefox/WebKit i 45 regressions locals (10 de notificacions, 11 de delegats i 9 d’horari en Chromium, més 15 panoràmiques en tres motors) correctes. Tipus/lint/build/font/enllaços correctes; tots els 11 jobs i Validate de PR/main verds. Proveïdor, domini/callback/bindings, tag/release immutable i digest verificats. Una pujada inicial i una correcció de branca, una PR i una publicació; backend/permisos/migracions/manteniment intactes, sense càrrega D1/R2 nova o prova pública. Tancament documental local sense push addicional.",
       "change_log_id": "H200"
+    },
+    {
+      "id": "T86-01",
+      "phase": "F86",
+      "title": "Separar estudi lliure i Pomodoro al mode focus",
+      "status": "review",
+      "requirements": [
+        "R108"
+      ],
+      "depends_on": [
+        "T85-01"
+      ],
+      "files": [
+        "shared/timer.js",
+        "src/timer.jsx",
+        "src/pages/Study.jsx",
+        "src/components/FocusMode.jsx",
+        "src/focus-mode.css",
+        "tests/timer.test.js",
+        "scripts/test-focus-mode.mjs",
+        "docs/PLA-FOCUS-LLIURE.md",
+        "scripts/test-roulette-sound.mjs"
+      ],
+      "acceptance": "Selector visible amb/sense Pomodoro; estudi lliure amb fons i música opcional, sense comptador ni sessions fantasma. Pausar i conservar el temporitzador en passar a lliure, reprendre només per acció explícita. Preferències locals per usuari, sons per defecte amb silenci/volum zero conservats. Teclat, mòbil/paisatge i tres motors comprovats amb fixtures locals; cap prova pública, migració, polling o càrrega D1/R2 nova. Una PR/publicació després de CI exacta.",
+      "checks": [
+        "Revisar opcions, sons i interaccions entre temporitzador i focus.",
+        "Implementar estudi lliure, pausa conservadora i controls de fons/música.",
+        "Provar persistència, silenci, sessions, teclat i disposició en tres motors locals.",
+        "Agrupar versió/documentació, auditar font, esperar CI de PR/main i publicar una vegada."
+      ],
+      "evidence": [
+        "docs/PLA-FOCUS-LLIURE.md",
+        "output/free-focus/chromium/results.json",
+        "output/free-focus/firefox/results.json",
+        "output/free-focus/webkit/results.json",
+        "output/free-focus/roulette-sound/results.json",
+        "output/free-focus/unit.log",
+        "output/free-focus/typecheck-final.log",
+        "output/free-focus/build-final.log"
+      ],
+      "progress": "Estudi lliure i Pomodoro separats, pausa conservadora i preferències locals. 460 unitàries, 60 fluxos focus en tres motors i 15 regressions de sons correctes; 6 casos natius WebKit/Windows no disponibles, fallback provat. Tipus/lint/build correctes. Corregit cercle que cobria Comença amb opcions obertes i disposició lliure en paisatge. Pendent font de l’índex, CI exacta i una publicació consolidada.",
+      "change_log_id": "H201"
     }
   ]
 }

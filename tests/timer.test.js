@@ -1,6 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { secondsRemaining, restoreTimer, advanceTimer, focusOptions } from '../shared/timer.js';
+import {
+  secondsRemaining,
+  pauseTimer,
+  restoreTimer,
+  advanceTimer,
+  focusOptions,
+} from '../shared/timer.js';
 import { madridDay } from '../shared/domain.js';
 
 test('starting or resuming never displays an extra second from a stale render clock', () => {
@@ -154,4 +160,34 @@ test('focus options are bounded and malformed preferences cannot disable require
   assert.equal(focusOptions({ alarmVolume: 99 }).alarmVolume, 1);
   assert.equal(focusOptions({ alarmVolume: NaN }).alarmVolume, 0.5);
   assert.equal(focusOptions({ automatic: false, theme: 'night' }).automatic, false);
+});
+
+test('free study pauses work and breaks without resetting or awarding a session', () => {
+  for (const phase of ['work', 'rest', 'long']) {
+    const active = { ...working, phase };
+    const paused = pauseTimer(active, active.end - 37000);
+    assert.deepEqual(paused, { ...active, running: false, remaining: 37, end: null });
+    assert.equal(
+      advanceTimer(paused, settings, active.end + 86400000, true, () => 'unused'),
+      null,
+    );
+    assert.equal(pauseTimer(paused, active.end + 86400000), paused);
+    assert.equal(active.running, true);
+  }
+  assert.equal(pauseTimer(working, working.end + 1).remaining, 0);
+});
+
+test('new focus preferences keep sound on while explicit silence and old preferences survive', () => {
+  const defaults = focusOptions(null);
+  assert.equal(defaults.mode, 'pomodoro');
+  assert.equal(defaults.alarm, true);
+  assert.ok(defaults.alarmVolume > 0);
+  assert.equal(defaults.music, true);
+  assert.equal(focusOptions({ mode: 'free' }).mode, 'free');
+  assert.equal(focusOptions({ mode: 'bad' }).mode, 'pomodoro');
+  const saved = focusOptions({ alarm: false, alarmVolume: 0, music: false });
+  assert.equal(saved.alarm, false);
+  assert.equal(saved.alarmVolume, 0);
+  assert.equal(saved.music, false);
+  assert.equal(saved.mode, 'pomodoro');
 });

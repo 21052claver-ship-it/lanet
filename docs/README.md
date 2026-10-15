@@ -33,6 +33,7 @@ El catàleg següent enllaça tots els Markdown del primer nivell de docs. Els d
 - [Fiabilitat de les notificacions](PLA-NOTIFICACIONS.md).
 - [Publicació directa dels representants](PLA-PUBLICACIO-DIRECTA.md).
 - [Responsive en pantalles estretes](PLA-RESPONSIVE-2026-10.md).
+- [Mode focus amb estudi lliure](PLA-FOCUS-LLIURE.md).
 - [La Net · estat actual i decisions vigents](ESTAT-PROJECTE.md).
 - [Historial de canvis de La Net](HISTORIAL-CANVIS.md).
 - [Pla mestre de revisió de La Net](PLA-MESTRE.md).

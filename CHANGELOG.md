@@ -2,6 +2,12 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production.
 
+## [0.6.21] - 2026-10-15
+
+- Mode focus amb selector visible entre Amb Pomodoro i Estudi lliure, només amb fons i música opcional. Canviar a lliure pausa el comptador sense perdre la sessió; reprendre requereix una acció explícita.
+- Ambient, elecció i silenci conservats per usuari. Controls musicals visibles inicialment, alarma del Pomodoro i sons de ruleta actius per defecte amb el silenci/volum zero desats respectats.
+- Rellotge sense interval mentre està pausat; cap consulta, migració o càrrega D1/R2 nova. Regressions locals de modes, pausa, so, música compartida i accessibilitat en tres motors.
+
 ## [0.6.20] - 2026-10-15
 
 - Pestanyes de Comunitat i Gestió visibles en files en mòbil i paisatge tàctil; Delegats, Notificacions i Revisions accessibles sense desplaçar-les lateralment.
