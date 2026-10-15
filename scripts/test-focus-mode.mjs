@@ -28,7 +28,12 @@ async function assetOverride(request) {
 }
 for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,webkit').split(',')) {
   const browser = await { chromium, firefox, webkit }[engine].launch();
-  async function run(name, width, fn, { height = 900, timer = null, queue = null } = {}) {
+  async function run(
+    name,
+    width,
+    fn,
+    { height = 900, timer = null, queue = null, options = null, nativeFullscreen = false } = {},
+  ) {
     if (process.env.LANET_FOCUS_CHECK && process.env.LANET_FOCUS_CHECK !== name) return;
     const f = await browserFixture({ beforeAsset: assetOverride });
     f.db.exec("INSERT INTO focus_settings VALUES('browser',1,1,2,2);");
@@ -41,7 +46,14 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
     );
     await context.addCookies([{ name: 'lanet_session', value: f.token, url: f.base }]);
     await context.addInitScript(
-      ({ timer, queue }) => {
+      ({ timer, queue, options, nativeFullscreen }) => {
+        // Native Firefox fullscreen replaces the emulated mobile viewport with
+        // the host screen. Test fixed sizes in the supported window fallback;
+        // exercise the native entry/exit path in its own scenario below.
+        if (!nativeFullscreen)
+          Object.defineProperty(HTMLElement.prototype, 'requestFullscreen', { value: undefined });
+        if (options && !localStorage.getItem('lanet.focusOptions.browser'))
+          localStorage.setItem('lanet.focusOptions.browser', JSON.stringify(options));
         if (queue && !localStorage.getItem('lanet.focusQueue.browser'))
           localStorage.setItem('lanet.focusQueue.browser', JSON.stringify(queue));
         if (timer && !localStorage.getItem('lanet.timer.browser'))
@@ -93,7 +105,7 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
           window.AudioContext = Probe;
         }
       },
-      { timer, queue },
+      { timer, queue, options, nativeFullscreen },
     );
     const p = await context.newPage();
     p.setDefaultTimeout(12000);
@@ -136,6 +148,304 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
     }
   }
   try {
+    await run('free-study-theme-colours', 390, async (p) => {
+      await p.getByRole('button', { name: 'Mode focus', exact: true }).click();
+      const dialog = p.getByRole('dialog', { name: 'Mode focus', exact: true });
+      await dialog.locator('summary').click();
+      await dialog.getByRole('tab', { name: 'Digital', exact: true }).click();
+      await dialog.getByRole('tab', { name: 'Anell', exact: true }).click();
+      assert.equal(await dialog.locator('svg.timer-ring').count(), 1);
+      await dialog.getByRole('tab', { name: 'Estudi lliure', exact: true }).click();
+      for (const theme of ['Nit', 'Clar', 'Bosc']) {
+        await dialog.getByRole('tab', { name: theme, exact: true }).click();
+        const colours = await dialog.evaluate((el) => ({
+          foreground: getComputedStyle(el).color,
+          title: getComputedStyle(el.querySelector('h1')).color,
+        }));
+        assert.equal(
+          colours.title,
+          colours.foreground,
+          `Free study title follows the ${theme} foreground`,
+        );
+      }
+      await dialog.getByRole('tab', { name: 'Nit', exact: true }).click();
+      await dialog.locator('summary').click();
+      await p.screenshot({ path: `${out}/${engine}-free-night-390.png` });
+    });
+    await run(
+      'native-fullscreen-entry-exit',
+      1440,
+      async (p) => {
+        await p.getByRole('button', { name: 'Mode focus', exact: true }).click();
+        const dialog = p.getByRole('dialog', { name: 'Mode focus', exact: true });
+        await dialog.waitFor();
+        assert.equal(await p.evaluate(() => document.querySelector('.app-shell').inert), true);
+        await dialog.getByRole('tab', { name: 'Estudi lliure', exact: true }).click();
+        await dialog.getByRole('heading', { name: 'Al teu ritme', exact: true }).waitFor();
+        await dialog.getByRole('button', { name: 'Sortir del mode focus', exact: true }).click();
+        await dialog.waitFor({ state: 'hidden' });
+        await p.waitForFunction(
+          () => !document.fullscreenElement && !document.querySelector('.app-shell').inert,
+        );
+      },
+      { nativeFullscreen: true },
+    );
+    for (const [width, height] of [
+      [320, 800],
+      [390, 844],
+      [820, 950],
+      [1440, 950],
+      [740, 390],
+    ])
+      await run(
+        'free-study-pause-persist',
+        width,
+        async (p, f) => {
+          let completions = 0;
+          p.on('request', (r) => {
+            if (r.url().endsWith('/api/focus/complete')) completions++;
+          });
+          const entry = p.getByRole('button', { name: 'Mode focus', exact: true });
+          await entry.click();
+          const dialog = p.getByRole('dialog', { name: 'Mode focus', exact: true });
+          await dialog.getByRole('button', { name: 'Comença', exact: true }).click();
+          const before = await p.evaluate(() =>
+            JSON.parse(localStorage.getItem('lanet.timer.browser')),
+          );
+          assert.equal(before.running, true);
+          assert.ok(before.sessionId);
+          await dialog.getByRole('tab', { name: 'Estudi lliure', exact: true }).click();
+          await dialog.getByRole('heading', { name: 'Al teu ritme', exact: true }).waitFor();
+          assert.equal(await dialog.getByRole('timer').count(), 0);
+          assert.equal(
+            await dialog.getByRole('button', { name: /^(Comença|Continuar|Pausar)$/ }).count(),
+            0,
+          );
+          const paused = await p.evaluate(() =>
+            JSON.parse(localStorage.getItem('lanet.timer.browser')),
+          );
+          assert.equal(paused.running, false);
+          assert.equal(paused.end, null);
+          assert.equal(paused.sessionId, before.sessionId);
+          await p.waitForTimeout(1200);
+          assert.deepEqual(
+            await p.evaluate(() => JSON.parse(localStorage.getItem('lanet.timer.browser'))),
+            paused,
+          );
+          await dialog.locator('summary').click();
+          assert.equal(
+            await dialog.getByRole('checkbox', { name: /Alarma als canvis/ }).count(),
+            0,
+          );
+          assert.equal(await dialog.getByRole('tab', { name: 'Digital', exact: true }).count(), 0);
+          await dialog.getByRole('tab', { name: 'Bosc', exact: true }).click();
+          await dialog.locator('summary').click();
+          assert.ok(
+            await dialog.getByRole('button', { name: 'Reproduir música', exact: true }).isVisible(),
+          );
+          const bounds = await dialog.evaluate((el) => ({
+            width: el.clientWidth,
+            scroll: el.scrollWidth,
+            tabs: [...el.querySelectorAll('.focus-mode-choice button')].map((b) => {
+              const r = b.getBoundingClientRect();
+              return { left: r.left, right: r.right, height: r.height };
+            }),
+          }));
+          assert.ok(bounds.scroll <= bounds.width + 1);
+          assert.ok(
+            bounds.tabs.every((b) => b.left >= 0 && b.right <= width + 1 && b.height >= 44),
+          );
+          if (height < 500) {
+            await dialog.evaluate((el) => {
+              el.scrollTop = 0;
+            });
+            const music = await dialog.locator('.focus-mode-music').boundingBox();
+            assert.ok(music.y + music.height <= height + 1, 'Free study controls fit in landscape');
+          }
+          await p.screenshot({ path: `${out}/${engine}-free-space-${width}.png` });
+          const free = dialog.getByRole('tab', { name: 'Estudi lliure', exact: true });
+          await free.press('Home');
+          assert.equal(
+            await dialog
+              .getByRole('tab', { name: 'Amb Pomodoro', exact: true })
+              .getAttribute('aria-selected'),
+            'true',
+          );
+          assert.equal(
+            await dialog.getByRole('button', { name: 'Continuar', exact: true }).isVisible(),
+            true,
+          );
+          assert.equal(
+            await p.evaluate(() => JSON.parse(localStorage.getItem('lanet.timer.browser')).running),
+            false,
+          );
+          await dialog.getByRole('button', { name: 'Continuar', exact: true }).click();
+          await dialog.getByRole('button', { name: 'Pausar', exact: true }).click();
+          assert.equal(
+            await p.evaluate(
+              () => JSON.parse(localStorage.getItem('lanet.timer.browser')).sessionId,
+            ),
+            before.sessionId,
+          );
+          await dialog.getByRole('tab', { name: 'Amb Pomodoro', exact: true }).press('End');
+          const exit = dialog.getByRole('button', { name: 'Sortir del mode focus', exact: true });
+          const firstControl = dialog.locator('.focus-mode-header button').first();
+          await firstControl.focus();
+          await firstControl.press('Shift+Tab');
+          assert.equal(
+            await dialog
+              .getByRole('slider', { name: 'Volum de la música' })
+              .evaluate((el) => el === document.activeElement),
+            true,
+          );
+          await p.keyboard.press('Tab');
+          await exit.click();
+          assert.equal(await p.evaluate(() => document.querySelector('.app-shell').inert), false);
+          await p.reload();
+          await entry.click();
+          await dialog.getByRole('heading', { name: 'Al teu ritme', exact: true }).waitFor();
+          assert.ok((await dialog.getAttribute('class')).includes('theme-forest'));
+          await p.keyboard.press('Escape');
+          await dialog.waitFor({ state: 'hidden' });
+          await p
+            .locator('.focus-panel')
+            .getByRole('button', { name: /^(Comença|Continuar)$/ })
+            .click();
+          assert.equal(
+            await p.evaluate(() => JSON.parse(localStorage.getItem('lanet.timer.browser')).running),
+            true,
+          );
+          await entry.click();
+          await dialog.getByRole('heading', { name: 'Al teu ritme', exact: true }).waitFor();
+          assert.equal(
+            await p.evaluate(() => JSON.parse(localStorage.getItem('lanet.timer.browser')).running),
+            false,
+          );
+          assert.equal(completions, 0);
+          assert.equal(f.db.prepare('SELECT COUNT(*) n FROM focus_sessions').get().n, 0);
+        },
+        { height },
+      );
+    await run(
+      'default-sound-start-gesture',
+      390,
+      async (p, f) => {
+        await p.getByRole('button', { name: 'Mode focus', exact: true }).click();
+        const dialog = p.getByRole('dialog', { name: 'Mode focus', exact: true });
+        await dialog.getByRole('button', { name: 'Continuar', exact: true }).click();
+        await dialog.getByRole('status').filter({ hasText: 'Descans' }).waitFor();
+        const available = await p.evaluate(() => window.focusSound.nativeAvailable);
+        if (available) {
+          await p.waitForFunction(() => window.focusSound.peak > 0.001);
+          assert.equal(await p.evaluate(() => window.focusSound.starts), 3);
+        }
+        assert.equal(
+          f.db.prepare("SELECT COUNT(*) n FROM focus_sessions WHERE id='default-sound'").get().n,
+          1,
+        );
+        await dialog.getByRole('button', { name: 'Pausar', exact: true }).click();
+      },
+      {
+        timer: {
+          phase: 'work',
+          round: 1,
+          running: false,
+          remaining: 2,
+          sessionId: 'default-sound',
+          workMinutes: 1,
+        },
+      },
+    );
+    for (const options of [
+      { mode: 'free', alarm: false, music: false },
+      { mode: 'free', alarmVolume: 0 },
+    ])
+      await run(
+        options.alarm === false ? 'saved-silence' : 'saved-zero-volume',
+        390,
+        async (p) => {
+          await p.getByRole('button', { name: 'Mode focus', exact: true }).click();
+          const dialog = p.getByRole('dialog', { name: 'Mode focus', exact: true });
+          await dialog.getByRole('tab', { name: 'Amb Pomodoro', exact: true }).click();
+          await dialog.locator('summary').click();
+          const check = dialog.getByRole('checkbox', { name: /Alarma als canvis/ });
+          if (options.alarm === false) {
+            assert.equal(await check.isChecked(), false);
+            assert.equal(
+              await dialog.getByRole('button', { name: 'Reproduir música', exact: true }).count(),
+              0,
+            );
+          } else
+            assert.equal(
+              await dialog
+                .getByRole('slider', { name: 'Volum de l’alarma', exact: true })
+                .inputValue(),
+              '0',
+            );
+          await dialog.getByRole('button', { name: 'Comença', exact: true }).click();
+          await dialog.getByRole('tab', { name: 'Estudi lliure', exact: true }).click();
+          await p.keyboard.press('Escape');
+          await p.reload();
+          await p.getByRole('button', { name: 'Mode focus', exact: true }).click();
+          await dialog.getByRole('tab', { name: 'Amb Pomodoro', exact: true }).click();
+          await dialog.locator('summary').click();
+          if (options.alarm === false) assert.equal(await check.isChecked(), false);
+          else
+            assert.equal(
+              await dialog
+                .getByRole('slider', { name: 'Volum de l’alarma', exact: true })
+                .inputValue(),
+              '0',
+            );
+          assert.equal(await p.evaluate(() => window.focusSound.starts), 0);
+        },
+        { options },
+      );
+    await run('free-study-shared-music', 390, async (p) => {
+      await p.getByRole('button', { name: 'Mode focus', exact: true }).click();
+      const dialog = p.getByRole('dialog', { name: 'Mode focus', exact: true });
+      await dialog.getByRole('tab', { name: 'Estudi lliure', exact: true }).click();
+      await dialog.getByRole('button', { name: 'Reproduir música', exact: true }).click();
+      await dialog.getByRole('button', { name: 'Pausar música', exact: true }).waitFor();
+      await p.evaluate(() => {
+        window.focusMusic = document.querySelector('audio[data-study-audio]');
+      });
+      await dialog.getByRole('tab', { name: 'Amb Pomodoro', exact: true }).click();
+      await dialog.getByRole('tab', { name: 'Estudi lliure', exact: true }).click();
+      assert.equal(await p.locator('audio[data-study-audio]').count(), 1);
+      assert.equal(
+        await p.evaluate(
+          () =>
+            window.focusMusic === document.querySelector('audio[data-study-audio]') &&
+            !window.focusMusic.paused,
+        ),
+        true,
+      );
+      await dialog.getByRole('button', { name: 'Pausar música', exact: true }).click();
+      assert.equal(await p.evaluate(() => window.focusMusic.paused), true);
+      await dialog.getByRole('button', { name: 'Reproduir música', exact: true }).click();
+      await dialog.getByRole('button', { name: 'Pausar música', exact: true }).waitFor();
+      let saves = 0;
+      p.on('request', (r) => {
+        if (r.url().endsWith('/api/preferences') && r.method() === 'POST') saves++;
+      });
+      const volume = dialog.getByRole('slider', { name: 'Volum de la música', exact: true });
+      await volume.focus();
+      await volume.press('Home');
+      await p.waitForFunction(() => window.focusMusic.volume === 0);
+      await volume.press('Tab');
+      await p.waitForTimeout(200);
+      assert.equal(saves, 1, 'One preference write for the final volume, no duplicate blur save');
+      await p.keyboard.press('Escape');
+      assert.equal(
+        await p.evaluate(
+          () =>
+            window.focusMusic === document.querySelector('audio[data-study-audio]') &&
+            !window.focusMusic.paused,
+        ),
+        true,
+      );
+    });
     for (const [width, height] of [
       [320, 800],
       [390, 844],

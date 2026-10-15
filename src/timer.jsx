@@ -3,6 +3,7 @@ import { useApp } from './context';
 import { useStudyAudio } from './use-study-audio';
 import {
   secondsRemaining,
+  pauseTimer,
   restoreTimer,
   advanceTimer,
   focusOptions,
@@ -55,9 +56,10 @@ export function TimerProvider({ children }) {
   const focusVersion = useRef(JSON.stringify(data.focus));
   const music = useStudyAudio({ preferences: data.preferences, savePreferences, notify });
   useEffect(() => {
+    if (!timer.running) return;
     const i = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(i);
-  }, []);
+  }, [timer.running]);
   useEffect(() => {
     const update = () => setNow(Date.now());
     window.addEventListener('focus', update);
@@ -238,6 +240,14 @@ export function TimerProvider({ children }) {
         toggle,
         reset,
         options,
+        setFocusMode: (mode) => {
+          if (!['pomodoro', 'free'].includes(mode)) return;
+          if (mode === 'free') {
+            alarm.current.cancel();
+            setTimer((t) => pauseTimer(t));
+          }
+          setOptions((o) => focusOptions({ ...o, mode }));
+        },
         setFocusOptions: (patch) => {
           if (patch.alarm === true) prepareAlarm();
           setOptions((o) => focusOptions({ ...o, ...patch }));

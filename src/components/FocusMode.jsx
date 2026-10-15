@@ -130,8 +130,10 @@ export default function FocusMode({ onClose }) {
     toggle,
     reset,
     options,
+    setFocusMode,
     setFocusOptions,
     playing,
+    loading,
     toggleMusic,
     volume,
     setVolume,
@@ -276,7 +278,7 @@ export default function FocusMode({ onClose }) {
   return createPortal(
     <section
       ref={root}
-      className={'focus-mode theme-' + options.theme}
+      className={'focus-mode theme-' + options.theme + (options.mode === 'free' ? ' is-free' : '')}
       role="dialog"
       aria-modal="true"
       aria-label="Mode focus"
@@ -300,35 +302,57 @@ export default function FocusMode({ onClose }) {
           </button>
         </div>
       </header>
+      <Tabs
+        className="focus-mode-choice"
+        label="Manera de concentrar-te"
+        value={options.mode}
+        onChange={setFocusMode}
+        items={[
+          ['pomodoro', 'Amb Pomodoro'],
+          ['free', 'Estudi lliure'],
+        ]}
+      />
       <main className="focus-mode-main">
-        <p className="focus-mode-phase" role="status">
-          {phase}
-        </p>
-        <p className="focus-mode-round">
-          Sessió {((timer.round - 1) % data.focus.rounds) + 1} de {data.focus.rounds}
-        </p>
-        <FocusClock visual={options.visual} />
-        <div className="focus-mode-actions">
-          <Button variant="primary" onClick={toggle}>
-            {timer.running ? <Pause size={23} /> : <Play size={23} />}{' '}
-            {timer.running
-              ? 'Pausar'
-              : timer.phase === 'work' && !timer.sessionId && remaining === data.focus.work * 60
-                ? 'Comença'
-                : 'Continuar'}
-          </Button>
-          <Button onClick={reset} aria-label="Reiniciar el temporitzador">
-            <ArrowCounterClockwise size={20} />
-          </Button>
-          {timer.running && options.alarm && alarmSupported && !alarmReady && (
-            <Button onClick={prepareAlarm}>
-              <SpeakerHigh size={20} /> Activar alarma
-            </Button>
-          )}
-        </div>
-        <p className="focus-mode-next">
-          {options.automatic ? 'La següent fase començarà sola' : 'Tu decideixes quan continuar'}
-        </p>
+        {options.mode === 'free' ? (
+          <div className="focus-free-space">
+            <Leaf size={64} weight="duotone" aria-hidden="true" />
+            <h1>Al teu ritme</h1>
+            <p>Un fons tranquil per estudiar, sense temporitzador.</p>
+          </div>
+        ) : (
+          <>
+            <p className="focus-mode-phase" role="status">
+              {phase}
+            </p>
+            <p className="focus-mode-round">
+              Sessió {((timer.round - 1) % data.focus.rounds) + 1} de {data.focus.rounds}
+            </p>
+            <FocusClock visual={options.visual} />
+            <div className="focus-mode-actions">
+              <Button variant="primary" onClick={toggle}>
+                {timer.running ? <Pause size={23} /> : <Play size={23} />}{' '}
+                {timer.running
+                  ? 'Pausar'
+                  : timer.phase === 'work' && !timer.sessionId && remaining === data.focus.work * 60
+                    ? 'Comença'
+                    : 'Continuar'}
+              </Button>
+              <Button onClick={reset} aria-label="Reiniciar el temporitzador">
+                <ArrowCounterClockwise size={20} />
+              </Button>
+              {timer.running && options.alarm && alarmSupported && !alarmReady && (
+                <Button onClick={prepareAlarm}>
+                  <SpeakerHigh size={20} /> Activar alarma
+                </Button>
+              )}
+            </div>
+            <p className="focus-mode-next">
+              {options.automatic
+                ? 'La següent fase començarà sola'
+                : 'Tu decideixes quan continuar'}
+            </p>
+          </>
+        )}
       </main>
       <footer className="focus-mode-footer">
         <details className="focus-mode-settings">
@@ -336,7 +360,8 @@ export default function FocusMode({ onClose }) {
             <Gear size={18} /> Personalitza el teu espai
           </summary>
           <div className="focus-mode-settings-content">
-            <Field label="Ambient">
+            <div className="field">
+              <span>Ambient</span>
               <Tabs
                 label="Ambient del mode focus"
                 value={options.theme}
@@ -347,19 +372,24 @@ export default function FocusMode({ onClose }) {
                   ['night', 'Nit', Moon],
                 ]}
               />
-            </Field>
-            <Field label="Rellotge">
-              <Tabs
-                label="Estil del rellotge"
-                value={options.visual}
-                onChange={(visual) => setFocusOptions({ visual })}
-                items={[
-                  ['ring', 'Anell'],
-                  ['digital', 'Digital'],
-                ]}
-              />
-            </Field>
-            <FocusOptions />
+            </div>
+            {options.mode === 'pomodoro' && (
+              <>
+                <div className="field">
+                  <span>Rellotge</span>
+                  <Tabs
+                    label="Estil del rellotge"
+                    value={options.visual}
+                    onChange={(visual) => setFocusOptions({ visual })}
+                    items={[
+                      ['ring', 'Anell'],
+                      ['digital', 'Digital'],
+                    ]}
+                  />
+                </div>
+                <FocusOptions />
+              </>
+            )}
             <label className="focus-option-check">
               <input
                 type="checkbox"
@@ -383,9 +413,9 @@ export default function FocusMode({ onClose }) {
         </details>
         {options.music && (
           <div className="focus-mode-music">
-            <Button onClick={toggleMusic}>
+            <Button onClick={toggleMusic} aria-pressed={playing || loading}>
               <MusicNotes size={19} />
-              {playing ? 'Pausar música' : 'Reproduir música'}
+              {loading ? 'Aturar la càrrega' : playing ? 'Pausar música' : 'Reproduir música'}
             </Button>
             <input
               aria-label="Volum de la música"

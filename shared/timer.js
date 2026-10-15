@@ -7,6 +7,12 @@ export function secondsRemaining(timer, now = Date.now()) {
     : timer.remaining;
 }
 
+export function pauseTimer(timer, now = Date.now()) {
+  return timer.running
+    ? { ...timer, running: false, remaining: secondsRemaining(timer, now), end: null }
+    : timer;
+}
+
 export const phaseMinutes = (phase, focus) =>
   phase === 'work'
     ? focus.work
@@ -54,13 +60,14 @@ export function advanceTimer(timer, focus, now, automatic, makeId) {
 }
 
 export const DEFAULT_FOCUS_OPTIONS = {
+  mode: 'pomodoro',
   automatic: true,
   alarm: true,
   tone: 'bell',
   alarmVolume: 0.5,
   theme: 'linen',
   visual: 'ring',
-  music: false,
+  music: true,
   awake: false,
 };
 export function focusOptions(value) {
@@ -69,6 +76,7 @@ export function focusOptions(value) {
   for (const k of ['automatic', 'alarm', 'music', 'awake'])
     if (typeof input[k] === 'boolean') result[k] = input[k];
   for (const [k, allowed] of Object.entries({
+    mode: ['pomodoro', 'free'],
     tone: ['bell', 'soft', 'digital'],
     theme: ['linen', 'forest', 'night'],
     visual: ['ring', 'digital'],
