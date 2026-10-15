@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useApp } from '../context';
 import { Tabs } from '../ui';
 import { DAYS, DAYS_SHORT, timeMinutes, scheduleBounds, dateLabel } from '../../shared/domain';
@@ -7,39 +7,30 @@ import {
   slotTeacher,
   schoolScheduleBounds,
 } from '../../shared/official-schedule';
+import { eventColumns } from '../../shared/schedule-view';
 
 function label(minutes) {
   return `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
 }
-function eventLanes(events) {
-  const lanes = [];
-  const result = events.map((event) => {
-    const start = timeMinutes(event.start);
-    const end = event.end ? timeMinutes(event.end) : start + 60;
-    let lane = lanes.findIndex((until) => until <= start);
-    if (lane < 0) lane = lanes.length;
-    lanes[lane] = end;
-    return { event, start, end, lane };
-  });
-  return result.map((entry) => ({
-    ...entry,
-    total:
-      Math.max(
-        ...result.filter((r) => r.start < entry.end && entry.start < r.end).map((r) => r.lane),
-      ) + 1,
-  }));
-}
-export default function WeekTimeline({ dates, slots, events, context, eventCard }) {
+export default function WeekTimeline({
+  dates,
+  slots,
+  events,
+  context,
+  eventCard,
+  selectedDate,
+  onSelectDate,
+}) {
   const { data, subject, open } = useApp();
-  const [day, setDay] = useState(() => Math.max(0, dates.slice(0, 5).indexOf(data.today)));
+  const day = Math.max(0, dates.slice(0, 5).indexOf(selectedDate));
   const bounds = schoolScheduleBounds(slots, data.schoolSchedule) || scheduleBounds(slots);
   const mergedSlots = mergeAdjacentSlots(slots);
   const breaks = data.schoolSchedule?.breaks || [];
   const range = bounds.end - bounds.start;
   const percent = (minutes) => `${((minutes - bounds.start) / range) * 100}%`;
-  const position = (start, end) => ({
-    top: `calc(${percent(Math.max(bounds.start, start))} + 3px)`,
-    height: `calc(${((Math.min(bounds.end, end) - Math.max(bounds.start, start)) / range) * 100}% - 6px)`,
+  const position = (start, end, inset = 3) => ({
+    top: `calc(${percent(Math.max(bounds.start, start))} + ${inset}px)`,
+    height: `calc(${((Math.min(bounds.end, end) - Math.max(bounds.start, start)) / range) * 100}% - ${2 * inset}px)`,
   });
   const ticks = [
     ...new Set([
@@ -64,7 +55,7 @@ export default function WeekTimeline({ dates, slots, events, context, eventCard 
         className="timetable-days"
         label="Dia de l’horari"
         value={String(day)}
-        onChange={(value) => setDay(Number(value))}
+        onChange={(value) => onSelectDate(dates[Number(value)])}
         items={dates
           .slice(0, 5)
           .map((d, i) => [String(i), `${DAYS_SHORT[i]} ${Number(d.slice(8))}`])}
@@ -75,14 +66,18 @@ export default function WeekTimeline({ dates, slots, events, context, eventCard 
       >
         <div className="time-heading">Hora</div>
         {dates.slice(0, 5).map((d, i) => (
-          <div
+          <button
+            type="button"
             key={d}
             data-current={i === day}
             className={`week-heading ${d === data.today ? 'today' : ''}`}
+            aria-label={`Veure ${dateLabel(d, { weekday: 'long', day: 'numeric', month: 'long' })}`}
+            aria-pressed={i === day}
+            onClick={() => onSelectDate(d)}
           >
             <span>{DAYS_SHORT[i]}</span>
             <strong>{Number(d.slice(8))}</strong>
-          </div>
+          </button>
         ))}
         {hasAllDayEvents && (
           <>
@@ -164,11 +159,15 @@ export default function WeekTimeline({ dates, slots, events, context, eventCard 
                       '--subject': s?.color,
                     }}
                     aria-label={`${s?.name || s?.short}, ${slot.start} a ${slot.end}, ${slotTeacher(slot, offering) || slot.note || ''}, aula ${slot.room || 'sense especificar'}`}
-                    onClick={() => open('class', { subject: s, offering, slot, date: d })}
+                    onClick={() => {
+                      onSelectDate(d);
+                      open('class', { subject: s, offering, slot, date: d });
+                    }}
                   >
-                    <strong>{s?.short || s?.name}</strong>
+                    <strong>{s?.id === 'math' ? s.name : s?.short || s?.name}</strong>
                     <small>
-                      {slot.room ? `Aula ${slot.room}` : ''} · {slot.start}
+                      {slot.start}–{slot.end}
+                      {slot.room ? ` · ${slot.room}` : ''}
                     </small>
                     <span className="class-teacher">
                       {slotTeacher(slot, offering) || slot.note}
@@ -176,12 +175,12 @@ export default function WeekTimeline({ dates, slots, events, context, eventCard 
                   </button>
                 );
               })}
-              {eventLanes(dailyEvents).map(({ event, start, end, lane, total }) => (
+              {eventColumns(dailyEvents).map(({ event, start, end, lane, total }) => (
                 <div
                   key={event.id}
                   className="timeline-event"
                   style={{
-                    ...position(start, end),
+                    ...position(start, end, 0),
                     left: `calc(${(lane * 100) / total}% + 4px)`,
                     width: `calc(${100 / total}% - 8px)`,
                   }}

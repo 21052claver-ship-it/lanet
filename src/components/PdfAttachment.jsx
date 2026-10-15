@@ -19,6 +19,11 @@ export default function PdfAttachment({ file }) {
     [busy, setBusy] = useState(true),
     [text, setText] = useState('');
   useEffect(() => {
+    setDoc(null);
+    setError('');
+    setBusy(true);
+    setText('');
+    setZoom(1);
     let alive = true,
       task;
     import('pdfjs-dist/legacy/build/pdf.mjs')
@@ -28,6 +33,9 @@ export default function PdfAttachment({ file }) {
         task = pdf.getDocument({
           url: '/api/files/' + file.id,
           isEvalSupported: false,
+          enableXfa: false,
+          maxImageSize: 24_000_000,
+          canvasMaxAreaInBytes: 32_000_000,
           useSystemFonts: true,
           disableWorkerRendering: true,
         });
@@ -67,10 +75,20 @@ export default function PdfAttachment({ file }) {
         if (!alive) return;
         const original = pdfPage.getViewport({ scale: 1 });
         const viewport = pdfPage.getViewport({ scale: (width / original.width) * zoom });
-        const pixelRatio = Math.min(devicePixelRatio || 1, 2),
+        if (
+          ![viewport.width, viewport.height].every((n) => Number.isFinite(n) && n > 0 && n <= 8192)
+        )
+          throw new Error('La pàgina supera els límits de previsualització.');
+        const pixelRatio = Math.min(
+            devicePixelRatio || 1,
+            2,
+            8192 / viewport.width,
+            8192 / viewport.height,
+            Math.sqrt(8_000_000 / (viewport.width * viewport.height)),
+          ),
           target = canvas.current;
-        target.width = Math.ceil(viewport.width * pixelRatio);
-        target.height = Math.ceil(viewport.height * pixelRatio);
+        target.width = Math.max(1, Math.floor(viewport.width * pixelRatio));
+        target.height = Math.max(1, Math.floor(viewport.height * pixelRatio));
         target.style.width = viewport.width + 'px';
         target.style.height = viewport.height + 'px';
         rendering = pdfPage.render({

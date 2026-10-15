@@ -63,8 +63,26 @@ export class Boundary extends React.Component {
   }
 }
 function Workspace({ onLogout }) {
-  const { data, walletBalance, page, go, open, setCommunityTab, savePreferences, notify } =
-    useApp();
+  const {
+    data,
+    walletBalance,
+    page,
+    go,
+    open,
+    communityTab,
+    setCommunityTab,
+    savePreferences,
+    notify,
+  } = useApp();
+  const delegatePanel = data.delegation?.members?.some(
+    (member) =>
+      member.email.toLowerCase() === data.user.email.toLowerCase() &&
+      ['delegate', 'subdelegate'].includes(member.position) &&
+      data.delegation.managedUnits.includes(member.unit_id),
+  );
+  const navigation = delegatePanel ? [...NAV, ['delegates', 'Panell de delegats']] : NAV;
+  const currentSection =
+    delegatePanel && page === 'community' && communityTab === 'delegates' ? 'delegates' : page;
   const notices = notificationSummary(data);
   const { timer, remaining, toggle, audioType, audioState, playing, loading, toggleMusic } =
     useTimer();
@@ -183,8 +201,14 @@ function Workspace({ onLogout }) {
     management: Management,
   };
   const Page = pages[page] || Schedule;
-  const navigate = (p) => {
-    go(p);
+  const navigate = (p, section = false) => {
+    if (p === 'delegates') {
+      setCommunityTab('delegates');
+      go('community');
+    } else {
+      if (p === 'community' && section) setCommunityTab('notices');
+      go(p);
+    }
     setMobile(false);
   };
   return (
@@ -237,17 +261,21 @@ function Workspace({ onLogout }) {
           {data.groups.find((g) => g.id === data.user.group_id)?.name || 'El meu curs'}
         </div>
         <nav aria-label="Principal">
-          {NAV.map(([key, label]) => (
+          {navigation.map(([key, label]) => (
             <button
               key={key}
-              className={`nav-item ${page === key ? 'active' : ''}`}
-              onClick={() => navigate(key)}
+              className={`nav-item ${currentSection === key ? 'active' : ''}`}
+              onClick={() => navigate(key, true)}
               aria-label={label}
               title={label}
-              aria-current={page === key ? 'page' : undefined}
+              aria-current={currentSection === key ? 'page' : undefined}
             >
               <span className="nav-art" aria-hidden="true">
-                <ReferenceArt name={key} originalSize />
+                {key === 'delegates' ? (
+                  <ShieldCheck size={36} weight="duotone" />
+                ) : (
+                  <ReferenceArt name={key} originalSize />
+                )}
               </span>
               <span>
                 {key === 'schedule' ? (
@@ -439,16 +467,20 @@ function Workspace({ onLogout }) {
                 </IconButton>
               </div>
               <nav className="mobile-more-grid" aria-label="Tots els apartats">
-                {NAV.map(([key, label]) => (
+                {navigation.map(([key, label]) => (
                   <button
                     key={key}
-                    className={`mobile-more-item ${page === key ? 'active' : ''}`}
-                    aria-current={page === key ? 'page' : undefined}
+                    className={`mobile-more-item ${currentSection === key ? 'active' : ''}`}
+                    aria-current={currentSection === key ? 'page' : undefined}
                     aria-label={label}
                     title={label}
-                    onClick={() => navigate(key)}
+                    onClick={() => navigate(key, true)}
                   >
-                    <ReferenceArt name={key} size={32} />
+                    {key === 'delegates' ? (
+                      <ShieldCheck size={32} weight="duotone" />
+                    ) : (
+                      <ReferenceArt name={key} size={32} />
+                    )}
                     <span>{key === 'schedule' ? 'Curs' : key === 'pau' ? 'PAU' : label}</span>
                   </button>
                 ))}

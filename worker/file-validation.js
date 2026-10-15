@@ -1,4 +1,5 @@
 import { fail } from './utils.js';
+import { hasPdfCrossReference } from '../shared/pdf-preflight.js';
 
 export const MAX_FILE_BYTES = 25 * 1024 * 1024;
 export const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
@@ -35,10 +36,11 @@ export function safeFileName(value) {
     .normalize('NFC')
     .replace(/[\\/\x00-\x1f\x7f-\x9f\u202a-\u202e\u2066-\u2069]/g, '_')
     .trim();
-  if (!name || name.length > 150 || /[. ]$/.test(name)) fail(400, 'El nom del fitxer no és vàlid.');
+  if (!name || name.length > 150 || /[. ]$/.test(name) || name.includes(':'))
+    fail(400, 'El nom del fitxer no és vàlid.');
   // Reject dangerous names even when accompanied by a forged image header.
   if (
-    /(?:^|\.)(?:js|mjs|cjs|jsx|ts|tsx|html?|xhtml|svg|php\d*|phtml|asp|aspx|exe|dll|bat|cmd|ps1|sh|wasm)(?:\.|$)/i.test(
+    /(?:^|\.)(?:js|mjs|cjs|jsx|ts|tsx|html?|xhtml|svg|php\d*|phtml|asp|aspx|exe|dll|com|scr|msi|msp|hta|lnk|url|jar|vbs|vbe|wsf|wsh|reg|bat|cmd|ps1|sh|wasm)(?:\.|$)/i.test(
       name,
     )
   )
@@ -250,11 +252,7 @@ export function validateFile(bytes, name) {
     }
     mime = imageMime;
   } else if (ext === 'pdf') {
-    if (
-      !/^%PDF-[12]\.\d/.test(ascii(bytes, 0, 8)) ||
-      !/%%EOF\s*$/.test(ascii(bytes, Math.max(0, bytes.length - 1024), bytes.length))
-    )
-      invalid();
+    if (!hasPdfCrossReference(bytes)) invalid();
     mime = 'application/pdf';
   } else if (ext === 'txt') {
     try {

@@ -2,6 +2,13 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production.
 
+## [0.6.22] - 2026-10-15
+
+- Horari amb selecció del dia coherent amb Avui, alta contextual i agenda mensual; columnes consistents per a dates solapades, franges curtes fidels i files completes per llegir i obrir dates/classes tapades.
+- Exportació de la setmana amb les classes, hores, aules i professorat real per dia; dates entre mesos/anys i calendari ICS amb text UTF-8 ben plegat.
+- Accés separat al panell de delegats a la barra lateral i al menú mòbil, visible només per a delegats i subdelegats assignats, amb els permisos existents.
+- Reforç dels PDF contra capçaleres/finals falsos, índexs inexistents i contingut afegit al final; noms d’adjunts més estrictes i previsualització amb límits de píxels. Revalidació dels PDF antics una sola vegada, sense còpies R2 ni migracions. Aquestes comprovacions no són un antivirus ni una certificació de contingut innocu.
+
 ## [0.6.21] - 2026-10-15
 
 - Mode focus amb selector visible entre Amb Pomodoro i Estudi lliure, només amb fons i música opcional. Canviar a lliure pausa el comptador sense perdre la sessió; reprendre requereix una acció explícita.

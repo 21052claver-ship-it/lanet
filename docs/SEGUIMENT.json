@@ -436,6 +436,18 @@
     {
       "id": "R108",
       "description": "Mode focus amb Pomodoro o estudi lliure només amb fons, sons activats per defecte i silenci explícit respectat."
+    },
+    {
+      "id": "R109",
+      "description": "Revisar i millorar a fons l’experiència visual i funcional de l’horari: dates, lectura, solapaments, detalls, accions i mòbil."
+    },
+    {
+      "id": "R110",
+      "description": "Reforçar les pujades contra PDF falsificats i noms perillosos, i limitar recursos de previsualització; no presentar validació de format com un antivirus."
+    },
+    {
+      "id": "R111",
+      "description": "Accés separat al panell de delegats a la barra només per a representants assignats, i publicació conjunta verificada."
     }
   ],
   "phases": [
@@ -1045,6 +1057,13 @@
       "title": "Estudi lliure i sons del mode focus",
       "depends_on": [
         "F85"
+      ]
+    },
+    {
+      "id": "F87",
+      "title": "Experiència completa de l’horari",
+      "depends_on": [
+        "F86"
       ]
     }
   ],
@@ -8314,6 +8333,58 @@
       ],
       "progress": "0.6.21 publicada via PR43: 8d2c1aa51c7ac5fc336f15a8dd57c8fc56dcd680. Mode focus amb selector visible Amb Pomodoro / Estudi lliure. El mode lliure conserva el fons Clar/Bosc/Nit i la música opcional; pausa el temporitzador i en conserva fase, temps i sessió. Tornar a Pomodoro no el reprèn fins a una acció explícita. Preferències locals per usuari, controls musicals visibles inicialment i reproductor compartit. Alarma i sons de ruleta actius per defecte, amb silenci i volum zero desats respectats. 460 unitàries, 63 fluxos focus en Chromium/Firefox/WebKit i 15 regressions locals de so de ruleta correctes. Tipus/lint/build/font/enllaços correctes; tots els 11 jobs i Validate de PR/main verds. Proveïdor, domini/callback/bindings, tag/release immutable i digest verificats. Una pujada inicial i una correcció, una PR i una publicació; sense migracions, consultes/polling/R2 nous o prova pública. Tancament documental local sense push addicional.",
       "change_log_id": "H201"
+    },
+    {
+      "id": "T87-01",
+      "phase": "F87",
+      "title": "Tancar horari, reforç de PDF i accés de delegats amb publicació conjunta",
+      "status": "review",
+      "requirements": [
+        "R109",
+        "R110",
+        "R111"
+      ],
+      "depends_on": [
+        "T86-01"
+      ],
+      "files": [
+        "src/pages/Schedule.jsx",
+        "src/pages/WeekTimeline.jsx",
+        "src/schedule-experience.css",
+        "shared/schedule-view.js",
+        "tests/schedule-view.test.js",
+        "scripts/test-schedule-experience.mjs",
+        "src/App.jsx",
+        "shared/pdf-preflight.js",
+        "worker/file-validation.js",
+        "worker/files.js",
+        "src/components/PdfAttachment.jsx",
+        "tests/upload-safety.test.js",
+        "docs/PLA-HORARI-EXPERIENCIA.md"
+      ],
+      "acceptance": "Auditoria amb fixtures oficials dels tres itineraris, mòbil/tauleta/escriptori/paisatge, dates/setmanes, classes, esdeveniments solapats, detalls i accions contextuals. La data d’alta coincideix amb el dia escollit; Avui torna al dia correcte. Targetes llegibles i intervals fidelment representats, sense controls tapats o inaccessible amb teclat. Conservar catàleg, professorat per dia, permisos, agenda i dades. Cap prova pública o càrrega D1/R2 nova; migracions només si un defecte les fa necessàries i amb verificació separada. Una PR/publicació amb CI exacta.",
+      "checks": [
+        "Auditar disposició i fluxos reals amb captures, mesures i dades locals dels tres itineraris.",
+        "Corregir problemes reproduïbles de dates, solapaments, lectura i controls.",
+        "Verificar les correccions, dades oficials, alta contextual, teclat i responsive en tres motors.",
+        "Agrupar versió/documentació, auditar font, esperar CI de PR/main i publicar una vegada.",
+        "Comprovar absència/presència de l’accés per estudiant, delegat i subdelegat; rebutjar PDF falsos abans de R2 i revalidar política antiga."
+      ],
+      "evidence": [
+        "docs/PLA-HORARI-EXPERIENCIA.md",
+        "output/schedule-experience/baseline/audit.json",
+        "output/schedule-experience/browser-final/results.json",
+        "output/schedule-experience/cards/results.json",
+        "output/schedule-experience/official/results.json",
+        "output/schedule-experience/uploads/browser-results.json",
+        "output/schedule-experience/unit-final.log",
+        "output/schedule-experience/typecheck-final.log",
+        "output/schedule-experience/build-final.log",
+        "output/schedule-experience/official-api.log",
+        "output/schedule-experience/api.log"
+      ],
+      "progress": "0.6.22 en revisió local: horari amb dia únic, Avui/alta/mes coherents, solapaments consistents i exportació de classes. Accés al panell per representants assignats; PDF/noms/recursos reforçats i revalidació de política antiga. 469 unitàries, 36 nous fluxos en tres motors i 81 regressions (15 targetes, 27 horaris oficials, 36 pujades i 3 visors PDF) correctes, tipus/lint/build i API locals correctes. Incidència de captura intermèdia WebKit aïllada; la captura de viewport i el recorregut complet passen sense forçar clicks. Pendent CI exacta de PR/main i una publicació; cap prova pública ni migració.",
+      "change_log_id": "H202"
     }
   ]
 }

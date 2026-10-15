@@ -50,6 +50,7 @@ jobs:
             tests: |
               npm run test:onboarding
               npm run test:official-schedule
+              npm run test:schedule-experience
               npm run test:schedule-cards
               npm run test:workspace-recovery
               npm run test:mobile-navigation
@@ -141,6 +142,7 @@ jobs:
             output/student-guide/browser/
             output/reactions/browser/
             output/official-schedule/browser/
+            output/schedule-experience/browser/
             output/schedule-cards/browser/
             output/workspace-recovery/
             output/predictions/
@@ -160,6 +162,7 @@ jobs:
             output/music-records/
             output/grade-activities/
             output/upload-safety/
+            output/schedule-experience/
   validate:
     name: Validate
     if: always()
