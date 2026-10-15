@@ -17,7 +17,7 @@ SELECT * FROM (
   UNION ALL
   SELECT * FROM (
     SELECT * FROM agenda_notifications WHERE user_id=? AND read_at IS NOT NULL
-    ORDER BY created_at DESC,id LIMIT MAX(0,?-(SELECT COUNT(*) FROM unread))
+    ORDER BY created_at DESC LIMIT MAX(0,?-(SELECT COUNT(*) FROM unread))
   )
 ) ORDER BY (read_at IS NOT NULL),created_at DESC,id`;
 

@@ -15,7 +15,9 @@ La bústia existent comunica a l’autor el resultat de les propostes d’agenda
 
 ## Eficiència i dades
 
-Mateixa taula, índex usuari/data i destinataris existents. Una consulta de bústia per bootstrap amb dos accessos indexats, una CTE de màxim 101 files i el seu recompte acotat. Una única fotografia SQL evita duplicats si es marca un avís mentre es carrega la bústia. Cap migració, còpia d’esdeveniments per destinatari, recompte global, secret nou, operació R2 o desplegament del servei privat. La generació transaccional existent continua impedint duplicar un avís en revisions concurrents.
+Mateixa taula i destinataris. Una consulta de bústia per bootstrap amb dos accessos indexats, una CTE de màxim 101 files i el seu recompte acotat. La migració additiva 0030 afegeix un índex parcial per als no llegits: permet saltar directament a aquests avisos sense recórrer l’històric llegit. La segona branca usa l’índex usuari/data existent i només s’executa quan hi ha menys de 100 no llegits. Una única fotografia SQL evita duplicats si es marca un avís mentre es carrega la bústia. Cap còpia d’esdeveniments per destinatari, recompte global, secret nou, polling, operació R2 o desplegament del servei privat. La generació transaccional existent continua impedint duplicar un avís en revisions concurrents.
+
+La migració 0030 és únicament CREATE INDEX, sense UPDATE/DELETE ni taules noves. Es prova sobre 10.000 avisos llegits i un no llegit antic, amb EXPLAIN de l’índex i igualtat de totes les files abans/després. Producció exigeix CI exacta, còpia privada restaurada i íntegra, només 0030 pendent i aplicació separada via proveïdor amb registre de migracions. No s’executen migracions antigues ni scripts de regals/roster.
 
 ## Verificació
 
@@ -26,3 +28,5 @@ Navegadors: 320/1440 px en Chromium, Firefox i WebKit amb fixtures; actualitzaci
 Evidències privades a `output/notifications/` i logs `output/notifications-*.log`. Resultats finals i publicació es consignaran en el seguiment i al rebut de versió. Cap visita a la web o API de producció; els navegadors són automatitzats i les amplades mòbils emulades.
 
 Resultat local: 453 unitàries, 30 escenaris de notificacions i 15 de delegats correctes. D1/workerd confirma l’SQL real i les lectures privades/idempotents. A 320 px, la pestanya activa es manté visible també quan WebKit afegeix scrollbar i quan la finestra passa d’escriptori a mòbil. Tipus/lint/build correctes. Fonts i CI/publicació es verificaran abans de tancar la tasca.
+
+Revisió final d’eficiència: l’índex parcial 0030 evita recórrer històric llegit. La consulta de llegits usa l’ordre de timestamp de l’índex existent; el desempat per ID s’aplica només a les files del lot final, evitant ordenar històrics amb timestamps idèntics. 454 unitàries correctes. Es requereix una correcció de la mateixa PR40; la publicació continua sent única.

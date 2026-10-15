@@ -179,8 +179,50 @@ test('old unread notices remain accessible behind over 100 newer read notices; i
   assert.equal(data.agendaNotificationsMoreUnread, false);
   assert.ok(data.agendaNotifications.every((n) => n.user_id === 'a'));
   const plan = f.db.prepare('EXPLAIN QUERY PLAN ' + NOTIFICATION_QUERY).all('a', 101, 'a', 100);
-  assert.equal(plan.filter((p) => p.detail.includes('agenda_notifications_user')).length, 2);
+  assert.ok(plan.some((p) => p.detail.includes('agenda_notifications_user')));
+  assert.ok(plan.some((p) => p.detail.includes('agenda_notifications_unread')));
   f.db.close();
+});
+
+test('unread index preserves notification history and seeks past 10,000 read notices', () => {
+  const { db } = testEnvironment({ through: '0029_activity_dashboard.sql' });
+  db.exec(
+    "INSERT INTO users(id,email,name,password_hash,salt) VALUES('index-user','index-fixture@fje.edu','Fixture','x','x');",
+  );
+  const insert = db.prepare(
+    'INSERT INTO agenda_notifications(id,user_id,title,body,read_at,created_at) VALUES(?,?,?,?,?,?)',
+  );
+  db.exec('BEGIN');
+  for (let n = 0; n < 10000; n++)
+    insert.run(
+      `read-${n}`,
+      'index-user',
+      'Històric',
+      'Cos',
+      '2026-10-15T12:00:00Z',
+      '2026-10-15T10:00:00Z',
+    );
+  insert.run(
+    'old-unread-index',
+    'index-user',
+    'Pendent antic',
+    'Cos',
+    null,
+    '2026-09-01T10:00:00Z',
+  );
+  db.exec('COMMIT');
+  const before = db.prepare('SELECT * FROM agenda_notifications ORDER BY id').all();
+  db.exec(readFileSync('migrations/0030_notification_unread_index.sql', 'utf8'));
+  assert.deepEqual(db.prepare('SELECT * FROM agenda_notifications ORDER BY id').all(), before);
+  const plan = db
+    .prepare('EXPLAIN QUERY PLAN ' + NOTIFICATION_QUERY)
+    .all('index-user', 101, 'index-user', 100);
+  assert.ok(plan.some((p) => p.detail.includes('agenda_notifications_unread')));
+  const records = db.prepare(NOTIFICATION_QUERY).all('index-user', 101, 'index-user', 100);
+  assert.equal(records.length, 100);
+  assert.equal(records[0].id, 'old-unread-index');
+  assert.equal(db.prepare('PRAGMA integrity_check').get().integrity_check, 'ok');
+  db.close();
 });
 
 test('bounded unread batches drain without losing concurrent arrivals; a read is one idempotent scoped update', async () => {
