@@ -436,6 +436,22 @@
     {
       "id": "R108",
       "description": "Mode focus amb Pomodoro o estudi lliure només amb fons, sons activats per defecte i silenci explícit respectat."
+    },
+    {
+      "id": "R109",
+      "description": "Revisar i millorar a fons l’experiència visual i funcional de l’horari: dates, lectura, solapaments, detalls, accions i mòbil."
+    },
+    {
+      "id": "R110",
+      "description": "Reforçar les pujades contra PDF falsificats i noms perillosos, i limitar recursos de previsualització; no presentar validació de format com un antivirus."
+    },
+    {
+      "id": "R111",
+      "description": "Accés separat al panell de delegats a la barra només per a representants assignats, i publicació conjunta verificada."
+    },
+    {
+      "id": "R112",
+      "description": "Depurar la plataforma amb simulacions completes d’una classe entre alumnes; comprovar botons, funcions, seguiments, persistència, alineació, proporcions i absència de solapaments."
     }
   ],
   "phases": [
@@ -1045,6 +1061,13 @@
       "title": "Estudi lliure i sons del mode focus",
       "depends_on": [
         "F85"
+      ]
+    },
+    {
+      "id": "F87",
+      "title": "Experiència completa de l’horari",
+      "depends_on": [
+        "F86"
       ]
     }
   ],
@@ -8260,7 +8283,7 @@
       "id": "T86-01",
       "phase": "F86",
       "title": "Separar estudi lliure i Pomodoro al mode focus",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R108"
       ],
@@ -8300,10 +8323,102 @@
         "output/free-focus/theme-before/results.json",
         "output/free-focus/ci-correction.json",
         "output/free-focus/build-theme-corrected.log",
-        "output/free-focus/lint-theme.log"
+        "output/free-focus/lint-theme.log",
+        "output/free-focus/local-verification.json",
+        "output/free-focus/source-audit.log",
+        "output/free-focus/provider-verification.json",
+        "output/free-focus/pr-verification.json",
+        "output/releases/0.6.21/receipt.json",
+        "docs/releases/0.6.21.json",
+        "docs/releases/0.6.21.md",
+        "output/free-focus/ci-audio-proof.json",
+        "output/free-focus/ci-pr-school.log",
+        "output/free-focus/ci-pr-audio.log"
       ],
-      "progress": "Estudi lliure i Pomodoro separats, pausa conservadora i preferències locals. 460 unitàries, 63 fluxos focus en tres motors i 15 regressions de sons correctes; 6 casos natius WebKit/Windows no disponibles, fallback provat. Tipus/lint/build correctes. Corregit cercle que cobria Comença amb opcions obertes i disposició lliure en paisatge. Pendent font de l’índex, CI exacta i una publicació consolidada. Revisió local durant CI: títol Nit i noms accessibles dels primers selectors corregits; tres regressions addicionals correctes. Una correcció consolidada de la mateixa PR43, pendent CI del nou head.",
+      "progress": "0.6.21 publicada via PR43: 8d2c1aa51c7ac5fc336f15a8dd57c8fc56dcd680. Mode focus amb selector visible Amb Pomodoro / Estudi lliure. El mode lliure conserva el fons Clar/Bosc/Nit i la música opcional; pausa el temporitzador i en conserva fase, temps i sessió. Tornar a Pomodoro no el reprèn fins a una acció explícita. Preferències locals per usuari, controls musicals visibles inicialment i reproductor compartit. Alarma i sons de ruleta actius per defecte, amb silenci i volum zero desats respectats. 460 unitàries, 63 fluxos focus en Chromium/Firefox/WebKit i 15 regressions locals de so de ruleta correctes. Tipus/lint/build/font/enllaços correctes; tots els 11 jobs i Validate de PR/main verds. Proveïdor, domini/callback/bindings, tag/release immutable i digest verificats. Una pujada inicial i una correcció, una PR i una publicació; sense migracions, consultes/polling/R2 nous o prova pública. Tancament documental local sense push addicional.",
       "change_log_id": "H201"
+    },
+    {
+      "id": "T87-01",
+      "phase": "F87",
+      "title": "Depurar la plataforma i simular la seqüència completa d’una classe",
+      "status": "review",
+      "requirements": [
+        "R109",
+        "R110",
+        "R111",
+        "R112"
+      ],
+      "depends_on": [
+        "T86-01"
+      ],
+      "files": [
+        "src/pages/Schedule.jsx",
+        "src/pages/WeekTimeline.jsx",
+        "src/schedule-experience.css",
+        "shared/schedule-view.js",
+        "tests/schedule-view.test.js",
+        "scripts/test-schedule-experience.mjs",
+        "src/App.jsx",
+        "shared/pdf-preflight.js",
+        "worker/file-validation.js",
+        "worker/files.js",
+        "src/components/PdfAttachment.jsx",
+        "tests/upload-safety.test.js",
+        "docs/PLA-HORARI-EXPERIENCIA.md",
+        "docs/PLA-SEQUENCIA-CLASSE.md",
+        "scripts/test-class-sequence.mjs",
+        "shared/agenda.js",
+        "worker/agenda.js",
+        "src/task-writes.jsx",
+        "src/components/TaskProgressButton.jsx",
+        "src/components/AgendaList.jsx",
+        "src/context.jsx",
+        "src/forms.jsx",
+        "src/forms-resources.jsx",
+        "src/pages/Notes.jsx",
+        "tests/agenda.test.js"
+      ],
+      "acceptance": "Auditoria amb fixtures oficials dels tres itineraris, mòbil/tauleta/escriptori/paisatge, dates/setmanes, classes, esdeveniments solapats, detalls i accions contextuals. La data d’alta coincideix amb el dia escollit; Avui torna al dia correcte. Targetes llegibles i intervals fidels, controls accessibles i separats. Simulacions entre alumnes i delegat amb progrés privat independent, tasques antigues recuperables, plusos per assignatura, context persistent, lectura visible, notes i estudi sense duplicats. Conservar catàleg, professorat, permisos i dades. Associacions del plus per lectura indexada dins de la consulta existent; cap petició, polling, escriptura, migració o càrrega R2 addicional. Cap prova pública. Una PR/publicació amb CI exacta.",
+      "checks": [
+        "Auditar disposició i fluxos reals amb captures, mesures i dades locals dels tres itineraris.",
+        "Corregir problemes reproduïbles de dates, solapaments, lectura i controls.",
+        "Verificar les correccions, dades oficials, alta contextual, teclat i responsive en tres motors.",
+        "Agrupar versió/documentació, auditar font, esperar CI de PR/main i publicar una vegada.",
+        "Comprovar absència/presència de l’accés per estudiant, delegat i subdelegat; rebutjar PDF falsos abans de R2 i revalidar política antiga.",
+        "Simular una classe entre diversos alumnes i un delegat, amb tasques, continguts, seguiment personal, estudi i recàrregues; auditar errors, aïllament i disposició en tres motors."
+      ],
+      "evidence": [
+        "docs/PLA-HORARI-EXPERIENCIA.md",
+        "output/schedule-experience/baseline/audit.json",
+        "output/schedule-experience/browser-final/results.json",
+        "output/schedule-experience/cards/results.json",
+        "output/schedule-experience/official/results.json",
+        "output/schedule-experience/uploads/browser-results.json",
+        "output/schedule-experience/unit-final.log",
+        "output/schedule-experience/typecheck-final.log",
+        "output/schedule-experience/build-final.log",
+        "output/schedule-experience/official-api.log",
+        "output/schedule-experience/api.log",
+        "docs/PLA-SEQUENCIA-CLASSE.md",
+        "output/class-audit/local-verification.json",
+        "output/class-audit/sequence-before/results.json",
+        "output/class-audit/reading-before-stable/results.json",
+        "output/class-audit/sequence-final/results.json",
+        "output/class-audit/material-final/results.json",
+        "output/class-audit/detail-compat-final/results.json",
+        "output/class-audit/responsive-final/responsive-results.json",
+        "output/class-audit/workspaces-final/results.json",
+        "output/class-audit/delegates-final/results.json",
+        "output/class-audit/api-current.log",
+        "output/class-audit/official-api-final/api-results.json",
+        "output/class-audit/typecheck-final.log",
+        "output/class-audit/unit-final.log",
+        "output/class-audit/build-compat-final.log",
+        "output/class-audit/source-audit.log"
+      ],
+      "progress": "0.6.22 en revisió: horari/PDF/delegats ampliats amb depuració de la seqüència d’una classe. Progrés de tasques compartit entre llista i detalls, clics repetits i refresh fallit gestionats, tasques vençudes fetes recuperables, plusos per totes les assignatures, filtre contextual persistent i consultes només amb lectura visible. Accions separades i àrees tàctils de 44 px. 472 unitàries, matriu de 63 simulacions de classe, 12 comprovacions de focus/disposició sense Object.hasOwn, 66 responsive, 33 espais, 33 delegats i 39 controls funcionals correctes; 62 API D1/R2 i horaris A/B/C locals correctes. La matriu va requerir corregir l’espera del bootstrap abans de recarregar en dos casos WebKit; 12 recorreguts afectats reexecutats, sense ignorar errors. Tipus/lint/build/font correctes. Pendent CI exacta de la PR44 actualitzada i main, i una publicació; cap prova pública, migració, polling, petició o escriptura nova.",
+      "change_log_id": "H202"
     }
   ]
 }

@@ -50,6 +50,7 @@ jobs:
             tests: |
               npm run test:onboarding
               npm run test:official-schedule
+              npm run test:schedule-experience
               npm run test:schedule-cards
               npm run test:workspace-recovery
               npm run test:mobile-navigation
@@ -64,6 +65,7 @@ jobs:
               npm run test:pau-top5
           - group: academics
             tests: |
+              npm run test:class-sequence
               npm run test:student-guide
               npm run test:course-grades
               npm run test:reactions
@@ -141,6 +143,7 @@ jobs:
             output/student-guide/browser/
             output/reactions/browser/
             output/official-schedule/browser/
+            output/schedule-experience/browser/
             output/schedule-cards/browser/
             output/workspace-recovery/
             output/predictions/
@@ -160,6 +163,8 @@ jobs:
             output/music-records/
             output/grade-activities/
             output/upload-safety/
+            output/schedule-experience/
+            output/class-sequence/browser/
   validate:
     name: Validate
     if: always()

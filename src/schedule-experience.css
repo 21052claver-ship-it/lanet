@@ -1,0 +1,213 @@
+.schedule-main .timeline-mode > .week-heading {
+  width: 100%;
+  margin: 0;
+  padding: 8px 4px;
+  font: inherit;
+  cursor: pointer;
+  background: #fffefd;
+  border: 0;
+  border-bottom: 3px solid transparent;
+}
+.schedule-main .timeline-mode > .week-heading.today {
+  background: #fff4ec;
+}
+.schedule-main .timeline-mode > .week-heading[aria-pressed='true'] {
+  border-bottom-color: #b07c58;
+}
+.schedule-main .timeline-mode > .week-heading:hover {
+  background: #f8f2eb;
+}
+.schedule-main .timeline-mode .timeline-class {
+  gap: 3px;
+  padding: 7px 9px;
+  text-align: left;
+}
+.schedule-main .timeline-mode .timeline-class > * {
+  flex-shrink: 0;
+  max-width: 100%;
+}
+.schedule-main .timeline-mode .timeline-class strong {
+  font-size: 13px;
+  line-height: 1.2;
+}
+.schedule-main .timeline-mode .timeline-class small {
+  display: block;
+  font-size: 10.5px;
+  line-height: 1.2;
+  color: #514d47;
+  white-space: nowrap;
+}
+.schedule-main .timeline-mode .class-teacher {
+  color: #514d47;
+}
+.schedule-main .timeline-axis > span:first-child {
+  transform: translateY(2px);
+}
+.schedule-main .week-heading:focus-visible,
+.schedule-main .class-card:focus-visible,
+.schedule-main .event-card:focus-visible,
+.schedule-date-row:focus-visible,
+.schedule-day-events > summary:focus-visible {
+  outline: 3px solid #795e95;
+  outline-offset: -3px;
+}
+.schedule-day-events {
+  border-top: 1px solid #eee6df;
+  padding: 16px;
+}
+.schedule-day-events > summary {
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.5;
+  min-height: 44px;
+  padding: 10px 0;
+}
+.schedule-day-events > summary > span {
+  display: inline-block;
+  margin-left: 7px;
+  padding: 0 7px;
+  border-radius: 6px;
+  background: #f4ece5;
+}
+.schedule-day-events > div {
+  display: grid;
+  gap: 8px;
+}
+.schedule-covered-classes {
+  margin-top: 12px;
+}
+.schedule-covered-classes > summary {
+  padding: 12px 0;
+  min-height: 44px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.schedule-covered-classes > div {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+.schedule-date-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 5px 12px;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 12px;
+  border: 1px solid #e8e0d9;
+  border-left: 5px solid color-mix(in srgb, var(--subject), #8b7ab8 24%);
+  border-radius: 10px;
+  background: #fffefd;
+  color: #302a2a;
+  text-align: left;
+  cursor: pointer;
+}
+.schedule-date-row > span,
+.schedule-date-row > strong,
+.schedule-date-row > small {
+  grid-column: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.schedule-date-row > span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #62584f;
+}
+.schedule-date-row > strong {
+  font-size: 14px;
+  line-height: 1.4;
+}
+.schedule-date-row > small {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #62584f;
+}
+.schedule-date-row > svg {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: center;
+}
+.app-shell[data-compact='true'] .schedule-main .timeline-axis,
+.app-shell[data-compact='true'] .schedule-main .timeline-day {
+  height: calc(var(--timeline-minutes) * 1.35px);
+}
+.app-shell[data-compact='true'] .schedule-main .timeline-class {
+  gap: 3px;
+  padding: 7px 10px;
+}
+.app-shell[data-compact='true'] .schedule-main .timeline-class strong {
+  font-size: 14px;
+}
+.app-shell[data-compact='true'] .schedule-main .timeline-class small {
+  font-size: 11px;
+}
+.app-shell[data-compact='true'] .date-navigation .text-button {
+  min-height: 44px;
+}
+.schedule-main .timeline-mode .timeline-event {
+  min-height: 0;
+  overflow: hidden;
+}
+@container schedule-event (height < 26px) {
+  .schedule-main .timeline-event .event-card {
+    padding: 0;
+  }
+  .schedule-main .timeline-event .event-card > * {
+    display: none;
+  }
+}
+.schedule-covered-classes > summary:focus-visible {
+  outline: 3px solid #795e95;
+  outline-offset: -3px;
+}
+.calendar-navigation-row .date-navigation,
+.calendar-navigation-row .date-navigation > strong {
+  min-width: 0;
+}
+.event-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0;
+}
+.schedule-event-detail .event-detail-actions .button {
+  margin: 0;
+  max-width: 100%;
+}
+.agenda-list .agenda-row {
+  grid-template-columns: 80px minmax(0, 1fr) 44px;
+}
+.agenda-list .agenda-row.task-row {
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+}
+.agenda-task-check {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+}
+.agenda-task-check input {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  accent-color: #8d966b;
+}
+.agenda-row > .icon-button {
+  min-width: 44px;
+  min-height: 44px;
+}
+.calendar-navigation-row .date-navigation > strong {
+  line-height: 1.4;
+}
+@media (max-width: 380px) {
+  .app-shell[data-compact='true'] .page-schedule .agenda-filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

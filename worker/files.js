@@ -12,6 +12,8 @@ import { safeImage, IMAGE_SAFETY_POLICY } from './image-safety.js';
 import { beginUpload, finishUpload } from './upload-guard.js';
 import { drainFileDeletions, queueUnusedFiles } from './file-lifecycle.js';
 const FILE_POLICY = 'lanet-file-v1';
+const PDF_POLICY = 'lanet-pdf-v1';
+const filePolicy = (mime) => (mime === 'application/pdf' ? PDF_POLICY : FILE_POLICY);
 const imageName = (name) => name.slice(0, name.lastIndexOf('.')).slice(0, 140) + '.webp';
 export async function upload(request, env, user, ctx) {
   await queueUnusedFiles(env);
@@ -53,7 +55,7 @@ export async function upload(request, env, user, ctx) {
         size,
         key,
         image ? 'approved' : 'validated',
-        image ? IMAGE_SAFETY_POLICY : FILE_POLICY,
+        image ? IMAGE_SAFETY_POLICY : filePolicy(mime),
         new Date().toISOString(),
         lease.purpose,
         lease.purpose,
@@ -98,7 +100,7 @@ export async function ensureFileSafety(env, f) {
   if (
     !image &&
     f.safety_state === 'validated' &&
-    f.safety_policy === FILE_POLICY &&
+    f.safety_policy === filePolicy(f.mime) &&
     SAFE_MIMES.has(f.mime)
   )
     return f;
@@ -121,18 +123,19 @@ export async function ensureFileSafety(env, f) {
     }
     const result = await run(
       env,
-      `UPDATE files SET name=?,mime=?,size=?,object_key=?,safety_state=?,safety_policy=?,safety_checked_at=?,original_object_key=? WHERE id=? AND object_key=? AND safety_state=? AND deleting_at IS NULL`,
+      `UPDATE files SET name=?,mime=?,size=?,object_key=?,safety_state=?,safety_policy=?,safety_checked_at=?,original_object_key=? WHERE id=? AND object_key=? AND safety_state=? AND safety_policy IS ? AND deleting_at IS NULL`,
       image ? imageName(name) : name,
       image ? 'image/webp' : f.mime,
       bytes.length,
       replacement || f.object_key,
       image ? 'approved' : 'validated',
-      image ? IMAGE_SAFETY_POLICY : FILE_POLICY,
+      image ? IMAGE_SAFETY_POLICY : filePolicy(f.mime),
       new Date().toISOString(),
       image ? f.original_object_key || f.object_key : null,
       f.id,
       f.object_key,
       f.safety_state,
+      f.safety_policy ?? null,
     );
     if (!result.meta?.changes && replacement) {
       await env.FILES.delete(replacement);
@@ -148,7 +151,7 @@ export async function ensureFileSafety(env, f) {
             fresh.safety_state === 'approved' &&
             fresh.safety_policy === IMAGE_SAFETY_POLICY
           )
-        : !(fresh.safety_state === 'validated' && fresh.safety_policy === FILE_POLICY))
+        : !(fresh.safety_state === 'validated' && fresh.safety_policy === filePolicy(fresh.mime)))
     )
       fail(409, 'L’adjunt està canviant. Torna-ho a provar.');
     return fresh;
@@ -233,7 +236,10 @@ export async function fileResponse(request, env, user, fid) {
   );
   if (banner) allowed = true;
   if (!allowed) fail(403, 'Aquest fitxer és privat o cal desbloquejar els apunts.');
-  if (f.safety_state === 'legacy')
+  if (
+    f.safety_state === 'legacy' ||
+    (f.mime === 'application/pdf' && f.safety_policy !== PDF_POLICY)
+  )
     await limit(env, request, `legacy-file-check:${user.id}`, 30, 60, true);
   f = await ensureFileSafety(env, f);
   let range;
@@ -255,15 +261,9 @@ export async function fileResponse(request, env, user, fid) {
   );
   if (!object) fail(404, 'El fitxer no està disponible.');
   const inline =
-    [
-      'image/png',
-      'image/jpeg',
-      'image/webp',
-      'image/gif',
-      'application/pdf',
-      'video/mp4',
-      'video/webm',
-    ].includes(f.mime) && !new URL(request.url).searchParams.has('download');
+    ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'video/mp4', 'video/webm'].includes(
+      f.mime,
+    ) && !new URL(request.url).searchParams.has('download');
   const filename = banner?.anonymous
     ? `cartell.${{ 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif' }[f.mime] || 'img'}`
     : f.name;

@@ -1,0 +1,95 @@
+{
+  "recordedAt": "2026-10-15T03:44:24.806Z",
+  "version": "0.6.21",
+  "sourceCommit": "8d2c1aa51c7ac5fc336f15a8dd57c8fc56dcd680",
+  "origin": "https://lanet.es",
+  "pullRequest": "https://github.com/21052claver-ship-it/lanet/pull/43",
+  "ci": "https://github.com/21052claver-ship-it/lanet/actions/runs/38676381817",
+  "allCiJobsSuccess": true,
+  "ciJobs": [
+    {
+      "name": "Core checks",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (navigation)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (board)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (casino)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (functional)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (compatibility)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (audio)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (school)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (academics)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (contents)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Validate",
+      "conclusion": "success"
+    }
+  ],
+  "pullRequestCi": "https://github.com/21052claver-ship-it/lanet/actions/runs/38674953453",
+  "pullRequestCiAttempt": 1,
+  "mainCiAttempt": 1,
+  "releaseUrl": "https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.21",
+  "immutable": true,
+  "tagCommitMatches": true,
+  "receiptDigestMatches": true,
+  "cloudflareDeployment": "3b564faa-7986-48b6-a23c-a87dd9b1c389",
+  "githubDeployment": 7083276156,
+  "providerConfirmed": true,
+  "productionCommitMatches": true,
+  "domainActive": true,
+  "pagesDomainPreserved": true,
+  "googleCallbackPreserved": true,
+  "d1R2BindingsPreserved": true,
+  "migrationsUnchanged": true,
+  "privateMaintenanceUnchanged": true,
+  "privateMaintenanceRedeployed": false,
+  "tests": {
+    "unit": 460,
+    "focusBrowser": 63,
+    "browserRegressions": {
+      "rouletteSound": 15
+    },
+    "ciLinuxFocus": 63,
+    "ciLinuxRouletteSound": 21
+  },
+  "publicAppVisited": false,
+  "productionDataUsed": false,
+  "physicalDevicesTested": false,
+  "branchPushes": 2,
+  "productPublications": 1,
+  "ciCorrection": {
+    "initialRun": "https://github.com/21052claver-ship-it/lanet/actions/runs/38674107120",
+    "initialConclusion": "cancelled",
+    "reason": "Local theme review reproduced a dark inherited heading in Night mode and a wrapping label overriding the first theme/clock tab accessible name. Scoped foreground and neutral field wrappers corrected before publication.",
+    "sourceCorrections": 1,
+    "localThemeScenarios": 3,
+    "localThemePassed": true
+  }
+}

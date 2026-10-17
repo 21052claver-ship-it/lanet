@@ -58,6 +58,9 @@ export async function agendaRecords(env, user, ctx, eventId = null) {
     env,
     `SELECT e.*,u.name AS author,COALESCE(p.done,0) AS done,r.name AS reviewer,
     (SELECT json_group_array(offering_id) FROM event_targets WHERE event_id=e.id) AS targets_json,
+    (SELECT json_group_array(subject_id) FROM plus_subjects WHERE plus_id=
+      CASE WHEN e.source_key LIKE 'plus:%' THEN substr(e.source_key,6,instr(substr(e.source_key,6),':')-1) END
+    ) AS source_subjects_json,
     (SELECT json_group_array(unit_id) FROM event_review_units WHERE event_id=e.id) AS units_json FROM events e
     JOIN users u ON u.id=e.owner_id LEFT JOIN users r ON r.id=e.reviewed_by
     LEFT JOIN event_progress p ON p.event_id=e.id AND p.user_id=?
@@ -79,8 +82,9 @@ export async function agendaRecords(env, user, ctx, eventId = null) {
     user.id,
   );
   return records
-    .map(({ targets_json, units_json, ...e }) => ({
+    .map(({ targets_json, units_json, source_subjects_json, ...e }) => ({
       ...e,
+      subject_ids: JSON.parse(source_subjects_json),
       targets: JSON.parse(targets_json),
       review_units: JSON.parse(units_json),
     }))

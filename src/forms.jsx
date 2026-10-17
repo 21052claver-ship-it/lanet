@@ -7,6 +7,8 @@ import { slotTeacher } from '../shared/official-schedule';
 import { BoardDetail } from './components/WoodBoard';
 import { CourseSubject } from './components/CourseGrades';
 import { AgendaReview } from './components/Delegates';
+import TaskProgressButton from './components/TaskProgressButton';
+import { eventSubjectIds } from '../shared/agenda';
 import {
   ConfigureForm,
   EventForm,
@@ -91,9 +93,11 @@ const titles = {
   manageUser: 'Gestionar compte',
 };
 export default function Forms({ onLogout, logoutBusy = false, logoutError = '' }) {
-  const { modal, close, open, subject, go, setSubjectFilter } = useApp();
+  const { data, modal, close, open, subject, go, subjectFilter, setSubjectFilter } = useApp();
   if (!modal) return null;
   const { type, item } = modal;
+  const event = type === 'eventDetail' ? data.events.find((e) => e.id === item.id) || item : null;
+  const eventSubjects = eventSubjectIds(event);
   const Form = forms[type];
   const title =
     type === 'reader' || type === 'plusDetail' || type === 'eventDetail'
@@ -172,17 +176,20 @@ export default function Forms({ onLogout, logoutBusy = false, logoutError = '' }
         </div>
       ) : type === 'eventDetail' ? (
         <div>
-          <SubjectChip subject={subject(item.subject_id)} />
+          <div className="card-tags">
+            {eventSubjects.map((id) => <SubjectChip key={id} subject={subject(id)} />)}
+          </div>
           <p>
             {dateLabel(item.date, { weekday: 'long', day: 'numeric', month: 'long' })} ·{' '}
             {item.start || 'Tot el dia'}
           </p>
           <p>{item.room}</p>
           <RichText text={item.body} />
-          {item.subject_id && (
+          <TaskProgressButton event={event} />
+          {!!eventSubjects.length && (
             <Button
               onClick={() => {
-                setSubjectFilter(item.subject_id);
+                setSubjectFilter(eventSubjects.includes(subjectFilter) ? subjectFilter : eventSubjects[0]);
                 go('notes');
                 close();
               }}

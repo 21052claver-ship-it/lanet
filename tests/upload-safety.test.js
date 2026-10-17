@@ -15,6 +15,25 @@ import media, {
 import { safeImage } from '../worker/image-safety.js';
 
 const user = { id: 'u', role: 'student' };
+function pdfFixture() {
+  let text = '%PDF-1.4\n';
+  const offsets = [0];
+  for (const [i, object] of [
+    '<< /Type /Catalog /Pages 2 0 R >>',
+    '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+    '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] >>',
+  ].entries()) {
+    offsets.push(Buffer.byteLength(text));
+    text += `${i + 1} 0 obj\n${object}\nendobj\n`;
+  }
+  const start = Buffer.byteLength(text);
+  text += 'xref\n0 4\n0000000000 65535 f \n';
+  text += offsets
+    .slice(1)
+    .map((n) => String(n).padStart(10, '0') + ' 00000 n \n')
+    .join('');
+  return Buffer.from(text + `trailer\n<< /Size 4 /Root 1 0 R >>\nstartxref\n${start}\n%%EOF\n`);
+}
 const safe = { sexual_content: false, nudity: false, graphic_violence: false, uncertain: false };
 const request = (bytes, name = 'imatge.png', type = 'image/png') =>
   new Request('https://lanet.test/api/files', {
@@ -426,4 +445,109 @@ test('Migration: existing file metadata and references are preserved and marked 
   } finally {
     db.close();
   }
+});
+
+test('PDF: forged containers and alternate-stream/executable names never reach R2', async (t) => {
+  const c = setup(t);
+  for (const [bytes, name] of [
+    [Buffer.from('%PDF-1.4\nalert(1)\n%%EOF'), 'fals.pdf'],
+    [
+      Buffer.from(
+        pdfFixture()
+          .toString()
+          .replace(/startxref\n\d+/, 'startxref\n0'),
+      ),
+      'offset.pdf',
+    ],
+    [Buffer.concat([pdfFixture(), Buffer.from('MZpayload')]), 'final.pdf'],
+    [pdfFixture(), 'apunts.pdf:payload'],
+    [pdfFixture(), 'apunts.scr.pdf'],
+    [pdfFixture(), 'apunts.hta.pdf'],
+    [pdfFixture(), 'apunts.lnk.pdf'],
+  ]) {
+    await assert.rejects(
+      upload(request(bytes, name, 'application/pdf'), c.env, user),
+      (e) => e.status === 400,
+    );
+    c.db.prepare("DELETE FROM upload_guards WHERE user_id='u'").run();
+  }
+  assert.equal(c.objects.size, 0);
+  assert.equal(c.db.prepare('SELECT count(*) n FROM files').get().n, 0);
+});
+
+test('PDF: valid PDF is checked once and old policy is rechecked before ranges/downloads', async (t) => {
+  const c = setup(t);
+  const file = await upload(
+    request(pdfFixture(), 'Apunts de química.pdf', 'text/html'),
+    c.env,
+    user,
+  );
+  assert.equal(file.mime, 'application/pdf');
+  assert.equal(c.calls(), 0);
+  assert.equal(
+    c.db.prepare('SELECT safety_policy FROM files WHERE id=?').get(file.id).safety_policy,
+    'lanet-pdf-v1',
+  );
+  const originalGet = c.env.FILES.get;
+  let reads = 0;
+  c.env.FILES.get = (...args) => {
+    reads++;
+    return originalGet(...args);
+  };
+  const cached = await fileResponse(
+    new Request('https://lanet.test/api/files/' + file.id),
+    c.env,
+    user,
+    file.id,
+  );
+  assert.match(cached.headers.get('Content-Disposition'), /^attachment/);
+  assert.equal(reads, 1, 'A current PDF reads only its response bytes, without rescanning');
+  c.db.prepare("UPDATE files SET safety_policy='lanet-file-v1' WHERE id=?").run(file.id);
+  const response = await fileResponse(
+    new Request('https://lanet.test/api/files/' + file.id + '?download', {
+      headers: { Range: 'bytes=0-3' },
+    }),
+    c.env,
+    user,
+    file.id,
+  );
+  assert.equal(response.status, 206);
+  assert.match(response.headers.get('Content-Disposition'), /^attachment/);
+  assert.equal(await response.text(), '%PDF');
+  assert.equal(
+    c.db.prepare('SELECT safety_policy FROM files WHERE id=?').get(file.id).safety_policy,
+    'lanet-pdf-v1',
+  );
+  c.db.prepare("UPDATE files SET safety_policy='lanet-file-v1' WHERE id=?").run(file.id);
+  c.objects.set(
+    c.db.prepare('SELECT object_key FROM files WHERE id=?').get(file.id).object_key,
+    Buffer.from('%PDF-1.4\nfals\n%%EOF'),
+  );
+  await assert.rejects(
+    fileResponse(
+      new Request('https://lanet.test/api/files/' + file.id + '?download'),
+      c.env,
+      user,
+      file.id,
+    ),
+    (e) => e.status === 400,
+  );
+  assert.equal(
+    c.db.prepare('SELECT safety_state FROM files WHERE id=?').get(file.id).safety_state,
+    'blocked',
+  );
+});
+
+test('PDF: existing official local PDF fixtures remain accepted', () => {
+  for (const name of [
+    'weights-2027.pdf',
+    'weights-2026.pdf',
+    'history-2021-2025.pdf',
+    'cutoffs-2026-latest.pdf',
+    'cutoffs-2026-first.pdf',
+  ])
+    assert.equal(
+      validateFile(readFileSync('tests/fixtures/pau/sources/' + name), name).mime,
+      'application/pdf',
+    );
 });

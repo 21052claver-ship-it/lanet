@@ -3,7 +3,8 @@ import Select from '../components/Select';
 import AgendaList from '../components/AgendaList';
 import SchoolCalendar from '../components/SchoolCalendar';
 import OptionsMenu from '../components/OptionsMenu';
-import { EVENT_KINDS, eventKind, eventLabel, eventOrigin } from '../../shared/agenda';
+import { EVENT_KINDS, eventKind, eventLabel, eventOrigin, eventSubjectIds, agendaListItems } from '../../shared/agenda';
+import TaskProgressButton from '../components/TaskProgressButton';
 import { canManageEvent } from '../../shared/delegation';
 import {
   CaretLeft,
@@ -34,6 +35,13 @@ import {
 } from '../../shared/domain';
 import { download } from '../api';
 import { readLocalJSON, writeLocalJSON } from '../../shared/local-state';
+import {
+  calendarICS,
+  scheduleDate,
+  weekClassEvents,
+  weekRangeLabel,
+} from '../../shared/schedule-view';
+import '../schedule-experience.css';
 import { ReferenceArt, Avatar } from '../art';
 import { useCompactLayout } from '../responsive';
 import {
@@ -41,6 +49,8 @@ import {
   SCHEDULE_VERSION,
   curriculumIssues,
   schoolScheduleBounds,
+  mergeAdjacentSlots,
+  slotTeacher,
 } from '../../shared/official-schedule';
 function EventDetailContainer({ compact, title, onClose, children }) {
   return compact ? (
@@ -51,67 +61,6 @@ function EventDetailContainer({ compact, title, onClose, children }) {
     children
   );
 }
-function exportEvents(events) {
-  const esc = (s) =>
-    String(s || '')
-      .replaceAll('\\', '\\\\')
-      .replaceAll('\n', '\\n')
-      .replaceAll(',', '\\,')
-      .replaceAll(';', '\\;');
-  const stamp = new Date()
-    .toISOString()
-    .replace(/[-:]/g, '')
-    .replace(/\.\d+Z/, 'Z');
-  const lines = [
-    'BEGIN:VCALENDAR',
-    'VERSION:2.0',
-    'PRODID:-//La Net//Calendari//CA',
-    'CALSCALE:GREGORIAN',
-    'X-WR-TIMEZONE:Europe/Madrid',
-    'BEGIN:VTIMEZONE',
-    'TZID:Europe/Madrid',
-    'BEGIN:DAYLIGHT',
-    'DTSTART:19700329T020000',
-    'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU',
-    'TZOFFSETFROM:+0100',
-    'TZOFFSETTO:+0200',
-    'END:DAYLIGHT',
-    'BEGIN:STANDARD',
-    'DTSTART:19701025T030000',
-    'RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU',
-    'TZOFFSETFROM:+0200',
-    'TZOFFSETTO:+0100',
-    'END:STANDARD',
-    'END:VTIMEZONE',
-  ];
-  for (const e of events) {
-    const date = e.date.replaceAll('-', '');
-    lines.push(
-      'BEGIN:VEVENT',
-      `UID:${e.id}@lanet`,
-      `DTSTAMP:${stamp}`,
-      e.start
-        ? `DTSTART;TZID=Europe/Madrid:${date}T${e.start.replace(':', '')}00`
-        : `DTSTART;VALUE=DATE:${date}`,
-      e.end
-        ? `DTEND;TZID=Europe/Madrid:${date}T${e.end.replace(':', '')}00`
-        : !e.start
-          ? `DTEND;VALUE=DATE:${addDays(e.date, 1).replaceAll('-', '')}`
-          : '',
-      `SUMMARY:${esc(e.title)}`,
-      `DESCRIPTION:${esc(e.body)}`,
-      `LOCATION:${esc(e.room)}`,
-      `CLASS:${e.visibility === 'private' ? 'PRIVATE' : 'PUBLIC'}`,
-      'END:VEVENT',
-    );
-  }
-  lines.push('END:VCALENDAR');
-  download(
-    'la-net-calendari.ics',
-    lines.filter(Boolean).join('\r\n'),
-    'text/calendar;charset=utf-8',
-  );
-}
 export default function Schedule() {
   const {
     data,
@@ -120,14 +69,12 @@ export default function Schedule() {
     go,
     open,
     setSubjectFilter,
-    mutate,
     notify,
     agendaSubject,
     setAgendaSubject,
     setCommunityTab,
   } = useApp();
   const compact = useCompactLayout();
-  const [monthDay, setMonthDay] = useState(data.today);
   const prefKey = `lanet.calendar.${data.user.id}`;
   const saved = readLocalJSON(prefKey, {}) || {};
   const [view, setView] = useState(
@@ -170,11 +117,14 @@ export default function Schedule() {
     setFilterKind('all');
     setFilterSubject(agendaSubject);
     setDate(data.today);
+    if (!writeLocalJSON(prefKey, { view: 'calendar', scale: 'list', filterKind: 'all', filterSubject: agendaSubject }))
+      notify('Vista actualitzada. El navegador no ha pogut recordar aquesta preferència.', 'warning');
     setAgendaSubject(null);
-  }, [agendaSubject, setAgendaSubject, data.today]);
+  }, [agendaSubject, setAgendaSubject, data.today, prefKey, notify]);
   const dates = weekDates(date),
     chosenIds = data.enrollments.map((e) => e.offering_id);
   const slots = data.slots.filter((s) => chosenIds.includes(s.offering_id));
+  const activeDate = scheduleDate(date, dates);
   const route = OFFICIAL_ROUTES.find((r) => r.id === data.user.group_id);
   const needsReview =
     data.schoolSchedule &&
@@ -188,17 +138,19 @@ export default function Schedule() {
         (filterKind === 'exam'
           ? ['exam', 'test'].includes(eventKind(e))
           : eventKind(e) === filterKind)) &&
-        (filterSubject === 'all' || e.subject_id === filterSubject) &&
+        (filterSubject === 'all' || eventSubjectIds(e).includes(filterSubject)) &&
         (showCompleted || !e.done)),
   );
-  const listEvents = events.filter(
-    (e) =>
-      (e.date >= date && e.date <= addDays(date, 90)) ||
-      (eventKind(e) === 'task' && !e.done && e.date < data.today),
-  );
+  const listEvents = agendaListItems(events, date, data.today, showCompleted);
   const weekEvents = events.filter((e) => dates.includes(e.date));
+  const dayEvents = weekEvents
+    .filter((e) => e.date === activeDate)
+    .sort((a, b) => (a.start || '').localeCompare(b.start || '') || a.title.localeCompare(b.title));
+  const dayClasses = mergeAdjacentSlots(slots).filter(
+    (slot) => slot.day === dates.indexOf(activeDate),
+  );
   const selectedEvent = data.events.find((e) => e.id === selected);
-  const selectedSubject = subject(selectedEvent?.subject_id);
+  const selectedSubjects = eventSubjectIds(selectedEvent).map(subject).filter(Boolean);
   function openEventForm(type, item) {
     if (compact) setSelected(null);
     open(type, item);
@@ -212,7 +164,25 @@ export default function Schedule() {
   const monthStart = date.slice(0, 7) + '-01';
   const monthDates = Array.from({ length: 42 }, (_, i) => addDays(monday(monthStart), i));
   const isMonth = view === 'calendar' && scale === 'month';
-  const visibleMonthDay = monthDay.slice(0, 7) === date.slice(0, 7) ? monthDay : monthStart;
+  const visibleMonthDay = date;
+  function selectEvent(event) {
+    setSelected(event.id);
+    setDate(event.date);
+  }
+  function addOnDay(day) {
+    open('event', { date: day, contextual: true, offering_id: '' });
+  }
+  function exportCalendar() {
+    const entries =
+      view === 'schedule'
+        ? [...weekClassEvents(dates, slots, data.offerings, data.subjects), ...weekEvents]
+        : events;
+    download(
+      view === 'schedule' ? 'la-net-horari-' + dates[0] + '.ics' : 'la-net-calendari.ics',
+      calendarICS(entries),
+      'text/calendar;charset=utf-8',
+    );
+  }
   function move(n) {
     if (isMonth) {
       const d = new Date(monthStart + 'T12:00:00Z');
@@ -221,7 +191,8 @@ export default function Schedule() {
     } else setDate(addDays(date, n * 7));
   }
   function eventCard(e, small = false) {
-    const eventSubject = subject(e.subject_id);
+    const ids = eventSubjectIds(e);
+    const eventSubject = subject(ids.includes(filterSubject) ? filterSubject : ids[0]);
     const subjectName = ['math', 'smath', 'cast'].includes(eventSubject?.id)
       ? eventSubject.name
       : eventSubject?.short;
@@ -237,7 +208,7 @@ export default function Schedule() {
       <button
         key={e.id}
         className={`event-card ${e.kind} ${selected === e.id ? 'selected' : ''} ${small ? 'compact' : ''}`}
-        onClick={() => setSelected(e.id)}
+        onClick={() => selectEvent(e)}
         aria-label={description}
         title={description}
         style={{ '--subject': subject(e.subject_id)?.color || '#EEE6F4' }}
@@ -267,7 +238,7 @@ export default function Schedule() {
             : 'Exàmens, proves, tasques, lliuraments i activitats en un sol lloc'
         }
       >
-        <Button variant="primary" onClick={() => open('event', { date })}>
+        <Button variant="primary" onClick={() => addOnDay(view === 'schedule' ? activeDate : date)}>
           <Plus size={18} />
           Afegir a l’agenda
         </Button>
@@ -296,14 +267,18 @@ export default function Schedule() {
           onChange={(v) => preference('view', v)}
         />
         <div className="calendar-navigation-row">
-          <div className="date-navigation">
+          <div
+            className="date-navigation"
+            role="group"
+            aria-label={isMonth ? 'Navegació del mes' : 'Navegació de la setmana'}
+          >
             <IconButton label="Anterior" onClick={() => move(-1)}>
               <CaretLeft size={18} />
             </IconButton>
-            <strong>
+            <strong role="status" aria-live="polite" aria-atomic="true">
               {isMonth
                 ? dateLabel(monthStart, { month: 'long', year: 'numeric' })
-                : `${Number(dates[0].slice(8))}–${dateLabel(dates[4], { day: 'numeric', month: 'long' })}`}
+                : weekRangeLabel(dates)}
             </strong>
             <IconButton label="Següent" onClick={() => move(1)}>
               <CaretRight size={18} />
@@ -327,8 +302,9 @@ export default function Schedule() {
             </div>
           )}
           <OptionsMenu label="Opcions de l’horari i l’agenda">
-            <Button variant="ghost" onClick={() => exportEvents(events)}>
-              <Export size={18} /> Exportar el calendari
+            <Button variant="ghost" onClick={exportCalendar}>
+              <Export size={18} />{' '}
+              {view === 'schedule' ? 'Exportar aquesta setmana' : 'Exportar dates de l’agenda'}
             </Button>
             <Button variant="ghost" onClick={() => open('configure')}>
               <ReferenceArt name="gear" size={23} /> Personalitzar el curs
@@ -391,7 +367,7 @@ export default function Schedule() {
       )}
       <div className="schedule-layout">
         <section className="schedule-main panel">
-          {!data.user.configured && view === 'schedule' ? (
+          {(!data.user.configured || !slots.length) && view === 'schedule' ? (
             <Empty
               title="Preparem el teu horari"
               body="Tria el grup, l’itinerari i les assignatures."
@@ -401,7 +377,7 @@ export default function Schedule() {
               </Button>
             </Empty>
           ) : view === 'calendar' && scale === 'list' ? (
-            <AgendaList events={listEvents} onSelect={(e) => setSelected(e.id)} />
+            <AgendaList events={listEvents} onSelect={selectEvent} />
           ) : isMonth ? (
             <>
               <div className="month-grid" aria-label="Calendari mensual">
@@ -421,12 +397,11 @@ export default function Schedule() {
                       aria-label={`${compact ? 'Veure' : 'Afegir una data a'} ${dateLabel(d, { weekday: 'long', day: 'numeric', month: 'long' })}`}
                       onClick={() => {
                         if (compact) {
-                          setMonthDay(d);
-                          if (d.slice(0, 7) !== date.slice(0, 7)) setDate(d);
-                        } else open('event', { date: d });
+                          setDate(d);
+                        } else addOnDay(d);
                       }}
                     >
-                      {Number(d.slice(8))}
+                      <time dateTime={d}>{Number(d.slice(8))}</time>
                       {events.some((e) => e.date === d) && (
                         <span className="month-event-dot" aria-hidden="true" />
                       )}
@@ -453,9 +428,9 @@ export default function Schedule() {
                 </h3>
                 <AgendaList
                   events={events.filter((e) => e.date === visibleMonthDay)}
-                  onSelect={(e) => setSelected(e.id)}
+                  onSelect={selectEvent}
                 />
-                <Button onClick={() => open('event', { date: visibleMonthDay })}>
+                <Button onClick={() => addOnDay(visibleMonthDay)}>
                   <Plus size={18} />
                   Afegir aquest dia
                 </Button>
@@ -493,8 +468,86 @@ export default function Schedule() {
               events={weekEvents}
               context={view === 'calendar'}
               eventCard={eventCard}
+              selectedDate={activeDate}
+              onSelectDate={setDate}
             />
           )}
+          {!(view === 'calendar' && (isMonth || examOnly || scale === 'list')) &&
+            !!dayEvents.length && (
+              <details className="schedule-day-events" open={compact}>
+                <summary>
+                  Dates de{' '}
+                  {dateLabel(activeDate, { weekday: 'long', day: 'numeric', month: 'long' })}{' '}
+                  <span>{dayEvents.length}</span>
+                </summary>
+                <div>
+                  {dayEvents.map((event) => (
+                    <button
+                      key={event.id}
+                      type="button"
+                      className="schedule-date-row"
+                      aria-label={'Obrir ' + eventLabel(event) + ': ' + event.title}
+                      onClick={() => selectEvent(event)}
+                      style={{ '--subject': subject(event.subject_id)?.color || '#eee6f4' }}
+                    >
+                      <span>
+                        {event.visibility === 'private' && (
+                          <LockSimple size={13} aria-hidden="true" />
+                        )}
+                        {eventLabel(event)}
+                      </span>
+                      <strong>{event.title}</strong>
+                      <small>
+                        {event.done ? 'Feta · ' : ''}
+                        {event.start
+                          ? event.start + (event.end ? '–' + event.end : '')
+                          : 'Tot el dia'}
+                        {subject(event.subject_id) ? ' · ' + subject(event.subject_id).name : ''}
+                      </small>
+                      <ArrowRight size={18} aria-hidden="true" />
+                    </button>
+                  ))}
+                </div>
+                <details className="schedule-covered-classes">
+                  <summary>Veure les classes d’aquest dia</summary>
+                  <div>
+                    {dayClasses.map((slot) => {
+                      const offering = data.offerings.find((o) => o.id === slot.offering_id);
+                      const course = subject(offering?.subject_id);
+                      return (
+                        <button
+                          key={slot.id}
+                          type="button"
+                          className="schedule-date-row"
+                          aria-label={
+                            'Obrir classe de ' +
+                            (course?.name || 'l’horari') +
+                            ', ' +
+                            slot.start +
+                            '–' +
+                            slot.end
+                          }
+                          onClick={() =>
+                            open('class', { subject: course, offering, slot, date: activeDate })
+                          }
+                          style={{ '--subject': course?.color || '#eee6f4' }}
+                        >
+                          <span>
+                            Classe · {slot.start}–{slot.end}
+                            {slot.room ? ' · Aula ' + slot.room : ''}
+                          </span>
+                          <strong>{course?.name}</strong>
+                          <small>
+                            {slotTeacher(slot, offering) || slot.note || 'Treball personal'}
+                          </small>
+                          <ArrowRight size={18} aria-hidden="true" />
+                        </button>
+                      );
+                    })}
+                  </div>
+                </details>
+              </details>
+            )}
           {!isMonth &&
             !(view === 'calendar' && (examOnly || scale === 'list')) &&
             outsideEvents.length > 0 && (
@@ -520,16 +573,12 @@ export default function Schedule() {
             >
               <div className="panel detail-panel schedule-event-detail">
                 <h2 className="selection-heading">{eventLabel(selectedEvent)}</h2>
-                <SubjectChip
-                  subject={selectedSubject}
-                  label={
-                    ['math', 'smath'].includes(selectedSubject?.id)
-                      ? selectedSubject.name
-                      : undefined
-                  }
-                />
+                <div className="card-tags">
+                  {selectedSubjects.map((s) => <SubjectChip key={s.id} subject={s} label={['math', 'smath'].includes(s.id) ? s.name : undefined} />)}
+                </div>
                 <h3 className="selected-event-title">{selectedEvent.title}</h3>
                 <p className="muted">{eventOrigin(selectedEvent)}</p>
+                <div className="event-detail-actions">
                 <Button
                   onClick={() =>
                     openEventForm('event', {
@@ -546,17 +595,7 @@ export default function Schedule() {
                 >
                   <Plus size={18} /> Afegir una altra tasca o examen
                 </Button>
-                {eventKind(selectedEvent) === 'task' && (
-                  <Button
-                    onClick={() =>
-                      mutate('/events/' + selectedEvent.id + '/progress', {
-                        done: !selectedEvent.done,
-                      }).catch(() => {})
-                    }
-                  >
-                    {selectedEvent.done ? 'Tornar a marcar pendent' : 'Marcar com a feta'}
-                  </Button>
-                )}
+                <TaskProgressButton event={selectedEvent} />
                 {selectedEvent.source_key?.startsWith('plus:') &&
                   data.pluses.find((p) => p.id === selectedEvent.source_key.split(':')[1]) && (
                     <Button
@@ -570,6 +609,7 @@ export default function Schedule() {
                       Veure el plus d’origen
                     </Button>
                   )}
+                </div>
                 <ul className="detail-list">
                   <li>
                     <CalendarCheck size={19} />
@@ -608,11 +648,11 @@ export default function Schedule() {
                     </small>
                   </span>
                 </div>
-                {selectedEvent.subject_id && (
+                {!!selectedSubjects.length && (
                   <Button
                     variant="primary"
                     onClick={() => {
-                      setSubjectFilter(selectedEvent.subject_id);
+                      setSubjectFilter(selectedSubjects.some((s) => s.id === filterSubject) ? filterSubject : selectedSubjects[0].id);
                       go('notes');
                     }}
                   >
