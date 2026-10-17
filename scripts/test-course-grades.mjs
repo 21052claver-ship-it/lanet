@@ -14,6 +14,7 @@ for (const name of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,webki
   );
   const browser = await engines[name].launch({ headless: true });
   async function run(label, width, scenario) {
+    if (process.env.LANET_COURSE_CHECK && !label.includes(process.env.LANET_COURSE_CHECK)) return;
     fixture.db.exec(
       "DELETE FROM grade_bonuses WHERE user_id='browser'; DELETE FROM grade_course_settings WHERE user_id='browser'; DELETE FROM user_preferences WHERE user_id='browser'",
     );
@@ -55,6 +56,8 @@ for (const name of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,webki
         .screenshot({ path: `${out}/${name}-${label}-failed.png`, fullPage: true })
         .catch(() => {});
     } finally {
+      // Complete interception callbacks before disposing their request context.
+      await context.unrouteAll({ behavior: 'wait' });
       await context.close();
       writeFileSync(
         `${out}/course-browser-results.json`,
@@ -387,12 +390,58 @@ for (const name of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,webki
         dialog.getByRole('button', { name: 'Reintentar', exact: true }).click(),
       );
       await text(p, dialog.locator('.course-total-number'), '8,24');
-      await saved(p, '/grades/batch', () =>
-        dialog.getByRole('button', { name: 'Desfer l’última nota', exact: true }).click(),
+      await text(
+        p,
+        dialog.locator('.bonus-save-status'),
+        'Les notes corregides es desen en sortir de la casella.',
       );
-      assert.equal(marks()[0].grade, null);
-      await dialog.locator('.bonus-grade-input').fill('0,26');
-      assert.equal(await dialog.locator('.bonus-grade-input').inputValue(), '0,26');
+      let startRead, finishRead, readTimer;
+      const reading = new Promise((resolve, reject) => {
+        readTimer = setTimeout(() => reject(new Error('The undo refresh did not start.')), 10000);
+        startRead = () => {
+          clearTimeout(readTimer);
+          resolve();
+        };
+      });
+      reading.catch(() => {});
+      const finish = new Promise((resolve) => {
+        finishRead = resolve;
+      });
+      let holdUndo = true;
+      await p.route('**/api/bootstrap', async (route) => {
+        const response = await route.fetch();
+        if (holdUndo) {
+          holdUndo = false;
+          startRead();
+          await finish;
+        }
+        await route.fulfill({ response });
+      });
+      try {
+        await saved(p, '/grades/batch', () =>
+          dialog.getByRole('button', { name: 'Desfer l’última nota', exact: true }).click(),
+        );
+        await reading;
+        assert.equal(marks()[0].grade, null);
+        // Focus as a user does, then edit while the confirmed undo is still refreshing.
+        await dialog.locator('.bonus-grade-input').click();
+        await dialog.locator('.bonus-grade-input').fill('0,26');
+        assert.equal(await dialog.locator('.bonus-grade-input').inputValue(), '0,26');
+        finishRead();
+        await text(
+          p,
+          dialog.locator('.bonus-save-status'),
+          'Les notes corregides es desen en sortir de la casella.',
+        );
+        assert.equal(
+          await dialog.locator('.bonus-grade-input').inputValue(),
+          '0,26',
+          'The refresh must preserve a newer edit',
+        );
+      } finally {
+        clearTimeout(readTimer);
+        finishRead();
+      }
       await dialog.locator('.bonus-grade-input').press('Tab');
       await dialog.locator('.bonus-grade-input[aria-invalid="true"]').waitFor();
       assert.equal(marks()[0].grade, null);

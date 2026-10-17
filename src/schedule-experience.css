@@ -169,17 +169,6 @@
 .calendar-navigation-row .date-navigation > strong {
   min-width: 0;
 }
-.event-detail-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  margin: 18px 0;
-}
-.schedule-event-detail .event-detail-actions .button {
-  margin: 0;
-  max-width: 100%;
-}
 .agenda-list .agenda-row {
   grid-template-columns: 80px minmax(0, 1fr) 44px;
 }

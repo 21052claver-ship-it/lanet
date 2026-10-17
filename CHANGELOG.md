@@ -2,6 +2,16 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production.
 
+## [0.6.23] - 2026-10-17
+
+- Continuïtat entre classe, continguts i agenda: dia, setmana i tasques fetes conservats durant la sessió, també després d’una recàrrega. Un nou dia torna a Avui; si el navegador bloqueja l’emmagatzematge, la navegació conserva el context en memòria.
+- Panell de delegats amb publicació directa, dates publicades, cerca i actualització manual; propostes recents en entrar, sense afegir polling. Pestanyes i subseccions recuperables en recarregar, navegar enrere o obrir l’enllaç.
+- L’autor conserva les dates aprovades a Les meves propostes i veu el motiu dels canvis dins del formulari de correcció. El desament des del panell porta a la llista corresponent; els esborranys públics antics es recuperen i els privats es conserven separats.
+- El detall obert reflecteix títol, data, aula i instruccions de l’estat actualitzat; si la data es retira, mostra un retorn clar a l’agenda i elimina les accions antigues.
+- Retirada de dates amb una única acció clara i motiu obligatori; recuperació des del mateix diàleg si un altre representant ja ha resolt la proposta. Accions d’avisos segons autoria i permisos, verificats al servidor.
+- Panell amb pestanyes en dues columnes en mòbil, resum compacte, targetes alineades, textos llargs adaptables i controls tàctils separats. Les confirmacions anteriors es retiren en obrir un formulari nou. Simulacions completes d’alumnes, delegats i subdelegats dels tres itineraris, errors, concurrència i seguiment privat als tres motors de navegador.
+- Cap canvi de permisos de servidor, migració o operació R2. S’afegeix una lectura de l’estat vigent en entrar al panell; la resta reutilitza les consultes i accions existents.
+
 ## [0.6.22] - 2026-10-17
 
 - Horari amb selecció del dia coherent amb Avui, alta contextual i agenda mensual; columnes consistents per a dates solapades, franges curtes fidels i files completes per llegir i obrir dates/classes tapades.

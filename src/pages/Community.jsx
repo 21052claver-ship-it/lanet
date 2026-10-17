@@ -56,19 +56,21 @@ export default function Community() {
   return (
     <>
       <PageTitle title="Comunitat" subtitle="La gent i les coses del teu grup">
-        <label className="community-group">
-          <UsersThree size={24} />
-          <Select
-            aria-label="Àmbit de la comunitat"
-            value={scope}
-            onChange={(e) => setScope(e.target.value)}
-          >
-            <option value="group">
-              {group?.name.replace(/^([12])n de batxillerat ([A-Z])$/, '$1n $2') || 'El meu grup'}
-            </option>
-            <option value="centre">Tot el centre</option>
-          </Select>
-        </label>
+        {['notices', 'events'].includes(tab) && (
+          <label className="community-group">
+            <UsersThree size={24} />
+            <Select
+              aria-label="Àmbit de la comunitat"
+              value={scope}
+              onChange={(e) => setScope(e.target.value)}
+            >
+              <option value="group">
+                {group?.name.replace(/^([12])n de batxillerat ([A-Z])$/, '$1n $2') || 'El meu grup'}
+              </option>
+              <option value="centre">Tot el centre</option>
+            </Select>
+          </label>
+        )}
         {manager && tab === 'notices' && (
           <Button onClick={() => open('announcement')}>
             <Plus size={18} />

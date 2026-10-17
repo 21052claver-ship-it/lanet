@@ -26,8 +26,17 @@ import { ConflictNotice } from './Delegates';
 import { agendaPublication } from '../../shared/delegation';
 
 export default function EventEditor({ item }) {
-  const { data, enrolled, close, mutate, open, notify } = useApp();
-  const key = `lanet.eventDraft.${data.user.id}.${item.subject_id || 'all'}.${item.kind || 'exam'}${item.contextual ? '.' + item.date + '.' + item.offering_id : ''}`;
+  const { data, enrolled, close, mutate, open, notify, setDelegateTab } = useApp();
+  const baseKey = `lanet.eventDraft.${data.user.id}.${item.subject_id || 'all'}.${item.kind || 'exam'}${item.contextual ? '.' + item.date + '.' + item.offering_id : ''}`;
+  const [key] = useState(() => {
+    if (item.id || item.visibility !== 'shared') return baseKey;
+    const publicKey = baseKey + '.public';
+    // Keep an older public draft in its original location until it is confirmed.
+    // A private draft must never override an explicitly public entry point.
+    return !readLocalJSON(publicKey, null) && readLocalJSON(baseKey, null)?.visibility === 'shared'
+      ? baseKey
+      : publicKey;
+  });
   const [cached] = useState(() => (!item.id ? readLocalJSON(key, null) : null));
   const [f, setF] = useState(() => ({
     title: '',
@@ -123,6 +132,8 @@ export default function EventEditor({ item }) {
           undefined,
           (result) => {
             if (!item.id) removeLocalJSONIfUnchanged(key, f);
+            if (item.fromDelegatePanel)
+              setDelegateTab(result.status === 'approved' ? 'published' : 'mine');
             notify(
               f.visibility !== 'shared'
                 ? 'Data privada desada al calendari.'
@@ -135,6 +146,22 @@ export default function EventEditor({ item }) {
       })}
     >
       {cached && <p className="editor-draft-hint">Hem recuperat la data que estaves preparant.</p>}
+      {item.review_note && ['returned', 'withdrawn'].includes(item.review_status) && (
+        <section
+          className="delegate-feedback editor-feedback"
+          aria-label={
+            item.review_status === 'returned' ? 'Canvis demanats' : 'Motiu de la retirada'
+          }
+        >
+          <strong>
+            {item.review_status === 'returned'
+              ? 'El delegat et demana aquests canvis'
+              : 'La data s’ha retirat per aquest motiu'}
+          </strong>
+          <p>{item.review_note}</p>
+          <small>Corregeix la proposta i torna-la a enviar perquè la revisin.</small>
+        </section>
+      )}
       <ol className="agenda-sequence" aria-label="Passos per afegir una data">
         <li>
           <b>1</b> Què i quan

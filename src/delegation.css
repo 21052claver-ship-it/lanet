@@ -149,6 +149,82 @@
 .delegate-hero h2 {
   margin: 0 0 8px;
 }
+.delegate-hero > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.delegate-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+}
+.delegate-panel-actions .button,
+.delegate-proposal .button {
+  min-height: 44px;
+  max-width: 100%;
+  white-space: normal;
+}
+.delegate-proposal-grid {
+  align-items: stretch;
+}
+.delegate-proposal {
+  display: flex;
+  flex-direction: column;
+}
+.app-shell .delegate-proposal > .subject-chip {
+  align-self: flex-start;
+  max-width: 100%;
+}
+.delegate-proposal-top {
+  flex-wrap: wrap;
+}
+.delegate-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  min-height: 44px;
+}
+.delegate-search input {
+  width: 100%;
+  min-width: 0;
+}
+.delegate-search svg {
+  flex-shrink: 0;
+}
+.agenda-state.approved {
+  background: #eaf0e4;
+  color: #486544;
+}
+.editor-feedback {
+  margin: 0 0 18px;
+  overflow-wrap: anywhere;
+}
+.editor-feedback p {
+  margin: 10px 0;
+  white-space: pre-wrap;
+}
+.editor-feedback small {
+  display: block;
+  line-height: 1.5;
+}
+@media (max-width: 600px) {
+  .app-shell .delegation-hub > .tabs.view-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    overflow: visible;
+  }
+  .app-shell .delegation-hub > .tabs.view-tabs > button {
+    justify-content: center;
+    min-width: 0;
+    min-height: 44px;
+    padding: 10px 7px;
+    white-space: normal;
+    height: auto;
+  }
+}
 .delegate-hero p {
   margin: 0;
   color: #5b6254;
@@ -159,19 +235,19 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  margin: 16px 0 22px;
+  margin: 14px 0;
 }
 .delegate-stats span {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  padding: 17px;
+  gap: 3px;
+  padding: 10px 12px;
   border: 1px solid #e4ddd2;
   border-radius: 15px;
-  font-size: 13px;
+  font-size: 12px;
 }
 .delegate-stats b {
-  font-size: 27px;
+  font-size: 21px;
   color: #4f6548;
 }
 .delegate-proposal-grid,
@@ -217,7 +293,8 @@
 }
 .delegate-proposal .row-actions {
   flex-wrap: wrap;
-  margin-top: 16px;
+  margin-top: auto;
+  padding-top: 16px;
   gap: 8px;
 }
 .delegate-feedback {
@@ -424,10 +501,10 @@
   }
   .delegate-stats span {
     font-size: 11px;
-    padding: 12px;
+    padding: 8px;
   }
   .delegate-stats b {
-    font-size: 23px;
+    font-size: 19px;
   }
   .delegate-contact,
   .delegate-proposal {

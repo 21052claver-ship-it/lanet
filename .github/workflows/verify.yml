@@ -70,6 +70,9 @@ jobs:
               npm run test:course-grades
               npm run test:reactions
               npm run test:grade-activities
+          - group: journeys
+            tests: |
+              npm run test:student-journeys
           - group: functional
             tests: |
               npm run test:functional-controls
@@ -128,6 +131,7 @@ jobs:
           name: local-browser-evidence-${{ matrix.group }}
           retention-days: 7
           path: |
+            output/student-journeys/browser/
             output/onboarding/browser/
             output/delegates/browser/
             output/notifications/browser/
