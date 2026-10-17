@@ -456,6 +456,10 @@
     {
       "id": "R113",
       "description": "Simplificar a fons els recorreguts d’alumnes i delegats, conservar el context entre pantalles i simular proposta, correcció, publicació i seguiment amb diverses persones, errors i mides de pantalla; disposició recta i sense solapaments."
+    },
+    {
+      "id": "R114",
+      "description": "Entrar a Continguts, filtrar o recarregar no ha de carregar ni descarregar cap PDF. Obrir el material permet llegir-lo al visor; descarregar requereix una acció explícita."
     }
   ],
   "phases": [
@@ -1079,6 +1083,13 @@
       "title": "Recorreguts fàcils per a alumnes i delegats",
       "depends_on": [
         "F87"
+      ]
+    },
+    {
+      "id": "F89",
+      "title": "Continguts sense descàrregues automàtiques",
+      "depends_on": [
+        "F88"
       ]
     }
   ],
@@ -8523,6 +8534,48 @@
       ],
       "progress": "Dia i setmana conservats entre classe, continguts i agenda; panell de delegats recuperable amb publicació, cerca, actualització i dates publicades. Correccions amb el missatge visible, aprovades accessibles a l’autor, retirada amb motiu i recuperació de concurrència. Detall amb dades vigents i accions antigues retirades quan desapareix la data. Esborranys públics anteriors recuperables amb privats intactes. Resum mòbil compacte, pestanyes en dues columnes i confirmacions antigues retirades en obrir un formulari nou. 475 unitàries, 66 recorreguts nous d’alumnes/delegats/subdelegats als tres itineraris i motors, 63 regressions de classe, 66 responsive, 33 delegats, 30 notificacions, 36 horari/navegació i 24 de nota anual correctes. Revalidació final de 12 publicacions amb cerca anterior, fallada i reintent, sense duplicats. Tipus/lint/build/font correctes. Els 12 jobs i Validate de PR/main són verds; la CI recompila i prova la matriu sencera del codi final. Publicada una vegada via PR46: 15c71c03610653ea195891a8e765fe183c165c0d. Tag/release immutable, rebut/digest, Deployment i configuració comprovats. Cap prova pública o dada real; tancament documental separat sense nou producte.",
       "change_log_id": "H203"
+    },
+    {
+      "id": "T89-01",
+      "phase": "F89",
+      "title": "Eliminar la descàrrega de PDF en entrar a Continguts",
+      "status": "review",
+      "requirements": [
+        "R114"
+      ],
+      "depends_on": [
+        "T88-01"
+      ],
+      "files": [
+        "src/pages/Notes.jsx",
+        "src/contents.css",
+        "scripts/test-contents-downloads.mjs",
+        ".github/workflows/verify.yml",
+        "package.json",
+        "package-lock.json",
+        "CHANGELOG.md",
+        "docs/PLA-PDF-CONTINGUTS.md",
+        "tests/helpers/browser-fixture.mjs"
+      ],
+      "acceptance": "Reproduir el clic únic a Continguts amb fixtures locals i un PDF servit com attachment. Cap petició PDF ni descàrrega en entrar, tornar, recarregar, cercar o filtrar. Lectura amb PDF.js només després d’obrir el material, i descàrrega només en prémer el seu enllaç. PR amb Validate verd i publicació única.",
+      "checks": [
+        "Reproduir la descàrrega només amb el clic de navegació, sense contingut real.",
+        "Substituir el PDF incrustat de la targeta per una portada estàtica accessible.",
+        "Comprovar absència de peticions/descàrregues i lectura/descàrrega explícites en tres motors i mòbil/escriptori.",
+        "Tipus, unitàries, build, font, CI exacta, publicació i registre."
+      ],
+      "evidence": [
+        "docs/PLA-PDF-CONTINGUTS.md",
+        "output/contents-download/before.json",
+        "output/contents-download/validated/results.json",
+        "output/contents-download/local-verification.json",
+        "output/contents-download/library/contents-browser-results.json",
+        "output/contents-download/unit.log",
+        "output/contents-download/typecheck-final.log",
+        "output/contents-download/build-final.log"
+      ],
+      "progress": "Reproduït un únic clic a Continguts que demanava i descarregava el PDF fictici. Retirat l’iframe de les targetes i substituït per una portada estàtica. La llista no demana cap PDF; el visor PDF.js carrega només el material obert i la descàrrega requereix el seu enllaç. 6 escenaris de 10 etapes, mòbil/escriptori als tres motors, amb 0 peticions/descàrregues espontànies; lectura i bytes de la descàrrega explícita correctes. 33 regressions de Continguts i 475 unitàries correctes; tipus/lint/build correctes. Portades revisades sense solapaments. Cap canvi de servidor, capçaleres, permisos, migracions o operació privada. Pendent CI exacta de PR/main i publicació única de 0.6.24.",
+      "change_log_id": "H204"
     }
   ]
 }

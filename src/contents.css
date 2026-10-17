@@ -1,6 +1,16 @@
 .contents-page {
   min-width: 0;
 }
+.note-pdf-cover {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  height: 100%;
+  padding: 16px;
+  color: var(--accent-dark);
+  font-weight: 700;
+}
 .app-shell .tabs.view-tabs.contents-sections {
   width: fit-content;
   max-width: 100%;
