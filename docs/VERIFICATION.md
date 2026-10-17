@@ -1,9 +1,9 @@
-# Verificació · La Net 0.6.23
+# Verificació · La Net 0.6.24
 
-[Informe i límits](releases/0.6.23.md) · [Recorreguts](PLA-RECORREGUTS-ALUMNES-DELEGATS.md) · [Estat](ESTAT-PROJECTE.md).
+[Informe i límits](releases/0.6.24.md) · [Reproducció](PLA-PDF-CONTINGUTS.md) · [Estat](ESTAT-PROJECTE.md).
 
-475 unitàries, 66 recorreguts nous d’alumnes/delegats/subdelegats als tres itineraris i motors, 63 regressions de classe, 66 responsive, 33 delegats, 30 notificacions, 36 horari/navegació i 24 de nota anual correctes. Revalidació final de 12 publicacions amb cerca anterior, fallada i reintent, sense duplicats. Tipus/lint/build/font correctes. Els 12 jobs i Validate de PR/main són verds; la CI recompila i prova la matriu sencera del codi final.
+Reproducció prèvia amb un clic únic: una petició de document i una descàrrega. Després: 6 escenaris als tres motors, a 320/1440 px, amb 10 etapes per escenari i zero peticions PDF/descàrregues espontànies. Lectura correcta i descàrrega explícita contrastada amb tots els bytes originals; el segon PDF no obert continua sense carregar-se. 33 regressions de Continguts i 475 unitàries correctes; tipus/lint/build/font correctes. Els 12 jobs i Validate de PR/main són verds.
 
-GitHub ha comprovat el commit publicat 15c71c03610653ea195891a8e765fe183c165c0d: [CI completa](https://github.com/21052claver-ship-it/lanet/actions/runs/39049070275).
+GitHub ha comprovat el commit publicat d3ef96fb678a77fe751c6b3aed2691e61210c139: [CI completa](https://github.com/21052claver-ship-it/lanet/actions/runs/39053459420).
 
-Dades fictícies locals, mides/visibilitat/temps simulats, cap visita pública ni login Google real. Proveïdor, domini, callback, bindings, tag/release immutable i rebut verificats. Cap migració o desplegament privat.
+Dades fictícies locals i mides simulades; cap visita pública, fitxer real, login Google o dispositiu físic. Proveïdor, domini/callback/bindings, tag/release immutable i rebut verificats. Cap migració ni desplegament privat.

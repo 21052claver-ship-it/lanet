@@ -1,0 +1,102 @@
+{
+  "recordedAt": "2026-10-17T17:49:47.380Z",
+  "version": "0.6.24",
+  "sourceCommit": "d3ef96fb678a77fe751c6b3aed2691e61210c139",
+  "origin": "https://lanet.es",
+  "pullRequest": "https://github.com/21052claver-ship-it/lanet/pull/48",
+  "ci": "https://github.com/21052claver-ship-it/lanet/actions/runs/39053459420",
+  "pullRequestCi": "https://github.com/21052claver-ship-it/lanet/actions/runs/39052243045",
+  "mainCiAttempt": 2,
+  "pullRequestCiAttempt": 1,
+  "ciRetryReason": "La primera execució de main va fallar amb un error intern de WebKit durant una recàrrega a la prova d’horaris. Els 9 recorreguts WebKit del mateix codi passen localment; s’aturen les suites encara pendents i es repeteix tota la CI una vegada, sense canviar ni ometre asserts. Els 12 controls de la segona execució són correctes. Registre i captura originals conservats.",
+  "allCiJobsSuccess": true,
+  "ciJobs": [
+    {
+      "name": "Core checks",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (contents)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (school)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (audio)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (functional)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (board)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (compatibility)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (casino)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (academics)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (journeys)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (navigation)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Validate",
+      "conclusion": "success"
+    }
+  ],
+  "releaseUrl": "https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.24",
+  "immutable": true,
+  "tagCommitMatches": true,
+  "receiptDigestMatches": true,
+  "cloudflareDeployment": "df18bede-e81b-4497-a07d-24400d3d2b7a",
+  "githubDeployment": 7143425011,
+  "providerConfirmed": true,
+  "productionCommitMatches": true,
+  "domainActive": true,
+  "pagesDomainPreserved": true,
+  "googleCallbackPreserved": true,
+  "d1R2BindingsPreserved": true,
+  "privateServiceBindingsPreserved": true,
+  "serverUnchanged": true,
+  "migrationsUnchanged": true,
+  "privateMaintenanceRedeployed": false,
+  "tests": {
+    "unit": 475,
+    "downloadScenarios": 6,
+    "stagesPerScenario": 10,
+    "contentLibrary": 33,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "widths": [
+      320,
+      1440
+    ],
+    "unsolicitedPdfRequests": 0,
+    "unsolicitedDownloads": 0,
+    "explicitPdfBytesMatch": true,
+    "explicitDownloadsPerScenario": 1
+  },
+  "publicAppVisited": false,
+  "productionDataUsed": false,
+  "physicalDevicesTested": false,
+  "productPublications": 1
+}
