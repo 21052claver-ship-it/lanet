@@ -8,11 +8,12 @@ export default function SubjectPicker({
   onChange,
   label = 'Les meves assignatures',
   defaults = subjects.map((s) => s.id),
+  disabled = false,
 }) {
   const [query, setQuery] = useState('');
   const filtered = subjects.filter((subject) => matchesSearch(query, subject.name, subject.short));
   return (
-    <fieldset className="subject-picker">
+    <fieldset className="subject-picker" disabled={disabled}>
       <legend>{label}</legend>
       <div className="subject-picker-tools">
         <input

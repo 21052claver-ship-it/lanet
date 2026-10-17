@@ -248,3 +248,5 @@ R115: Marc confirma el 17 d’octubre de 2026 que Química també és una altern
 R116: icona pròpia de representants amb bafarada per identificar el panell de delegats al menú lateral, al mòbil i a la capçalera. Tasca única T91-01; revisió visual amb fixtures locals i regressions de navegació per a alumnes, delegats i subdelegats.
 
 R117: per indicació de Marc del 17/10/2026, evitar PRs i peticions de revisió per als canvis propis. Excepció de PR només per al compte propietari, CI obligatòria sobre el commit exacte i incorporació directa sense force push. Les contribucions externes continuen requerint PR i revisió de Marc. [Flux vigent](FLUX-PROPIETARI.md), tasca única T92-01.
+
+R118: nova depuració a fons amb simulacions locals d’alumnes, delegats i subdelegats. Desaments lents, recuperació d’errors, esborranys, navegació, controls i disposició mòbil/escriptori. Correccions agrupades amb regressions, CI completa i incorporació directa segons R117. [Pla, fallades i evidències](PLA-DEPURACIO-INTEGRAL.md), tasca única T93-01.

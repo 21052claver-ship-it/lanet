@@ -77,6 +77,7 @@ jobs:
               npm run test:technology-chemistry
           - group: functional
             tests: |
+              npm run test:platform-recovery
               npm run test:functional-controls
               npm run test:ad-retention
               npm run test:bakery-minute
@@ -165,6 +166,7 @@ jobs:
             output/responsive/
             output/security-compat/
             output/functional-controls/browser/
+            output/platform-recovery/browser/
             output/ad-retention/browser/
             output/bakery-minute/
             output/music-records/

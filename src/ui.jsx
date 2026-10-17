@@ -140,8 +140,16 @@ export function Field({ label, hint, children }) {
     </label>
   );
 }
-export function Tabs({ items, value, onChange, label = 'Vista', className = '' }) {
+export function Tabs({
+  items,
+  value,
+  onChange,
+  label = 'Vista',
+  className = '',
+  disabled = false,
+}) {
   function move(event, index) {
+    if (disabled) return;
     const next =
       event.key === 'Home'
         ? 0
@@ -164,6 +172,7 @@ export function Tabs({ items, value, onChange, label = 'Vista', className = '' }
           key={id}
           type="button"
           role="tab"
+          disabled={disabled}
           aria-selected={value === id}
           tabIndex={value === id || (!items.some(([key]) => key === value) && index === 0) ? 0 : -1}
           className={value === id ? 'active' : ''}

@@ -1,6 +1,6 @@
 {
   "name": "la-net",
-  "version": "0.6.26",
+  "version": "0.6.27",
   "private": true,
   "type": "module",
   "scripts": {
@@ -67,7 +67,8 @@
     "test:notifications": "node scripts/test-notifications.mjs",
     "test:schedule-experience": "node scripts/test-schedule-experience.mjs",
     "test:class-sequence": "node scripts/test-class-sequence.mjs",
-    "test:student-journeys": "node scripts/test-student-journeys.mjs"
+    "test:student-journeys": "node scripts/test-student-journeys.mjs",
+    "test:platform-recovery": "node scripts/test-platform-recovery.mjs"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.3.0",

@@ -2,6 +2,16 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production.
 
+## [0.6.27] - 2026-10-17
+
+- Les propostes conserven el text més recent encara que s’editi mentre pugen les imatges. En tornar a obrir l’esborrany es recuperen el text i els adjunts junts.
+- El perfil i el filtre d’assignatures protegeixen els camps durant el desament per evitar acceptar canvis que després es perdien en tancar-se el formulari.
+- Les dates, propostes i plusos també protegeixen els camps durant la publicació; les imatges continuen permetent preparar el text mentre s’estan pujant.
+- Acabar de desar un filtre després d’obrir una assignatura ja no fa sortir del seu espai d’estudi. La preferència es conserva sense alterar la navegació més recent.
+- El filtre d’assignatures s’obre amb la selecció correcta des del primer moment, sense tornar a marcar una opció que l’alumne acaba de desmarcar.
+- El calendari recupera les parts vàlides dels esborranys antics o malmesos sense bloquejar la plataforma. Dates, hores, tipus i metadades no vàlids deixen de substituir els valors del formulari.
+- Simulacions locals de recuperació amb alumnat, delegats i subdelegats, en mòbil i escriptori als tres motors de navegador, incorporades a CI.
+
 ## [0.6.26] - 2026-10-17
 
 - Icona pròpia del panell de delegats: representants amb una bafarada, amb els colors de La Net. La mateixa icona identifica el menú lateral, el menú mòbil i la capçalera del panell.

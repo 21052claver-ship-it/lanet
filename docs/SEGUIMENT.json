@@ -472,6 +472,10 @@
     {
       "id": "R117",
       "description": "Incorporació directa dels canvis propis per evitar PRs i peticions de revisió al correu de Marc; conservar CI obligatòria i revisió de contribucions externes."
+    },
+    {
+      "id": "R118",
+      "description": "Depurar al màxim la plataforma amb simulacions locals d’alumnes i representants, corregint errors reproduïbles, continuïtat de les accions i disposició visual."
     }
   ],
   "phases": [
@@ -1123,6 +1127,13 @@
       "title": "Canvis propis sense peticions de revisió",
       "depends_on": [
         "F91"
+      ]
+    },
+    {
+      "id": "F93",
+      "title": "Depuració integral dels recorreguts de la plataforma",
+      "depends_on": [
+        "F92"
       ]
     }
   ],
@@ -8776,6 +8787,61 @@
       ],
       "progress": "Configuració de GitHub comprovada per API: només el compte propietari pot incorporar sense PR. CI obligatòria sense bypass, aprovació externa i proteccions contra force push/esborrat conservades. CI de push activada a main/codex/** i instruccions vigents actualitzades. Revisió independent del diff sense bloquejadors. Cada incorporació comprova el mateix SHA, els 12 controls inclòs Validate i main actualitzada. Cap nova PR, canvi de notificacions globals o publicació de producte.",
       "change_log_id": "H207"
+    },
+    {
+      "id": "T93-01",
+      "phase": "F93",
+      "title": "Revisar i corregir els recorreguts complets amb proves adverses locals",
+      "status": "review",
+      "requirements": [
+        "R118"
+      ],
+      "depends_on": [
+        "T92-01"
+      ],
+      "files": [
+        "src/forms-general.jsx",
+        "src/forms-resources.jsx",
+        "src/components/EventEditor.jsx",
+        "src/components/SubjectFilter.jsx",
+        "src/components/SubjectPicker.jsx",
+        "src/ui.jsx",
+        "src/revision.css",
+        "shared/event-draft.js",
+        "tests/event-draft.test.js",
+        "scripts/test-platform-recovery.mjs",
+        ".github/workflows/verify.yml",
+        "package.json",
+        "package-lock.json",
+        "CHANGELOG.md",
+        "docs/PLA-DEPURACIO-INTEGRAL.md",
+        "docs/PLA-MESTRE.md",
+        "docs/README.md"
+      ],
+      "acceptance": "Auditoria dels recorreguts d’alumnes/delegats/subdelegats, amb fallades reproduïdes abans de corregir, regressions significatives i revisió mòbil/escriptori. Controls apropiats i CI completa verda; incorporació directa sense PR i publicació amb rebut si hi ha canvis de producte.",
+      "checks": [
+        "Mapar accions, persistència, formularis i errors amb dades fictícies.",
+        "Reproduir les fallades i corregir-ne la causa amb regressions de resultat.",
+        "Revisar disposició i executar les suites locals relacionades i els controls de font.",
+        "Validar el commit exacte, incorporar directament i publicar la tanda amb evidències."
+      ],
+      "evidence": [
+        "docs/PLA-DEPURACIO-INTEGRAL.md",
+        "output/platform-deep-audit/action-inventory.json",
+        "output/platform-deep-audit/baseline-recovery/results.json",
+        "output/platform-deep-audit/baseline-subject-filter/results.json",
+        "output/platform-deep-audit/baseline-late-navigation/results.json",
+        "output/platform-deep-audit/baseline-publication/results.json",
+        "output/platform-deep-audit/unit.log",
+        "output/platform-deep-audit/build-final.log",
+        "output/platform-deep-audit/final-recovery/results.json",
+        "output/platform-deep-audit/primary-verification.json",
+        "output/platform-deep-audit/visual-reviewed.json",
+        "output/platform-deep-audit/typecheck-final.log",
+        "output/platform-deep-audit/source-audit-product.log"
+      ],
+      "progress": "Correccions de pèrdua de text i canvis durant desaments, recuperació d’esborranys de calendari, inicialització del filtre i navegació durant peticions. 485 unitàries i 162 simulacions noves correctes als tres motors, amb alumnat/delegats/subdelegats a 320/1440 px. Captures de formularis, filtres i panell denses revisades; tipus/lint/build/font correctes. Regressions àmplies en execució; CI completa i publicació 0.6.27 pendents. Cap prova pública ni canvi de serveis o dades de producció.",
+      "change_log_id": "H208"
     }
   ]
 }

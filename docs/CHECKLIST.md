@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**203/204 tasques verificades · 117 requisits · 93 fases · límit d’una tasca activa.**
+**203/205 tasques verificades · 118 requisits · 94 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **cap**.
+Tasca activa: **T93-01 — Revisar i corregir els recorreguts complets amb proves adverses locals**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -492,5 +492,9 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 ## F92 Canvis propis sense peticions de revisió
 
 - [x] **T92-01** Configurar la incorporació directa del propietari amb CI obligatòria — Verificat.
+
+## F93 Depuració integral dels recorreguts de la plataforma
+
+- [ ] **T93-01** Revisar i corregir els recorreguts complets amb proves adverses locals — En revisió.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

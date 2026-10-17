@@ -4,7 +4,7 @@ import CourseSetup from './components/CourseSetup';
 import { OFFICIAL_ROUTES } from '../shared/official-schedule';
 import SubjectPicker from './components/SubjectPicker';
 import { DEFAULT_PREFERENCES } from '../shared/preferences';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Plus, Trash, Clock, MapPin, LockSimple, ArrowRight, SignOut } from '@phosphor-icons/react';
 import { useApp } from './context';
 import { Avatar } from './art';
@@ -31,7 +31,7 @@ export function EventForm({ item }) {
 export function ProposalForm({ item }) {
   const { data, close, mutate } = useApp();
   const key = `lanet.proposalDraft.${data.user.id}`;
-  const cached = readLocalJSON(key, {}) || {};
+  const [cached] = useState(() => readLocalJSON(key, {}) || {});
   const draft = {
     title: typeof cached.title === 'string' ? cached.title.slice(0, 120) : '',
     body: typeof cached.body === 'string' ? cached.body.slice(0, 4000) : '',
@@ -44,13 +44,15 @@ export function ProposalForm({ item }) {
     [uploading, setUploading] = useState(false),
     [draftRemembered, setDraftRemembered] = useState(true);
   const { busy, error, submit } = useSubmit(close);
+  useEffect(() => {
+    if (!item.id) setDraftRemembered(writeLocalJSON(key, { ...f, files }));
+  }, [key, f, files, item.id]);
   function change(k, v) {
-    const next = { ...f, [k]: v };
-    setF(next);
-    if (!item.id) setDraftRemembered(writeLocalJSON(key, { ...next, files }));
+    setF((current) => ({ ...current, [k]: v }));
   }
   return (
     <form
+      aria-busy={busy}
       onSubmit={submit(() => {
         if (uploading) throw new Error('Espera que acabin de pujar les imatges.');
         const submittedDraft = { ...f, files };
@@ -64,33 +66,27 @@ export function ProposalForm({ item }) {
         );
       })}
     >
-      <Field label="La teva idea">
-        <input
-          placeholder="Ex.: trobar companys per repassar"
-          value={f.title}
-          onChange={(e) => change('title', e.target.value)}
-          maxLength={120}
-          required
-        />
-      </Field>
-      <Field label="Com ajudaria?" hint="Explica el problema i què canviaries.">
-        <textarea
-          rows={5}
-          value={f.body}
-          onChange={(e) => change('body', e.target.value)}
-          maxLength={4000}
-          required
-        />
-      </Field>
-      <Attachments
-        imagesOnly
-        onBusyChange={setUploading}
-        files={files}
-        setFiles={(v) => {
-          setFiles(v);
-          if (!item.id) setDraftRemembered(writeLocalJSON(key, { ...f, files: v }));
-        }}
-      />
+      <fieldset className="form-fields" disabled={busy}>
+        <Field label="La teva idea">
+          <input
+            placeholder="Ex.: trobar companys per repassar"
+            value={f.title}
+            onChange={(e) => change('title', e.target.value)}
+            maxLength={120}
+            required
+          />
+        </Field>
+        <Field label="Com ajudaria?" hint="Explica el problema i què canviaries.">
+          <textarea
+            rows={5}
+            value={f.body}
+            onChange={(e) => change('body', e.target.value)}
+            maxLength={4000}
+            required
+          />
+        </Field>
+        <Attachments imagesOnly onBusyChange={setUploading} files={files} setFiles={setFiles} />
+      </fieldset>
       <FormError error={error} />
       {!draftRemembered && (
         <p className="muted small" role="status">
@@ -221,6 +217,7 @@ export function ProfileForm({ item = {}, onLogout, logoutBusy = false, logoutErr
     <div>
       <Tabs
         label="Configuració del perfil"
+        disabled={busy}
         value={section}
         onChange={setSection}
         items={[
@@ -246,7 +243,11 @@ export function ProfileForm({ item = {}, onLogout, logoutBusy = false, logoutErr
               </span>
             </p>
             <p>S’actualitzen quan tornes a iniciar sessió.</p>
-            <p className="muted">Per mantenir La Net, el responsable pot consultar resums d’ús i activitat recent del compte. Detall durant 35 dies i resums diaris durant 400 dies, sense copiar les teves notes, textos ni fitxers.</p>
+            <p className="muted">
+              Per mantenir La Net, el responsable pot consultar resums d’ús i activitat recent del
+              compte. Detall durant 35 dies i resums diaris durant 400 dies, sense copiar les teves
+              notes, textos ni fitxers.
+            </p>
           </div>
           <div className="profile-course">
             <strong>
@@ -270,6 +271,7 @@ export function ProfileForm({ item = {}, onLogout, logoutBusy = false, logoutErr
         </>
       ) : (
         <form
+          aria-busy={busy}
           onSubmit={submit(async () => {
             const patch = Object.fromEntries(
               Object.entries(preferences).filter(
@@ -289,6 +291,7 @@ export function ProfileForm({ item = {}, onLogout, logoutBusy = false, logoutErr
               </p>
               <SubjectPicker
                 label="Assignatures de Continguts"
+                disabled={busy}
                 subjects={data.subjects}
                 defaults={enrolled.map((s) => s.id)}
                 value={preferences.notesSubjects ?? enrolled.map((s) => s.id)}
@@ -296,6 +299,7 @@ export function ProfileForm({ item = {}, onLogout, logoutBusy = false, logoutErr
               />
               <SubjectPicker
                 label="Assignatures de Plusos"
+                disabled={busy}
                 subjects={data.subjects}
                 defaults={enrolled.map((s) => s.id)}
                 value={preferences.plusSubjects ?? enrolled.map((s) => s.id)}
@@ -307,6 +311,7 @@ export function ProfileForm({ item = {}, onLogout, logoutBusy = false, logoutErr
             <>
               <Field label="Densitat de la plataforma">
                 <Select
+                  disabled={busy}
                   value={preferences.density}
                   onChange={(e) => updatePreference('density', e.target.value)}
                 >
@@ -317,6 +322,7 @@ export function ProfileForm({ item = {}, onLogout, logoutBusy = false, logoutErr
               <label className="preference-check">
                 <input
                   type="checkbox"
+                  disabled={busy}
                   checked={preferences.sidebarCollapsed}
                   onChange={(e) => updatePreference('sidebarCollapsed', e.target.checked)}
                 />
@@ -325,6 +331,7 @@ export function ProfileForm({ item = {}, onLogout, logoutBusy = false, logoutErr
               <label className="preference-check">
                 <input
                   type="checkbox"
+                  disabled={busy}
                   checked={!!preferences.hideGrades}
                   onChange={(e) => updatePreference('hideGrades', e.target.checked)}
                 />

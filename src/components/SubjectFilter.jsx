@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useRef, useState } from 'react';
+import React, { useLayoutEffect, useId, useRef, useState } from 'react';
 import { CaretDown, SlidersHorizontal } from '@phosphor-icons/react';
 import { useApp } from '../context';
 import { Button } from '../ui';
@@ -13,7 +13,7 @@ export default function SubjectFilter({ kind, value, onApplied, expanded, onExpa
     pending = useRef(false);
   const wasExpanded = useRef(false);
   const panelId = useId();
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (expanded && !wasExpanded.current) {
       setDraft(value);
       setFollowing(data.preferences?.[preferenceKey] == null);
@@ -30,12 +30,15 @@ export default function SubjectFilter({ kind, value, onApplied, expanded, onExpa
     setBusy(true);
     try {
       await savePreferences({ [preferenceKey]: selection }, 'Assignatures desades al teu perfil.');
+      // The preference can finish after navigation has unmounted this filter.
+      // Keep the confirmed write without resetting the newly opened workspace.
+      if (!trigger.current?.isConnected) return;
       onApplied?.();
       close();
     } catch {
     } finally {
       pending.current = false;
-      setBusy(false);
+      if (trigger.current?.isConnected) setBusy(false);
     }
   }
   return (
@@ -46,6 +49,7 @@ export default function SubjectFilter({ kind, value, onApplied, expanded, onExpa
         aria-label={`Les meves assignatures: ${value.length} ${value.length === 1 ? 'seleccionada' : 'seleccionades'}`}
         aria-expanded={expanded}
         aria-controls={panelId}
+        disabled={busy}
         onClick={() => {
           if (!expanded) setDraft(value);
           onExpandedChange(!expanded);
@@ -63,8 +67,9 @@ export default function SubjectFilter({ kind, value, onApplied, expanded, onExpa
           className="subject-filter-content"
           role="region"
           aria-label="Preferències d’assignatures"
+          aria-busy={busy}
           onKeyDown={(e) => {
-            if (e.key === 'Escape') {
+            if (e.key === 'Escape' && !busy) {
               e.preventDefault();
               close();
             }
@@ -86,6 +91,7 @@ export default function SubjectFilter({ kind, value, onApplied, expanded, onExpa
             </p>
           ) : (
             <SubjectPicker
+              disabled={busy}
               label="Mostrar recursos d’aquestes assignatures"
               subjects={data.subjects}
               value={draft}
@@ -94,7 +100,7 @@ export default function SubjectFilter({ kind, value, onApplied, expanded, onExpa
             />
           )}
           <div className="subject-filter-actions">
-            <Button type="button" onClick={close}>
+            <Button type="button" onClick={close} disabled={busy}>
               Cancel·lar
             </Button>
             <Button

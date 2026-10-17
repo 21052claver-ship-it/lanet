@@ -134,15 +134,33 @@ export function NoteForm({ item }) {
         </div>
         <div className="form-grid">
           <Field label="Tema" hint="Opcional. S’agrupa amb els materials del mateix tema.">
-            <input value={f.topic || ''} maxLength={80} list="material-topics" onChange={e=>update('topic',e.target.value)} placeholder="Per exemple: Derivades" />
+            <input
+              value={f.topic || ''}
+              maxLength={80}
+              list="material-topics"
+              onChange={(e) => update('topic', e.target.value)}
+              placeholder="Per exemple: Derivades"
+            />
           </Field>
           <datalist id="material-topics">
-            {[...new Set(data.notes.filter(n=>n.subject_id===f.subject_id && n.topic).map(n=>n.topic))].map(t=><option key={t} value={t} />)}
+            {[
+              ...new Set(
+                data.notes
+                  .filter((n) => n.subject_id === f.subject_id && n.topic)
+                  .map((n) => n.topic),
+              ),
+            ].map((t) => (
+              <option key={t} value={t} />
+            ))}
           </datalist>
           <Field label="Trimestre del material">
-            <Select value={f.term || ''} onChange={e=>update('term',e.target.value)}>
+            <Select value={f.term || ''} onChange={(e) => update('term', e.target.value)}>
               <option value="">Tot el curs</option>
-              {[1,2,3].map(t=><option key={t} value={t}>{t===2?'2n':t+'r'} trimestre</option>)}
+              {[1, 2, 3].map((t) => (
+                <option key={t} value={t}>
+                  {t === 2 ? '2n' : t + 'r'} trimestre
+                </option>
+              ))}
             </Select>
           </Field>
         </div>
@@ -282,15 +300,13 @@ export function Reader({ item }) {
           setLoadError('');
         }
         if (!disposed && current === generation && document.visibilityState === 'visible')
-          timer = setTimeout(
-            () => {
-              if (disposed || current !== generation || document.visibilityState !== 'visible') return;
-              api(`/notes/${n.id}/consult`, { method: 'POST', body: {} })
-                .then(refresh)
-                .catch(() => {});
-            },
-            10500,
-          );
+          timer = setTimeout(() => {
+            if (disposed || current !== generation || document.visibilityState !== 'visible')
+              return;
+            api(`/notes/${n.id}/consult`, { method: 'POST', body: {} })
+              .then(refresh)
+              .catch(() => {});
+          }, 10500);
       } catch (e) {
         if (!disposed && current === generation) setLoadError(e.message);
       }
@@ -474,6 +490,7 @@ export function PlusForm({ item }) {
   const update = (k, v) => setF((x) => ({ ...x, [k]: v }));
   return (
     <form
+      aria-busy={busy}
       onSubmit={submit(() =>
         mutate(
           '/pluses' + (item.id ? '/' + item.id : ''),
@@ -482,140 +499,149 @@ export function PlusForm({ item }) {
         ),
       )}
     >
-      <Field label="Nom de l’activitat">
-        <input
-          value={f.title}
-          maxLength={120}
-          required
-          onChange={(e) => update('title', e.target.value)}
-        />
-      </Field>
-      <Field label="De què tracta?">
-        <textarea
-          rows={4}
-          value={f.body}
-          required
-          maxLength={6000}
-          onChange={(e) => update('body', e.target.value)}
-        />
-      </Field>
-      <div className="form-grid three">
-        <Field label="Data">
+      <fieldset className="form-fields" disabled={busy}>
+        <Field label="Nom de l’activitat">
           <input
-            type="date"
-            value={f.date}
-            onChange={(e) => update('date', e.target.value)}
+            value={f.title}
+            maxLength={120}
             required
+            onChange={(e) => update('title', e.target.value)}
           />
         </Field>
-        <Field label="Hora d’inici">
-          <input
-            type="time"
-            value={f.start || ''}
-            onChange={(e) => update('start', e.target.value)}
+        <Field label="De què tracta?">
+          <textarea
+            rows={4}
+            value={f.body}
+            required
+            maxLength={6000}
+            onChange={(e) => update('body', e.target.value)}
           />
         </Field>
-        <Field label="Hora final">
-          <input type="time" value={f.end || ''} onChange={(e) => update('end', e.target.value)} />
-        </Field>
-      </div>
-      <Field label="Lloc">
-        <input
-          value={f.place}
-          required
-          maxLength={160}
-          onChange={(e) => update('place', e.target.value)}
-        />
-      </Field>
-      <fieldset className="plus-subject-editor">
-        <legend>Assignatures i plus indicat</legend>
-        {subjects.map((s, i) => (
-          <div className="form-grid bonus-row" key={i}>
-            <Select
-              aria-label={`Assignatura ${i + 1}`}
-              value={s.subject_id}
-              onChange={(e) =>
-                setSubjects(
-                  subjects.map((x, j) => (j === i ? { ...x, subject_id: e.target.value } : x)),
-                )
-              }
-            >
-              {data.subjects.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.short}
-                </option>
-              ))}
-            </Select>
-            <Select
-              aria-label={`Plus de l’assignatura ${i + 1}`}
-              value={s.bonus}
+        <div className="form-grid three">
+          <Field label="Data">
+            <input
+              type="date"
+              value={f.date}
+              onChange={(e) => update('date', e.target.value)}
               required
-              onChange={(e) =>
-                setSubjects(subjects.map((x, j) => (j === i ? { ...x, bonus: e.target.value } : x)))
-              }
-            >
-              <option value="" disabled>
-                Tria el màxim del plus
-              </option>
-              {BONUS_TYPES.map((type) => (
-                <option key={type.capacity} value={bonusLabel(type.maximum)}>
-                  {type.label}
+            />
+          </Field>
+          <Field label="Hora d’inici">
+            <input
+              type="time"
+              value={f.start || ''}
+              onChange={(e) => update('start', e.target.value)}
+            />
+          </Field>
+          <Field label="Hora final">
+            <input
+              type="time"
+              value={f.end || ''}
+              onChange={(e) => update('end', e.target.value)}
+            />
+          </Field>
+        </div>
+        <Field label="Lloc">
+          <input
+            value={f.place}
+            required
+            maxLength={160}
+            onChange={(e) => update('place', e.target.value)}
+          />
+        </Field>
+        <fieldset className="plus-subject-editor">
+          <legend>Assignatures i plus indicat</legend>
+          {subjects.map((s, i) => (
+            <div className="form-grid bonus-row" key={i}>
+              <Select
+                aria-label={`Assignatura ${i + 1}`}
+                value={s.subject_id}
+                onChange={(e) =>
+                  setSubjects(
+                    subjects.map((x, j) => (j === i ? { ...x, subject_id: e.target.value } : x)),
+                  )
+                }
+              >
+                {data.subjects.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.short}
+                  </option>
+                ))}
+              </Select>
+              <Select
+                aria-label={`Plus de l’assignatura ${i + 1}`}
+                value={s.bonus}
+                required
+                onChange={(e) =>
+                  setSubjects(
+                    subjects.map((x, j) => (j === i ? { ...x, bonus: e.target.value } : x)),
+                  )
+                }
+              >
+                <option value="" disabled>
+                  Tria el màxim del plus
                 </option>
-              ))}
-            </Select>
-            <IconButton
-              type="button"
-              label="Treure assignatura"
-              disabled={subjects.length === 1}
-              onClick={() => setSubjects(subjects.filter((_, j) => j !== i))}
-            >
-              <Trash size={17} />
-            </IconButton>
-          </div>
-        ))}
-        <Button
-          type="button"
-          onClick={() =>
-            setSubjects([
-              ...subjects,
-              {
-                subject_id:
-                  data.subjects.find((s) => !subjects.some((x) => x.subject_id === s.id))?.id ||
-                  data.subjects[0].id,
-                bonus: bonusLabel(0.25),
-              },
-            ])
-          }
+                {BONUS_TYPES.map((type) => (
+                  <option key={type.capacity} value={bonusLabel(type.maximum)}>
+                    {type.label}
+                  </option>
+                ))}
+              </Select>
+              <IconButton
+                type="button"
+                label="Treure assignatura"
+                disabled={subjects.length === 1}
+                onClick={() => setSubjects(subjects.filter((_, j) => j !== i))}
+              >
+                <Trash size={17} />
+              </IconButton>
+            </div>
+          ))}
+          <Button
+            type="button"
+            onClick={() =>
+              setSubjects([
+                ...subjects,
+                {
+                  subject_id:
+                    data.subjects.find((s) => !subjects.some((x) => x.subject_id === s.id))?.id ||
+                    data.subjects[0].id,
+                  bonus: bonusLabel(0.25),
+                },
+              ])
+            }
+          >
+            <Plus size={17} />
+            Una altra assignatura
+          </Button>
+        </fieldset>
+        <Field
+          label="Condicions"
+          hint="Aquesta informació la comparteix un estudiant. No s’afegeix automàticament a les notes."
         >
-          <Plus size={17} />
-          Una altra assignatura
-        </Button>
+          <textarea
+            rows={2}
+            value={f.conditions}
+            maxLength={2000}
+            onChange={(e) => update('conditions', e.target.value)}
+          />
+        </Field>
+        <Field label="Enllaç d’informació o inscripció">
+          <input
+            type="url"
+            value={f.url}
+            onChange={(e) => update('url', e.target.value)}
+            placeholder="https://…"
+          />
+        </Field>
       </fieldset>
-      <Field
-        label="Condicions"
-        hint="Aquesta informació la comparteix un estudiant. No s’afegeix automàticament a les notes."
-      >
-        <textarea
-          rows={2}
-          value={f.conditions}
-          maxLength={2000}
-          onChange={(e) => update('conditions', e.target.value)}
-        />
-      </Field>
-      <Field label="Enllaç d’informació o inscripció">
-        <input
-          type="url"
-          value={f.url}
-          onChange={(e) => update('url', e.target.value)}
-          placeholder="https://…"
-        />
-      </Field>
       <FormError error={error} />
       <FormFooter busy={busy} onCancel={close} label="Publicar plus">
         {item.id && (
           <Button
             type="button"
             variant="danger"
+            disabled={busy}
             onClick={() => open('delete', { resource: 'pluses', id: item.id, title: item.title })}
           >
             Retirar

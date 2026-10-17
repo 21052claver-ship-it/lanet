@@ -120,6 +120,7 @@
   border: 0;
   min-width: 0;
 }
+.form-fields,
 .note-editor-fields {
   border: 0;
   margin: 0;
