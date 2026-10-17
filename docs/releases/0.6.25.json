@@ -1,0 +1,123 @@
+{
+  "recordedAt": "2026-10-17T19:12:16.201Z",
+  "version": "0.6.25",
+  "sourceCommit": "3f330003a618fc7387fdab9669f12daea7ea9b37",
+  "origin": "https://lanet.es",
+  "pullRequest": "https://github.com/21052claver-ship-it/lanet/pull/50",
+  "ci": "https://github.com/21052claver-ship-it/lanet/actions/runs/39060137124",
+  "pullRequestCi": "https://github.com/21052claver-ship-it/lanet/actions/runs/39059095129",
+  "mainCiAttempt": 1,
+  "pullRequestCiAttempt": 1,
+  "allCiJobsSuccess": true,
+  "ciJobs": [
+    {
+      "name": "Core checks",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (journeys)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (school)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (navigation)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (contents)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (academics)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (compatibility)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (audio)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (functional)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (board)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (casino)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Validate",
+      "conclusion": "success"
+    }
+  ],
+  "releaseUrl": "https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.25",
+  "immutable": true,
+  "tagCommitMatches": true,
+  "receiptDigestMatches": true,
+  "cloudflareDeployment": "a8176b5e-74d4-4936-a2d9-0e1a5567a147",
+  "githubDeployment": 7144459466,
+  "providerConfirmed": true,
+  "productionCommitMatches": true,
+  "domainActive": true,
+  "pagesDomainPreserved": true,
+  "googleCallbackPreserved": true,
+  "d1R2BindingsPreserved": true,
+  "privateServiceBindingsPreserved": true,
+  "migration": {
+    "name": "0031_technology_chemistry.sql",
+    "sha256": "1f43d00c327637249aa9d66269d928edb2a40f7b04dca77895576515f05534a7",
+    "appliedSeparately": true,
+    "privateBackupRestored": true,
+    "existingTablesPreserved": 67,
+    "historicalCatalogAndTemplatesPreserved": true,
+    "providerCatalogMatches": true,
+    "officialOfferings": 55,
+    "officialSlots": 163
+  },
+  "privateMaintenanceRedeployed": false,
+  "tests": {
+    "unit": 479,
+    "chemistryJourneys": 18,
+    "officialScheduleRegressions": 27,
+    "combinations": 272,
+    "hoursPerWeek": 30,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "chemistryWidths": [
+      320,
+      1440
+    ],
+    "roles": [
+      "student",
+      "delegate",
+      "subdelegate"
+    ],
+    "periodsPerDay": 6,
+    "preferences": 24
+  },
+  "publicAppVisited": false,
+  "realUserDataUsedInTests": false,
+  "physicalDevicesTested": false,
+  "productPublications": 1,
+  "ciHardening": {
+    "initialRun": "https://github.com/21052claver-ship-it/lanet/actions/runs/39057602120",
+    "reason": "WebKit bootstrap cancelled by a test reload after a confirmed preference write.",
+    "correction": "Wait for the confirmed final bootstrap preference before reload; all error assertions retained.",
+    "productAudioUnchanged": true,
+    "completeCiOnUpdatedCommit": true,
+    "navigationRun": "https://github.com/21052claver-ship-it/lanet/actions/runs/39058227749",
+    "navigationCorrection": "Load a fresh document after an out-of-band fixture role change instead of racing a hash navigation with reload; all management assertions retained."
+  }
+}

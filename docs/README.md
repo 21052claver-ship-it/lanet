@@ -1,13 +1,13 @@
 # Documentació de La Net
 
-Punt d’entrada documental · 17 d’octubre de 2026 · producte publicat **0.6.24**.
+Punt d’entrada documental · 17 d’octubre de 2026 · producte publicat **0.6.25**.
 
 ## Començar aquí
 
 | Necessitat | Document |
 | --- | --- |
 | Entendre l’estat actual, decisions i pendents | [Estat del projecte](ESTAT-PROJECTE.md) |
-| Consultar exactament què s’ha publicat i comprovat | [Informe Markdown 0.6.24](releases/0.6.24.md) |
+| Consultar exactament què s’ha publicat i comprovat | [Informe Markdown 0.6.25](releases/0.6.25.md) |
 | Resum de publicació i proves | [Publicació](PUBLICACIO.md) · [Verificació](VERIFICATION.md) |
 | Continuar una tasca sense solapar feina | [Checklist](CHECKLIST.md) · [Registre únic](SEGUIMENT.json) |
 | Consultar els canvis en ordre cronològic | [Historial](HISTORIAL-CANVIS.md) · [CHANGELOG](../CHANGELOG.md) |
@@ -37,12 +37,13 @@ El catàleg següent enllaça tots els Markdown del primer nivell de docs. Els d
 - [Experiència visual i funcional de l’horari](PLA-HORARI-EXPERIENCIA.md).
 - [Depuració i simulacions de la seqüència d’una classe](PLA-SEQUENCIA-CLASSE.md).
 - [Recorreguts fàcils d’alumnes i delegats](PLA-RECORREGUTS-ALUMNES-DELEGATS.md).
+- [Química al tecnològic](PLA-QUIMICA-TECNOLOGIC.md).
 - [Continguts sense descàrregues automàtiques](PLA-PDF-CONTINGUTS.md).
 - [La Net · estat actual i decisions vigents](ESTAT-PROJECTE.md).
 - [Historial de canvis de La Net](HISTORIAL-CANVIS.md).
 - [Pla mestre de revisió de La Net](PLA-MESTRE.md).
-- [Publicació · La Net 0.6.24](PUBLICACIO.md).
-- [Verificació · La Net 0.6.24](VERIFICATION.md).
+- [Publicació · La Net 0.6.25](PUBLICACIO.md).
+- [Verificació · La Net 0.6.25](VERIFICATION.md).
 - [Versions i Cloudflare](VERSIONS.md).
 
 ### PAU i universitat
@@ -153,6 +154,7 @@ El catàleg següent enllaça tots els Markdown del primer nivell de docs. Els d
 
 ## Versions, arxiu i recursos visuals
 
+- [Informe de Química al tecnològic 0.6.25](releases/0.6.25.md) i [registre JSON segur](releases/0.6.25.json).
 - [Informe de Continguts sense descàrregues automàtiques 0.6.24](releases/0.6.24.md) i [registre JSON segur](releases/0.6.24.json).
 - [Informe de recorreguts d’alumnes i delegats 0.6.23](releases/0.6.23.md) i [registre JSON segur](releases/0.6.23.json).
 - [Informe de depuració i seqüència de classe 0.6.22](releases/0.6.22.md) i [registre JSON segur](releases/0.6.22.json).

@@ -4,6 +4,8 @@ Actualitzat el 17 d’octubre de 2026. Aquest document és la memòria de contin
 
 ## On som
 
+Química 0.6.25: Química disponible al tecnològic com alternativa a Dibuix tècnic i Empresa. Dilluns i dimarts 09:10–10:10; dimecres i dijous 08:10–09:10, segons la correcció confirmada per Marc. Professorat seleccionable, horari i desament coherents per a alumnat, delegats i subdelegats. [Informe](releases/0.6.25.md) · [Font i contrast](PLA-QUIMICA-TECNOLOGIC.md).
+
 Continguts 0.6.24: Entrar a Continguts ja no carrega ni descarrega els PDF dels materials. Les targetes mostren una portada estàtica; obrir expressament l’apunt carrega el visor PDF.js i descarregar requereix prémer l’enllaç del fitxer. Les capçaleres de seguretat i els permisos del servidor es conserven. [Informe](releases/0.6.24.md) · [Reproducció](PLA-PDF-CONTINGUTS.md).
 
 Recorreguts 0.6.23: Dia i setmana conservats entre classe, continguts i agenda; panell de delegats recuperable amb publicació, cerca, actualització i dates publicades. Correccions amb el missatge visible, aprovades accessibles a l’autor, retirada amb motiu i recuperació de concurrència. Detall amb dades vigents i accions antigues retirades quan desapareix la data. Esborranys públics anteriors recuperables amb privats intactes. Resum mòbil compacte, pestanyes en dues columnes i confirmacions antigues retirades en obrir un formulari nou. [Informe](releases/0.6.23.md) · [Simulacions](PLA-RECORREGUTS-ALUMNES-DELEGATS.md).
@@ -11,14 +13,14 @@ Recorreguts 0.6.23: Dia i setmana conservats entre classe, continguts i agenda; 
 | Element | Estat registrat |
 | --- | --- |
 | Aplicació principal | [lanet.es](https://lanet.es) |
-| Darrera versió de producte publicada | **0.6.24** |
-| Informe complet de la versió | [Publicació 0.6.24](releases/0.6.24.md) |
-| Codi publicat | `d3ef96fb678a77fe751c6b3aed2691e61210c139` |
+| Darrera versió de producte publicada | **0.6.25** |
+| Informe complet de la versió | [Publicació 0.6.25](releases/0.6.25.md) |
+| Codi publicat | `3f330003a618fc7387fdab9669f12daea7ea9b37` |
 | GitHub | [21052claver-ship-it/lanet](https://github.com/21052claver-ship-it/lanet) |
-| Incorporació del codi | [PR #48](https://github.com/21052claver-ship-it/lanet/pull/48), fusionada amb tots els controls correctes |
-| CI del commit publicat | [Verify La Net](https://github.com/21052claver-ship-it/lanet/actions/runs/39053459420), correcta |
-| Publicació | [Tag i release immutable v0.6.24](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.24), rebut i Deployment verificats |
-| Documentació de tancament | Registre de 0.6.24 consolidat en una PR documental, sense segona publicació de producte |
+| Incorporació del codi | [PR #50](https://github.com/21052claver-ship-it/lanet/pull/50), fusionada amb tots els controls correctes |
+| CI del commit publicat | [Verify La Net](https://github.com/21052claver-ship-it/lanet/actions/runs/39060137124), correcta |
+| Publicació | [Tag i release immutable v0.6.25](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.25), rebut i Deployment verificats |
+| Documentació de tancament | Registre de 0.6.25 consolidat en una PR documental, sense segona publicació de producte |
 
 Els rebuts descriuen el producte publicat. Una actualització d’aquests Markdown no implica un nou desplegament ni un canvi de versió de l’aplicació.
 

@@ -1,9 +1,9 @@
-# Verificació · La Net 0.6.24
+# Verificació · La Net 0.6.25
 
-[Informe i límits](releases/0.6.24.md) · [Reproducció](PLA-PDF-CONTINGUTS.md) · [Estat](ESTAT-PROJECTE.md).
+[Informe i límits](releases/0.6.25.md) · [Font i correcció](PLA-QUIMICA-TECNOLOGIC.md) · [Estat](ESTAT-PROJECTE.md).
 
-Reproducció prèvia amb un clic únic: una petició de document i una descàrrega. Després: 6 escenaris als tres motors, a 320/1440 px, amb 10 etapes per escenari i zero peticions PDF/descàrregues espontànies. Lectura correcta i descàrrega explícita contrastada amb tots els bytes originals; el segon PDF no obert continua sense carregar-se. 33 regressions de Continguts i 475 unitàries correctes; tipus/lint/build/font correctes. Els 12 jobs i Validate de PR/main són verds.
+479 unitàries, 55 ofertes contrastades amb els blocs de la matriu independent i 272 combinacions de 30 hores sense solapaments. 18 recorreguts nous als tres motors a 320/1440 px, 27 regressions dels tres itineraris i API workerd/D1 local correctes. Selecció excloent, professorat explícit, error/reintent, recàrrega, perfil i detall de classe comprovats. Tipus/lint/build/font correctes; els 12 jobs i Validate de PR/main són verds.
 
-GitHub ha comprovat el commit publicat d3ef96fb678a77fe751c6b3aed2691e61210c139: [CI completa](https://github.com/21052claver-ship-it/lanet/actions/runs/39053459420).
+GitHub ha comprovat el commit publicat 3f330003a618fc7387fdab9669f12daea7ea9b37: [CI completa](https://github.com/21052claver-ship-it/lanet/actions/runs/39060137124).
 
-Dades fictícies locals i mides simulades; cap visita pública, fitxer real, login Google o dispositiu físic. Proveïdor, domini/callback/bindings, tag/release immutable i rebut verificats. Cap migració ni desplegament privat.
+Fixtures locals i mides simulades; cap prova pública, login Google real o dispositiu físic. Migració 0031 revisada i aplicada separadament: còpia privada restaurada, 67 taules existents conservades i catàleg contrastat via proveïdor. Domini/callback/bindings, tag/release immutable i rebut verificats.
