@@ -9,6 +9,7 @@ Cada publicació nova té una versió SemVer, un tag Git immutable, una release 
 - Les dates, propostes i plusos també protegeixen els camps durant la publicació; les imatges continuen permetent preparar el text mentre s’estan pujant.
 - Acabar de desar un filtre després d’obrir una assignatura ja no fa sortir del seu espai d’estudi. La preferència es conserva sense alterar la navegació més recent.
 - El filtre d’assignatures s’obre amb la selecció correcta des del primer moment, sense tornar a marcar una opció que l’alumne acaba de desmarcar.
+- Tancar un formulari respecta el camp on l’alumne ja ha continuat escrivint. El retorn del focus del diàleg no interromp una cerca nova ni una finestra oberta després.
 - El calendari recupera les parts vàlides dels esborranys antics o malmesos sense bloquejar la plataforma. Dates, hores, tipus i metadades no vàlids deixen de substituir els valors del formulari.
 - Simulacions locals de recuperació amb alumnat, delegats i subdelegats, en mòbil i escriptori als tres motors de navegador, incorporades a CI.
 

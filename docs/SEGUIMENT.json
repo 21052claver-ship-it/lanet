@@ -8838,9 +8838,15 @@
         "output/platform-deep-audit/primary-verification.json",
         "output/platform-deep-audit/visual-reviewed.json",
         "output/platform-deep-audit/typecheck-final.log",
-        "output/platform-deep-audit/source-audit-product.log"
+        "output/platform-deep-audit/source-audit-product.log",
+        "output/platform-deep-audit/baseline-focus/results.json",
+        "output/platform-deep-audit/focus-fixed/results.json",
+        "output/platform-deep-audit/focus-original-case/results.json",
+        "output/platform-deep-audit/focus-verification.json",
+        "output/platform-deep-audit/build-focus-final.log",
+        "output/platform-deep-audit/lint-focus.log"
       ],
-      "progress": "Correccions de pèrdua de text i canvis durant desaments, recuperació d’esborranys de calendari, inicialització del filtre i navegació durant peticions. 485 unitàries i 162 simulacions noves correctes als tres motors, amb alumnat/delegats/subdelegats a 320/1440 px. Captures de formularis, filtres i panell denses revisades; tipus/lint/build/font correctes. Regressions àmplies en execució; CI completa i publicació 0.6.27 pendents. Cap prova pública ni canvi de serveis o dades de producció.",
+      "progress": "A la regressió àmplia s’ha detectat una cerca interrompuda després de tancar un formulari a WebKit. El retorn diferit del focus s’ha reproduït als tres motors i corregit preservant el control nou. 18 casos controlats i el recorregut original als tres motors passen sense relaxar assercions. Les 162 simulacions de desaments ja passaven; la matriu s’amplia a 180 i es repeteixen els controls funcionals i responsive afectats. 485 unitàries, 45 recorreguts de classe/representants, 24 de preferències, 12 de pujades, 6 de PDF, 18 de Química, 9 d’activitat i 62 fluxos API locals correctes. Validació final i publicació 0.6.27 pendents; cap prova pública.",
       "change_log_id": "H208"
     }
   ]

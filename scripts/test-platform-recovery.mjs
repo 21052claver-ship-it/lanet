@@ -19,6 +19,7 @@ const scenarios = [
   'subject-save-after-navigation-keeps-workspace',
   'preference-save-error-recovers',
   'damaged-event-draft-remains-usable',
+  'closing-dialog-keeps-new-search-focus',
 ].filter(
   (name) => !process.env.LANET_RECOVERY_CHECK || name.includes(process.env.LANET_RECOVERY_CHECK),
 );
@@ -448,6 +449,42 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
               await panel.waitFor({ state: 'hidden' });
               assert.deepEqual(savedPreferences().notesSubjects, ['math']);
               assert.equal(writes.length, 4, 'Each retry performs one new write');
+            } else if (scenario === 'closing-dialog-keeps-new-search-focus') {
+              await page.goto(f.base + '/?community=proposals#community');
+              await page
+                .locator('#main-content')
+                .getByRole('button', { name: 'Proposa una idea', exact: true })
+                .first()
+                .click();
+              const dialog = page.getByRole('dialog');
+              // Radix restores focus in a deferred teardown event. Model a user
+              // who has already focused the search before that event finishes.
+              await dialog.evaluate((element) => {
+                element.addEventListener(
+                  'focusScope.autoFocusOnUnmount',
+                  () => {
+                    document.querySelector('[aria-label="Cercar propostes"]').focus();
+                    window.localCloseFocusObserved = true;
+                  },
+                  { once: true },
+                );
+              });
+              await dialog.getByRole('button', { name: 'Tancar', exact: true }).first().click();
+              await dialog.waitFor({ state: 'hidden' });
+              await page.waitForFunction(() => window.localCloseFocusObserved === true);
+              const search = page.getByRole('textbox', { name: 'Cercar propostes', exact: true });
+              assert.equal(
+                await search.evaluate((element) => document.activeElement === element),
+                true,
+                'Deferred dialog cleanup must preserve the control the user has just focused',
+              );
+              await page.keyboard.type('Una idea local');
+              assert.equal(
+                await search.inputValue(),
+                'Una idea local',
+                'Typing continues in the new search',
+              );
+              await page.locator('.proposal-row').filter({ hasText: 'Una idea local' }).waitFor();
             } else {
               await context.addInitScript(() => {
                 localStorage.setItem(

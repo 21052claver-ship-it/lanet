@@ -290,6 +290,16 @@ export function Modal({ open, onClose, title, description, children, wide = fals
           }}
           onCloseAutoFocus={(event) => {
             event.preventDefault();
+            // Deferred cleanup must not override a newer interaction or dialog.
+            const focused = document.activeElement;
+            if (
+              focused instanceof HTMLElement &&
+              focused !== document.body &&
+              focused !== document.documentElement &&
+              focused.isConnected &&
+              !event.currentTarget?.contains(focused)
+            )
+              return;
             let target = returnFocus.current;
             if (target instanceof HTMLElement) {
               const closedDisclosure = target.closest('details:not([open])');
