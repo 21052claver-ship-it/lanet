@@ -6,11 +6,11 @@ Plataforma per a estudiants de segon de batxillerat, en català, amb horaris ofi
 
 ## Versió publicada
 
-**0.6.25 · 17 d’octubre de 2026.** Química disponible al tecnològic com alternativa a Dibuix i Empresa, amb les quatre franges confirmades, selecció de professorat i persistència. 479 unitàries, 272 combinacions sense solapaments, 18 recorreguts de Química i 27 regressions dels tres itineraris correctes.
+**0.6.26 · 17 d’octubre de 2026.** El panell de delegats té una icona pròpia de representants amb bafarada i els colors de La Net. La mateixa icona identifica el menú lateral desplegat/plegat, el menú mòbil i la capçalera del panell.
 
-[Informe Markdown](docs/releases/0.6.25.md) · [Release immutable](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.25) · [CI del commit publicat](https://github.com/21052claver-ship-it/lanet/actions/runs/39060137124) · [CHANGELOG](CHANGELOG.md)
+[Informe Markdown](docs/releases/0.6.26.md) · [Release immutable](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.26) · [CI del commit publicat](https://github.com/21052claver-ship-it/lanet/actions/runs/39064162350) · [CHANGELOG](CHANGELOG.md)
 
-La versió publicada correspon al commit `3f330003a618fc7387fdab9669f12daea7ea9b37`. El tancament documental posterior no és un nou desplegament. Resultats i límits a [VERIFICATION.md](docs/VERIFICATION.md); pendents al [registre](docs/SEGUIMENT.json).
+La versió publicada correspon al commit `a3070589da656348f6180ad0942c3236cf71a54e`. El tancament documental posterior no és un nou desplegament. Resultats i límits a [VERIFICATION.md](docs/VERIFICATION.md); pendents al [registre](docs/SEGUIMENT.json).
 
 ## Què inclou
 

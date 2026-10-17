@@ -1,9 +1,9 @@
-# Verificació · La Net 0.6.25
+# Verificació · La Net 0.6.26
 
-[Informe i límits](releases/0.6.25.md) · [Font i correcció](PLA-QUIMICA-TECNOLOGIC.md) · [Estat](ESTAT-PROJECTE.md).
+[Informe i límits](releases/0.6.26.md) · [Estat](ESTAT-PROJECTE.md).
 
-479 unitàries, 55 ofertes contrastades amb els blocs de la matriu independent i 272 combinacions de 30 hores sense solapaments. 18 recorreguts nous als tres motors a 320/1440 px, 27 regressions dels tres itineraris i API workerd/D1 local correctes. Selecció excloent, professorat explícit, error/reintent, recàrrega, perfil i detall de classe comprovats. Tipus/lint/build/font correctes; els 12 jobs i Validate de PR/main són verds.
+479 proves unitàries, 18 regressions d’horari i accés segons rol i 9 recorreguts del menú mòbil als tres motors correctes. Revisió visual a 320/1440 px, tipus/lint/build/font correctes. Els 12 jobs i Validate de PR/main són verds.
 
-GitHub ha comprovat el commit publicat 3f330003a618fc7387fdab9669f12daea7ea9b37: [CI completa](https://github.com/21052claver-ship-it/lanet/actions/runs/39060137124).
+GitHub ha comprovat el commit publicat a3070589da656348f6180ad0942c3236cf71a54e: [CI completa](https://github.com/21052claver-ship-it/lanet/actions/runs/39064162350).
 
-Fixtures locals i mides simulades; cap prova pública, login Google real o dispositiu físic. Migració 0031 revisada i aplicada separadament: còpia privada restaurada, 67 taules existents conservades i catàleg contrastat via proveïdor. Domini/callback/bindings, tag/release immutable i rebut verificats.
+Fixtures locals i mides simulades; cap prova pública, login Google real o dispositiu físic. Domini/callback/bindings, tag/release immutable i rebut verificats.
