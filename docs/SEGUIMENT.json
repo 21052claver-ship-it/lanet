@@ -8464,7 +8464,8 @@
         "package-lock.json",
         "CHANGELOG.md",
         "docs/PLA-RECORREGUTS-ALUMNES-DELEGATS.md",
-        "scripts/test-delegate-agenda.mjs"
+        "scripts/test-delegate-agenda.mjs",
+        "scripts/test-class-sequence.mjs"
       ],
       "acceptance": "Reproduir i corregir friccions reals dels recorreguts quotidians, amb context, estats i accions comprensibles. Simular alumnat, delegat i subdelegat entre comptes ficticis a diferents itineraris, errors recuperables i pantalles estretes/paisatge/escriptori en tres motors. Verificar persistència, aïllament, permisos, seguiments i geometria. Tot amb fixtures locals; PR, CI exacta i publicació única si es modifica producte.",
       "checks": [
@@ -8487,9 +8488,12 @@
         "output/journeys-audit/delegates-fixed/results.json",
         "output/journeys-audit/notifications/results.json",
         "output/journeys-audit/build-publish-final.log",
-        "output/journeys-audit/source-audit-staged.log"
+        "output/journeys-audit/source-audit-staged.log",
+        "output/journeys-audit/ci-academics-failure.log",
+        "output/journeys-audit/ci-first-academics/class-sequence/browser/results.json",
+        "output/journeys-audit/material-confirmed/results.json"
       ],
-      "progress": "Implementació en revisió per a 0.6.23. Context de classe conservat, panell recuperable, publicació/retirada i cerca des del mateix lloc, feedback dins de la correcció, aprovades de l’autor visibles, refresh d’entrada/manual i recuperació de concurrència. Resum mòbil compacte i confirmacions antigues retirades en obrir un altre formulari. 475 unitàries, 60 recorreguts nous als tres motors, 63 regressions de classe, 66 responsive, 33 delegats i 30 notificacions correctes. Retoc final de cerca anterior amb 12 revalidacions en curs sobre la compilació definitiva; pendent CI exacta de PR/main i una sola publicació. Font auditada, cap prova pública ni canvi de permisos/servidor/migració/R2.",
+      "progress": "Implementació en revisió per a 0.6.23. 475 unitàries, 60 recorreguts nous, 63 regressions de classe, 66 responsive, 33 delegats i 30 notificacions correctes en local; 12 publicacions revalidades en la compilació definitiva. La primera CI passa els 60 recorreguts nous i detecta una cursa de la prova d’apunts a WebKit/Linux: llegia la base de dades abans d’acabar el desament optimista. Prova reforçada amb escriptura retinguda, bloqueig, resposta confirmada i persistència; 12 recorreguts de material revalidats i nova CI completa abans de publicar. Cap canvi de servidor, permisos, migració o R2; cap prova pública.",
       "change_log_id": ""
     }
   ]

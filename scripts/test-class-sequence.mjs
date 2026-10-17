@@ -333,113 +333,153 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
         );
       });
 
-      await run('class-material-study-grade-continuity', width, async ({ p, f, actor, today }) => {
-        f.db.exec("INSERT INTO focus_settings VALUES('browser',1,1,2,2)");
-        const title = 'Derivades: exercicis resolts de la classe i preparació del pròxim parcial';
-        const text =
-          'Materials ficticis compartits durant la classe. Cada alumne conserva les seves notes.';
-        await openMathClass(p, f);
-        await p.getByRole('button', { name: 'Continguts de l’assignatura', exact: true }).click();
-        await p.getByRole('region', { name: 'Espai de Matemàtiques II', exact: true }).waitFor();
-        await p.getByRole('button', { name: 'Comparteix un apunt', exact: true }).click();
-        const dialog = p.getByRole('dialog');
-        await dialog.getByRole('textbox', { name: 'Títol', exact: true }).fill(title);
-        await dialog.getByRole('textbox', { name: 'Text dels apunts', exact: true }).fill(text);
-        await dialog.getByRole('button', { name: 'Publicar apunts', exact: true }).click();
-        await dialog.waitFor({ state: 'hidden' });
-        const note = f.db.prepare('SELECT * FROM notes WHERE title=?').get(title);
-        assert.equal(note.subject_id, 'math');
-        assert.equal(note.status, 'published');
-        const peer = await actor('classmate');
-        await openMathClass(peer, f);
-        await peer
-          .getByRole('button', { name: 'Continguts de l’assignatura', exact: true })
-          .click();
-        await peer.getByRole('button', { name: 'Obrir ' + title, exact: true }).click();
-        await peer.getByRole('dialog').getByText(text, { exact: true }).waitFor();
-        await peer.getByRole('dialog').getByRole('button', { name: 'Desar', exact: true }).click();
-        await peer
-          .getByRole('dialog')
-          .getByRole('button', { name: 'Treure dels desats', exact: true })
-          .waitFor();
-        assert.equal(
-          f.db.prepare('SELECT COUNT(*) n FROM saves WHERE target_id=?').get(note.id).n,
-          1,
-        );
-        await closeDialog(peer);
-        f.db
-          .prepare(
-            "INSERT INTO events(id,owner_id,title,kind,display_kind,date,subject_id,visibility) VALUES('material-task','browser',?,'exam','task',?,'math','private')",
-          )
-          .run(taskTitle, today);
-        await p.reload();
-        await p
-          .getByLabel('Pròximes dates', { exact: true })
-          .getByRole('button')
-          .filter({ hasText: taskTitle })
-          .click();
-        const progressed = p.waitForResponse(
-          (r) => new URL(r.url()).pathname === '/api/events/material-task/progress',
-        );
-        await p
-          .getByRole('dialog')
-          .getByRole('button', { name: 'Marcar com a feta', exact: true })
-          .click();
-        await progressed;
-        await p
-          .getByRole('dialog')
-          .getByRole('button', { name: 'Tornar a marcar pendent', exact: true })
-          .waitFor();
-        assert.equal(
-          f.db.prepare("SELECT done FROM event_progress WHERE event_id='material-task'").get().done,
-          1,
-        );
-        await closeDialog(p);
-        await p.getByRole('button', { name: 'Notes', exact: true }).click();
-        const grade = p.getByRole('textbox', { name: 'Matemàtiques: Parcial 1', exact: true });
-        await grade.fill('0');
-        const graded = p.waitForResponse((r) => new URL(r.url()).pathname === '/api/grades/batch');
-        await grade.press('Tab');
-        await graded;
-        assert.equal(
-          f.db.prepare("SELECT grade FROM grade_entries WHERE id='math-1-0'").get().grade,
-          0,
-        );
-        await p.getByRole('button', { name: 'Estudi', exact: true }).click();
-        await p.getByRole('heading', { name: 'Estudi', exact: true }).waitFor();
-        await p.clock.install({ time: Date.now() });
-        await p.getByRole('button', { name: 'Comença', exact: true }).click();
-        await p.getByRole('button', { name: 'Pausar', exact: true }).waitFor();
-        await p.getByRole('button', { name: 'Continguts', exact: true }).click();
-        await p.getByRole('heading', { name: 'Continguts', exact: true }).waitFor();
-        await p.getByRole('button', { name: 'Estudi', exact: true }).click();
-        await p.getByRole('button', { name: 'Pausar', exact: true }).waitFor();
-        const completed = p.waitForResponse(
-          (r) => new URL(r.url()).pathname === '/api/focus/complete',
-        );
-        await p.clock.fastForward(61000);
-        assert.equal((await completed).status(), 200);
-        await p.locator('.study-record summary').filter({ hasText: '1 sessions' }).waitFor();
-        // The confirmed completion refresh must finish before a real navigation;
-        // WebKit reports cancellation of an intercepted read as a page error.
-        await p.waitForLoadState('networkidle');
-        await p.reload();
-        await p.getByRole('heading', { name: 'Estudi', exact: true }).waitFor();
-        assert.equal(
-          f.db.prepare("SELECT COUNT(*) n FROM focus_sessions WHERE user_id='browser'").get().n,
-          1,
-        );
-        assert.equal(
-          f.db.prepare("SELECT SUM(minutes) n FROM focus_sessions WHERE user_id='browser'").get().n,
-          1,
-        );
-        assert.equal(
-          f.db.prepare("SELECT COUNT(*) n FROM focus_sessions WHERE user_id='classmate'").get().n,
-          0,
-        );
-        await p.getByRole('button', { name: 'Notes', exact: true }).click();
-        assert.equal(await grade.inputValue(), '0,0');
-      });
+      await run(
+        'class-material-study-grade-continuity',
+        width,
+        async ({ p, f, actor, today, hold }) => {
+          f.db.exec("INSERT INTO focus_settings VALUES('browser',1,1,2,2)");
+          const title = 'Derivades: exercicis resolts de la classe i preparació del pròxim parcial';
+          const text =
+            'Materials ficticis compartits durant la classe. Cada alumne conserva les seves notes.';
+          await openMathClass(p, f);
+          await p.getByRole('button', { name: 'Continguts de l’assignatura', exact: true }).click();
+          await p.getByRole('region', { name: 'Espai de Matemàtiques II', exact: true }).waitFor();
+          await p.getByRole('button', { name: 'Comparteix un apunt', exact: true }).click();
+          const dialog = p.getByRole('dialog');
+          await dialog.getByRole('textbox', { name: 'Títol', exact: true }).fill(title);
+          await dialog.getByRole('textbox', { name: 'Text dels apunts', exact: true }).fill(text);
+          await dialog.getByRole('button', { name: 'Publicar apunts', exact: true }).click();
+          await dialog.waitFor({ state: 'hidden' });
+          const note = f.db.prepare('SELECT * FROM notes WHERE title=?').get(title);
+          assert.equal(note.subject_id, 'math');
+          assert.equal(note.status, 'published');
+          const peer = await actor('classmate');
+          await openMathClass(peer, f);
+          await peer
+            .getByRole('button', { name: 'Continguts de l’assignatura', exact: true })
+            .click();
+          await peer.getByRole('button', { name: 'Obrir ' + title, exact: true }).click();
+          await peer.getByRole('dialog').getByText(text, { exact: true }).waitFor();
+          const saveStarted = hold(),
+            saveFinished = hold();
+          await peer.route('**/api/notes/' + note.id + '/save', async (route) => {
+            saveStarted.release();
+            await saveFinished.promise;
+            await route.continue();
+          });
+          const saved = peer.waitForResponse(
+            (r) => new URL(r.url()).pathname === '/api/notes/' + note.id + '/save',
+          );
+          await peer
+            .getByRole('dialog')
+            .getByRole('button', { name: 'Desar', exact: true })
+            .click();
+          await saveStarted.promise;
+          await peer
+            .getByRole('dialog')
+            .getByRole('button', { name: 'Treure dels desats', exact: true })
+            .waitFor();
+          // The label is optimistic. A pending write is not proof of persistence.
+          assert.equal(
+            await peer
+              .getByRole('dialog')
+              .getByRole('button', { name: 'Treure dels desats', exact: true })
+              .isDisabled(),
+            true,
+          );
+          assert.equal(
+            f.db.prepare('SELECT COUNT(*) n FROM saves WHERE target_id=?').get(note.id).n,
+            0,
+          );
+          saveFinished.release();
+          assert.equal((await saved).status(), 200);
+          await peer
+            .getByRole('dialog')
+            .locator('button[aria-label="Treure dels desats"][aria-busy="false"]')
+            .waitFor();
+          assert.equal(
+            f.db.prepare('SELECT COUNT(*) n FROM saves WHERE target_id=?').get(note.id).n,
+            1,
+          );
+          await closeDialog(peer);
+          f.db
+            .prepare(
+              "INSERT INTO events(id,owner_id,title,kind,display_kind,date,subject_id,visibility) VALUES('material-task','browser',?,'exam','task',?,'math','private')",
+            )
+            .run(taskTitle, today);
+          await p.reload();
+          await p
+            .getByLabel('Pròximes dates', { exact: true })
+            .getByRole('button')
+            .filter({ hasText: taskTitle })
+            .click();
+          const progressed = p.waitForResponse(
+            (r) => new URL(r.url()).pathname === '/api/events/material-task/progress',
+          );
+          await p
+            .getByRole('dialog')
+            .getByRole('button', { name: 'Marcar com a feta', exact: true })
+            .click();
+          await progressed;
+          await p
+            .getByRole('dialog')
+            .getByRole('button', { name: 'Tornar a marcar pendent', exact: true })
+            .waitFor();
+          assert.equal(
+            f.db.prepare("SELECT done FROM event_progress WHERE event_id='material-task'").get()
+              .done,
+            1,
+          );
+          await closeDialog(p);
+          await p.getByRole('button', { name: 'Notes', exact: true }).click();
+          const grade = p.getByRole('textbox', { name: 'Matemàtiques: Parcial 1', exact: true });
+          await grade.fill('0');
+          const graded = p.waitForResponse(
+            (r) => new URL(r.url()).pathname === '/api/grades/batch',
+          );
+          await grade.press('Tab');
+          await graded;
+          assert.equal(
+            f.db.prepare("SELECT grade FROM grade_entries WHERE id='math-1-0'").get().grade,
+            0,
+          );
+          await p.getByRole('button', { name: 'Estudi', exact: true }).click();
+          await p.getByRole('heading', { name: 'Estudi', exact: true }).waitFor();
+          await p.clock.install({ time: Date.now() });
+          await p.getByRole('button', { name: 'Comença', exact: true }).click();
+          await p.getByRole('button', { name: 'Pausar', exact: true }).waitFor();
+          await p.getByRole('button', { name: 'Continguts', exact: true }).click();
+          await p.getByRole('heading', { name: 'Continguts', exact: true }).waitFor();
+          await p.getByRole('button', { name: 'Estudi', exact: true }).click();
+          await p.getByRole('button', { name: 'Pausar', exact: true }).waitFor();
+          const completed = p.waitForResponse(
+            (r) => new URL(r.url()).pathname === '/api/focus/complete',
+          );
+          await p.clock.fastForward(61000);
+          assert.equal((await completed).status(), 200);
+          await p.locator('.study-record summary').filter({ hasText: '1 sessions' }).waitFor();
+          // The confirmed completion refresh must finish before a real navigation;
+          // WebKit reports cancellation of an intercepted read as a page error.
+          await p.waitForLoadState('networkidle');
+          await p.reload();
+          await p.getByRole('heading', { name: 'Estudi', exact: true }).waitFor();
+          assert.equal(
+            f.db.prepare("SELECT COUNT(*) n FROM focus_sessions WHERE user_id='browser'").get().n,
+            1,
+          );
+          assert.equal(
+            f.db.prepare("SELECT SUM(minutes) n FROM focus_sessions WHERE user_id='browser'").get()
+              .n,
+            1,
+          );
+          assert.equal(
+            f.db.prepare("SELECT COUNT(*) n FROM focus_sessions WHERE user_id='classmate'").get().n,
+            0,
+          );
+          await p.getByRole('button', { name: 'Notes', exact: true }).click();
+          assert.equal(await grade.inputValue(), '0,0');
+        },
+      );
 
       await run(
         'task-detail-commit-survives-refresh-error',
