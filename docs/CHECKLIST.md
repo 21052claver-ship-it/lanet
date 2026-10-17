@@ -2,7 +2,7 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**202/203 tasques verificades · 116 requisits · 92 fases · límit d’una tasca activa.**
+**203/204 tasques verificades · 117 requisits · 93 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
@@ -488,5 +488,9 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 ## F91 Icona pròpia del panell de delegats
 
 - [x] **T91-01** Identificar el panell de delegats amb una icona pròpia — Verificat.
+
+## F92 Canvis propis sense peticions de revisió
+
+- [x] **T92-01** Configurar la incorporació directa del propietari amb CI obligatòria — Verificat.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

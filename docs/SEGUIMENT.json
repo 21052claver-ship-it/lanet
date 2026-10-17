@@ -468,6 +468,10 @@
     {
       "id": "R116",
       "description": "El panell de delegats té una icona pròpia, coherent al menú lateral, mòbil i capçalera, sense canviar-ne els accessos."
+    },
+    {
+      "id": "R117",
+      "description": "Incorporació directa dels canvis propis per evitar PRs i peticions de revisió al correu de Marc; conservar CI obligatòria i revisió de contribucions externes."
     }
   ],
   "phases": [
@@ -1112,6 +1116,13 @@
       "title": "Icona pròpia del panell de delegats",
       "depends_on": [
         "F90"
+      ]
+    },
+    {
+      "id": "F92",
+      "title": "Canvis propis sense peticions de revisió",
+      "depends_on": [
+        "F91"
       ]
     }
   ],
@@ -8725,6 +8736,46 @@
       ],
       "progress": "El panell de delegats té una icona pròpia de representants amb bafarada i els colors de La Net. La mateixa icona identifica el menú lateral desplegat/plegat, el menú mòbil i la capçalera del panell. 479 proves unitàries, 18 regressions d’horari i accés segons rol i 9 recorreguts del menú mòbil als tres motors correctes. Revisió visual a 320/1440 px, tipus/lint/build/font correctes. Els 12 jobs i Validate de PR/main són verds. Publicada una vegada: a3070589da656348f6180ad0942c3236cf71a54e. Rebut/digest, tag/release immutable, Deployment i configuració verificats. Cap prova pública, migració o desplegament privat.",
       "change_log_id": "H206"
+    },
+    {
+      "id": "T92-01",
+      "phase": "F92",
+      "title": "Configurar la incorporació directa del propietari amb CI obligatòria",
+      "status": "verified",
+      "requirements": [
+        "R117"
+      ],
+      "depends_on": [
+        "T91-01"
+      ],
+      "files": [
+        "AGENTS.md",
+        "CONTRIBUTING.md",
+        "README.md",
+        ".github/workflows/verify.yml",
+        "docs/FLUX-PROPIETARI.md",
+        "docs/VERSIONS.md",
+        "docs/ESTAT-PROJECTE.md",
+        "docs/README.md",
+        "docs/PLA-PULL-REQUESTS.md",
+        "docs/PLA-MESTRE.md"
+      ],
+      "acceptance": "La regla de PR permet incorporació directa només al compte propietari. CI sense bypass i proteccions clàssiques conservades. Workflow push per a main/codex i instruccions vigents coherents, amb revisió de contribucions externes intacta. Cap nova PR o publicació de producte.",
+      "checks": [
+        "Verificar identitat, col·laboradors i regles per API abans del canvi.",
+        "Canviar només el mode d’excepció de PR del compte propietari i contrastar la resta de proteccions.",
+        "Activar CI de push a codex/** i documentar incorporació del mateix SHA verificat.",
+        "Comprovar registre, enllaços i auditoria; incorporar el commit només després dels 12 controls correctes."
+      ],
+      "evidence": [
+        "docs/FLUX-PROPIETARI.md",
+        "output/owner-direct-push/governance.json",
+        "output/owner-direct-push/before.json",
+        "output/owner-direct-push/after.json",
+        "output/owner-direct-push/review.json"
+      ],
+      "progress": "Configuració de GitHub comprovada per API: només el compte propietari pot incorporar sense PR. CI obligatòria sense bypass, aprovació externa i proteccions contra force push/esborrat conservades. CI de push activada a main/codex/** i instruccions vigents actualitzades. Revisió independent del diff sense bloquejadors. Cada incorporació comprova el mateix SHA, els 12 controls inclòs Validate i main actualitzada. Cap nova PR, canvi de notificacions globals o publicació de producte.",
+      "change_log_id": "H207"
     }
   ]
 }

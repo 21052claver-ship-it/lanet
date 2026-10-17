@@ -37,17 +37,17 @@ Executa també les proves de navegador relacionades amb el canvi. Per exemple, `
 
 ## Revisió i acceptació
 
-`main` exigeix una pull request. La comprovació **Validate**, de GitHub Actions, ha de passar amb la branca actualitzada. Les converses han d'estar resoltes i les propostes d'altres persones han de tenir l'aprovació de Marc, propietari de tots els fitxers segons `CODEOWNERS`. Si es modifica la proposta després d'aprovar-la, cal tornar-la a revisar.
+Les contribucions externes a `main` exigeixen una pull request. La comprovació **Validate**, de GitHub Actions, ha de passar amb la branca actualitzada. Les converses han d'estar resoltes i les propostes d'altres persones han de tenir l'aprovació de Marc, propietari de tots els fitxers segons `CODEOWNERS`. Si es modifica la proposta després d'aprovar-la, cal tornar-la a revisar.
 
 GitHub pot demanar a Marc que autoritzi l'execució de les proves d'un contribuïdor nou. Aquesta autorització només executa CI; **no accepta la proposta**. Els workflows no reben secrets de producció i no s'utilitza `pull_request_target` per executar codi d'un fork.
 
-Marc té una excepció limitada a la regla de revisió per fusionar les seves pròpies PR: GitHub no permet aprovar una PR pròpia. Aquesta excepció continua exigint una PR, i **no permet saltar-se Validate**. No es permeten push directes a `main`, force push ni esborrar-la.
+Per indicació de Marc del 17 d’octubre de 2026, els canvis propis del propietari s’incorporen sense PR ni peticions de revisió. Es preparen en una branca `codex/`, es comproven els 12 controls, inclòs **Validate**, sobre el commit exacte i s’incorpora aquest mateix SHA a `main` amb un push normal. L’excepció és només per al compte propietari; la CI continua sense bypass. No es permeten force push ni esborrar `main`. [Flux del propietari](docs/FLUX-PROPIETARI.md).
 
 Per acceptar una proposta, Marc obre [Pull requests](https://github.com/21052claver-ship-it/lanet/pulls), revisa **Files changed**, deixa la revisió **Approve**, espera **Validate** verd i prem **Squash and merge** o **Merge pull request**. També pot demanar canvis amb **Request changes** o descartar-la amb **Close pull request**.
 
 ## Versions i publicació
 
-Fusionar una PR actualitza el codi a GitHub. La web publicada s'actualitza amb un pas separat: Marc sincronitza `main`, espera la CI del commit fusionat i executa `npm run release` amb les sessions locals autoritzades. La publicació genera versió, tag, release immutable, GitHub Deployment i rebut de Cloudflare.
+Incorporar el commit verificat del propietari, o fusionar una PR externa aprovada, actualitza el codi a GitHub. La web publicada s'actualitza amb un pas separat: Marc sincronitza `main`, espera la CI del commit exacte i executa `npm run release` amb les sessions locals autoritzades. La publicació genera versió, tag, release immutable, GitHub Deployment i rebut de Cloudflare.
 
 Els canvis de producte han de quedar descrits a `CHANGELOG.md`, amb versió coherent a `package.json` i `package-lock.json`; coordina la numeració si hi ha diverses PR obertes. Els canvis només documentals no necessiten publicar producte. [Flux de versions](docs/VERSIONS.md).
 

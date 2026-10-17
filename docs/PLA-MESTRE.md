@@ -246,3 +246,5 @@ R90: horaris oficials BAT2 2026–27 a partir del PDF aportat per Marc. [Pla d�
 R115: Marc confirma el 17 d’octubre de 2026 que Química també és una alternativa a Dibuix/Empresa al tecnològic, amb les mateixes quatre franges. Aquesta correcció amplia el catàleg de R90 a 272 combinacions; no canvia el resultat històric de la primera transcripció. [Pla i evidències](PLA-QUIMICA-TECNOLOGIC.md), tasca única T90-01. Les seleccions i notes actuals es conserven; l’identificador antic i retirat de Química no es reutilitza.
 
 R116: icona pròpia de representants amb bafarada per identificar el panell de delegats al menú lateral, al mòbil i a la capçalera. Tasca única T91-01; revisió visual amb fixtures locals i regressions de navegació per a alumnes, delegats i subdelegats.
+
+R117: per indicació de Marc del 17/10/2026, evitar PRs i peticions de revisió per als canvis propis. Excepció de PR només per al compte propietari, CI obligatòria sobre el commit exacte i incorporació directa sense force push. Les contribucions externes continuen requerint PR i revisió de Marc. [Flux vigent](FLUX-PROPIETARI.md), tasca única T92-01.

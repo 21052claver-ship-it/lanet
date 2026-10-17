@@ -120,7 +120,8 @@ El catàleg següent enllaça tots els Markdown del primer nivell de docs. Els d
 - [Marca i adreça pròpies de La Net · R46 / F33](PLA-MARCA-LANET.md).
 - [Accés a la NET oficial](PLA-NET-OFICIAL.md).
 - [Icona NET pastel](PLA-NET-PASTEL.md).
-- [Pull requests i protecció de main](PLA-PULL-REQUESTS.md).
+- [Canvis propis sense peticions de revisió](FLUX-PROPIETARI.md).
+- [Pull requests i protecció de main · configuració històrica](PLA-PULL-REQUESTS.md).
 
 ### Benvinguda, navegació i disseny
 
@@ -180,6 +181,6 @@ El catàleg següent enllaça tots els Markdown del primer nivell de docs. Els d
 2. Actualitzar l’estat o informe corresponent; conservar els registres antics i marcar decisions substituïdes.
 3. Afegir l’entrada d’historial i evidències sense secrets ni dades reals d’usuaris.
 4. Regenerar la checklist amb `npm run plan:sync` i comprovar-la amb `npm run plan:check` al workspace que conserva les evidències privades.
-5. Validar enllaços locals, coherència de les xifres, format i auditoria de font abans d’un futur push. El flux branca/PR continua sent obligatori per incorporar canvis a main.
+5. Validar enllaços locals, coherència de les xifres, format i auditoria de font abans d’un futur push. Els canvis propis segueixen el [flux directe del propietari](FLUX-PROPIETARI.md), amb CI obligatòria i sense PR; les contribucions externes mantenen PR i revisió de Marc.
 
 Els canvis només documentals no necessiten una nova versió de producte ni tornar a desplegar.

@@ -53,7 +53,7 @@ Executa també les regressions relacionades amb el canvi. La CI comprova el codi
 
 Qualsevol persona pot proposar millores amb un **fork i una pull request a main**. Marc revisa les contribucions externes. [CONTRIBUTING.md](CONTRIBUTING.md) explica el flux complet; [AGENTS.md](AGENTS.md) fixa els controls del projecte.
 
-Per a producte: versió/lock i CHANGELOG, comprovacions locals, PR, Validate al head actualitzat, merge i CI del commit exacte de main. La publicació es fa amb `npm run release` des d’una sessió local autoritzada i un main net, i genera tag/release immutable, GitHub Deployment i rebut de Cloudflare. Els passos de D1/R2 i serveis privats, si calen, es revisen i verifiquen separadament. Els canvis només documentals no requereixen desplegar producte. [Versions i publicació](docs/VERSIONS.md).
+Els canvis propis del propietari segueixen el [flux directe sense PR](docs/FLUX-PROPIETARI.md): branca codex/, 12 controls, inclòs Validate, tots verds, i incorporació del mateix SHA a main amb un push normal. Per a producte: versió/lock i CHANGELOG, comprovacions locals i CI del commit exacte de main. La publicació es fa amb `npm run release` des d’una sessió local autoritzada i un main net, i genera tag/release immutable, GitHub Deployment i rebut de Cloudflare. Els passos de D1/R2 i serveis privats, si calen, es revisen i verifiquen separadament. Els canvis només documentals no requereixen desplegar producte. [Versions i publicació](docs/VERSIONS.md).
 
 L’origen principal és `https://lanet.es`; `lanet.pages.dev` es conserva. [cloudflare-target.json](cloudflare-target.json) fixa la destinació; `wrangler.jsonc` configura Pages. Google és l’únic accés, i la marca OAuth compartida es conserva per decisió de Marc.
 

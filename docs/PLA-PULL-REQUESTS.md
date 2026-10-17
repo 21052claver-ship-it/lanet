@@ -1,5 +1,7 @@
 # Pull requests i protecció de main
 
+> Registre històric de T68-01. El 17 d’octubre de 2026 Marc substitueix l’obligació de PR per als canvis propis per [incorporació directa del propietari amb CI obligatòria](FLUX-PROPIETARI.md). Les PR i revisions de contribucions externes es conserven. El contingut següent documenta la configuració anterior.
+
 Tasca única T68-01. Configuració del repositori; no canvia la versió publicada.
 
 - [x] Confirmar el compte propietari, col·laboradors i proteccions anteriors.

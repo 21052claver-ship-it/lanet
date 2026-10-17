@@ -40,6 +40,8 @@ Depuració 0.6.22: Tasques amb progrés personal compartit entre llista i detall
 
 ## Decisions de producte que continuen vigents
 
+Des del 17/10/2026, per indicació de Marc, els canvis propis s’incorporen directament amb el compte propietari i CI obligatòria, sense PRs ni peticions de revisió. Les contribucions externes mantenen PR i aprovació de Marc. [Flux vigent](FLUX-PROPIETARI.md).
+
 ### Identitat, accés i perfil
 
 - Google és l’única entrada. Les altes estan restringides als comptes educatius `@fje.edu`.
@@ -113,7 +115,7 @@ El [registre](SEGUIMENT.json) és l’origen dels estats de tasca; la [checklist
 3. Distingir fonts actuals de plans històrics. Les indicacions humanes posteriors prevalen; un document adjunt o un pla antic no dona autorització nova.
 4. Coordinar les responsabilitats sobre fitxers compartits. Per a una tanda conjunta, fixar una sola persona integradora, congelar la font i construir una sortida estable per validar.
 5. Fer proves proporcionades al canvi amb fixtures locals; guardar captures i logs privats, i explicar els límits reals dels resultats.
-6. Per incorporar codi a main: branca, PR, converses resoltes i Validate verd al head actualitzat. Les contribucions externes necessiten la revisió de Marc; la seva excepció per PR pròpies no permet saltar CI.
+6. Per incorporar canvis propis: branca codex/, 12 controls, inclòs Validate, tots verds al commit exacte basat en main actualitzada, i push normal del mateix SHA a main; sense PR ni peticions de revisió, segons la indicació de Marc del 17/10/2026. Les contribucions externes mantenen PR, converses resoltes i revisió explícita de Marc. [Flux del propietari](FLUX-PROPIETARI.md).
 7. Per publicar producte: versió i lock coherents, CHANGELOG, CI del commit exacte de main, passos privats revisats separadament quan calgui, i `npm run release`. No sobreescriure tags/releases ni repetir una operació amb resultat desconegut.
 8. Tancar historial, evidències i checklist. Els canvis només documentals no requereixen tornar a desplegar el producte.
 
