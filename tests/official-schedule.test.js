@@ -148,11 +148,11 @@ test('management cannot overwrite another offering slot ID', async () => {
   db.close();
 });
 
-test('all 208 official combinations have exactly six nonoverlapping periods per day', () => {
+test('all 272 official combinations have exactly six nonoverlapping periods per day', () => {
   let count = 0;
   for (const [group, expected] of [
     ['2A', 96],
-    ['2B', 64],
+    ['2B', 128],
     ['2C', 48],
   ]) {
     const sets = combinations(group);
@@ -177,7 +177,129 @@ test('all 208 official combinations have exactly six nonoverlapping periods per 
       count++;
     }
   }
-  assert.equal(count, 208);
+  assert.equal(count, 272);
+});
+
+test('technological Chemistry matches the independently recorded correction, not group A periods', () => {
+  const reference = JSON.parse(readFileSync('tests/fixtures/technology-chemistry.json', 'utf8'));
+  const periods = (id) =>
+    model.slots.filter((s) => s.offering_id === id).map((s) => [s.day, s.start, s.end]);
+  for (const variant of reference.variants) {
+    const offering = model.offerings.find((o) => o.id === variant.id);
+    assert.equal(offering.group_id, '2B');
+    assert.equal(offering.block, 'speciality');
+    assert.equal(offering.subject_id, 'chem');
+    assert.deepEqual(periods(variant.id), reference.periods);
+    assert.ok(
+      model.slots
+        .filter((s) => s.offering_id === variant.id)
+        .every((s) => s.teacher === variant.teacher && s.room === variant.room),
+    );
+    assert.deepEqual(periods(variant.id), periods('2B-dt'));
+    assert.deepEqual(periods(variant.id), periods('2B-eco'));
+    assert.notDeepEqual(periods(variant.id), periods('2A-chem'));
+  }
+  const route = OFFICIAL_ROUTES.find((r) => r.id === '2B');
+  assert.match(route.description, /Química/);
+  assert.match(route.blocks.find((b) => b.id === 'speciality').label, /Química/);
+});
+
+test('technological students and delegates save Chemistry, retain grades and reject mixed alternatives', async () => {
+  const { db, env } = testEnvironment();
+  const u = user(db);
+  await configure(env, u, { group_id: '2B', path: 'science', offerings: first('2B') });
+  db.exec(
+    "INSERT INTO grade_entries(id,user_id,subject_id,term,category,title,grade,weight,position) VALUES('kept-drawing','schedule-fixture','dt',1,'exam','Prova anterior',8.6,37,0)",
+  );
+  for (const role of ['student', 'delegate']) {
+    for (const chemistry of ['2B-chem-biosca', '2B-chem-solsona']) {
+      const ids = first('2B').map((id) => (id === '2B-dt' ? chemistry : id));
+      const body = { group_id: '2B', path: 'science', offerings: ids };
+      const current = { ...u, role, group_id: '2B' };
+      await configure(env, current, body);
+      const saved = db.prepare('SELECT offering_id FROM enrollments WHERE user_id=?').all(u.id);
+      assert.deepEqual(new Set(saved.map((e) => e.offering_id)), new Set(ids));
+      assert.equal(
+        db.prepare("SELECT grade FROM grade_entries WHERE id='kept-drawing'").get().grade,
+        8.6,
+      );
+      assert.equal(
+        db
+          .prepare("SELECT COUNT(*) AS n FROM grade_entries WHERE user_id=? AND subject_id='chem'")
+          .get(u.id).n,
+        36,
+      );
+      const choices = curriculumChoices(await catalog(env), '2B', ids);
+      assert.equal(choices.speciality.offering_id, chemistry);
+      for (const invalid of [
+        [...ids, '2B-dt'],
+        [...ids, '2B-eco'],
+        ids.map((id) => (id === chemistry ? '2A-chem' : id)),
+        [...ids, chemistry === '2B-chem-biosca' ? '2B-chem-solsona' : '2B-chem-biosca'],
+      ])
+        await assert.rejects(configure(env, current, { ...body, offerings: invalid }), {
+          status: 400,
+        });
+      assert.deepEqual(
+        db.prepare('SELECT offering_id FROM enrollments WHERE user_id=?').all(u.id),
+        saved,
+      );
+    }
+  }
+  db.close();
+});
+
+test('Chemistry migration only adds its catalog rows and keeps every existing table and choice intact', () => {
+  const { db } = testEnvironment({ through: '0030_notification_unread_index.sql' });
+  user(db);
+  db.exec(
+    "INSERT INTO enrollments VALUES('schedule-fixture','2B-dt'); INSERT INTO grade_entries(id,user_id,subject_id,term,category,title,grade,weight,position) VALUES('kept-grade','schedule-fixture','dt',1,'exam','Prova existent',9.1,37,0); UPDATE templates SET title='Plantilla conservada' WHERE offering_id='2B-dt' AND position=0;",
+  );
+  const tables = db
+    .prepare(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name",
+    )
+    .all()
+    .map((t) => t.name);
+  const snapshot = () =>
+    Object.fromEntries(
+      tables.map((name) => [
+        name,
+        db
+          .prepare(`SELECT * FROM "${name}"`)
+          .all()
+          .sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b))),
+      ]),
+    );
+  const before = snapshot();
+  const migration = readFileSync('migrations/0031_technology_chemistry.sql', 'utf8');
+  db.exec(migration);
+  const after = snapshot();
+  for (const name of tables) {
+    for (const row of before[name])
+      assert.ok(
+        after[name].some((r) => JSON.stringify(r) === JSON.stringify(row)),
+        name,
+      );
+    if (!['offerings', 'slots', 'templates'].includes(name))
+      assert.deepEqual(after[name], before[name], name);
+  }
+  assert.equal(after.offerings.length - before.offerings.length, 2);
+  assert.equal(after.slots.length - before.slots.length, 8);
+  assert.equal(after.templates.length - before.templates.length, 72);
+  db.exec(
+    "UPDATE templates SET title='Plantilla nova personalitzada' WHERE offering_id='2B-chem-biosca' AND position=0",
+  );
+  const customized = snapshot();
+  db.exec(migration);
+  assert.deepEqual(
+    snapshot(),
+    customized,
+    'Reapplying cannot replace customized templates or duplicate rows',
+  );
+  assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(), []);
+  assert.equal(db.prepare('PRAGMA quick_check').get().quick_check, 'ok');
+  db.close();
 });
 test('default route matrices match the independently transcribed PDF fixture', () => {
   const reference = JSON.parse(readFileSync('tests/fixtures/official-timetable.json', 'utf8'));
@@ -194,6 +316,47 @@ test('default route matrices match the independently transcribed PDF fixture', (
         }),
     );
     assert.deepEqual(matrix, reference[group], group);
+  }
+});
+
+test('every offering follows its independently transcribed timetable block, including all alternatives', () => {
+  const reference = JSON.parse(readFileSync('tests/fixtures/official-timetable.json', 'utf8'));
+  const blockSubject = {
+    '2A': {
+      mathematics: 'math',
+      chemistry: 'chem',
+      science: 'phy',
+      elective: 'ods',
+      tutor: 'tutor',
+    },
+    '2B': {
+      mathematics: 'math',
+      science: 'phy',
+      speciality: 'dt',
+      elective: 'ods',
+      tutor: 'tutor',
+    },
+    '2C': {
+      mathematics: 'smath',
+      speciality: 'eco',
+      geography: 'geo',
+      elective: 'ods',
+      tutor: 'tutor',
+    },
+  };
+  for (const offering of OFFICIAL_OFFERINGS) {
+    const subject = blockSubject[offering.group_id][offering.block] || offering.subject_id;
+    const expected = reference[offering.group_id].flatMap((entries, day) =>
+      entries.flatMap((entry, period) =>
+        entry.split('/')[0] === subject ? [[day, ...SCHOOL_PERIODS[period]]] : [],
+      ),
+    );
+    const actual = OFFICIAL_SLOTS.filter((s) => s.offering_id === offering.id).map((s) => [
+      s.day,
+      s.start,
+      s.end,
+    ]);
+    assert.deepEqual(actual, expected, offering.id);
   }
 });
 test('all teacher and elective variants use the exact rooms and per-day assignments', () => {

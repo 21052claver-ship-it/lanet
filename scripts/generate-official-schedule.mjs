@@ -10,6 +10,11 @@ import {
 import { defaultAssessments } from '../shared/assessments.js';
 import { WEIGHTS } from '../shared/catalog.js';
 
+// 0026 is already published. New offerings belong exclusively to the additive 0031.
+const chemistryB = OFFICIAL_OFFERINGS.filter((o) => o.group_id === '2B' && o.subject_id === 'chem');
+const chemistryIds = new Set(chemistryB.map((o) => o.id));
+const originalOfferings = OFFICIAL_OFFERINGS.filter((o) => !chemistryIds.has(o.id));
+const originalSlots = OFFICIAL_SLOTS.filter((s) => !chemistryIds.has(s.offering_id));
 const literal = (value) =>
   value === null
     ? 'NULL'
@@ -28,9 +33,9 @@ const lines = [
   "ALTER TABLE slots ADD COLUMN note TEXT NOT NULL DEFAULT '';",
   "ALTER TABLE users ADD COLUMN schedule_version TEXT NOT NULL DEFAULT '';",
 ];
-function upsert(table, rows, conflict) {
+function upsert(table, rows, conflict, target = lines) {
   const columns = Object.keys(rows[0]);
-  lines.push(
+  target.push(
     `INSERT INTO ${table}(${columns.join(',')}) VALUES\n${rows.map((r) => '(' + columns.map((c) => literal(r[c])).join(',') + ')').join(',\n')}\nON CONFLICT(${conflict}) DO UPDATE SET ${columns
       .filter((c) => c !== conflict)
       .map((c) => `${c}=excluded.${c}`)
@@ -44,15 +49,15 @@ upsert(
   'id',
 );
 lines.push("UPDATE offerings SET active=0 WHERE group_id IN('2A','2B','2C');");
-upsert('offerings', OFFICIAL_OFFERINGS, 'id');
+upsert('offerings', originalOfferings, 'id');
 lines.push(
   "DELETE FROM slots WHERE offering_id IN(SELECT id FROM offerings WHERE group_id IN('2A','2B','2C'));",
 );
-upsert('slots', OFFICIAL_SLOTS, 'id');
+upsert('slots', originalSlots, 'id');
 lines.push(
   '-- Fill templates only when the offering has none: PDF supplies no assessment weights.',
 );
-for (const offering of OFFICIAL_OFFERINGS.filter((o) => o.subject_id !== 'tutor')) {
+function templatesFor(offering, target = lines) {
   // The condition is evaluated before the statement inserts all terms together.
   const entries = [1, 2, 3].flatMap((term) =>
     defaultAssessments(WEIGHTS[offering.subject_id]).map((t) => [
@@ -67,23 +72,40 @@ for (const offering of OFFICIAL_OFFERINGS.filter((o) => o.subject_id !== 'tutor'
       t.assessment_type,
     ]),
   );
-  lines.push(
+  target.push(
     `WITH defaults(id,offering_id,term,category,title,date,weight,position,assessment_type) AS (\nVALUES ${entries.map((e) => '(' + e.map(literal).join(',') + ')').join(',\n')}\n)\nINSERT OR IGNORE INTO templates(id,offering_id,term,category,title,date,weight,position,assessment_type)\nSELECT * FROM defaults WHERE NOT EXISTS(SELECT 1 FROM templates WHERE offering_id=${literal(offering.id)});`,
   );
 }
+for (const offering of originalOfferings.filter((o) => o.subject_id !== 'tutor'))
+  templatesFor(offering);
 lines.push(
   `INSERT INTO settings(key,value) VALUES('official_schedule_version',${literal(SCHEDULE_VERSION)}) ON CONFLICT(key) DO UPDATE SET value=excluded.value;`,
 );
 lines.push("INSERT OR IGNORE INTO settings(key,value) VALUES('catalog_initialized','1');");
-const source = lines.join('\n\n') + '\n';
-const path = 'migrations/0026_official_schedule.sql';
-if (process.argv.includes('--check')) {
-  if (readFileSync(path, 'utf8').replaceAll('\r\n', '\n') !== source)
-    throw new Error('Regenerate the official timetable migration.');
-  console.log('Official timetable migration matches its reviewed catalog.');
-} else {
-  writeFileSync(path, source);
-  console.log(
-    `Generated ${path}: ${OFFICIAL_OFFERINGS.length} offerings, ${OFFICIAL_SLOTS.length} slots.`,
-  );
+const addition = [
+  '-- Add Chemistry to the technological route; periods confirmed by Marc on 2026-10-17.',
+  '-- Monday/Tuesday 09:10; Wednesday/Thursday 08:10. Alternatives to Drawing/Business.',
+  '-- Additive catalog only. Preserve all existing users, enrollments, grades and templates.',
+];
+upsert('offerings', chemistryB, 'id', addition);
+upsert(
+  'slots',
+  OFFICIAL_SLOTS.filter((s) => chemistryIds.has(s.offering_id)),
+  'id',
+  addition,
+);
+for (const offering of chemistryB) templatesFor(offering, addition);
+for (const [path, statements] of [
+  ['migrations/0026_official_schedule.sql', lines],
+  ['migrations/0031_technology_chemistry.sql', addition],
+]) {
+  const source = statements.join('\n\n') + '\n';
+  if (process.argv.includes('--check')) {
+    if (readFileSync(path, 'utf8').replaceAll('\r\n', '\n') !== source)
+      throw new Error(`Regenerate the official timetable migration: ${path}`);
+    console.log(`${path} matches its reviewed catalog.`);
+  } else {
+    writeFileSync(path, source);
+    console.log(`Generated ${path}.`);
+  }
 }

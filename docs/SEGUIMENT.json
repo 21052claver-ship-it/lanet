@@ -460,6 +460,10 @@
     {
       "id": "R114",
       "description": "Entrar a Continguts, filtrar o recarregar no ha de carregar ni descarregar cap PDF. Obrir el material permet llegir-lo al visor; descarregar requereix una acció explícita."
+    },
+    {
+      "id": "R115",
+      "description": "Els alumnes del tecnològic poden escollir Química com alternativa a Dibuix tècnic i Empresa, a les mateixes quatre franges confirmades per Marc. Selector, servidor, horari, notes i delegació conserven la coherència."
     }
   ],
   "phases": [
@@ -1090,6 +1094,13 @@
       "title": "Continguts sense descàrregues automàtiques",
       "depends_on": [
         "F88"
+      ]
+    },
+    {
+      "id": "F90",
+      "title": "Química al tecnològic i fidelitat dels horaris",
+      "depends_on": [
+        "F89"
       ]
     }
   ],
@@ -8588,6 +8599,52 @@
       ],
       "progress": "Entrar a Continguts ja no carrega ni descarrega els PDF dels materials. Les targetes mostren una portada estàtica; obrir expressament l’apunt carrega el visor PDF.js i descarregar requereix prémer l’enllaç del fitxer. Les capçaleres de seguretat i els permisos del servidor es conserven. Reproducció prèvia amb un clic únic: una petició de document i una descàrrega. Després: 6 escenaris als tres motors, a 320/1440 px, amb 10 etapes per escenari i zero peticions PDF/descàrregues espontànies. Lectura correcta i descàrrega explícita contrastada amb tots els bytes originals; el segon PDF no obert continua sense carregar-se. 33 regressions de Continguts i 475 unitàries correctes; tipus/lint/build/font correctes. Els 12 jobs i Validate de PR/main són verds. Publicada una vegada: d3ef96fb678a77fe751c6b3aed2691e61210c139. Rebut/digest, tag/release immutable, Deployment i proveïdor verificats. Cap prova pública ni fitxer real. La primera execució de main va fallar amb un error intern de WebKit durant una recàrrega a la prova d’horaris. Els 9 recorreguts WebKit del mateix codi passen localment; s’aturen les suites encara pendents i es repeteix tota la CI una vegada, sense canviar ni ometre asserts. Els 12 controls de la segona execució són correctes. Registre i captura originals conservats.",
       "change_log_id": "H204"
+    },
+    {
+      "id": "T90-01",
+      "phase": "F90",
+      "title": "Completar Química del tecnològic i contrastar tots els horaris",
+      "status": "review",
+      "requirements": [
+        "R115"
+      ],
+      "depends_on": [
+        "T89-01"
+      ],
+      "files": [
+        "shared/official-schedule.js",
+        "scripts/generate-official-schedule.mjs",
+        "migrations/0031_technology_chemistry.sql",
+        "tests/official-schedule.test.js",
+        "scripts/test-official-schedule-api.mjs",
+        "scripts/test-technology-chemistry.mjs",
+        "docs/PLA-QUIMICA-TECNOLOGIC.md",
+        "tests/fixtures/technology-chemistry.json",
+        ".github/workflows/verify.yml",
+        "package.json",
+        "package-lock.json",
+        "CHANGELOG.md"
+      ],
+      "acceptance": "Química és la tercera alternativa del bloc de Dibuix i Empresa, amb professorat conegut seleccionat explícitament. Dilluns/dimarts 09:10 i dimecres/dijous 08:10. Les combinacions tenen 30 hores sense solapaments; desament/recàrrega i delegats correctes amb fixtures. Migració additiva assajada i revisada, dades conservades, PR/CI i publicació amb rebut.",
+      "checks": [
+        "Contrastar PDF i full original amb la correcció explícita de Marc del 17/10/2026.",
+        "Verificar les 272 combinacions i els horaris de Química amb una matriu independent.",
+        "Simular alumnat i delegats, canvi d’assignatura/professor, reintent i persistència als tres motors.",
+        "Assajar migració sense pèrdua de dades, tipus/lint/build/font, PR, CI exacta i publicació."
+      ],
+      "evidence": [
+        "docs/PLA-QUIMICA-TECNOLOGIC.md",
+        "output/technology-chemistry/before.json",
+        "output/technology-chemistry/local-verification.json",
+        "output/technology-chemistry/unit-final.log",
+        "output/technology-chemistry/typecheck-final.log",
+        "output/technology-chemistry/build.log",
+        "output/technology-chemistry/final/results.json",
+        "output/technology-chemistry/official/results.json",
+        "output/technology-chemistry/api/api-results.json"
+      ],
+      "progress": "Química afegida com tercera alternativa del bloc de Dibuix/Empresa del B, amb professorat explícit. Franges confirmades per Marc i contrastades independentment; totes les 55 ofertes segueixen el bloc transcrit. 272 combinacions de 30 hores sense solapaments, 479 unitàries, 18 recorreguts nous dels tres rols/motors a 320/1440 px i 27 regressions oficials correctes; API D1 local amb professorat, persistència, permisos i alternatives excloents correcta. Migració 0031 conserva totes les dades existents; IDs nous protegeixen Química retirada i les plantilles històriques. Tipus/lint/build correctes. Pendent PR/CI, còpia privada, aplicació separada de la migració i publicació.",
+      "change_log_id": "H205"
     }
   ]
 }
