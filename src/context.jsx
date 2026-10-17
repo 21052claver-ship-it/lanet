@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useCallback, useEffect, use
 import { api } from './api';
 import { createDataSync, runMutation, privacyAfterFailure } from '../shared/async-state';
 import { useGradeWrites } from './grade-writes';
+import { useTaskWrites } from './task-writes';
 import { emptyPau } from '../shared/pau';
 import { useReactionWrites } from './reaction-writes';
 import { createPreferenceWriter } from '../shared/preference-writer';
@@ -134,6 +135,7 @@ export function AppProvider({ initial, children }) {
     [notify],
   );
   const gradeWrites = useGradeWrites(data, setData, mutate);
+  const taskWrites = useTaskWrites(mutate, setData);
   const reactions = useReactionWrites(data, setData, sync.current, notify);
   const go = useCallback((p) => {
     setPage(p);
@@ -187,6 +189,7 @@ export function AppProvider({ initial, children }) {
         setAgendaSubject,
         savePreferences,
         gradeWrites,
+        taskWrites,
         hideGrades,
         pauDraft,
         setPauDraft,

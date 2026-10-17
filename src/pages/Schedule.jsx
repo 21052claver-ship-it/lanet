@@ -3,7 +3,8 @@ import Select from '../components/Select';
 import AgendaList from '../components/AgendaList';
 import SchoolCalendar from '../components/SchoolCalendar';
 import OptionsMenu from '../components/OptionsMenu';
-import { EVENT_KINDS, eventKind, eventLabel, eventOrigin } from '../../shared/agenda';
+import { EVENT_KINDS, eventKind, eventLabel, eventOrigin, eventSubjectIds, agendaListItems } from '../../shared/agenda';
+import TaskProgressButton from '../components/TaskProgressButton';
 import { canManageEvent } from '../../shared/delegation';
 import {
   CaretLeft,
@@ -68,7 +69,6 @@ export default function Schedule() {
     go,
     open,
     setSubjectFilter,
-    mutate,
     notify,
     agendaSubject,
     setAgendaSubject,
@@ -117,8 +117,10 @@ export default function Schedule() {
     setFilterKind('all');
     setFilterSubject(agendaSubject);
     setDate(data.today);
+    if (!writeLocalJSON(prefKey, { view: 'calendar', scale: 'list', filterKind: 'all', filterSubject: agendaSubject }))
+      notify('Vista actualitzada. El navegador no ha pogut recordar aquesta preferència.', 'warning');
     setAgendaSubject(null);
-  }, [agendaSubject, setAgendaSubject, data.today]);
+  }, [agendaSubject, setAgendaSubject, data.today, prefKey, notify]);
   const dates = weekDates(date),
     chosenIds = data.enrollments.map((e) => e.offering_id);
   const slots = data.slots.filter((s) => chosenIds.includes(s.offering_id));
@@ -136,14 +138,10 @@ export default function Schedule() {
         (filterKind === 'exam'
           ? ['exam', 'test'].includes(eventKind(e))
           : eventKind(e) === filterKind)) &&
-        (filterSubject === 'all' || e.subject_id === filterSubject) &&
+        (filterSubject === 'all' || eventSubjectIds(e).includes(filterSubject)) &&
         (showCompleted || !e.done)),
   );
-  const listEvents = events.filter(
-    (e) =>
-      (e.date >= date && e.date <= addDays(date, 90)) ||
-      (eventKind(e) === 'task' && !e.done && e.date < data.today),
-  );
+  const listEvents = agendaListItems(events, date, data.today, showCompleted);
   const weekEvents = events.filter((e) => dates.includes(e.date));
   const dayEvents = weekEvents
     .filter((e) => e.date === activeDate)
@@ -152,7 +150,7 @@ export default function Schedule() {
     (slot) => slot.day === dates.indexOf(activeDate),
   );
   const selectedEvent = data.events.find((e) => e.id === selected);
-  const selectedSubject = subject(selectedEvent?.subject_id);
+  const selectedSubjects = eventSubjectIds(selectedEvent).map(subject).filter(Boolean);
   function openEventForm(type, item) {
     if (compact) setSelected(null);
     open(type, item);
@@ -193,7 +191,8 @@ export default function Schedule() {
     } else setDate(addDays(date, n * 7));
   }
   function eventCard(e, small = false) {
-    const eventSubject = subject(e.subject_id);
+    const ids = eventSubjectIds(e);
+    const eventSubject = subject(ids.includes(filterSubject) ? filterSubject : ids[0]);
     const subjectName = ['math', 'smath', 'cast'].includes(eventSubject?.id)
       ? eventSubject.name
       : eventSubject?.short;
@@ -574,16 +573,12 @@ export default function Schedule() {
             >
               <div className="panel detail-panel schedule-event-detail">
                 <h2 className="selection-heading">{eventLabel(selectedEvent)}</h2>
-                <SubjectChip
-                  subject={selectedSubject}
-                  label={
-                    ['math', 'smath'].includes(selectedSubject?.id)
-                      ? selectedSubject.name
-                      : undefined
-                  }
-                />
+                <div className="card-tags">
+                  {selectedSubjects.map((s) => <SubjectChip key={s.id} subject={s} label={['math', 'smath'].includes(s.id) ? s.name : undefined} />)}
+                </div>
                 <h3 className="selected-event-title">{selectedEvent.title}</h3>
                 <p className="muted">{eventOrigin(selectedEvent)}</p>
+                <div className="event-detail-actions">
                 <Button
                   onClick={() =>
                     openEventForm('event', {
@@ -600,17 +595,7 @@ export default function Schedule() {
                 >
                   <Plus size={18} /> Afegir una altra tasca o examen
                 </Button>
-                {eventKind(selectedEvent) === 'task' && (
-                  <Button
-                    onClick={() =>
-                      mutate('/events/' + selectedEvent.id + '/progress', {
-                        done: !selectedEvent.done,
-                      }).catch(() => {})
-                    }
-                  >
-                    {selectedEvent.done ? 'Tornar a marcar pendent' : 'Marcar com a feta'}
-                  </Button>
-                )}
+                <TaskProgressButton event={selectedEvent} />
                 {selectedEvent.source_key?.startsWith('plus:') &&
                   data.pluses.find((p) => p.id === selectedEvent.source_key.split(':')[1]) && (
                     <Button
@@ -624,6 +609,7 @@ export default function Schedule() {
                       Veure el plus d’origen
                     </Button>
                   )}
+                </div>
                 <ul className="detail-list">
                   <li>
                     <CalendarCheck size={19} />
@@ -662,11 +648,11 @@ export default function Schedule() {
                     </small>
                   </span>
                 </div>
-                {selectedEvent.subject_id && (
+                {!!selectedSubjects.length && (
                   <Button
                     variant="primary"
                     onClick={() => {
-                      setSubjectFilter(selectedEvent.subject_id);
+                      setSubjectFilter(selectedSubjects.some((s) => s.id === filterSubject) ? filterSubject : selectedSubjects[0].id);
                       go('notes');
                     }}
                   >

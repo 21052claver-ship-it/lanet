@@ -269,26 +269,30 @@ export function Reader({ item }) {
   useEffect(() => {
     if (!n.unlocked) return;
     let timer,
+      generation = 0,
       disposed = false;
     const start = async () => {
+      const current = ++generation;
       clearTimeout(timer);
       if (document.visibilityState !== 'visible') return;
       try {
         const full = await api(`/notes/${n.id}`);
-        if (!disposed) {
+        if (!disposed && current === generation) {
           setContent(full);
           setLoadError('');
         }
-        if (!disposed)
+        if (!disposed && current === generation && document.visibilityState === 'visible')
           timer = setTimeout(
-            () =>
+            () => {
+              if (disposed || current !== generation || document.visibilityState !== 'visible') return;
               api(`/notes/${n.id}/consult`, { method: 'POST', body: {} })
                 .then(refresh)
-                .catch(() => {}),
+                .catch(() => {});
+            },
             10500,
           );
       } catch (e) {
-        if (!disposed) setLoadError(e.message);
+        if (!disposed && current === generation) setLoadError(e.message);
       }
     };
     start();

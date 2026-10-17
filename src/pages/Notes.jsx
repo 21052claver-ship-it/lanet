@@ -36,7 +36,7 @@ import { matchesSearch } from '../../shared/search';
 import ContentLibrary from '../components/ContentLibrary';
 import SchoolGuide from '../components/SchoolGuide';
 import { filterMaterials, materialTopics } from '../../shared/content-workspace';
-import { eventLabel, eventKind } from '../../shared/agenda';
+import { eventLabel, eventKind, eventSubjectIds } from '../../shared/agenda';
 import { dateLabel } from '../../shared/domain';
 import '../contents.css';
 import '../workspace.css';
@@ -77,7 +77,7 @@ export default function Notes() {
     ? data.events
         .filter(
           (e) =>
-            e.subject_id === current.id &&
+            eventSubjectIds(e).includes(current.id) &&
             !e.done &&
             (e.date >= data.today || eventKind(e) === 'task'),
         )

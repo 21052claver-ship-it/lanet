@@ -448,6 +448,10 @@
     {
       "id": "R111",
       "description": "Accés separat al panell de delegats a la barra només per a representants assignats, i publicació conjunta verificada."
+    },
+    {
+      "id": "R112",
+      "description": "Depurar la plataforma amb simulacions completes d’una classe entre alumnes; comprovar botons, funcions, seguiments, persistència, alineació, proporcions i absència de solapaments."
     }
   ],
   "phases": [
@@ -8337,12 +8341,13 @@
     {
       "id": "T87-01",
       "phase": "F87",
-      "title": "Tancar horari, reforç de PDF i accés de delegats amb publicació conjunta",
+      "title": "Depurar la plataforma i simular la seqüència completa d’una classe",
       "status": "review",
       "requirements": [
         "R109",
         "R110",
-        "R111"
+        "R111",
+        "R112"
       ],
       "depends_on": [
         "T86-01"
@@ -8360,15 +8365,28 @@
         "worker/files.js",
         "src/components/PdfAttachment.jsx",
         "tests/upload-safety.test.js",
-        "docs/PLA-HORARI-EXPERIENCIA.md"
+        "docs/PLA-HORARI-EXPERIENCIA.md",
+        "docs/PLA-SEQUENCIA-CLASSE.md",
+        "scripts/test-class-sequence.mjs",
+        "shared/agenda.js",
+        "worker/agenda.js",
+        "src/task-writes.jsx",
+        "src/components/TaskProgressButton.jsx",
+        "src/components/AgendaList.jsx",
+        "src/context.jsx",
+        "src/forms.jsx",
+        "src/forms-resources.jsx",
+        "src/pages/Notes.jsx",
+        "tests/agenda.test.js"
       ],
-      "acceptance": "Auditoria amb fixtures oficials dels tres itineraris, mòbil/tauleta/escriptori/paisatge, dates/setmanes, classes, esdeveniments solapats, detalls i accions contextuals. La data d’alta coincideix amb el dia escollit; Avui torna al dia correcte. Targetes llegibles i intervals fidelment representats, sense controls tapats o inaccessible amb teclat. Conservar catàleg, professorat per dia, permisos, agenda i dades. Cap prova pública o càrrega D1/R2 nova; migracions només si un defecte les fa necessàries i amb verificació separada. Una PR/publicació amb CI exacta.",
+      "acceptance": "Auditoria amb fixtures oficials dels tres itineraris, mòbil/tauleta/escriptori/paisatge, dates/setmanes, classes, esdeveniments solapats, detalls i accions contextuals. La data d’alta coincideix amb el dia escollit; Avui torna al dia correcte. Targetes llegibles i intervals fidels, controls accessibles i separats. Simulacions entre alumnes i delegat amb progrés privat independent, tasques antigues recuperables, plusos per assignatura, context persistent, lectura visible, notes i estudi sense duplicats. Conservar catàleg, professorat, permisos i dades. Associacions del plus per lectura indexada dins de la consulta existent; cap petició, polling, escriptura, migració o càrrega R2 addicional. Cap prova pública. Una PR/publicació amb CI exacta.",
       "checks": [
         "Auditar disposició i fluxos reals amb captures, mesures i dades locals dels tres itineraris.",
         "Corregir problemes reproduïbles de dates, solapaments, lectura i controls.",
         "Verificar les correccions, dades oficials, alta contextual, teclat i responsive en tres motors.",
         "Agrupar versió/documentació, auditar font, esperar CI de PR/main i publicar una vegada.",
-        "Comprovar absència/presència de l’accés per estudiant, delegat i subdelegat; rebutjar PDF falsos abans de R2 i revalidar política antiga."
+        "Comprovar absència/presència de l’accés per estudiant, delegat i subdelegat; rebutjar PDF falsos abans de R2 i revalidar política antiga.",
+        "Simular una classe entre diversos alumnes i un delegat, amb tasques, continguts, seguiment personal, estudi i recàrregues; auditar errors, aïllament i disposició en tres motors."
       ],
       "evidence": [
         "docs/PLA-HORARI-EXPERIENCIA.md",
@@ -8381,9 +8399,25 @@
         "output/schedule-experience/typecheck-final.log",
         "output/schedule-experience/build-final.log",
         "output/schedule-experience/official-api.log",
-        "output/schedule-experience/api.log"
+        "output/schedule-experience/api.log",
+        "docs/PLA-SEQUENCIA-CLASSE.md",
+        "output/class-audit/local-verification.json",
+        "output/class-audit/sequence-before/results.json",
+        "output/class-audit/reading-before-stable/results.json",
+        "output/class-audit/sequence-final/results.json",
+        "output/class-audit/material-final/results.json",
+        "output/class-audit/detail-compat-final/results.json",
+        "output/class-audit/responsive-final/responsive-results.json",
+        "output/class-audit/workspaces-final/results.json",
+        "output/class-audit/delegates-final/results.json",
+        "output/class-audit/api-current.log",
+        "output/class-audit/official-api-final/api-results.json",
+        "output/class-audit/typecheck-final.log",
+        "output/class-audit/unit-final.log",
+        "output/class-audit/build-compat-final.log",
+        "output/class-audit/source-audit.log"
       ],
-      "progress": "0.6.22 en revisió local: horari amb dia únic, Avui/alta/mes coherents, solapaments consistents i exportació de classes. Accés al panell per representants assignats; PDF/noms/recursos reforçats i revalidació de política antiga. 469 unitàries, 36 nous fluxos en tres motors i 81 regressions (15 targetes, 27 horaris oficials, 36 pujades i 3 visors PDF) correctes, tipus/lint/build i API locals correctes. Incidència de captura intermèdia WebKit aïllada; la captura de viewport i el recorregut complet passen sense forçar clicks. Pendent CI exacta de PR/main i una publicació; cap prova pública ni migració.",
+      "progress": "0.6.22 en revisió: horari/PDF/delegats ampliats amb depuració de la seqüència d’una classe. Progrés de tasques compartit entre llista i detalls, clics repetits i refresh fallit gestionats, tasques vençudes fetes recuperables, plusos per totes les assignatures, filtre contextual persistent i consultes només amb lectura visible. Accions separades i àrees tàctils de 44 px. 472 unitàries, matriu de 63 simulacions de classe, 12 comprovacions de focus/disposició sense Object.hasOwn, 66 responsive, 33 espais, 33 delegats i 39 controls funcionals correctes; 62 API D1/R2 i horaris A/B/C locals correctes. La matriu va requerir corregir l’espera del bootstrap abans de recarregar en dos casos WebKit; 12 recorreguts afectats reexecutats, sense ignorar errors. Tipus/lint/build/font correctes. Pendent CI exacta de la PR44 actualitzada i main, i una publicació; cap prova pública, migració, polling, petició o escriptura nova.",
       "change_log_id": "H202"
     }
   ]

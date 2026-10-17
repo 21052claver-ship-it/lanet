@@ -182,7 +182,7 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
         } else await route.continue();
       });
       await p.getByRole('button', { name: 'Desar', exact: true }).click();
-      await p.getByRole('alert').filter({ hasText: 'Error local recuperable.' }).waitFor();
+      await p.getByRole('dialog').getByRole('alert').filter({ hasText: 'Error local recuperable.' }).waitFor();
       assert.equal(await title.inputValue(), 'Tasca privada local');
       await p.getByRole('button', { name: 'Desar', exact: true }).click();
       await p.getByRole('dialog').waitFor({ state: 'hidden' });

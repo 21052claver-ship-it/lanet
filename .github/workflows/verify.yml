@@ -65,6 +65,7 @@ jobs:
               npm run test:pau-top5
           - group: academics
             tests: |
+              npm run test:class-sequence
               npm run test:student-guide
               npm run test:course-grades
               npm run test:reactions
@@ -163,6 +164,7 @@ jobs:
             output/grade-activities/
             output/upload-safety/
             output/schedule-experience/
+            output/class-sequence/browser/
   validate:
     name: Validate
     if: always()

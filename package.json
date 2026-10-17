@@ -63,7 +63,8 @@
     "test:functional-controls": "node scripts/test-functional-controls.mjs",
     "test:ad-retention": "node scripts/test-ad-retention.mjs",
     "test:notifications": "node scripts/test-notifications.mjs",
-    "test:schedule-experience": "node scripts/test-schedule-experience.mjs"
+    "test:schedule-experience": "node scripts/test-schedule-experience.mjs",
+    "test:class-sequence": "node scripts/test-class-sequence.mjs"
   },
   "dependencies": {
     "@fontsource/nunito": "^5.3.0",
