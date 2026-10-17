@@ -2,7 +2,7 @@
 
 Repositori públic: [21052claver-ship-it/lanet](https://github.com/21052claver-ship-it/lanet). Aplicació principal: [lanet.es](https://lanet.es); es conserva `lanet.pages.dev`.
 
-[Índex documental](README.md) · [Estat actual](ESTAT-PROJECTE.md) · [Publicació 0.6.16](releases/0.6.16.md).
+[Índex documental](README.md) · [Estat actual](ESTAT-PROJECTE.md) · [Publicació 0.6.22](releases/0.6.22.md).
 
 ## Flux
 

@@ -1,20 +1,20 @@
 # La Net · estat actual i decisions vigents
 
-Actualitzat el 15 d’octubre de 2026. Aquest document és la memòria de continuïtat del projecte; els plans datats conserven les decisions i comprovacions de cada revisió.
+Actualitzat el 17 d’octubre de 2026. Aquest document és la memòria de continuïtat del projecte; els plans datats conserven les decisions i comprovacions de cada revisió.
 
 ## On som
 
 | Element | Estat registrat |
 | --- | --- |
 | Aplicació principal | [lanet.es](https://lanet.es) |
-| Darrera versió de producte publicada | **0.6.21** |
-| Informe complet de la versió | [Publicació 0.6.21](releases/0.6.21.md) |
-| Codi publicat | `8d2c1aa51c7ac5fc336f15a8dd57c8fc56dcd680` |
+| Darrera versió de producte publicada | **0.6.22** |
+| Informe complet de la versió | [Publicació 0.6.22](releases/0.6.22.md) |
+| Codi publicat | `1c35ceed95b69edd2e6faec3aee26645fadba3cc` |
 | GitHub | [21052claver-ship-it/lanet](https://github.com/21052claver-ship-it/lanet) |
-| Incorporació del codi | [PR #43](https://github.com/21052claver-ship-it/lanet/pull/43), fusionada amb tots els controls correctes |
-| CI del commit exacte de main | [Verify La Net](https://github.com/21052claver-ship-it/lanet/actions/runs/38676381817), correcta |
-| Publicació | [Tag i release immutable v0.6.21](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.21), rebut i Deployment verificats |
-| Documentació de tancament | Desada al projecte; es conserva en branca local per a la pròxima tanda, sense push documental immediat |
+| Incorporació del codi | [PR #44](https://github.com/21052claver-ship-it/lanet/pull/44), fusionada amb tots els controls correctes |
+| CI del commit publicat | [Verify La Net](https://github.com/21052claver-ship-it/lanet/actions/runs/39027328090), correcta |
+| Publicació | [Tag i release immutable v0.6.22](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.22), rebut i Deployment verificats |
+| Documentació de tancament | Registre i evidències de 0.6.22 consolidats en una PR documental, sense segona publicació de producte |
 
 Els rebuts descriuen el producte publicat. Una actualització d’aquests Markdown no implica un nou desplegament ni un canvi de versió de l’aplicació.
 
@@ -27,6 +27,8 @@ Publicació directa 0.6.19: delegats/subdelegats autoritzats publiquen i editen 
 Responsive 0.6.20: pestanyes visibles, contingut llarg dins de la columna, targetes de gestió i controls tàctils. [Pla i evidències](PLA-RESPONSIVE-2026-10.md).
 
 Estudi 0.6.21: focus amb Pomodoro o lliure, pausa conservadora, música compartida i silenci respectat. [Pla i evidències](PLA-FOCUS-LLIURE.md).
+
+Depuració 0.6.22: Tasques amb progrés personal compartit entre llista i detalls, clics repetits bloquejats i estat confirmat conservat davant errors de sincronització. Tasques vençudes fetes recuperables, plusos per totes les assignatures, filtres contextuals persistents i consultes d’apunts només amb lectura visible. Accions separades i àrees tàctils de 44 px. Inclou horari coherent, accés de delegats assignats i reforç de PDF. [Informe](releases/0.6.22.md) · [Simulacions](PLA-SEQUENCIA-CLASSE.md).
 
 ## Decisions de producte que continuen vigents
 
@@ -82,7 +84,7 @@ Les propostes visuals anteriors de xats es conserven com a exploració de dissen
 
 ## Verificació i límits
 
-La 0.6.21 té **460 proves unitàries correctes**, 63 fluxos focus en Chromium/Firefox/WebKit i 15 regressions locals de so; tipus/lint/build/font i CI completa correctes. Les tandes anteriors conserven les seves mètriques als informes de versió.
+La 0.6.22 té **472 proves unitàries correctes**, 63 simulacions de classe i 66 escenaris responsive, més les regressions detallades a l’informe. Tipus/lint/build/font i CI completa correctes. Les tandes anteriors conserven les seves mètriques als informes de versió.
 
 La verificació funcional utilitza fixtures locals. El desplegament, domini, callback, tag, release i rebuts es van verificar via APIs/CLI del proveïdor. No es van fer proves contra l’aplicació pública ni visites a la seva API. Els navegadors emulats no equivalen a proves en mòbils físics. El WebKit de Windows no exposa AudioContext: s’hi va comprovar el fallback; Chromium/Firefox van mesurar àudio real.
 

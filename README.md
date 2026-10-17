@@ -6,11 +6,11 @@ Plataforma per a estudiants de segon de batxillerat, en català, amb horaris ofi
 
 ## Versió publicada
 
-**0.6.21 · 15 d’octubre de 2026.** Mode focus amb Pomodoro o estudi lliure, fons i música opcional. Pausa conservadora, silenci respectat i controls accessibles. 460 unitàries, 63 fluxos focus i 15 regressions locals de so correctes.
+**0.6.22 · 17 d’octubre de 2026.** Depuració del recorregut de classe: agenda, tasques, continguts i seguiment coherents, consultes només amb lectura visible i controls adaptats al mòbil. 472 unitàries, 63 simulacions de classe i 66 casos responsive correctes.
 
-[Informe Markdown](docs/releases/0.6.21.md) · [Release immutable](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.21) · [CI del commit publicat](https://github.com/21052claver-ship-it/lanet/actions/runs/38676381817) · [CHANGELOG](CHANGELOG.md)
+[Informe Markdown](docs/releases/0.6.22.md) · [Release immutable](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.22) · [CI del commit publicat](https://github.com/21052claver-ship-it/lanet/actions/runs/39027328090) · [CHANGELOG](CHANGELOG.md)
 
-La versió publicada correspon al commit `8d2c1aa51c7ac5fc336f15a8dd57c8fc56dcd680`. El tancament documental posterior no és un nou desplegament. Els resultats i limitacions de les proves són a [VERIFICATION.md](docs/VERIFICATION.md); els pendents reals són al [registre](docs/SEGUIMENT.json).
+La versió publicada correspon al commit `1c35ceed95b69edd2e6faec3aee26645fadba3cc`. El tancament documental posterior no és un nou desplegament. Els resultats i limitacions de les proves són a [VERIFICATION.md](docs/VERIFICATION.md); els pendents reals són al [registre](docs/SEGUIMENT.json).
 
 ## Què inclou
 

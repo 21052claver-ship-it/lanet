@@ -8342,7 +8342,7 @@
       "id": "T87-01",
       "phase": "F87",
       "title": "Depurar la plataforma i simular la seqüència completa d’una classe",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R109",
         "R110",
@@ -8415,9 +8415,14 @@
         "output/class-audit/typecheck-final.log",
         "output/class-audit/unit-final.log",
         "output/class-audit/build-compat-final.log",
-        "output/class-audit/source-audit.log"
+        "output/class-audit/source-audit.log",
+        "docs/releases/0.6.22.json",
+        "docs/releases/0.6.22.md",
+        "output/class-audit/provider-after.json",
+        "output/class-audit/provider-verification.json",
+        "output/releases/0.6.22/receipt.json"
       ],
-      "progress": "0.6.22 en revisió: horari/PDF/delegats ampliats amb depuració de la seqüència d’una classe. Progrés de tasques compartit entre llista i detalls, clics repetits i refresh fallit gestionats, tasques vençudes fetes recuperables, plusos per totes les assignatures, filtre contextual persistent i consultes només amb lectura visible. Accions separades i àrees tàctils de 44 px. 472 unitàries, matriu de 63 simulacions de classe, 12 comprovacions de focus/disposició sense Object.hasOwn, 66 responsive, 33 espais, 33 delegats i 39 controls funcionals correctes; 62 API D1/R2 i horaris A/B/C locals correctes. La matriu va requerir corregir l’espera del bootstrap abans de recarregar en dos casos WebKit; 12 recorreguts afectats reexecutats, sense ignorar errors. Tipus/lint/build/font correctes. Pendent CI exacta de la PR44 actualitzada i main, i una publicació; cap prova pública, migració, polling, petició o escriptura nova.",
+      "progress": "0.6.22 publicada via PR44: 1c35ceed95b69edd2e6faec3aee26645fadba3cc. Tasques amb progrés personal compartit entre llista i detalls, clics repetits bloquejats i estat confirmat conservat davant errors de sincronització. Tasques vençudes fetes recuperables, plusos per totes les assignatures, filtres contextuals persistents i consultes d’apunts només amb lectura visible. Accions separades i àrees tàctils de 44 px. Inclou horari coherent, accés de delegats assignats i reforç de PDF. 472 unitàries, 63 simulacions de classe en tres motors, 12 comprovacions addicionals del detall amb focus/disposició i compatibilitat antiga, 66 responsive, 33 espais d’assignatura, 33 delegats, 39 controls funcionals i 62 API D1/R2 locals correctes. Horaris A/B/C i permisos comprovats amb workerd/D1. Tipus/lint/build/font correctes; tots els 11 jobs i Validate de PR/main verds. Proveïdor, domini/callback/bindings, tag/release immutable i digest verificats. Una publicació, sense migracions, desplegament privat o prova pública. Tancament documental consolidat en PR separada, sense nova versió de producte.",
       "change_log_id": "H202"
     }
   ]
