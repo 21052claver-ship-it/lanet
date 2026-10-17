@@ -9,6 +9,9 @@ import {
   Bell,
   UsersThree,
   NotePencil,
+  Plus,
+  CalendarCheck,
+  MagnifyingGlass,
 } from '@phosphor-icons/react';
 import { useApp } from '../context';
 import { Button, Tabs, Empty, Field, FormError, FormFooter, SubjectChip, RichText } from '../ui';
@@ -18,6 +21,7 @@ import { dateLabel } from '../../shared/domain';
 import { eventLabel } from '../../shared/agenda';
 import { canManageEvent } from '../../shared/delegation';
 import { acknowledgeNotifications } from '../../shared/notifications';
+import { matchesSearch } from '../../shared/search';
 import '../delegation.css';
 
 export function ConflictNotice({ conflicts }) {
@@ -46,13 +50,15 @@ export function ConflictNotice({ conflicts }) {
   );
 }
 export function AgendaReview({ item }) {
-  const { close, mutate } = useApp();
+  const { close, mutate, refresh, notify } = useApp();
+  const published = item.review_status === 'approved';
   const [preview, setPreview] = useState(null),
     [previewError, setPreviewError] = useState('');
   const [note, setNote] = useState(''),
     [confirmed, setConfirmed] = useState(false),
     [ack, setAck] = useState(''),
-    [retry, setRetry] = useState(0);
+    [retry, setRetry] = useState(0),
+    [stale, setStale] = useState(false);
   const { busy, error, submit } = useSubmit(close);
   useEffect(() => {
     let live = true;
@@ -85,11 +91,17 @@ export function AgendaReview({ item }) {
       action === 'approve'
         ? 'Data validada i publicada. Hem avisat l’autor.'
         : 'Decisió desada. Hem avisat l’autor.',
-    );
+    ).catch((error) => {
+      if (error.status === 409) setStale(true);
+      throw error;
+    });
   };
   return (
-    <form className="agenda-review-form" onSubmit={submit(() => decision('approve'))}>
-      <span className="agenda-state pending">
+    <form
+      className="agenda-review-form"
+      onSubmit={submit(() => decision(published ? 'withdraw' : 'approve'))}
+    >
+      <span className={'agenda-state ' + (published ? 'approved' : 'pending')}>
         <Clock size={17} />{' '}
         {item.review_status === 'approved' ? 'Publicada' : 'Pendent de validació'}
       </span>
@@ -100,6 +112,9 @@ export function AgendaReview({ item }) {
       </p>
       <p className="muted">Proposat per {item.author}</p>
       <RichText text={item.body} />
+      {published && (
+        <p>La data és visible a l’agenda. Si la retires, avisarem l’autor amb el motiu.</p>
+      )}
       <ConflictNotice conflicts={preview?.conflicts || []} />
       {preview && !preview.conflicts.length && (
         <p className="agenda-clear">Cap duplicat ni coincidència detectats.</p>
@@ -141,68 +156,95 @@ export function AgendaReview({ item }) {
         </label>
       )}
       <FormError error={error} />
+      {stale && (
+        <Button
+          type="button"
+          disabled={busy}
+          onClick={submit(async () => {
+            await refresh();
+            notify('Panell actualitzat. Revisa l’estat de la proposta.');
+          })}
+        >
+          Actualitzar el panell
+        </Button>
+      )}
       <FormFooter
         busy={busy}
         onCancel={close}
-        label="Validar i publicar"
+        label={published ? 'Retirar de l’agenda' : 'Validar i publicar'}
+        variant={published ? 'danger' : 'primary'}
         disabled={
-          !confirmed ||
-          !preview ||
-          !!previewError ||
-          preview.conflicts.some((c) => c.type === 'duplicate') ||
-          (!!preview.conflicts.length && ack !== preview.conflicts_token) ||
-          item.review_status !== 'pending'
+          stale ||
+          (published
+            ? !note.trim()
+            : !confirmed ||
+              !preview ||
+              !!previewError ||
+              preview.conflicts.some((c) => c.type === 'duplicate') ||
+              (!!preview.conflicts.length && ack !== preview.conflicts_token) ||
+              item.review_status !== 'pending')
         }
       >
-        <Button
-          type="button"
-          disabled={busy || !note.trim()}
-          onClick={submit(() =>
-            decision(item.review_status === 'approved' ? 'withdraw' : 'return'),
-          )}
-        >
-          <ArrowCounterClockwise size={18} />
-          {item.review_status === 'approved' ? 'Retirar de l’agenda' : 'Demanar canvis'}
-        </Button>
+        {!published && (
+          <Button
+            type="button"
+            disabled={busy || stale || !note.trim()}
+            onClick={submit(() => decision('return'))}
+          >
+            <ArrowCounterClockwise size={18} />
+            Demanar canvis
+          </Button>
+        )}
       </FormFooter>
     </form>
   );
 }
-function NotificationInbox({ queue, onReview }) {
-  const { data, open, mutate, setData, refresh } = useApp();
-  const notifications = data.agendaNotifications || [];
-  const events = new Map([...data.events, ...(data.agendaProposals || [])].map((e) => [e.id, e]));
-  const { busy, error, submit, setError } = useSubmit();
+function usePanelRefresh() {
+  const { refresh } = useApp();
   const [loading, setLoading] = useState(true),
     [loadError, setLoadError] = useState('');
-  const firstRead = useRef(null);
+  const firstRead = useRef(null),
+    pending = useRef(false);
   useEffect(() => {
     let live = true;
-    // Reuse the initial promise under StrictMode; entering the inbox adds no polling.
     firstRead.current ||= refresh();
+    pending.current = true;
     firstRead.current
       .catch((e) => {
         if (live) setLoadError(e.message);
       })
       .finally(() => {
-        if (live) setLoading(false);
+        if (live) {
+          pending.current = false;
+          setLoading(false);
+        }
       });
     return () => {
       live = false;
     };
   }, [refresh]);
   async function reload() {
+    if (pending.current) return;
+    pending.current = true;
     setLoading(true);
     setLoadError('');
-    setError('');
     try {
       await refresh();
     } catch (e) {
       setLoadError(e.message);
     } finally {
+      pending.current = false;
       setLoading(false);
     }
   }
+  return { loading, loadError, reload };
+}
+function NotificationInbox({ queue, onReview }) {
+  const { data, open, mutate, setData } = useApp();
+  const notifications = data.agendaNotifications || [];
+  const events = new Map([...data.events, ...(data.agendaProposals || [])].map((e) => [e.id, e]));
+  const { busy, error, submit } = useSubmit();
+  const { loading, loadError, reload } = usePanelRefresh();
   async function markRead(ids) {
     if (!ids.length) return;
     await mutate('/agenda/notifications/read', { ids }, 'Avisos marcats com a llegits.', (result) =>
@@ -269,7 +311,15 @@ function NotificationInbox({ queue, onReview }) {
                     {event ? (
                       <Button
                         onClick={() =>
-                          open(event.review_status === 'approved' ? 'eventDetail' : 'event', event)
+                          open(
+                            event.review_status === 'approved'
+                              ? 'eventDetail'
+                              : event.owner_id !== data.user.id &&
+                                  canManageEvent(data.user, event, data.delegation)
+                                ? 'agendaReview'
+                                : 'event',
+                            event,
+                          )
                         }
                       >
                         {event.review_status === 'returned'
@@ -302,15 +352,36 @@ function NotificationInbox({ queue, onReview }) {
   );
 }
 export default function Delegates({ notificationsOnly = false }) {
-  const { data, open, setCommunityTab } = useApp();
+  const { data, open, setCommunityTab, delegateTab, setDelegateTab } = useApp();
   const delegation = data.delegation || { units: [], members: [], managedUnits: [] };
   const manager = delegation.managedUnits.length > 0;
   const proposals = data.agendaProposals || [];
   const queue = proposals.filter(
     (e) => e.review_status === 'pending' && canManageEvent(data.user, e, delegation),
   );
-  const mine = proposals.filter((e) => e.owner_id === data.user.id);
-  const [tab, setTab] = useState(manager ? 'pending' : 'mine');
+  const shared = data.events.filter((e) => e.visibility === 'shared');
+  const mine = [...proposals, ...shared].filter((e) => e.owner_id === data.user.id);
+  const published = shared.filter((e) => canManageEvent(data.user, e, delegation));
+  const tab = !manager && ['pending', 'published'].includes(delegateTab) ? 'mine' : delegateTab;
+  const setTab = setDelegateTab;
+  const [query, setQuery] = useState('');
+  const source = tab === 'pending' ? queue : tab === 'published' ? published : mine;
+  const ordered = source
+    .filter((e) => matchesSearch(query, e.title, e.body, e.author))
+    .slice()
+    .sort((a, b) => {
+      const priority = (e) =>
+        e.review_status === 'returned'
+          ? 0
+          : e.review_status === 'pending'
+            ? 1
+            : e.date >= data.today
+              ? 2
+              : 3;
+      return (
+        priority(a) - priority(b) || a.date.localeCompare(b.date) || a.title.localeCompare(b.title)
+      );
+    });
   function card(e) {
     const manage = canManageEvent(data.user, e, delegation);
     return (
@@ -321,7 +392,9 @@ export default function Delegates({ notificationsOnly = false }) {
               ? 'Pendent'
               : e.review_status === 'returned'
                 ? 'Cal corregir'
-                : 'Retirada'}
+                : e.review_status === 'approved'
+                  ? 'Publicada'
+                  : 'Retirada'}
           </span>
           <span>{eventLabel(e)}</span>
         </div>
@@ -339,10 +412,20 @@ export default function Delegates({ notificationsOnly = false }) {
               <ShieldCheck size={18} /> Revisar proposta
             </Button>
           )}
+          {e.review_status === 'approved' && (
+            <Button onClick={() => open('eventDetail', e)}>Veure data</Button>
+          )}
+          {manage && e.review_status === 'approved' && (
+            <Button onClick={() => open('agendaReview', e)}>Revisar o retirar la data</Button>
+          )}
           {e.owner_id === data.user.id && (
             <Button onClick={() => open('event', e)}>
               <NotePencil size={18} />{' '}
-              {e.review_status === 'returned' ? 'Corregir i reenviar' : 'Editar proposta'}
+              {e.review_status === 'returned'
+                ? 'Corregir i reenviar'
+                : e.review_status === 'approved'
+                  ? 'Editar data'
+                  : 'Editar proposta'}
             </Button>
           )}
           {e.owner_id === data.user.id && e.review_status === 'pending' && (
@@ -367,6 +450,40 @@ export default function Delegates({ notificationsOnly = false }) {
       />
     );
   return (
+    <DelegatePanel
+      {...{
+        data,
+        delegation,
+        manager,
+        queue,
+        mine,
+        tab,
+        setTab,
+        open,
+        query,
+        setQuery,
+        ordered,
+        card,
+      }}
+    />
+  );
+}
+function DelegatePanel({
+  data,
+  delegation,
+  manager,
+  queue,
+  mine,
+  tab,
+  setTab,
+  open,
+  query,
+  setQuery,
+  ordered,
+  card,
+}) {
+  const { loading, loadError, reload } = usePanelRefresh();
+  return (
     <section className="delegation-hub" aria-label="Delegats i agenda pública">
       <div className="delegate-hero">
         <ShieldCheck size={38} />
@@ -374,17 +491,44 @@ export default function Delegates({ notificationsOnly = false }) {
           <h2>{manager ? 'El teu panell de delegats' : 'Delegats de la comunitat'}</h2>
           <p>
             {manager
-              ? 'Publica les dates del teu àmbit directament i revisa les propostes de la classe.'
-              : 'Proposa dates a l’agenda i contacta amb els representants de cada classe.'}
+              ? 'Publica dates i revisa les propostes de la classe.'
+              : 'Proposa dates i troba els teus delegats.'}
           </p>
         </div>
       </div>
+      <div className="delegate-panel-actions">
+        <Button
+          variant="primary"
+          aria-label={manager ? 'Publicar una data' : 'Proposar una data'}
+          onClick={() => {
+            setQuery('');
+            open('event', {
+              kind: 'exam',
+              visibility: 'shared',
+              audience_kind: 'class',
+              fromDelegatePanel: true,
+            });
+          }}
+        >
+          <Plus size={18} /> {manager ? 'Publicar data' : 'Proposar data'}
+        </Button>
+        <Button
+          disabled={loading}
+          aria-busy={loading}
+          aria-label={loading ? 'Actualitzant…' : 'Actualitzar propostes'}
+          onClick={reload}
+        >
+          {loading ? 'Actualitzant…' : 'Actualitzar'}
+        </Button>
+      </div>
+      <FormError error={loadError} />
       <div className="delegate-stats">
         <span>
-          <b>{queue.length}</b>Pendents de validar
+          <b>{manager ? queue.length : mine.filter((e) => e.review_status === 'pending').length}</b>
+          Per validar
         </span>
         <span>
-          <b>{mine.length}</b>Les meves propostes
+          <b>{mine.length}</b>Les meves
         </span>
         <span>
           <b>{delegation.members.length}</b>Representants
@@ -396,6 +540,7 @@ export default function Delegates({ notificationsOnly = false }) {
         onChange={setTab}
         items={[
           ...(manager ? [['pending', 'Per validar', Clock]] : []),
+          ...(manager ? [['published', 'Publicades', CalendarCheck]] : []),
           ['mine', 'Les meves propostes', NotePencil],
           ['contacts', 'Contactes', UsersThree],
         ]}
@@ -444,20 +589,49 @@ export default function Delegates({ notificationsOnly = false }) {
           ))}
         </div>
       ) : (
-        <div className="delegate-proposal-grid">
-          {(tab === 'pending' ? queue : mine).length ? (
-            (tab === 'pending' ? queue : mine).map(card)
-          ) : (
-            <Empty
-              title={tab === 'pending' ? 'Tot revisat!' : 'Cap proposta pendent'}
-              body={
-                tab === 'pending'
-                  ? 'Les propostes noves apareixeran aquí automàticament.'
-                  : 'Les dates aprovades ja apareixen a l’agenda.'
-              }
+        <>
+          <label className="delegate-search">
+            <MagnifyingGlass size={19} aria-hidden="true" />
+            <input
+              type="search"
+              aria-label="Cercar dates del panell"
+              placeholder="Cerca pel títol, els detalls o l’autor"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
             />
-          )}
-        </div>
+          </label>
+          <div className="delegate-proposal-grid" aria-busy={loading}>
+            {ordered.length ? (
+              ordered.map(card)
+            ) : loading ? (
+              <p role="status">Actualitzant les propostes…</p>
+            ) : loadError ? null : query ? (
+              <Empty
+                title="Cap data coincideix amb la cerca"
+                body="Prova un altre text o torna a veure totes les dates."
+              >
+                <Button onClick={() => setQuery('')}>Netejar la cerca</Button>
+              </Empty>
+            ) : (
+              <Empty
+                title={
+                  tab === 'pending'
+                    ? 'Tot revisat!'
+                    : tab === 'published'
+                      ? 'Cap data publicada'
+                      : 'Cap proposta pendent'
+                }
+                body={
+                  tab === 'pending'
+                    ? 'Les propostes noves apareixeran aquí automàticament.'
+                    : tab === 'published'
+                      ? 'Les dates que publiquis o validis apareixeran aquí.'
+                      : 'Pots proposar una data des del botó de dalt.'
+                }
+              />
+            )}
+          </div>
+        </>
       )}
       <p className="delegate-scope-note">
         Delegats i subdelegats tenen els mateixos permisos de publicació i revisió dins del seu

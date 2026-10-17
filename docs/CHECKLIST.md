@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**198/199 tasques verificades · 112 requisits · 88 fases · límit d’una tasca activa.**
+**198/200 tasques verificades · 113 requisits · 89 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **cap**.
+Tasca activa: **T88-01 — Simplificar i simular els recorreguts complets d’alumnes i delegats**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -472,5 +472,9 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 ## F87 Experiència completa de l’horari
 
 - [x] **T87-01** Depurar la plataforma i simular la seqüència completa d’una classe — Verificat.
+
+## F88 Recorreguts fàcils per a alumnes i delegats
+
+- [ ] **T88-01** Simplificar i simular els recorreguts complets d’alumnes i delegats — En revisió.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

@@ -8,7 +8,11 @@ import { useReactionWrites } from './reaction-writes';
 import { createPreferenceWriter } from '../shared/preference-writer';
 import { useActivity } from './use-activity';
 import { ACTIVITY_INTERVAL, ACTIVE_WINDOW } from '../shared/activity';
-const currentRoute = () => location.hash.slice(1) || (location.pathname.replace(/\/$/, '') === '/admin' ? 'admin' : 'schedule');
+import { readLocalJSON, writeLocalJSON } from '../shared/local-state';
+import { communityLocation, communityURL, calendarSession } from '../shared/workspace-navigation';
+const currentRoute = () =>
+  location.hash.slice(1) ||
+  (location.pathname.replace(/\/$/, '') === '/admin' ? 'admin' : 'schedule');
 // Preserve the provider identity across Vite module refreshes during development.
 const AppContext = import.meta.hot?.data.appContext ?? createContext();
 if (import.meta.hot) import.meta.hot.data.appContext = AppContext;
@@ -18,12 +22,48 @@ export function AppProvider({ initial, children }) {
     [modal, setModal] = useState(null),
     [toast, setToast] = useState(null),
     [page, setPage] = useState(currentRoute),
-    [communityTab, setCommunityTab] = useState('notices'),
+    [communityState, updateCommunityState] = useState(() => communityLocation(location.href)),
     [subjectFilter, updateSubjectFilter] = useState(() => {
       const id = new URL(location.href).searchParams.get('subject');
-      return initial.subjects.some(s => s.id === id) ? id : 'all';
+      return initial.subjects.some((s) => s.id === id) ? id : 'all';
     });
   const [agendaSubject, setAgendaSubject] = useState(null);
+  const communityRef = useRef(communityState);
+  const changeCommunity = useCallback((patch) => {
+    const next = { ...communityRef.current, ...patch };
+    communityRef.current = next;
+    updateCommunityState(next);
+    if (currentRoute() === 'community') {
+      const url = communityURL(location.href, next);
+      if (url.href !== location.href) history.pushState(null, '', url);
+    }
+  }, []);
+  const setCommunityTab = useCallback((tab) => changeCommunity({ tab }), [changeCommunity]);
+  const setDelegateTab = useCallback(
+    (delegates) => changeCommunity({ delegates }),
+    [changeCommunity],
+  );
+  const sessionKey = `lanet.calendarSession.${initial.user.id}`;
+  const [scheduleSession, updateScheduleSession] = useState(() => {
+    try {
+      return calendarSession(readLocalJSON(sessionKey, null, sessionStorage), initial.today);
+    } catch {
+      return calendarSession(null, initial.today);
+    }
+  });
+  const setScheduleSession = useCallback(
+    (patch) => {
+      updateScheduleSession((current) => ({ ...calendarSession(current, data.today), ...patch }));
+    },
+    [data.today],
+  );
+  useEffect(() => {
+    try {
+      writeLocalJSON(sessionKey, scheduleSession, sessionStorage);
+    } catch {
+      /* Memory still preserves navigation. */
+    }
+  }, [sessionKey, scheduleSession]);
   const lastInteraction = useActivity(initial.user.id, page);
   const setSubjectFilter = useCallback((id) => {
     updateSubjectFilter(id);
@@ -36,7 +76,7 @@ export function AppProvider({ initial, children }) {
   useEffect(() => {
     const restore = () => {
       const id = new URL(location.href).searchParams.get('subject');
-      updateSubjectFilter(data.subjects.some(s => s.id === id) ? id : 'all');
+      updateSubjectFilter(data.subjects.some((s) => s.id === id) ? id : 'all');
     };
     window.addEventListener('popstate', restore);
     return () => window.removeEventListener('popstate', restore);
@@ -80,14 +120,24 @@ export function AppProvider({ initial, children }) {
     sync.current = createDataSync({ read: () => api('/bootstrap'), apply: setData });
   const refresh = useCallback(() => sync.current.refresh(), []);
   useEffect(() => {
-    let lastRead = Date.now(), pending = false;
+    let lastRead = Date.now(),
+      pending = false;
     const update = () => {
       const now = Date.now();
-      if (pending || document.visibilityState !== 'visible' ||
-        now-lastInteraction.current >= ACTIVE_WINDOW || now-lastRead < ACTIVITY_INTERVAL) return;
+      if (
+        pending ||
+        document.visibilityState !== 'visible' ||
+        now - lastInteraction.current >= ACTIVE_WINDOW ||
+        now - lastRead < ACTIVITY_INTERVAL
+      )
+        return;
       lastRead = now;
       pending = true;
-      refresh().catch(() => {}).finally(() => { pending = false; });
+      refresh()
+        .catch(() => {})
+        .finally(() => {
+          pending = false;
+        });
     };
     const interval = setInterval(update, ACTIVITY_INTERVAL);
     window.addEventListener('focus', update);
@@ -142,12 +192,21 @@ export function AppProvider({ initial, children }) {
     if (p === 'admin') history.pushState(null, '', '/admin');
     else {
       if (location.pathname === '/admin') history.pushState(null, '', '/');
-      location.hash = p;
+      if (p === 'community') {
+        const url = communityURL(location.href, communityRef.current);
+        url.hash = p;
+        if (url.href !== location.href) history.pushState(null, '', url);
+      } else location.hash = p;
     }
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, []);
   useEffect(() => {
-    const f = () => setPage(currentRoute());
+    const f = () => {
+      setPage(currentRoute());
+      const state = communityLocation(location.href);
+      communityRef.current = state;
+      updateCommunityState(state);
+    };
     window.addEventListener('hashchange', f);
     window.addEventListener('popstate', f);
     return () => {
@@ -174,15 +233,22 @@ export function AppProvider({ initial, children }) {
         remove: (path, success) => mutate(path, {}, success, undefined, 'DELETE'),
         notify,
         modal,
-        open: (type, item = {}) => setModal({ type, item }),
+        open: (type, item = {}) => {
+          setToast((current) => (current?.type === 'success' ? null : current));
+          setModal({ type, item });
+        },
         // A delayed response from a dismissed form must not close a newer dialog.
         close: () => setModal((current) => (current === modal ? null : current)),
         page,
         go,
         subject,
         enrolled,
-        communityTab,
+        communityTab: communityState.tab,
         setCommunityTab,
+        delegateTab: communityState.delegates,
+        setDelegateTab,
+        scheduleSession: calendarSession(scheduleSession, data.today),
+        setScheduleSession,
         subjectFilter,
         setSubjectFilter,
         agendaSubject,

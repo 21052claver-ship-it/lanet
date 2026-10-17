@@ -452,6 +452,10 @@
     {
       "id": "R112",
       "description": "Depurar la plataforma amb simulacions completes d’una classe entre alumnes; comprovar botons, funcions, seguiments, persistència, alineació, proporcions i absència de solapaments."
+    },
+    {
+      "id": "R113",
+      "description": "Simplificar a fons els recorreguts d’alumnes i delegats, conservar el context entre pantalles i simular proposta, correcció, publicació i seguiment amb diverses persones, errors i mides de pantalla; disposició recta i sense solapaments."
     }
   ],
   "phases": [
@@ -1068,6 +1072,13 @@
       "title": "Experiència completa de l’horari",
       "depends_on": [
         "F86"
+      ]
+    },
+    {
+      "id": "F88",
+      "title": "Recorreguts fàcils per a alumnes i delegats",
+      "depends_on": [
+        "F87"
       ]
     }
   ],
@@ -8424,6 +8435,62 @@
       ],
       "progress": "0.6.22 publicada via PR44: 1c35ceed95b69edd2e6faec3aee26645fadba3cc. Tasques amb progrés personal compartit entre llista i detalls, clics repetits bloquejats i estat confirmat conservat davant errors de sincronització. Tasques vençudes fetes recuperables, plusos per totes les assignatures, filtres contextuals persistents i consultes d’apunts només amb lectura visible. Accions separades i àrees tàctils de 44 px. Inclou horari coherent, accés de delegats assignats i reforç de PDF. 472 unitàries, 63 simulacions de classe en tres motors, 12 comprovacions addicionals del detall amb focus/disposició i compatibilitat antiga, 66 responsive, 33 espais d’assignatura, 33 delegats, 39 controls funcionals i 62 API D1/R2 locals correctes. Horaris A/B/C i permisos comprovats amb workerd/D1. Tipus/lint/build/font correctes; tots els 11 jobs i Validate de PR/main verds. Proveïdor, domini/callback/bindings, tag/release immutable i digest verificats. Una publicació, sense migracions, desplegament privat o prova pública. Tancament documental consolidat en PR separada, sense nova versió de producte.",
       "change_log_id": "H202"
+    },
+    {
+      "id": "T88-01",
+      "phase": "F88",
+      "title": "Simplificar i simular els recorreguts complets d’alumnes i delegats",
+      "status": "review",
+      "requirements": [
+        "R113"
+      ],
+      "depends_on": [
+        "T87-01"
+      ],
+      "files": [
+        "src/context.jsx",
+        "shared/workspace-navigation.js",
+        "src/pages/Schedule.jsx",
+        "src/components/Delegates.jsx",
+        "src/components/EventEditor.jsx",
+        "src/pages/Community.jsx",
+        "src/forms.jsx",
+        "src/ui.jsx",
+        "src/delegation.css",
+        "tests/workspace-navigation.test.js",
+        "scripts/test-student-journeys.mjs",
+        ".github/workflows/verify.yml",
+        "package.json",
+        "package-lock.json",
+        "CHANGELOG.md",
+        "docs/PLA-RECORREGUTS-ALUMNES-DELEGATS.md",
+        "scripts/test-delegate-agenda.mjs"
+      ],
+      "acceptance": "Reproduir i corregir friccions reals dels recorreguts quotidians, amb context, estats i accions comprensibles. Simular alumnat, delegat i subdelegat entre comptes ficticis a diferents itineraris, errors recuperables i pantalles estretes/paisatge/escriptori en tres motors. Verificar persistència, aïllament, permisos, seguiments i geometria. Tot amb fixtures locals; PR, CI exacta i publicació única si es modifica producte.",
+      "checks": [
+        "Auditar la seqüència completa i documentar incidències reproduïbles amb captures locals.",
+        "Millorar continuïtat, accions i feedback; verificar recorreguts entre alumnes i representants.",
+        "Comprovar geometria, focus, errors, persistència i permisos en tres motors.",
+        "Executar regressions relacionades, tipus/unitàries/build/font i publicar mitjançant PR amb CI verda."
+      ],
+      "evidence": [
+        "docs/PLA-RECORREGUTS-ALUMNES-DELEGATS.md",
+        "output/journeys-audit/baseline.json",
+        "output/journeys-audit/final/results.json",
+        "output/journeys-audit/class-regression/results.json",
+        "output/journeys-audit/unit-final.log",
+        "output/journeys-audit/typecheck-final.log",
+        "output/journeys-audit/build-polished.log",
+        "output/journeys-audit/provider-before.json",
+        "output/journeys-audit/polished/results.json",
+        "output/journeys-audit/responsive/responsive-results.json",
+        "output/journeys-audit/delegates-fixed/results.json",
+        "output/journeys-audit/notifications/results.json",
+        "output/journeys-audit/build-publish-final.log",
+        "output/journeys-audit/source-audit-staged.log"
+      ],
+      "progress": "Implementació en revisió per a 0.6.23. Context de classe conservat, panell recuperable, publicació/retirada i cerca des del mateix lloc, feedback dins de la correcció, aprovades de l’autor visibles, refresh d’entrada/manual i recuperació de concurrència. Resum mòbil compacte i confirmacions antigues retirades en obrir un altre formulari. 475 unitàries, 60 recorreguts nous als tres motors, 63 regressions de classe, 66 responsive, 33 delegats i 30 notificacions correctes. Retoc final de cerca anterior amb 12 revalidacions en curs sobre la compilació definitiva; pendent CI exacta de PR/main i una sola publicació. Font auditada, cap prova pública ni canvi de permisos/servidor/migració/R2.",
+      "change_log_id": ""
     }
   ]
 }

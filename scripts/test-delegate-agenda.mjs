@@ -137,6 +137,7 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
         ]);
         await p.reload();
         await p.getByRole('tab', { name: 'Delegats', exact: true }).click();
+        await p.getByRole('tab', { name: 'Per validar', exact: true }).click();
         await p.getByRole('button', { name: 'Revisar proposta', exact: true }).click();
         await p.getByText('Cap duplicat ni coincidència detectats.', { exact: true }).waitFor();
         await p

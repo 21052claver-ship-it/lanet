@@ -36,6 +36,7 @@ El catàleg següent enllaça tots els Markdown del primer nivell de docs. Els d
 - [Mode focus amb estudi lliure](PLA-FOCUS-LLIURE.md).
 - [Experiència visual i funcional de l’horari](PLA-HORARI-EXPERIENCIA.md).
 - [Depuració i simulacions de la seqüència d’una classe](PLA-SEQUENCIA-CLASSE.md).
+- [Recorreguts fàcils d’alumnes i delegats](PLA-RECORREGUTS-ALUMNES-DELEGATS.md).
 - [La Net · estat actual i decisions vigents](ESTAT-PROJECTE.md).
 - [Historial de canvis de La Net](HISTORIAL-CANVIS.md).
 - [Pla mestre de revisió de La Net](PLA-MESTRE.md).

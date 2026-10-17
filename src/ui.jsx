@@ -346,14 +346,21 @@ export function FormError({ error }) {
     </p>
   ) : null;
 }
-export function FormFooter({ onCancel, busy, disabled = false, label = 'Desar', children }) {
+export function FormFooter({
+  onCancel,
+  busy,
+  disabled = false,
+  label = 'Desar',
+  variant = 'primary',
+  children,
+}) {
   return (
     <div className="form-footer">
       {children}
       <Button type="button" variant="ghost" onClick={onCancel}>
         Cancel·lar
       </Button>
-      <Button type="submit" variant="primary" busy={busy} disabled={disabled}>
+      <Button type="submit" variant={variant} busy={busy} disabled={disabled}>
         {label}
       </Button>
     </div>

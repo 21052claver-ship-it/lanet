@@ -177,7 +177,9 @@ export default function Forms({ onLogout, logoutBusy = false, logoutError = '' }
       ) : type === 'eventDetail' ? (
         <div>
           <div className="card-tags">
-            {eventSubjects.map((id) => <SubjectChip key={id} subject={subject(id)} />)}
+            {eventSubjects.map((id) => (
+              <SubjectChip key={id} subject={subject(id)} />
+            ))}
           </div>
           <p>
             {dateLabel(item.date, { weekday: 'long', day: 'numeric', month: 'long' })} ·{' '}
@@ -185,18 +187,22 @@ export default function Forms({ onLogout, logoutBusy = false, logoutError = '' }
           </p>
           <p>{item.room}</p>
           <RichText text={item.body} />
-          <TaskProgressButton event={event} />
-          {!!eventSubjects.length && (
-            <Button
-              onClick={() => {
-                setSubjectFilter(eventSubjects.includes(subjectFilter) ? subjectFilter : eventSubjects[0]);
-                go('notes');
-                close();
-              }}
-            >
-              Materials per preparar-ho <ArrowRight size={18} />
-            </Button>
-          )}
+          <div className="event-detail-actions">
+            <TaskProgressButton event={event} />
+            {!!eventSubjects.length && (
+              <Button
+                onClick={() => {
+                  setSubjectFilter(
+                    eventSubjects.includes(subjectFilter) ? subjectFilter : eventSubjects[0],
+                  );
+                  go('notes');
+                  close();
+                }}
+              >
+                Materials per preparar-ho <ArrowRight size={18} />
+              </Button>
+            )}
+          </div>
         </div>
       ) : null}
     </Modal>
