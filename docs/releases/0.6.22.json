@@ -1,0 +1,93 @@
+{
+  "recordedAt": "2026-10-17T11:20:59.068Z",
+  "version": "0.6.22",
+  "sourceCommit": "1c35ceed95b69edd2e6faec3aee26645fadba3cc",
+  "origin": "https://lanet.es",
+  "pullRequest": "https://github.com/21052claver-ship-it/lanet/pull/44",
+  "ci": "https://github.com/21052claver-ship-it/lanet/actions/runs/39027328090",
+  "allCiJobsSuccess": true,
+  "ciJobs": [
+    {
+      "name": "Core checks",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (board)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (school)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (navigation)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (audio)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (contents)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (functional)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (compatibility)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (academics)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (casino)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Validate",
+      "conclusion": "success"
+    }
+  ],
+  "pullRequestCi": "https://github.com/21052claver-ship-it/lanet/actions/runs/39026340039",
+  "pullRequestCiAttempt": 1,
+  "mainCiAttempt": 1,
+  "releaseUrl": "https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.22",
+  "immutable": true,
+  "tagCommitMatches": true,
+  "receiptDigestMatches": true,
+  "cloudflareDeployment": "6e46c92d-5ada-4ff7-afee-3c3a42e1517d",
+  "githubDeployment": 7138782165,
+  "providerConfirmed": true,
+  "productionCommitMatches": true,
+  "domainActive": true,
+  "pagesDomainPreserved": true,
+  "googleCallbackPreserved": true,
+  "d1R2BindingsPreserved": true,
+  "migrationsUnchanged": true,
+  "privateMaintenanceUnchanged": true,
+  "privateMaintenanceRedeployed": false,
+  "tests": {
+    "unit": 472,
+    "classroom": 63,
+    "detailFocusLayoutLegacy": 12,
+    "responsive": 66,
+    "subjectWorkspaces": 33,
+    "delegates": 33,
+    "functionalControls": 39,
+    "localApi": 62,
+    "officialRoutes": [
+      "2A",
+      "2B",
+      "2C"
+    ]
+  },
+  "publicAppVisited": false,
+  "productionDataUsed": false,
+  "physicalDevicesTested": false,
+  "branchPushes": 2,
+  "productPublications": 1
+}
