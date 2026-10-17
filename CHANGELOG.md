@@ -2,6 +2,10 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production.
 
+## [0.6.26] - 2026-10-17
+
+- Icona pròpia del panell de delegats: representants amb una bafarada, amb els colors de La Net. La mateixa icona identifica el menú lateral, el menú mòbil i la capçalera del panell.
+
 ## [0.6.25] - 2026-10-17
 
 - Química disponible al tecnològic com alternativa a Dibuix tècnic i Empresa: dilluns/dimarts 09:10–10:10 i dimecres/dijous 08:10–09:10, segons la correcció confirmada per Marc. Professorat seleccionable, horari i desament coherents per a alumnat i delegats.

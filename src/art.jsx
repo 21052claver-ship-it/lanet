@@ -51,6 +51,10 @@ export const ART = {
 };
 
 const transparentAliases = { bakery: 'cake', 'cake-large': 'cake' };
+const standaloneArt = {
+  pau: ['/pau-mark.svg', 40],
+  delegates: ['/images/ui/delegates.svg', 48],
+};
 
 export function ReferenceArt({
   name,
@@ -61,19 +65,22 @@ export function ReferenceArt({
   ...props
 }) {
   const maskId = useId();
-  if (name === 'pau')
+  if (standaloneArt[name]) {
+    const [src, intrinsicSize] = standaloneArt[name];
+    const renderedSize = originalSize ? intrinsicSize : size;
     return (
       <img
-        src="/pau-mark.svg"
-        width={size}
-        height={size}
-        className={`reference-art art-pau has-alpha ${className}`}
+        src={src}
+        width={renderedSize}
+        height={renderedSize}
+        className={`reference-art art-${name} has-alpha ${className}`}
         style={style}
         alt=""
         aria-hidden="true"
         {...props}
       />
     );
+  }
   const art = ART[name];
   if (!art) return null;
   const [sheet, x, y, width, height] = art;

@@ -271,11 +271,7 @@ function Workspace({ onLogout }) {
               aria-current={currentSection === key ? 'page' : undefined}
             >
               <span className="nav-art" aria-hidden="true">
-                {key === 'delegates' ? (
-                  <ShieldCheck size={36} weight="duotone" />
-                ) : (
-                  <ReferenceArt name={key} originalSize />
-                )}
+                <ReferenceArt name={key} originalSize />
               </span>
               <span>
                 {key === 'schedule' ? (
@@ -476,11 +472,7 @@ function Workspace({ onLogout }) {
                     title={label}
                     onClick={() => navigate(key, true)}
                   >
-                    {key === 'delegates' ? (
-                      <ShieldCheck size={32} weight="duotone" />
-                    ) : (
-                      <ReferenceArt name={key} size={32} />
-                    )}
+                    <ReferenceArt name={key} size={32} />
                     <span>{key === 'schedule' ? 'Curs' : key === 'pau' ? 'PAU' : label}</span>
                   </button>
                 ))}
