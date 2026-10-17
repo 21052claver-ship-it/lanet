@@ -44,6 +44,7 @@ jobs:
             tests: |
               npm run test:subject-workspaces
               npm run test:contents
+              npm run test:contents-downloads
               npm run test:fast-uploads
               npm run test:uploads
           - group: navigation
@@ -142,6 +143,7 @@ jobs:
             output/pau-top5/
             output/subject-workspaces/browser/
             output/contents/
+            output/contents-downloads/browser/
             output/fast-uploads/
             output/course-grades/
             output/student-guide/browser/

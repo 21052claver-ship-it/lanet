@@ -444,15 +444,9 @@ function Materials() {
                       </>
                     ) : pdf ? (
                       <>
-                        <iframe
-                          loading="lazy"
-                          src={`/api/files/${pdf.id}#toolbar=0&navpanes=0`}
-                          title={`Previsualització de ${pdf.name}`}
-                          tabIndex={-1}
-                        />
-                        <span className="format-badge">
-                          <FilePdf size={14} />
-                          PDF
+                        <span className="note-pdf-cover" aria-hidden="true">
+                          <FilePdf size={46} weight="duotone" />
+                          <span>Obrir el PDF</span>
                         </span>
                       </>
                     ) : null}

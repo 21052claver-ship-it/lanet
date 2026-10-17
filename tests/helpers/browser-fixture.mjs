@@ -181,6 +181,7 @@ export async function browserFixture({ beforeAsset, mediaSafety } = {}) {
     base,
     token,
     db,
+    files,
     close: async () => {
       await new Promise((resolve) => server.close(resolve));
       db.close();

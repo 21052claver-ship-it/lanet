@@ -2,6 +2,11 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production.
 
+## [0.6.24] - 2026-10-17
+
+- Entrar a Continguts ja no carrega ni descarrega els PDF dels materials. Les targetes mostren una portada estàtica; el PDF només es carrega en obrir expressament l’apunt, amb el visor existent, i la descàrrega requereix prémer el seu enllaç.
+- Regressió de navegador en mòbil i escriptori als tres motors: clic únic al menú, clic repetit, historial, pestanyes, cerca, filtres i recàrrega sense peticions PDF ni descàrregues; lectura i descàrrega explícites comprovades amb fitxers locals.
+
 ## [0.6.23] - 2026-10-17
 
 - Continuïtat entre classe, continguts i agenda: dia, setmana i tasques fetes conservats durant la sessió, també després d’una recàrrega. Un nou dia torna a Avui; si el navegador bloqueja l’emmagatzematge, la navegació conserva el context en memòria.

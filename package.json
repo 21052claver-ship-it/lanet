@@ -1,6 +1,6 @@
 {
   "name": "la-net",
-  "version": "0.6.23",
+  "version": "0.6.24",
   "private": true,
   "type": "module",
   "scripts": {
@@ -21,6 +21,7 @@
     "test:pau": "node scripts/test-pau.mjs",
     "test:pau-top5": "node scripts/test-pau-top5.mjs",
     "test:contents": "node scripts/test-content-library.mjs",
+    "test:contents-downloads": "node scripts/test-contents-downloads.mjs",
     "test:subject-workspaces": "node scripts/test-subject-workspaces.mjs",
     "test:mobile-startup": "node scripts/test-mobile-startup.mjs",
     "test:secret-room": "node scripts/test-secret-room.mjs",
