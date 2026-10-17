@@ -14,6 +14,7 @@ import {
   MagnifyingGlass,
 } from '@phosphor-icons/react';
 import { useApp } from '../context';
+import { ReferenceArt } from '../art';
 import { Button, Tabs, Empty, Field, FormError, FormFooter, SubjectChip, RichText } from '../ui';
 import { useSubmit } from '../form-utils';
 import { previewAgenda } from '../api';
@@ -486,7 +487,7 @@ function DelegatePanel({
   return (
     <section className="delegation-hub" aria-label="Delegats i agenda pública">
       <div className="delegate-hero">
-        <ShieldCheck size={38} />
+        <ReferenceArt name="delegates" size={38} />
         <div>
           <h2>{manager ? 'El teu panell de delegats' : 'Delegats de la comunitat'}</h2>
           <p>

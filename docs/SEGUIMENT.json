@@ -464,6 +464,10 @@
     {
       "id": "R115",
       "description": "Els alumnes del tecnològic poden escollir Química com alternativa a Dibuix tècnic i Empresa, a les mateixes quatre franges confirmades per Marc. Selector, servidor, horari, notes i delegació conserven la coherència."
+    },
+    {
+      "id": "R116",
+      "description": "El panell de delegats té una icona pròpia, coherent al menú lateral, mòbil i capçalera, sense canviar-ne els accessos."
     }
   ],
   "phases": [
@@ -1101,6 +1105,13 @@
       "title": "Química al tecnològic i fidelitat dels horaris",
       "depends_on": [
         "F89"
+      ]
+    },
+    {
+      "id": "F91",
+      "title": "Icona pròpia del panell de delegats",
+      "depends_on": [
+        "F90"
       ]
     }
   ],
@@ -8667,6 +8678,45 @@
       ],
       "progress": "Química disponible al tecnològic com alternativa a Dibuix tècnic i Empresa. Dilluns i dimarts 09:10–10:10; dimecres i dijous 08:10–09:10, segons la correcció confirmada per Marc. Professorat seleccionable, horari i desament coherents per a alumnat, delegats i subdelegats. 479 unitàries, 55 ofertes contrastades amb els blocs de la matriu independent i 272 combinacions de 30 hores sense solapaments. 18 recorreguts nous als tres motors a 320/1440 px, 27 regressions dels tres itineraris i API workerd/D1 local correctes. Selecció excloent, professorat explícit, error/reintent, recàrrega, perfil i detall de classe comprovats. Tipus/lint/build/font correctes; els 12 jobs i Validate de PR/main són verds. Migració 0031 aplicada separadament amb còpia privada restaurada, dades i catàleg històric conservats; proveïdor contrastat. Publicada una vegada: 3f330003a618fc7387fdab9669f12daea7ea9b37. Rebut/digest, tag/release immutable, Deployment i configuració verificats. Cap prova pública ni desplegament privat.",
       "change_log_id": "H205"
+    },
+    {
+      "id": "T91-01",
+      "phase": "F91",
+      "title": "Identificar el panell de delegats amb una icona pròpia",
+      "status": "review",
+      "requirements": [
+        "R116"
+      ],
+      "depends_on": [
+        "T90-01"
+      ],
+      "files": [
+        "public/images/ui/delegates.svg",
+        "src/art.jsx",
+        "src/App.jsx",
+        "src/components/Delegates.jsx",
+        "package.json",
+        "package-lock.json",
+        "CHANGELOG.md"
+      ],
+      "acceptance": "Icona de representants identificable al menú lateral desplegat/plegat, mòbil i capçalera. Proporcions i alineació correctes; navegació i visibilitat de rols conservades. Controls locals, PR amb CI verda i publicació amb rebut.",
+      "checks": [
+        "Dibuixar una icona vectorial amb els colors de la plataforma i integrar-la als accessos i capçalera.",
+        "Revisar visualment en mòbil i escriptori amb fixtures; executar les regressions de navegació relacionades.",
+        "Tipus, unitàries, build, font, PR/CI exacta, publicació i registre."
+      ],
+      "evidence": [
+        "public/images/ui/delegates.svg",
+        "output/delegates-icon/local-verification.json",
+        "output/delegates-icon/navigation/results.json",
+        "output/delegates-icon/mobile/results.json",
+        "output/delegates-icon/visual-reviewed.json",
+        "output/delegates-icon/unit.log",
+        "output/delegates-icon/typecheck.log",
+        "output/delegates-icon/build.log"
+      ],
+      "progress": "Icona vectorial pròpia de representants amb bafarada al menú lateral, menú mòbil i capçalera. Revisió visual a 320/1440 px, inclosa la barra plegada: proporcions i etiquetes correctes. 479 unitàries, 18 regressions d’horari/accés segons rol i 9 del menú mòbil als tres motors correctes; tipus/lint/build correctes. Pendent CI exacta i publicació.",
+      "change_log_id": "H206"
     }
   ]
 }
