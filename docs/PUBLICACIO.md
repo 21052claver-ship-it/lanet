@@ -1,11 +1,11 @@
-# Publicació · La Net 0.6.23
+# Publicació · La Net 0.6.24
 
-[Informe complet](releases/0.6.23.md) · [Estat](ESTAT-PROJECTE.md) · [Índex](README.md).
+[Informe complet](releases/0.6.24.md) · [Estat](ESTAT-PROJECTE.md) · [Índex](README.md).
 
-[Release immutable](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.23) · [PR #46](https://github.com/21052claver-ship-it/lanet/pull/46) · [CI exacta](https://github.com/21052claver-ship-it/lanet/actions/runs/39049070275).
+[Release immutable](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.24) · [PR #48](https://github.com/21052claver-ship-it/lanet/pull/48) · [CI exacta](https://github.com/21052claver-ship-it/lanet/actions/runs/39053459420).
 
-Publicada a https://lanet.es, commit 15c71c03610653ea195891a8e765fe183c165c0d, Pages d4408a14-f464-4863-8701-f4e9539db3c6.
+Publicada a https://lanet.es, commit d3ef96fb678a77fe751c6b3aed2691e61210c139, Pages df18bede-e81b-4497-a07d-24400d3d2b7a.
 
-Dia i setmana conservats entre classe, continguts i agenda; panell de delegats recuperable amb publicació, cerca, actualització i dates publicades. Correccions amb el missatge visible, aprovades accessibles a l’autor, retirada amb motiu i recuperació de concurrència. Detall amb dades vigents i accions antigues retirades quan desapareix la data. Esborranys públics anteriors recuperables amb privats intactes. Resum mòbil compacte, pestanyes en dues columnes i confirmacions antigues retirades en obrir un formulari nou.
+Entrar a Continguts ja no carrega ni descarrega els PDF dels materials. Les targetes mostren una portada estàtica; obrir expressament l’apunt carrega el visor PDF.js i descarregar requereix prémer l’enllaç del fitxer. Les capçaleres de seguretat i els permisos del servidor es conserven.
 
-475 unitàries, 66 recorreguts nous d’alumnes/delegats/subdelegats als tres itineraris i motors, 63 regressions de classe, 66 responsive, 33 delegats, 30 notificacions, 36 horari/navegació i 24 de nota anual correctes. Revalidació final de 12 publicacions amb cerca anterior, fallada i reintent, sense duplicats. Tipus/lint/build/font correctes. Els 12 jobs i Validate de PR/main són verds; la CI recompila i prova la matriu sencera del codi final.
+Reproducció prèvia amb un clic únic: una petició de document i una descàrrega. Després: 6 escenaris als tres motors, a 320/1440 px, amb 10 etapes per escenari i zero peticions PDF/descàrregues espontànies. Lectura correcta i descàrrega explícita contrastada amb tots els bytes originals; el segon PDF no obert continua sense carregar-se. 33 regressions de Continguts i 475 unitàries correctes; tipus/lint/build/font correctes. Els 12 jobs i Validate de PR/main són verds.

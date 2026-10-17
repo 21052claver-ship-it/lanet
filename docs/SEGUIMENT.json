@@ -8539,7 +8539,7 @@
       "id": "T89-01",
       "phase": "F89",
       "title": "Eliminar la descàrrega de PDF en entrar a Continguts",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R114"
       ],
@@ -8572,9 +8572,21 @@
         "output/contents-download/library/contents-browser-results.json",
         "output/contents-download/unit.log",
         "output/contents-download/typecheck-final.log",
-        "output/contents-download/build-final.log"
+        "output/contents-download/build-final.log",
+        "output/contents-download/source-audit.log",
+        "output/contents-download/ci-pr.json",
+        "output/contents-download/ci-main.json",
+        "output/contents-download/provider-after.json",
+        "output/contents-download/release-verified.json",
+        "output/releases/0.6.24/receipt.json",
+        "docs/releases/0.6.24.md",
+        "docs/releases/0.6.24.json",
+        "output/contents-download/ci-main-first.json",
+        "output/contents-download/ci-main-navigation-failure.log",
+        "output/contents-download/ci-main-navigation/official-schedule/browser/webkit-2C-320-failure.png",
+        "output/contents-download/official-webkit-recheck/results.json"
       ],
-      "progress": "Reproduït un únic clic a Continguts que demanava i descarregava el PDF fictici. Retirat l’iframe de les targetes i substituït per una portada estàtica. La llista no demana cap PDF; el visor PDF.js carrega només el material obert i la descàrrega requereix el seu enllaç. 6 escenaris de 10 etapes, mòbil/escriptori als tres motors, amb 0 peticions/descàrregues espontànies; lectura i bytes de la descàrrega explícita correctes. 33 regressions de Continguts i 475 unitàries correctes; tipus/lint/build correctes. Portades revisades sense solapaments. Cap canvi de servidor, capçaleres, permisos, migracions o operació privada. Pendent CI exacta de PR/main i publicació única de 0.6.24.",
+      "progress": "Entrar a Continguts ja no carrega ni descarrega els PDF dels materials. Les targetes mostren una portada estàtica; obrir expressament l’apunt carrega el visor PDF.js i descarregar requereix prémer l’enllaç del fitxer. Les capçaleres de seguretat i els permisos del servidor es conserven. Reproducció prèvia amb un clic únic: una petició de document i una descàrrega. Després: 6 escenaris als tres motors, a 320/1440 px, amb 10 etapes per escenari i zero peticions PDF/descàrregues espontànies. Lectura correcta i descàrrega explícita contrastada amb tots els bytes originals; el segon PDF no obert continua sense carregar-se. 33 regressions de Continguts i 475 unitàries correctes; tipus/lint/build/font correctes. Els 12 jobs i Validate de PR/main són verds. Publicada una vegada: d3ef96fb678a77fe751c6b3aed2691e61210c139. Rebut/digest, tag/release immutable, Deployment i proveïdor verificats. Cap prova pública ni fitxer real. La primera execució de main va fallar amb un error intern de WebKit durant una recàrrega a la prova d’horaris. Els 9 recorreguts WebKit del mateix codi passen localment; s’aturen les suites encara pendents i es repeteix tota la CI una vegada, sense canviar ni ometre asserts. Els 12 controls de la segona execució són correctes. Registre i captura originals conservats.",
       "change_log_id": "H204"
     }
   ]
