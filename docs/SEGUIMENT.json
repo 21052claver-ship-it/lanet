@@ -8440,7 +8440,7 @@
       "id": "T88-01",
       "phase": "F88",
       "title": "Simplificar i simular els recorreguts complets d’alumnes i delegats",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R113"
       ],
@@ -8509,10 +8509,20 @@
         "output/journeys-audit/schedule-drained/results.json",
         "output/journeys-audit/course-grades-final/course-browser-results.json",
         "output/journeys-audit/grade-undo-confirmed/course-browser-results.json",
-        "output/journeys-audit/typecheck-drain-final.log"
+        "output/journeys-audit/typecheck-drain-final.log",
+        "output/journeys-audit/visual-reviewed.json",
+        "output/journeys-audit/local-verification.json",
+        "output/journeys-audit/publish-final/results.json",
+        "output/journeys-audit/ci-pr.json",
+        "output/journeys-audit/ci-main.json",
+        "output/journeys-audit/provider-after.json",
+        "output/journeys-audit/release-verified.json",
+        "output/releases/0.6.23/receipt.json",
+        "docs/releases/0.6.23.md",
+        "docs/releases/0.6.23.json"
       ],
-      "progress": "0.6.23 en revisió. 475 unitàries; 66 recorreguts nous, 63 regressions de classe, 66 responsive, 33 delegats, 30 notificacions, 36 horari/navegació i 24 nota anual correctes en local. Revalidacions de publicació/esborranys antics i lectura/desament confirmat sense duplicar el recompte. Detall actualitzat i retirada amb retorn clar a l’agenda, context i dades privades conservats. La CI ha comprovat els 66 recorreguts; dues proves anteriors tenien coordinació incompleta (callback de bootstrap pendent en disposar la fixture i edició sintètica durant el focus de Desfer). Ara es drenen callbacks sense ignorar errors i s’edita amb el refresc retingut, exigint que el text nou es conservi. Pendent CI completa del head actualitzat/main i una publicació. Sense servidor, permisos, migracions, R2 ni prova pública.",
-      "change_log_id": ""
+      "progress": "Dia i setmana conservats entre classe, continguts i agenda; panell de delegats recuperable amb publicació, cerca, actualització i dates publicades. Correccions amb el missatge visible, aprovades accessibles a l’autor, retirada amb motiu i recuperació de concurrència. Detall amb dades vigents i accions antigues retirades quan desapareix la data. Esborranys públics anteriors recuperables amb privats intactes. Resum mòbil compacte, pestanyes en dues columnes i confirmacions antigues retirades en obrir un formulari nou. 475 unitàries, 66 recorreguts nous d’alumnes/delegats/subdelegats als tres itineraris i motors, 63 regressions de classe, 66 responsive, 33 delegats, 30 notificacions, 36 horari/navegació i 24 de nota anual correctes. Revalidació final de 12 publicacions amb cerca anterior, fallada i reintent, sense duplicats. Tipus/lint/build/font correctes. Els 12 jobs i Validate de PR/main són verds; la CI recompila i prova la matriu sencera del codi final. Publicada una vegada via PR46: 15c71c03610653ea195891a8e765fe183c165c0d. Tag/release immutable, rebut/digest, Deployment i configuració comprovats. Cap prova pública o dada real; tancament documental separat sense nou producte.",
+      "change_log_id": "H203"
     }
   ]
 }
