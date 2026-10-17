@@ -30,3 +30,5 @@ La migració publicada 0026 queda idèntica. L’antic `2B-chem` continua retira
 ## Sincronització de la prova de preferències
 
 La primera CI detecta una lectura de bootstrap cancel·lada en una recàrrega de WebKit, després de confirmar el volum al servidor. La prova comprova ara que l’últim valor també s’ha rebut a la lectura abans de recarregar, a més d’esperar la xarxa. No es filtra ni es retira la comprovació d’errors. Les 24 regressions de preferències passen localment als tres motors. La CI es torna a executar completa sobre el commit que incorpora aquesta correcció de prova; el codi de producte d’àudio no canvia.
+
+La segona CI supera preferències/àudio i detecta un error intern de WebKit en la recàrrega de la prova de gestió del grup C. El fixture canviava el rol directament a SQLite i encadenava una navegació de hash amb reload. Ara espera la xarxa, surt del document i torna a carregar la gestió amb el nou bootstrap. Es conserven els asserts de professorat per dia, Llatí, IDs, desament i zero errors. Els 27 casos oficials passen als tres motors. Cap canvi de producte per aquesta correcció de prova.

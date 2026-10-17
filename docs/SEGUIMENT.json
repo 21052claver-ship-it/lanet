@@ -8624,7 +8624,8 @@
         "package.json",
         "package-lock.json",
         "CHANGELOG.md",
-        "scripts/test-preferences.mjs"
+        "scripts/test-preferences.mjs",
+        "scripts/test-official-schedule.mjs"
       ],
       "acceptance": "Química és la tercera alternativa del bloc de Dibuix i Empresa, amb professorat conegut seleccionat explícitament. Dilluns/dimarts 09:10 i dimecres/dijous 08:10. Les combinacions tenen 30 hores sense solapaments; desament/recàrrega i delegats correctes amb fixtures. Migració additiva assajada i revisada, dades conservades, PR/CI i publicació amb rebut.",
       "checks": [
@@ -8645,9 +8646,12 @@
         "output/technology-chemistry/api/api-results.json",
         "output/technology-chemistry/ci-pr-audio-failure-clean.log",
         "output/technology-chemistry/ci-pr-audio/preferences/browser/results.json",
-        "output/technology-chemistry/preferences-confirmed/results.json"
+        "output/technology-chemistry/preferences-confirmed/results.json",
+        "output/technology-chemistry/ci-pr-navigation-failure-clean.log",
+        "output/technology-chemistry/official-final/results.json",
+        "output/technology-chemistry/ci-pr-audio-fixed/preferences/browser/results.json"
       ],
-      "progress": "Química afegida com tercera alternativa del bloc de Dibuix/Empresa del B, amb professorat explícit. Franges confirmades per Marc i contrastades independentment; totes les 55 ofertes segueixen el bloc transcrit. 272 combinacions de 30 hores sense solapaments, 479 unitàries, 18 recorreguts nous dels tres rols/motors a 320/1440 px i 27 regressions oficials correctes; API D1 local amb professorat, persistència, permisos i alternatives excloents correcta. Migració 0031 conserva totes les dades existents; IDs nous protegeixen Química retirada i les plantilles històriques. Tipus/lint/build correctes. Pendent PR/CI, còpia privada, aplicació separada de la migració i publicació. Primera CI: WebKit informa una lectura bootstrap cancel·lada per la recàrrega de la prova de preferències, amb el volum ja desat. La prova espera ara la lectura confirmada de l’últim valor abans de recarregar; es manté l’assert de zero errors. Les 24 regressions de preferències passen localment als tres motors. Es conserva la fallada i es demana CI completa del nou commit.",
+      "progress": "Química afegida com tercera alternativa del bloc de Dibuix/Empresa del B, amb professorat explícit. Franges confirmades per Marc i contrastades independentment; totes les 55 ofertes segueixen el bloc transcrit. 272 combinacions de 30 hores sense solapaments, 479 unitàries, 18 recorreguts nous dels tres rols/motors a 320/1440 px i 27 regressions oficials correctes; API D1 local amb professorat, persistència, permisos i alternatives excloents correcta. Migració 0031 conserva totes les dades existents; IDs nous protegeixen Química retirada i les plantilles històriques. Tipus/lint/build correctes. Pendent PR/CI, còpia privada, aplicació separada de la migració i publicació. Primera CI: WebKit informa una lectura bootstrap cancel·lada per la recàrrega de la prova de preferències, amb el volum ja desat. La prova espera ara la lectura confirmada de l’últim valor abans de recarregar; es manté l’assert de zero errors. Les 24 regressions de preferències passen localment als tres motors. Es conserva la fallada i es demana CI completa del nou commit. Segona CI: preferències/àudio correctes; la prova de gestió del grup C falla internament en WebKit en encadenar hash i reload després de canviar el rol al fixture. Ara es carrega un document nou després de quedar la xarxa en repòs, sense filtrar errors ni retirar cap assert. Els 27 recorreguts oficials tornen a passar localment als tres motors. CI completa del commit actualitzat pendent.",
       "change_log_id": "H205"
     }
   ]
