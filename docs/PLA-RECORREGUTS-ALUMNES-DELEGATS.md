@@ -20,6 +20,7 @@ Les proves només utilitzen servidors locals i fixtures; bloquegen peticions ext
 | Dos representants → validar simultàniament | El segon error exigia sortir i trobar com refrescar el panell. | Estat antic bloquejat i acció per actualitzar des del mateix diàleg; cap segon avís ni validació duplicada. |
 | Panell a 320 px | Pestanyes tallades per especificitat d’estil; massa resum abans de les propostes. | Dues columnes, instrucció breu, comptadors compactes, botons principals en una fila quan hi caben, targetes alineades i text adaptable. |
 | Acció confirmada → obrir un altre formulari ràpidament | La confirmació anterior podia tapar camps del nou diàleg. | En obrir un diàleg es retira la confirmació d’èxit anterior; avisos i errors es conserven. |
+| Data oberta → actualització o retirada rebuda | El servidor retornava les dades noves però el detall mantenia la còpia antiga i permetia intentar completar una tasca retirada. | Títol, data, horari, aula i cos vinculats a l’estat actual. En retirar-se, missatge explícit i retorn a l’agenda, sense accions de la data anterior. |
 
 `output/journeys-audit/baseline.json` conserva les reproduccions prèvies i les captures locals. La primera execució de la nova prova també ha descobert una expectativa incorrecta del títol: en tornar a la vista Agenda, l’encapçalament correcte és «La teva agenda». S’ha corregit la prova i s’ha mantingut la comprovació de setmana i estat. La regla de pestanyes s’ha reforçat contra el selector general existent, sense ignorar les mesures de geometria.
 
@@ -29,10 +30,12 @@ La primera CI ha passat els 60 recorreguts nous, però ha detectat una cursa en 
 
 ## Simulacions i criteris
 
-La matriu nova conté 60 escenaris: tres motors, quatre disposicions (320, paisatge tàctil 740 × 390, tauleta 820 i escriptori 1440), itineraris 2A/2B/2C i comptes separats d’alumne, company, delegat, subdelegat i persona fora d’àmbit. El cicle comprova proposta, retorn amb missatge, correcció, aprovació pel subdelegat, estat publicat de l’autor, progrés personal independent, retirada amb motiu i avisos. Les proves contrasten SQLite i permisos, no només text visible.
+La matriu nova conté 66 escenaris: tres motors, quatre disposicions (320, paisatge tàctil 740 × 390, tauleta 820 i escriptori 1440), itineraris 2A/2B/2C i comptes separats d’alumne, company, delegat, subdelegat i persona fora d’àmbit. El cicle comprova proposta, retorn amb missatge, correcció, aprovació pel subdelegat, estat publicat de l’autor, progrés personal independent, retirada amb motiu i avisos. Les proves contrasten SQLite i permisos, no només text visible.
 
 També es comproven escriptura fallida i reintent, clic duplicat mentre es desa, concurrència de representants, errors de comprovació i actualització, llistes denses, cerca sense accents, recuperació de cerca buida, enllaços i recàrregues, focus i controls de 44 px sense solapaments. Es conserven les regressions de seqüència de classe, lectura visible, seguiments d’estudi/notes, responsive, espais d’assignatura, delegats i notificacions.
 
 Cap canvi de permisos o consultes de servidor, migració, R2, Google o serveis privats. El panell demana el bootstrap existent una vegada en entrar i quan l’usuari prem Actualitzar; no s’afegeix cap interval de polling. Els camps de navegació contenen identificadors i dates, sense continguts ni dades personals.
 
 Estat: verificació local en curs sobre una compilació fixa. Després dels controls cal la CI exacta de PR/main i una única publicació de 0.6.23.
+
+La comprovació de detall viu afegeix sis casos (320/1440, tres motors) amb les actualitzacions del bootstrap existent: canvi de títol/data/aula/instruccions, retirada i retorn directe a la llista de l’agenda. La reproducció prèvia a output/journeys-audit/live-before.json contrastava servidor i finestra: títol antic i acció de completar encara visibles. Les captures també han permès moure la separació d’accions al CSS global: així no depèn d’haver carregat Horari abans d’obrir un detall des de Comunitat. Es mesuren 44 px i un mínim de 8 px entre les accions.

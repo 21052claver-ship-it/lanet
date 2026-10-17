@@ -8465,7 +8465,9 @@
         "CHANGELOG.md",
         "docs/PLA-RECORREGUTS-ALUMNES-DELEGATS.md",
         "scripts/test-delegate-agenda.mjs",
-        "scripts/test-class-sequence.mjs"
+        "scripts/test-class-sequence.mjs",
+        "src/responsive.css",
+        "src/schedule-experience.css"
       ],
       "acceptance": "Reproduir i corregir friccions reals dels recorreguts quotidians, amb context, estats i accions comprensibles. Simular alumnat, delegat i subdelegat entre comptes ficticis a diferents itineraris, errors recuperables i pantalles estretes/paisatge/escriptori en tres motors. Verificar persistència, aïllament, permisos, seguiments i geometria. Tot amb fixtures locals; PR, CI exacta i publicació única si es modifica producte.",
       "checks": [
@@ -8491,9 +8493,13 @@
         "output/journeys-audit/source-audit-staged.log",
         "output/journeys-audit/ci-academics-failure.log",
         "output/journeys-audit/ci-first-academics/class-sequence/browser/results.json",
-        "output/journeys-audit/material-confirmed/results.json"
+        "output/journeys-audit/material-confirmed/results.json",
+        "output/journeys-audit/live-before.json",
+        "output/journeys-audit/live-release/results.json",
+        "output/journeys-audit/build-release-candidate.log",
+        "output/journeys-audit/typecheck-final-context.log"
       ],
-      "progress": "Implementació en revisió per a 0.6.23. 475 unitàries, 60 recorreguts nous, 63 regressions de classe, 66 responsive, 33 delegats i 30 notificacions correctes en local; 12 publicacions revalidades en la compilació definitiva. La primera CI passa els 60 recorreguts nous i detecta una cursa de la prova d’apunts a WebKit/Linux: llegia la base de dades abans d’acabar el desament optimista. Prova reforçada amb escriptura retinguda, bloqueig, resposta confirmada i persistència; 12 recorreguts de material revalidats i nova CI completa abans de publicar. Cap canvi de servidor, permisos, migració o R2; cap prova pública.",
+      "progress": "Revisió 0.6.23: continuïtat de classe i panell, publicació/correcció/retirada, cerca i errors recuperables. 475 unitàries; matriu de 66 recorreguts nous (60 de rols + 6 de detall viu), 63 regressions de classe, 66 responsive, 33 delegats i 30 notificacions correctes en local. Revalidacions de 12 publicacions i 12 materials amb desament retingut/confirmat, sense sumar-les com a casos nous. Detall amb dades actualitzades i accions retirades quan desapareix la data; retorn real a la llista de l’agenda. Separació de controls compartida també en entrar directament des de Comunitat. Primera CI exposa una espera optimista incorrecta de la prova, ara corregida; pendent CI completa de la branca actualitzada/main i una única publicació. Sense servidor, permisos, migracions, R2 o prova pública.",
       "change_log_id": ""
     }
   ]

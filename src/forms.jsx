@@ -1,7 +1,7 @@
 import React from 'react';
 import { Clock, MapPin, BookOpen, ArrowRight, Plus } from '@phosphor-icons/react';
 import { useApp } from './context';
-import { Modal, SubjectChip, RichText, Button } from './ui';
+import { Modal, SubjectChip, RichText, Button, Empty } from './ui';
 import { dateLabel, DAYS } from '../shared/domain';
 import { slotTeacher } from '../shared/official-schedule';
 import { BoardDetail } from './components/WoodBoard';
@@ -93,18 +93,30 @@ const titles = {
   manageUser: 'Gestionar compte',
 };
 export default function Forms({ onLogout, logoutBusy = false, logoutError = '' }) {
-  const { data, modal, close, open, subject, go, subjectFilter, setSubjectFilter } = useApp();
+  const {
+    data,
+    modal,
+    close,
+    open,
+    subject,
+    go,
+    subjectFilter,
+    setSubjectFilter,
+    setAgendaSubject,
+  } = useApp();
   if (!modal) return null;
   const { type, item } = modal;
-  const event = type === 'eventDetail' ? data.events.find((e) => e.id === item.id) || item : null;
+  const event = type === 'eventDetail' ? data.events.find((e) => e.id === item.id) : null;
   const eventSubjects = eventSubjectIds(event);
   const Form = forms[type];
   const title =
-    type === 'reader' || type === 'plusDetail' || type === 'eventDetail'
-      ? item.title
-      : type === 'class'
-        ? item.subject.name
-        : titles[type] || 'La Net';
+    type === 'eventDetail'
+      ? event?.title || 'Data de l’agenda'
+      : type === 'reader' || type === 'plusDetail'
+        ? item.title
+        : type === 'class'
+          ? item.subject.name
+          : titles[type] || 'La Net';
   return (
     <Modal
       open
@@ -174,7 +186,7 @@ export default function Forms({ onLogout, logoutBusy = false, logoutError = '' }
             <ArrowRight size={18} />
           </Button>
         </div>
-      ) : type === 'eventDetail' ? (
+      ) : type === 'eventDetail' && event ? (
         <div>
           <div className="card-tags">
             {eventSubjects.map((id) => (
@@ -182,11 +194,12 @@ export default function Forms({ onLogout, logoutBusy = false, logoutError = '' }
             ))}
           </div>
           <p>
-            {dateLabel(item.date, { weekday: 'long', day: 'numeric', month: 'long' })} ·{' '}
-            {item.start || 'Tot el dia'}
+            {dateLabel(event.date, { weekday: 'long', day: 'numeric', month: 'long' })} ·{' '}
+            {event.start || 'Tot el dia'}
+            {event.end ? '–' + event.end : ''}
           </p>
-          <p>{item.room}</p>
-          <RichText text={item.body} />
+          <p>{event.room}</p>
+          <RichText text={event.body} />
           <div className="event-detail-actions">
             <TaskProgressButton event={event} />
             {!!eventSubjects.length && (
@@ -204,6 +217,21 @@ export default function Forms({ onLogout, logoutBusy = false, logoutError = '' }
             )}
           </div>
         </div>
+      ) : type === 'eventDetail' ? (
+        <Empty
+          title="Aquesta data ja no està disponible"
+          body="Pot haver canviat o haver-se retirat. Pots consultar les dates actuals a l’agenda."
+        >
+          <Button
+            onClick={() => {
+              setAgendaSubject('all');
+              close();
+              go('schedule');
+            }}
+          >
+            Tornar a l’agenda
+          </Button>
+        </Empty>
       ) : null}
     </Modal>
   );

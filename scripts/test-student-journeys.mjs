@@ -3,7 +3,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { chromium, firefox, webkit } from 'playwright';
 import { browserFixture } from '../tests/helpers/browser-fixture.mjs';
 import { hash } from '../worker/utils.js';
-import { madridDay, addDays } from '../shared/domain.js';
+import { madridDay, addDays, dateLabel } from '../shared/domain.js';
 import { OFFICIAL_ROUTES, SCHEDULE_VERSION } from '../shared/official-schedule.js';
 
 const out = process.env.LANET_TEST_OUTPUT || 'output/student-journeys/browser';
@@ -25,7 +25,7 @@ async function choose(p, label, name) {
   await p.getByRole('combobox', { name: label, exact: true }).click();
   await p.getByRole('option', { name, exact: true }).click();
 }
-async function checkGeometry(p, selector) {
+async function checkGeometry(p, selector, gap = 0) {
   const boxes = await p.locator(selector).evaluateAll((nodes) =>
     nodes
       .filter((n) => n.getClientRects().length)
@@ -53,7 +53,10 @@ async function checkGeometry(p, selector) {
       const a = boxes[i],
         b = boxes[j];
       assert.ok(
-        a.right <= b.x + 1 || b.right <= a.x + 1 || a.bottom <= b.y + 1 || b.bottom <= a.y + 1,
+        a.right + gap <= b.x + 1 ||
+          b.right + gap <= a.x + 1 ||
+          a.bottom + gap <= b.y + 1 ||
+          b.bottom + gap <= a.y + 1,
         'Controls overlap',
       );
     }
@@ -589,6 +592,72 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
             );
           },
         );
+
+    for (const width of [320, 1440])
+      await run('live-date-update-and-withdrawal', width, '2B', async ({ p, f, seed, today }) => {
+        seed('live', 'approved');
+        await p.clock.install({ time: Date.now() });
+        await panel(p, f);
+        await card(p).getByRole('button', { name: 'Veure data', exact: true }).click();
+        await p.getByRole('dialog').getByRole('heading', { name: title, exact: true }).waitFor();
+        const updatedTitle = 'La classe ha canviat de dia',
+          updatedBody = 'Porta la calculadora i el dossier actualitzat.',
+          date = addDays(today, 5);
+        f.db
+          .prepare(
+            "UPDATE events SET title=?,date=?,body=?,room='Aula de pràctiques',revision=revision+1 WHERE id='live'",
+          )
+          .run(updatedTitle, date, updatedBody);
+        const updated = p.waitForResponse((r) => new URL(r.url()).pathname === '/api/bootstrap');
+        await p.clock.fastForward(121000);
+        assert.equal(
+          (await (await updated).json()).events.find((e) => e.id === 'live').title,
+          updatedTitle,
+        );
+        await p
+          .getByRole('dialog')
+          .getByRole('heading', { name: updatedTitle, exact: true })
+          .waitFor();
+        await p.getByRole('dialog').getByText(updatedBody, { exact: true }).waitFor();
+        await p.getByRole('dialog').getByText('Aula de pràctiques', { exact: true }).waitFor();
+        await checkGeometry(p, '.dialog .event-detail-actions .button', 8);
+        await p
+          .getByRole('dialog')
+          .getByText(dateLabel(date, { weekday: 'long', day: 'numeric', month: 'long' }), {
+            exact: false,
+          })
+          .first()
+          .waitFor();
+        await p.screenshot({ path: `${out}/${engine}-updated-date-${width}.png` });
+        f.db.exec(
+          "UPDATE events SET review_status='withdrawn',revision=revision+1 WHERE id='live'",
+        );
+        const withdrawn = p.waitForResponse((r) => new URL(r.url()).pathname === '/api/bootstrap');
+        await p.clock.fastForward(121000);
+        assert.equal(
+          (await (await withdrawn).json()).events.some((e) => e.id === 'live'),
+          false,
+        );
+        await p
+          .getByRole('dialog')
+          .getByRole('heading', { name: 'Aquesta data ja no està disponible', exact: true })
+          .waitFor();
+        assert.equal(
+          await p
+            .getByRole('dialog')
+            .getByRole('button', { name: 'Marcar com a feta', exact: true })
+            .count(),
+          0,
+        );
+        await p.screenshot({ path: `${out}/${engine}-withdrawn-date-${width}.png` });
+        await p.getByRole('button', { name: 'Tornar a l’agenda', exact: true }).click();
+        await p.getByRole('dialog').waitFor({ state: 'hidden' });
+        await p.getByRole('heading', { name: 'La teva agenda', exact: true }).waitFor();
+        assert.equal(
+          await p.getByRole('tab', { name: 'Llista', exact: true }).getAttribute('aria-selected'),
+          'true',
+        );
+      });
 
     await run('two-delegates-conflict-recovery', 390, '2B', async ({ p, f, actor, seed }) => {
       seed('concurrent');
