@@ -8683,7 +8683,7 @@
       "id": "T91-01",
       "phase": "F91",
       "title": "Identificar el panell de delegats amb una icona pròpia",
-      "status": "review",
+      "status": "verified",
       "requirements": [
         "R116"
       ],
@@ -8713,9 +8713,17 @@
         "output/delegates-icon/visual-reviewed.json",
         "output/delegates-icon/unit.log",
         "output/delegates-icon/typecheck.log",
-        "output/delegates-icon/build.log"
+        "output/delegates-icon/build.log",
+        "output/delegates-icon/source-audit.log",
+        "output/delegates-icon/ci-pr.json",
+        "output/delegates-icon/ci-main.json",
+        "output/delegates-icon/provider-after.json",
+        "output/delegates-icon/release-verified.json",
+        "output/releases/0.6.26/receipt.json",
+        "docs/releases/0.6.26.md",
+        "docs/releases/0.6.26.json"
       ],
-      "progress": "Icona vectorial pròpia de representants amb bafarada al menú lateral, menú mòbil i capçalera. Revisió visual a 320/1440 px, inclosa la barra plegada: proporcions i etiquetes correctes. 479 unitàries, 18 regressions d’horari/accés segons rol i 9 del menú mòbil als tres motors correctes; tipus/lint/build correctes. Pendent CI exacta i publicació.",
+      "progress": "El panell de delegats té una icona pròpia de representants amb bafarada i els colors de La Net. La mateixa icona identifica el menú lateral desplegat/plegat, el menú mòbil i la capçalera del panell. 479 proves unitàries, 18 regressions d’horari i accés segons rol i 9 recorreguts del menú mòbil als tres motors correctes. Revisió visual a 320/1440 px, tipus/lint/build/font correctes. Els 12 jobs i Validate de PR/main són verds. Publicada una vegada: a3070589da656348f6180ad0942c3236cf71a54e. Rebut/digest, tag/release immutable, Deployment i configuració verificats. Cap prova pública, migració o desplegament privat.",
       "change_log_id": "H206"
     }
   ]

@@ -1,0 +1,101 @@
+{
+  "recordedAt": "2026-10-17T20:07:10.345Z",
+  "version": "0.6.26",
+  "sourceCommit": "a3070589da656348f6180ad0942c3236cf71a54e",
+  "origin": "https://lanet.es",
+  "pullRequest": "https://github.com/21052claver-ship-it/lanet/pull/52",
+  "ci": "https://github.com/21052claver-ship-it/lanet/actions/runs/39064162350",
+  "pullRequestCi": "https://github.com/21052claver-ship-it/lanet/actions/runs/39063068266",
+  "mainCiAttempt": 1,
+  "pullRequestCiAttempt": 1,
+  "allCiJobsSuccess": true,
+  "ciJobs": [
+    {
+      "name": "Core checks",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (academics)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (casino)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (audio)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (navigation)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (school)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (journeys)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (contents)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (board)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (functional)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (compatibility)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Validate",
+      "conclusion": "success"
+    }
+  ],
+  "releaseUrl": "https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.26",
+  "immutable": true,
+  "tagCommitMatches": true,
+  "receiptDigestMatches": true,
+  "cloudflareDeployment": "aa2ec1ed-80e5-4a25-885a-aeff55ccee90",
+  "githubDeployment": 7145085100,
+  "providerConfirmed": true,
+  "productionCommitMatches": true,
+  "domainActive": true,
+  "pagesDomainPreserved": true,
+  "googleCallbackPreserved": true,
+  "d1R2BindingsPreserved": true,
+  "privateServiceBindingsPreserved": true,
+  "migrationsApplied": false,
+  "privateServicesDeployed": false,
+  "tests": {
+    "unit": 479,
+    "navigation": 18,
+    "mobileNavigation": 9,
+    "engines": [
+      "chromium",
+      "firefox",
+      "webkit"
+    ],
+    "roles": [
+      "student",
+      "delegate",
+      "subdelegate"
+    ],
+    "visualWidths": [
+      320,
+      1440
+    ],
+    "collapsedAndExpanded": true
+  },
+  "publicAppVisited": false,
+  "realUserDataUsedInTests": false,
+  "physicalDevicesTested": false,
+  "productPublications": 1
+}
