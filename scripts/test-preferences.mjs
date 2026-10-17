@@ -32,9 +32,17 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
       const p = await context.newPage(),
         errors = [],
         requests = [],
-        completed = [];
+        completed = [],
+        bootstrapPreferences = [];
       p.setDefaultTimeout(12000);
       p.on('pageerror', (error) => errors.push(error.message));
+      p.on('response', (response) => {
+        if (response.url() !== f.base + '/api/bootstrap' || !response.ok()) return;
+        void response.json().then(
+          (body) => bootstrapPreferences.push(body.preferences),
+          (error) => errors.push(error.message),
+        );
+      });
       let release, start;
       const gate = new Promise((resolve) => (release = resolve));
       const started = new Promise((resolve) => (start = resolve));
@@ -82,6 +90,10 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
             'Blur does not send a duplicate',
           );
           assert.equal(saved().volume, 0);
+          // Route completion proves persistence before the browser receives the
+          // write response. Wait for the final confirmed read as well: a stale
+          // networkidle state alone can let reload cancel that queued bootstrap.
+          await until(() => bootstrapPreferences.some((prefs) => prefs?.volume === 0));
           await p.waitForLoadState('networkidle');
           await p.reload();
           await slider.waitFor();
@@ -99,6 +111,7 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
           assert.equal(requests[1].lofi, last, 'Pending track changes are combined');
           assert.equal(saved().lofi, last);
           const title = await p.locator('.record-now-info h3').innerText();
+          await until(() => bootstrapPreferences.some((prefs) => prefs?.lofi === last));
           // Let confirmed writes finish their bootstrap before navigating away.
           // Cancelling it with reload can surface a WebKit access-control error.
           await p.waitForLoadState('networkidle');

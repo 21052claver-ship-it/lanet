@@ -26,3 +26,7 @@ Estat i evidències vigents: [seguiment](SEGUIMENT.json). Les proves utilitzen f
 479 proves unitàries, 272 combinacions i totes les 55 ofertes contrastades amb els blocs de la matriu independent. 18 recorreguts nous de Química per a alumnat, delegats i subdelegats als tres motors, a 320/1440 px; 27 regressions dels tres itineraris, amb amplades entre 320 i 1440 px. Desament de les dues variants, recuperació d’errors, recàrrega, perfil i detall de classe correctes. API workerd/D1 local correcta, incloent exclusió d’alternatives i conservació de notes. Les proves són amb fixtures, no dispositius físics ni comptes reals.
 
 La migració publicada 0026 queda idèntica. L’antic `2B-chem` continua retirat; `2B-chem-biosca` i `2B-chem-solsona` són ofertes noves. La simulació verifica totes les taules i plantilles existents, integritat i reexecució sense duplicats. Pendent còpia privada i pas separat al proveïdor, després de CI exacta.
+
+## Sincronització de la prova de preferències
+
+La primera CI detecta una lectura de bootstrap cancel·lada en una recàrrega de WebKit, després de confirmar el volum al servidor. La prova comprova ara que l’últim valor també s’ha rebut a la lectura abans de recarregar, a més d’esperar la xarxa. No es filtra ni es retira la comprovació d’errors. Les 24 regressions de preferències passen localment als tres motors. La CI es torna a executar completa sobre el commit que incorpora aquesta correcció de prova; el codi de producte d’àudio no canvia.
