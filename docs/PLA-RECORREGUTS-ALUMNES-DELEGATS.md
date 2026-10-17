@@ -29,6 +29,8 @@ La regressió antiga que canvia de compte substituint la cookie estava assumint 
 
 La primera CI ha passat els 60 recorreguts nous, però ha detectat una cursa en una prova de material a WebKit/Linux: llegia SQLite quan l’etiqueta optimista ja havia canviat i el POST encara no havia acabat. La prova ara retarda aquesta escriptura expressament, comprova el bloqueig i l’absència de la fila mentre està pendent, i exigeix resposta correcta i estat confirmat abans de comprovar la fila. No es relaxa cap assert ni s’amaga cap error; es revalida la matriu del nou commit.
 
+La CI també ha exposat dos problemes de coordinació de les proves anteriors: es disposava la fixture mentre el seu callback de bootstrap encara treballava, i una inserció sintètica de text coincidia amb el focus i l’actualització de Desfer. Ara es confirma el refresc del panell i s’esperen els callbacks abans de disposar el context, sense ignorar errors. La prova de notes dona focus explícit, reté el refresc de Desfer, escriu durant l’espera i exigeix que el text nou sobrevisqui quan arriba la resposta. Passen els 36 recorreguts d’horari i les 24 proves de nota anual als tres motors, amb tots els asserts de persistència i límits conservats.
+
 ## Simulacions i criteris
 
 La matriu nova conté 66 escenaris: tres motors, quatre disposicions (320, paisatge tàctil 740 × 390, tauleta 820 i escriptori 1440), itineraris 2A/2B/2C i comptes separats d’alumne, company, delegat, subdelegat i persona fora d’àmbit. El cicle comprova proposta, retorn amb missatge, correcció, aprovació pel subdelegat, estat publicat de l’autor, progrés personal independent, retirada amb motiu i avisos. Les proves contrasten SQLite i permisos, no només text visible.

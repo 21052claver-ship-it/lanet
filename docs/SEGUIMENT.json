@@ -8467,7 +8467,9 @@
         "scripts/test-delegate-agenda.mjs",
         "scripts/test-class-sequence.mjs",
         "src/responsive.css",
-        "src/schedule-experience.css"
+        "src/schedule-experience.css",
+        "scripts/test-course-grades.mjs",
+        "scripts/test-schedule-experience.mjs"
       ],
       "acceptance": "Reproduir i corregir friccions reals dels recorreguts quotidians, amb context, estats i accions comprensibles. Simular alumnat, delegat i subdelegat entre comptes ficticis a diferents itineraris, errors recuperables i pantalles estretes/paisatge/escriptori en tres motors. Verificar persistència, aïllament, permisos, seguiments i geometria. Tot amb fixtures locals; PR, CI exacta i publicació única si es modifica producte.",
       "checks": [
@@ -8501,9 +8503,15 @@
         "output/journeys-audit/legacy-draft-before.json",
         "output/journeys-audit/drafts-final/results.json",
         "output/journeys-audit/build-drafts-final.log",
-        "output/journeys-audit/typecheck-drafts-final.log"
+        "output/journeys-audit/typecheck-drafts-final.log",
+        "output/journeys-audit/ci-navigation-head4.log",
+        "output/journeys-audit/ci-academics-head4.log",
+        "output/journeys-audit/schedule-drained/results.json",
+        "output/journeys-audit/course-grades-final/course-browser-results.json",
+        "output/journeys-audit/grade-undo-confirmed/course-browser-results.json",
+        "output/journeys-audit/typecheck-drain-final.log"
       ],
-      "progress": "Implementació 0.6.23 en revisió. 475 unitàries, 66 recorreguts nous, 63 regressions de classe, 66 responsive, 33 delegats i 30 notificacions correctes en local; 12 publicacions revalidades amb esborrany privat intacte i recuperació/desament de públic antic, 12 materials amb confirmació real. Les dues darreres CI completes són verdes; el nou head incorpora també la compatibilitat dels esborranys públics antics, que ha de superar la seva CI exacta. Context i subseccions conservats, publicació/correcció/retirada clares, detall viu i accions accessibles sense dependre de l’entrada. Cap servidor/permisos/migració/R2 ni prova pública; pendent CI actualitzada, CI de main i una publicació.",
+      "progress": "0.6.23 en revisió. 475 unitàries; 66 recorreguts nous, 63 regressions de classe, 66 responsive, 33 delegats, 30 notificacions, 36 horari/navegació i 24 nota anual correctes en local. Revalidacions de publicació/esborranys antics i lectura/desament confirmat sense duplicar el recompte. Detall actualitzat i retirada amb retorn clar a l’agenda, context i dades privades conservats. La CI ha comprovat els 66 recorreguts; dues proves anteriors tenien coordinació incompleta (callback de bootstrap pendent en disposar la fixture i edició sintètica durant el focus de Desfer). Ara es drenen callbacks sense ignorar errors i s’edita amb el refresc retingut, exigint que el text nou es conservi. Pendent CI completa del head actualitzat/main i una publicació. Sense servidor, permisos, migracions, R2 ni prova pública.",
       "change_log_id": ""
     }
   ]

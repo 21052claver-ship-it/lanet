@@ -180,6 +180,7 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
             await p
               .getByRole('heading', { name: 'El teu panell de delegats', exact: true })
               .waitFor();
+            await p.getByRole('button', { name: 'Actualitzar propostes', exact: true }).waitFor();
             assert.equal(await p.locator('.sidebar nav [aria-current="page"]').count(), 1);
           }
           assert.ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
@@ -216,6 +217,8 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
           });
           throw e;
         } finally {
+          // The panel refresh can still be completing after its heading appears.
+          await c.unrouteAll({ behavior: 'wait' });
           await c.close();
           await f.close();
           writeFileSync(
