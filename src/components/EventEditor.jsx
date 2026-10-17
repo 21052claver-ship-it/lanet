@@ -27,7 +27,16 @@ import { agendaPublication } from '../../shared/delegation';
 
 export default function EventEditor({ item }) {
   const { data, enrolled, close, mutate, open, notify, setDelegateTab } = useApp();
-  const key = `lanet.eventDraft.${data.user.id}.${item.subject_id || 'all'}.${item.kind || 'exam'}${item.contextual ? '.' + item.date + '.' + item.offering_id : ''}${item.visibility === 'shared' ? '.public' : ''}`;
+  const baseKey = `lanet.eventDraft.${data.user.id}.${item.subject_id || 'all'}.${item.kind || 'exam'}${item.contextual ? '.' + item.date + '.' + item.offering_id : ''}`;
+  const [key] = useState(() => {
+    if (item.id || item.visibility !== 'shared') return baseKey;
+    const publicKey = baseKey + '.public';
+    // Keep an older public draft in its original location until it is confirmed.
+    // A private draft must never override an explicitly public entry point.
+    return !readLocalJSON(publicKey, null) && readLocalJSON(baseKey, null)?.visibility === 'shared'
+      ? baseKey
+      : publicKey;
+  });
   const [cached] = useState(() => (!item.id ? readLocalJSON(key, null) : null));
   const [f, setF] = useState(() => ({
     title: '',

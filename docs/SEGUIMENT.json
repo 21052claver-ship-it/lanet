@@ -8497,9 +8497,13 @@
         "output/journeys-audit/live-before.json",
         "output/journeys-audit/live-release/results.json",
         "output/journeys-audit/build-release-candidate.log",
-        "output/journeys-audit/typecheck-final-context.log"
+        "output/journeys-audit/typecheck-final-context.log",
+        "output/journeys-audit/legacy-draft-before.json",
+        "output/journeys-audit/drafts-final/results.json",
+        "output/journeys-audit/build-drafts-final.log",
+        "output/journeys-audit/typecheck-drafts-final.log"
       ],
-      "progress": "Revisió 0.6.23: continuïtat de classe i panell, publicació/correcció/retirada, cerca i errors recuperables. 475 unitàries; matriu de 66 recorreguts nous (60 de rols + 6 de detall viu), 63 regressions de classe, 66 responsive, 33 delegats i 30 notificacions correctes en local. Revalidacions de 12 publicacions i 12 materials amb desament retingut/confirmat, sense sumar-les com a casos nous. Detall amb dades actualitzades i accions retirades quan desapareix la data; retorn real a la llista de l’agenda. Separació de controls compartida també en entrar directament des de Comunitat. Primera CI exposa una espera optimista incorrecta de la prova, ara corregida; pendent CI completa de la branca actualitzada/main i una única publicació. Sense servidor, permisos, migracions, R2 o prova pública.",
+      "progress": "Implementació 0.6.23 en revisió. 475 unitàries, 66 recorreguts nous, 63 regressions de classe, 66 responsive, 33 delegats i 30 notificacions correctes en local; 12 publicacions revalidades amb esborrany privat intacte i recuperació/desament de públic antic, 12 materials amb confirmació real. Les dues darreres CI completes són verdes; el nou head incorpora també la compatibilitat dels esborranys públics antics, que ha de superar la seva CI exacta. Context i subseccions conservats, publicació/correcció/retirada clares, detall viu i accions accessibles sense dependre de l’entrada. Cap servidor/permisos/migració/R2 ni prova pública; pendent CI actualitzada, CI de main i una publicació.",
       "change_log_id": ""
     }
   ]

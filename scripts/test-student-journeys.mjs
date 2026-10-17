@@ -297,7 +297,7 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
         'delegate-publish-retry-and-navigation',
         width,
         '2B',
-        async ({ p, f, actor, subjectName, gate }) => {
+        async ({ p, f, actor, subjectName, gate, today }) => {
           const d = await actor('delegate');
           await panel(d, f);
           await d.getByRole('tab', { name: 'Contactes', exact: true }).click();
@@ -392,6 +392,47 @@ for (const engine of (process.env.LANET_BROWSER_ENGINES || 'chromium,firefox,web
           await ready(d);
           await card(d).waitFor();
           await checkGeometry(d, '.delegate-panel-actions .button, .delegation-hub > .tabs button');
+          assert.equal(
+            await d.evaluate(
+              () => JSON.parse(localStorage.getItem('lanet.eventDraft.delegate.all.exam')).title,
+            ),
+            'Esborrany privat',
+            'Publishing must preserve a separate private draft',
+          );
+          const legacyTitle = 'Esborrany públic de la versió anterior';
+          await d.evaluate(
+            (draft) =>
+              localStorage.setItem('lanet.eventDraft.delegate.all.exam', JSON.stringify(draft)),
+            {
+              title: legacyTitle,
+              body: 'No perdis les instruccions que havia escrit.',
+              visibility: 'shared',
+              kind: 'task',
+              subject_id: 'math',
+              date: today,
+            },
+          );
+          await d.getByRole('button', { name: 'Publicar una data', exact: true }).click();
+          assert.equal(
+            await d.getByRole('textbox', { name: 'Títol', exact: true }).inputValue(),
+            legacyTitle,
+          );
+          assert.equal(
+            await d.getByRole('textbox', { name: 'Temari o detalls', exact: true }).inputValue(),
+            'No perdis les instruccions que havia escrit.',
+          );
+          await d.getByRole('button', { name: 'Publicar ara', exact: true }).click();
+          await d.getByRole('dialog').waitFor({ state: 'hidden' });
+          await card(d, legacyTitle).waitFor();
+          assert.equal(
+            f.db.prepare('SELECT count(*) n FROM events WHERE title=?').get(legacyTitle).n,
+            1,
+          );
+          assert.equal(
+            await d.evaluate(() => localStorage.getItem('lanet.eventDraft.delegate.all.exam')),
+            null,
+            'Only the confirmed old draft is cleared',
+          );
           await d.screenshot({ path: `${out}/${engine}-published-${width}.png` });
           await panel(p, f, 'published');
           assert.equal(await p.getByRole('tab', { name: 'Publicades', exact: true }).count(), 0);
