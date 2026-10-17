@@ -46,17 +46,18 @@ function cli(args) {
 }
 cli(['d1', 'migrations', 'apply', 'DB', '--local']);
 const tokens = Object.fromEntries(
-  ['2A', '2B', '2C', 'delegate', 'admin'].map((g) => [g, randomUUID()]),
+  ['2A', '2B', '2C', 'delegate', 'delegate-b', 'admin'].map((g) => [g, randomUUID()]),
 );
 const fixtures = Object.entries(tokens).map(([g, token]) => {
   const hash = createHash('sha256').update(token).digest('hex');
-  return `INSERT INTO users(id,email,name,password_hash,salt,google_sub,group_id,role) VALUES('${g}','timetable-${g}@fje.edu','Prova horari ${g}','unused','fixture','local-${g}','2A','${g === 'admin' ? 'admin' : g === 'delegate' ? 'delegate' : 'student'}');
+  return `INSERT INTO users(id,email,name,password_hash,salt,google_sub,group_id,role) VALUES('${g}','timetable-${g}@fje.edu','Prova horari ${g}','unused','fixture','local-${g}','${g === 'delegate-b' ? '2B' : '2A'}','${g === 'admin' ? 'admin' : g.startsWith('delegate') ? 'delegate' : 'student'}');
   INSERT INTO sessions(hash,user_id,expires,auth_provider) VALUES('${hash}','${g}',${Date.now() + 3600000},'google');
   INSERT INTO enrollments VALUES('${g}','2A-math');
   INSERT INTO grade_entries(id,user_id,subject_id,term,category,title,grade,weight,position) VALUES('kept-${g}','${g}','math',1,'exam','Nota existent',8.6,37,0);`;
 });
 fixtures.push(
   "INSERT INTO delegation_members(email,unit_id,name,position) VALUES('timetable-delegate@fje.edu','science','Delegat local de prova','delegate');",
+  "INSERT INTO delegation_members(email,unit_id,name,position) VALUES('timetable-delegate-b@fje.edu','tech1','Delegat tecnològic local','delegate');",
 );
 writeFileSync(state + '/fixtures.sql', fixtures.join('\n'));
 cli(['d1', 'execute', 'DB', '--local', '--file', state + '/fixtures.sql']);
@@ -143,6 +144,54 @@ try {
       route.id + ': real local D1 migration, configuration, persistence and rejection checks OK',
     );
   }
+  const chemistryReference = JSON.parse(
+    readFileSync('tests/fixtures/technology-chemistry.json', 'utf8'),
+  );
+  for (const account of ['2B', 'delegate-b']) {
+    for (const variant of chemistryReference.variants) {
+      const ids = idsFor(OFFICIAL_ROUTES[1]).map((id) =>
+        id === '2B-dt' ? variant.id : id === '2B-tutor-puigpinos' ? '2B-tutor-comellas' : id,
+      );
+      const body = { group_id: '2B', path: 'science', offerings: ids };
+      await request(account, '/configure', body);
+      const saved = await request(account, '/bootstrap');
+      assert.deepEqual(new Set(saved.enrollments.map((e) => e.offering_id)), new Set(ids));
+      const chemistrySlots = saved.slots.filter((s) => s.offering_id === variant.id);
+      assert.deepEqual(
+        chemistrySlots.map((s) => [s.day, s.start, s.end]),
+        chemistryReference.periods,
+      );
+      assert.ok(
+        chemistrySlots.every((s) => s.teacher === variant.teacher && s.room === variant.room),
+      );
+      assert.equal(saved.delegation.unit, 'tech1');
+      assert.equal(saved.grades.find((g) => g.id === 'kept-' + account).grade, 8.6);
+      for (const offerings of [
+        [...ids, '2B-dt'],
+        [...ids, '2B-eco'],
+        ids.map((id) => (id === variant.id ? '2A-chem' : id)),
+      ])
+        await request(account, '/configure', { ...body, offerings }, 400);
+      assert.deepEqual((await request(account, '/bootstrap')).enrollments, saved.enrollments);
+      results.push({
+        account,
+        chemistry: variant.id,
+        saved: true,
+        hourlySlots: 30,
+        independentPeriodsChecked: true,
+        badRequestsRejected: 3,
+        personalGradesPreserved: true,
+      });
+    }
+  }
+  await request('2B', '/configure', {
+    group_id: '2B',
+    path: 'science',
+    offerings: idsFor(OFFICIAL_ROUTES[1]),
+  });
+  console.log(
+    'Technological Chemistry: both teachers, students/delegates, exact periods, persistence and rejection on real local D1 OK.',
+  );
   await request(
     'delegate',
     '/configure',

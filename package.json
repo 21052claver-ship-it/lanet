@@ -1,6 +1,6 @@
 {
   "name": "la-net",
-  "version": "0.6.24",
+  "version": "0.6.25",
   "private": true,
   "type": "module",
   "scripts": {
@@ -52,6 +52,7 @@
     "test:roulette-panorama": "node scripts/test-roulette-panorama.mjs",
     "test:roulette-sound": "node scripts/test-roulette-sound.mjs",
     "test:official-schedule": "node scripts/test-official-schedule.mjs",
+    "test:technology-chemistry": "node scripts/test-technology-chemistry.mjs",
     "test:official-schedule-api": "node scripts/test-official-schedule-api.mjs",
     "test:student-guide": "node scripts/test-student-guide.mjs",
     "test:reactions": "node scripts/test-reactions.mjs",

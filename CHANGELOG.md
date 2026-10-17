@@ -2,6 +2,11 @@
 
 Cada publicació nova té una versió SemVer, un tag Git immutable, una release de GitHub i un registre de desplegament a l’entorn production.
 
+## [0.6.25] - 2026-10-17
+
+- Química disponible al tecnològic com alternativa a Dibuix tècnic i Empresa: dilluns/dimarts 09:10–10:10 i dimecres/dijous 08:10–09:10, segons la correcció confirmada per Marc. Professorat seleccionable, horari i desament coherents per a alumnat i delegats.
+- Catàleg ampliat amb una migració additiva que conserva les dades i les seleccions actuals. Contrast independent de les quatre franges i de les 272 combinacions dels tres itineraris, més simulacions locals de selecció, errors i persistència als tres motors de navegador.
+
 ## [0.6.24] - 2026-10-17
 
 - Entrar a Continguts ja no carrega ni descarrega els PDF dels materials. Les targetes mostren una portada estàtica; el PDF només es carrega en obrir expressament l’apunt, amb el visor existent, i la descàrrega requereix prémer el seu enllaç.

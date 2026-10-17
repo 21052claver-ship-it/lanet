@@ -2,11 +2,11 @@
 
 Generada des de [SEGUIMENT.json](SEGUIMENT.json). No s’edita a mà. Especificació: [pla mestre](PLA-MESTRE.md). Canvis fets: [historial](HISTORIAL-CANVIS.md).
 
-**200/201 tasques verificades · 114 requisits · 90 fases · límit d’una tasca activa.**
+**200/202 tasques verificades · 115 requisits · 91 fases · límit d’una tasca activa.**
 
 Les tasques verificades de preparació no equivalen a millores de producte implementades.
 
-Tasca activa: **cap**.
+Tasca activa: **T90-01 — Completar Química del tecnològic i contrastar tots els horaris**.
 
 Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musical**.
 
@@ -480,5 +480,9 @@ Següent tasca preparada: **T38-02 — Publicar i verificar la biblioteca musica
 ## F89 Continguts sense descàrregues automàtiques
 
 - [x] **T89-01** Eliminar la descàrrega de PDF en entrar a Continguts — Verificat.
+
+## F90 Química al tecnològic i fidelitat dels horaris
+
+- [ ] **T90-01** Completar Química del tecnològic i contrastar tots els horaris — En revisió.
 
 Cada tasca inclou fitxers previstos, criteri d’acceptació, comprovacions i evidències al registre. Per actualitzar: canviar el registre, afegir l’entrada d’historial en verificar i executar `npm run plan:sync` i `npm run plan:check`.

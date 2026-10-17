@@ -74,6 +74,7 @@ jobs:
           - group: journeys
             tests: |
               npm run test:student-journeys
+              npm run test:technology-chemistry
           - group: functional
             tests: |
               npm run test:functional-controls
@@ -171,6 +172,7 @@ jobs:
             output/upload-safety/
             output/schedule-experience/
             output/class-sequence/browser/
+            output/technology-chemistry/browser/
   validate:
     name: Validate
     if: always()

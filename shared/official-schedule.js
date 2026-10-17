@@ -6,6 +6,9 @@ export const SCHEDULE_SOURCE = {
   year: '2026-2027',
   pages: 5,
   sha256: '2e52bde56c8a26004148a00b3a191c35651e320e827459522d4bd700583c689b',
+  corrections: [
+    '2026-10-17: Química del grup B a les franges de Dibuix/Empresa, confirmat per Marc.',
+  ],
 };
 export const SCHOOL_PERIODS = [
   ['08:10', '09:10'],
@@ -294,6 +297,10 @@ const businessB = [
 ];
 offering('2B', 'dt', 'ocana', '4', businessB, 'speciality');
 offering('2B', 'eco', 'ferrer', '5', businessB, 'speciality');
+// Marc confirmed that B Chemistry shares Drawing/Business periods, not A Chemistry periods.
+// Use a fresh ID: the retired 2B-chem retains historical grades/templates.
+offering('2B', 'chem', 'biosca', '3', businessB, 'speciality', 'biosca');
+offering('2B', 'chem', 'solsona', '6', businessB, 'speciality', 'solsona');
 const mathC = [
   [0, 0],
   [1, 0],
@@ -376,11 +383,11 @@ export const OFFICIAL_ROUTES = [
     path: 'science',
     art: 'telescope',
     color: '#E9E3F2',
-    description: 'Matemàtiques, Física i Dibuix tècnic o Empresa.',
+    description: 'Matemàtiques, Física i Química, Dibuix tècnic o Empresa.',
     blocks: [
       block('mathematics', 'Matemàtiques'),
       block('science', 'Física'),
-      block('speciality', 'Dibuix tècnic o Empresa'),
+      block('speciality', 'Química, Dibuix tècnic o Empresa'),
       block('elective', 'Optativa'),
       block('tutor', 'Tutor o tutora'),
     ],

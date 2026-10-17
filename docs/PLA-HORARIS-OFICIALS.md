@@ -49,3 +49,7 @@ Publicada **0.6.9**: [release](https://github.com/21052claver-ship-it/lanet/rele
 T74-02 amplia la coherència a l’editor de variants: un desament ha de conservar professorat per dia, treball personal i IDs, inclòs amb clients antics. Es distingeixen explícitament professorat general, propi i treball personal. Validació de tipus, permisos i solapaments abans del batch. Versió 0.6.10 pendent de PR/CI i publicació, sense noves migracions.
 
 Revisió de gestió publicada **0.6.10**: [release](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.10) · [CI](https://github.com/21052claver-ship-it/lanet/actions/runs/38455769429) · [registre](releases/0.6.10.json). T74-02 verificada.
+
+## Correcció posterior de Química al tecnològic
+
+El 17 d’octubre Marc confirma una alternativa que no figurava al document original: Química del grup B es fa a les mateixes franges de Dibuix/Empresa. R115/T90-01 amplia el catàleg a 272 combinacions, amb una migració additiva i proves locals. Es conserva el resultat històric de les 208 combinacions de T74-01. [Pla i contrast](PLA-QUIMICA-TECNOLOGIC.md).

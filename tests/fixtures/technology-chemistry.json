@@ -1,0 +1,13 @@
+{
+  "source": "Marc, 2026-10-17: Química del tecnològic a les franges de Dibuix/Empresa. Professorat i aules del catàleg de Química documentat.",
+  "periods": [
+    [0, "09:10", "10:10"],
+    [1, "09:10", "10:10"],
+    [2, "08:10", "09:10"],
+    [3, "08:10", "09:10"]
+  ],
+  "variants": [
+    { "id": "2B-chem-biosca", "teacher": "Mireia Biosca", "room": "3" },
+    { "id": "2B-chem-solsona", "teacher": "Kiko Solsona", "room": "6" }
+  ]
+}
