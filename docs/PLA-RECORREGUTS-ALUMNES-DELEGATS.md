@@ -6,9 +6,9 @@ Marc demana una passada més profunda: posar-se en situació d’alumnes i deleg
 
 Es revisen les transicions entre horari, classe, continguts i agenda, la gestió diària del delegat, el cicle proposta → demanar canvis → corregir → publicar i els avisos que rep l’autor. Les simulacions contrasten la interfície amb els efectes persistits, la privacitat i els permisos de comptes ficticis separats. Inclouen errors recuperables, recàrregues, navegació enrere i pantalles petites.
 
-Les proves només utilitzen servidors locals i fixtures; bloquegen peticions externes. No s’accedeix a la plataforma pública ni a dades reals. Les evidències privades es desen a `output/journeys-audit/`. La matriu final distingirà casos nous, regressions i límits de la simulació.
+Les proves només utilitzen servidors locals i fixtures; bloquegen peticions externes. No s’accedeix a la plataforma pública ni a dades reals. Les evidències privades es desen a `output/journeys-audit/`. La matriu final distingeix casos nous, regressions i límits de la simulació.
 
-## Auditoria en curs
+## Problemes reproduïts i corregits
 
 | Recorregut | Problema reproduït | Canvi |
 | --- | --- | --- |
@@ -39,6 +39,8 @@ També es comproven escriptura fallida i reintent, clic duplicat mentre es desa,
 
 Cap canvi de permisos o consultes de servidor, migració, R2, Google o serveis privats. El panell demana el bootstrap existent una vegada en entrar i quan l’usuari prem Actualitzar; no s’afegeix cap interval de polling. Els camps de navegació contenen identificadors i dates, sense continguts ni dades personals.
 
-Estat: verificació local en curs sobre una compilació fixa. Després dels controls cal la CI exacta de PR/main i una única publicació de 0.6.23.
+Verificat i publicat: 475 unitàries, 66 recorreguts nous d’alumnes/delegats/subdelegats als tres itineraris i motors, 63 regressions de classe, 66 responsive, 33 delegats, 30 notificacions, 36 horari/navegació i 24 de nota anual correctes. Revalidació final de 12 publicacions amb cerca anterior, fallada i reintent, sense duplicats. Tipus/lint/build/font correctes. Els 12 jobs i Validate de PR/main són verds; la CI recompila i prova la matriu sencera del codi final.
+
+[Release immutable](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.23) · [PR #46](https://github.com/21052claver-ship-it/lanet/pull/46) · [CI exacta](https://github.com/21052claver-ship-it/lanet/actions/runs/39049070275) · [Informe](releases/0.6.23.md). Commit 15c71c03610653ea195891a8e765fe183c165c0d; una sola publicació.
 
 La comprovació de detall viu afegeix sis casos (320/1440, tres motors) amb les actualitzacions del bootstrap existent: canvi de títol/data/aula/instruccions, retirada i retorn directe a la llista de l’agenda. La reproducció prèvia a output/journeys-audit/live-before.json contrastava servidor i finestra: títol antic i acció de completar encara visibles. Les captures també han permès moure la separació d’accions al CSS global: així no depèn d’haver carregat Horari abans d’obrir un detall des de Comunitat. Es mesuren 44 px i un mínim de 8 px entre les accions.

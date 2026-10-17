@@ -1,13 +1,13 @@
 # Documentació de La Net
 
-Punt d’entrada documental · 17 d’octubre de 2026 · producte publicat **0.6.22**.
+Punt d’entrada documental · 17 d’octubre de 2026 · producte publicat **0.6.23**.
 
 ## Començar aquí
 
 | Necessitat | Document |
 | --- | --- |
 | Entendre l’estat actual, decisions i pendents | [Estat del projecte](ESTAT-PROJECTE.md) |
-| Consultar exactament què s’ha publicat i comprovat | [Informe Markdown 0.6.22](releases/0.6.22.md) |
+| Consultar exactament què s’ha publicat i comprovat | [Informe Markdown 0.6.23](releases/0.6.23.md) |
 | Resum de publicació i proves | [Publicació](PUBLICACIO.md) · [Verificació](VERIFICATION.md) |
 | Continuar una tasca sense solapar feina | [Checklist](CHECKLIST.md) · [Registre únic](SEGUIMENT.json) |
 | Consultar els canvis en ordre cronològic | [Historial](HISTORIAL-CANVIS.md) · [CHANGELOG](../CHANGELOG.md) |
@@ -40,8 +40,8 @@ El catàleg següent enllaça tots els Markdown del primer nivell de docs. Els d
 - [La Net · estat actual i decisions vigents](ESTAT-PROJECTE.md).
 - [Historial de canvis de La Net](HISTORIAL-CANVIS.md).
 - [Pla mestre de revisió de La Net](PLA-MESTRE.md).
-- [Publicació · La Net 0.6.22](PUBLICACIO.md).
-- [Verificació · La Net 0.6.22](VERIFICATION.md).
+- [Publicació · La Net 0.6.23](PUBLICACIO.md).
+- [Verificació · La Net 0.6.23](VERIFICATION.md).
 - [Versions i Cloudflare](VERSIONS.md).
 
 ### PAU i universitat
@@ -152,6 +152,7 @@ El catàleg següent enllaça tots els Markdown del primer nivell de docs. Els d
 
 ## Versions, arxiu i recursos visuals
 
+- [Informe de recorreguts d’alumnes i delegats 0.6.23](releases/0.6.23.md) i [registre JSON segur](releases/0.6.23.json).
 - [Informe de depuració i seqüència de classe 0.6.22](releases/0.6.22.md) i [registre JSON segur](releases/0.6.22.json).
 - [Informe estudi lliure 0.6.21](releases/0.6.21.md) i [registre JSON segur](releases/0.6.21.json).
 
@@ -176,4 +177,4 @@ El catàleg següent enllaça tots els Markdown del primer nivell de docs. Els d
 4. Regenerar la checklist amb `npm run plan:sync` i comprovar-la amb `npm run plan:check` al workspace que conserva les evidències privades.
 5. Validar enllaços locals, coherència de les xifres, format i auditoria de font abans d’un futur push. El flux branca/PR continua sent obligatori per incorporar canvis a main.
 
-Els canvis només documentals no necessiten una nova versió de producte ni tornar a desplegar. Aquesta ordenació queda desada localment per incorporar-la a una pròxima tanda; no genera una publicació duplicada.
+Els canvis només documentals no necessiten una nova versió de producte ni tornar a desplegar.

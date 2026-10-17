@@ -1,0 +1,98 @@
+{
+  "recordedAt": "2026-10-17T16:36:53.567Z",
+  "version": "0.6.23",
+  "sourceCommit": "15c71c03610653ea195891a8e765fe183c165c0d",
+  "origin": "https://lanet.es",
+  "pullRequest": "https://github.com/21052claver-ship-it/lanet/pull/46",
+  "ci": "https://github.com/21052claver-ship-it/lanet/actions/runs/39049070275",
+  "pullRequestCi": "https://github.com/21052claver-ship-it/lanet/actions/runs/39047932284",
+  "mainCiAttempt": 1,
+  "pullRequestCiAttempt": 1,
+  "allCiJobsSuccess": true,
+  "ciJobs": [
+    {
+      "name": "Core checks",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (compatibility)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (journeys)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (academics)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (audio)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (board)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (school)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (functional)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (navigation)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (contents)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Browser checks (casino)",
+      "conclusion": "success"
+    },
+    {
+      "name": "Validate",
+      "conclusion": "success"
+    }
+  ],
+  "releaseUrl": "https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.23",
+  "immutable": true,
+  "tagCommitMatches": true,
+  "receiptDigestMatches": true,
+  "cloudflareDeployment": "d4408a14-f464-4863-8701-f4e9539db3c6",
+  "githubDeployment": 7142586178,
+  "providerConfirmed": true,
+  "productionCommitMatches": true,
+  "domainActive": true,
+  "pagesDomainPreserved": true,
+  "googleCallbackPreserved": true,
+  "d1R2BindingsPreserved": true,
+  "migrationsUnchanged": true,
+  "privateMaintenanceUnchanged": true,
+  "privateMaintenanceRedeployed": false,
+  "tests": {
+    "unit": 475,
+    "studentJourneys": 66,
+    "classroom": 63,
+    "responsive": 66,
+    "delegates": 33,
+    "notifications": 30,
+    "scheduleNavigation": 36,
+    "annualGrades": 24,
+    "finalPublicationRechecks": 12,
+    "officialRoutes": [
+      "2A",
+      "2B",
+      "2C"
+    ]
+  },
+  "publicAppVisited": false,
+  "productionDataUsed": false,
+  "physicalDevicesTested": false,
+  "branchPushes": 5,
+  "productPublications": 1
+}

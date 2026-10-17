@@ -4,17 +4,19 @@ Actualitzat el 17 d’octubre de 2026. Aquest document és la memòria de contin
 
 ## On som
 
+Recorreguts 0.6.23: Dia i setmana conservats entre classe, continguts i agenda; panell de delegats recuperable amb publicació, cerca, actualització i dates publicades. Correccions amb el missatge visible, aprovades accessibles a l’autor, retirada amb motiu i recuperació de concurrència. Detall amb dades vigents i accions antigues retirades quan desapareix la data. Esborranys públics anteriors recuperables amb privats intactes. Resum mòbil compacte, pestanyes en dues columnes i confirmacions antigues retirades en obrir un formulari nou. [Informe](releases/0.6.23.md) · [Simulacions](PLA-RECORREGUTS-ALUMNES-DELEGATS.md).
+
 | Element | Estat registrat |
 | --- | --- |
 | Aplicació principal | [lanet.es](https://lanet.es) |
-| Darrera versió de producte publicada | **0.6.22** |
-| Informe complet de la versió | [Publicació 0.6.22](releases/0.6.22.md) |
-| Codi publicat | `1c35ceed95b69edd2e6faec3aee26645fadba3cc` |
+| Darrera versió de producte publicada | **0.6.23** |
+| Informe complet de la versió | [Publicació 0.6.23](releases/0.6.23.md) |
+| Codi publicat | `15c71c03610653ea195891a8e765fe183c165c0d` |
 | GitHub | [21052claver-ship-it/lanet](https://github.com/21052claver-ship-it/lanet) |
-| Incorporació del codi | [PR #44](https://github.com/21052claver-ship-it/lanet/pull/44), fusionada amb tots els controls correctes |
-| CI del commit publicat | [Verify La Net](https://github.com/21052claver-ship-it/lanet/actions/runs/39027328090), correcta |
-| Publicació | [Tag i release immutable v0.6.22](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.22), rebut i Deployment verificats |
-| Documentació de tancament | Registre i evidències de 0.6.22 consolidats en una PR documental, sense segona publicació de producte |
+| Incorporació del codi | [PR #46](https://github.com/21052claver-ship-it/lanet/pull/46), fusionada amb tots els controls correctes |
+| CI del commit publicat | [Verify La Net](https://github.com/21052claver-ship-it/lanet/actions/runs/39049070275), correcta |
+| Publicació | [Tag i release immutable v0.6.23](https://github.com/21052claver-ship-it/lanet/releases/tag/v0.6.23), rebut i Deployment verificats |
+| Documentació de tancament | Registre de 0.6.23 consolidat en una PR documental, sense segona publicació de producte |
 
 Els rebuts descriuen el producte publicat. Una actualització d’aquests Markdown no implica un nou desplegament ni un canvi de versió de l’aplicació.
 
